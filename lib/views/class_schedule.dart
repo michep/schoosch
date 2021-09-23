@@ -20,7 +20,9 @@ class ClassSchedule extends StatelessWidget {
             builder: (context, snapshot) {
               return snapshot.hasData
                   ? ListView(
-                      children: snapshot.data!.map((schedule) => ClassScheduleTile(schedule)).toList(),
+                      children: [
+                        ...snapshot.data!.map((schedule) => ClassScheduleTile(schedule)),
+                      ],
                     )
                   : const Center(
                       child: CircularProgressIndicator(),

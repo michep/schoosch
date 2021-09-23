@@ -18,7 +18,9 @@ class ClassSelection extends StatelessWidget {
           builder: (context, snapshot) {
             return snapshot.hasData
                 ? ListView(
-                    children: snapshot.data!.map((doc) => ClassListTile(doc)).toList(),
+                    children: [
+                      ...snapshot.data!.map((doc) => ClassListTile(doc)),
+                    ],
                   )
                 : const Center(
                     child: CircularProgressIndicator(),

@@ -8,7 +8,10 @@ import 'package:schoosch/data/class_model.dart';
 class FS {
   late final FirebaseFirestore _store;
 
-  FS._constructor() : _store = FirebaseFirestore.instance;
+  FS._constructor() {
+    _store = FirebaseFirestore.instance;
+    _store.settings = const Settings(persistenceEnabled: false);
+  }
   static final FS _instance = FS._constructor();
   static FS get instance => _instance;
 
