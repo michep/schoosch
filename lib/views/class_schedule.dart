@@ -16,11 +16,11 @@ class ClassSchedule extends StatelessWidget {
       ),
       body: SafeArea(
         child: StreamBuilder<List<ScheduleModel>>(
-            stream: FS.instance.getClassSchedulesModel(_class.id),
+            stream: FS.instance.getClassSchedulesWithLessonsModel(_class.id),
             builder: (context, snapshot) {
               return snapshot.hasData
                   ? ListView(
-                      children: snapshot.data!.map((schedule) => ClassScheduleTile(_class.id, schedule)).toList(),
+                      children: snapshot.data!.map((schedule) => ClassScheduleTile(schedule)).toList(),
                     )
                   : const Center(
                       child: CircularProgressIndicator(),
