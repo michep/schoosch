@@ -12,6 +12,7 @@ class LessonListTile extends StatelessWidget {
       leading: Text(_lesson.order.toString()),
       title: Text(_lesson.name),
       trailing: Text(_lesson.venue),
+      subtitle: Text('${_lesson.timeFrom} - ${_lesson.timeTill}'),
     );
   }
 }

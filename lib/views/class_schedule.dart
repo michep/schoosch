@@ -16,7 +16,7 @@ class ClassSchedule extends StatelessWidget {
       ),
       body: SafeArea(
         child: StreamBuilder<List<ScheduleModel>>(
-            stream: FS.instance.getClassSchedulesWithLessonsModel(_class.id),
+            stream: FS.instance.getSchedulesWithLessonsModel(_class.id),
             builder: (context, snapshot) {
               return snapshot.hasData
                   ? ListView(

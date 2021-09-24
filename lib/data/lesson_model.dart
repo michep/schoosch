@@ -6,13 +6,17 @@ class LessonModel {
   final String name;
   final int order;
   final String venue;
+  final String timeFrom;
+  final String timeTill;
 
   const LessonModel(
     this.id,
     this.name,
     this.order,
-    this.venue,
-  );
+    this.venue, [
+    this.timeFrom = '',
+    this.timeTill = '',
+  ]);
 
   LessonModel.fromMap(String id, Map<String, Object?> map)
       : this(
@@ -20,5 +24,7 @@ class LessonModel {
           map['name']! as String,
           map['order']! as int,
           map['venue']! as String,
+          map['timeFrom']! as String,
+          map['timeTill']! as String,
         );
 }

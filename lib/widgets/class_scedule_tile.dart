@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:schoosch/data/schedule_model.dart';
 import 'package:schoosch/data/weekday_model.dart';
 import 'package:schoosch/widgets/lesson_list_tile.dart';
