@@ -12,9 +12,8 @@ class ClassScheduleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
-      maintainState: true,
-      title: StreamBuilder<WeekdaysModel>(
-        stream: FS.instance.getWeekdayNameModel(_scedule.day),
+      title: FutureBuilder<WeekdaysModel>(
+        future: FS.instance.getWeekdayNameModel(_scedule.day),
         builder: (context, weekday) {
           return weekday.hasData
               ? Text(

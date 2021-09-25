@@ -9,6 +9,8 @@ import 'package:schoosch/data/class_model.dart';
 class FS {
   late final FirebaseFirestore _store;
   late final FirebaseFirestore _cachedStore;
+  final List<WeekdaysModel> _weekdaysCache = [];
+  final List<LessontimeModel> _lessontimesCache = [];
 
   FS._constructor() {
     FirebaseFirestore.instance.clearPersistence();
@@ -20,22 +22,31 @@ class FS {
   static final FS _instance = FS._constructor();
   static FS get instance => _instance;
 
-  Stream<WeekdaysModel> getWeekdayNameModel(int order) {
-    return _cachedStore.collection('weekdays').doc(order.toString()).snapshots().asyncMap(
-          (_weekday) => WeekdaysModel.fromMap(
-            order.toString(),
-            _weekday.data()!,
-          ),
-        );
+  Future<void> init() async {
+    getWeekdayNameModels();
+    getLessontimeModels();
   }
 
-  Stream<LessontimeModel> getLessontimeModel(int order) {
-    return _cachedStore.collection('lessonTime').doc(order.toString()).snapshots().asyncMap(
-          (_lessontime) => LessontimeModel.fromMap(
-            order.toString(),
-            _lessontime.data()!,
-          ),
-        );
+  Future<void> getWeekdayNameModels() async {
+    var wd = await _cachedStore.collection('weekdays').get();
+    for (var e in wd.docs) {
+      _weekdaysCache.add(WeekdaysModel(e.id, e.get('name')));
+    }
+  }
+
+  Future<void> getLessontimeModels() async {
+    var lt = await _cachedStore.collection('lessonTime').get();
+    for (var e in lt.docs) {
+      _lessontimesCache.add(LessontimeModel(e.id, e.get('from'), e.get('to')));
+    }
+  }
+
+  Future<WeekdaysModel> getWeekdayNameModel(int order) async {
+    return _weekdaysCache[order - 1];
+  }
+
+  Future<LessontimeModel> getLessontimeModel(int order) async {
+    return _lessontimesCache[order - 1];
   }
 
   Stream<List<ClassModel>> getClassesModel() {
@@ -86,14 +97,17 @@ class FS {
       return Future<List<LessonModel>>(() async {
         List<LessonModel> _lessmods = [];
         for (var _les in _lessons.docs) {
-          await for (var t in getLessontimeModel(_les.data()['order']).take(1)) {
-            Map<String, dynamic> _data = {'timeFrom': t.from, 'timeTill': t.till};
-            _data.addAll(_les.data());
-            _lessmods.add(LessonModel.fromMap(_les.id, _data));
-          }
+          var t = await getLessontimeModel(_les.data()['order']);
+          Map<String, dynamic> _data = {'timeFrom': t.from, 'timeTill': t.till};
+          _data.addAll(_les.data());
+          _lessmods.add(LessonModel.fromMap(_les.reference, _les.id, _data));
         }
         return _lessmods;
       });
     });
+  }
+
+  Future<void> updateLesson(LessonModel lesson) async {
+    await lesson.ref.update(lesson.toMap());
   }
 }
