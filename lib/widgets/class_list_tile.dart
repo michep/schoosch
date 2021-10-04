@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/data/class_model.dart';
 import 'package:schoosch/views/class_schedule.dart';
 
@@ -10,17 +11,16 @@ class ClassListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(_class.name),
+      title: Text(
+        _class.name,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       trailing: const SizedBox(
         height: 10,
       ),
-      onTap: _onTap(context, _class),
+      onTap: () => Get.to(() => ClassSchedule(_class)),
     );
-  }
-
-  void Function() _onTap(BuildContext context, ClassModel cla) {
-    return () {
-      Navigator.of(context).push(MaterialPageRoute(builder: ClassSchedule(cla).build));
-    };
   }
 }

@@ -1,0 +1,103 @@
+use('schoosch');
+//db.class.drop();
+db.class.insertMany([
+  {
+    'institution_id': ObjectId('614ded51a68f6c3043120f63'),
+    'name': 'Десятый класс',
+    'grade': 10,
+  },
+  {
+    'institution_id': ObjectId('614ded51a68f6c3043120f63'),
+    'name': 'Седьмой класс "Жаворонки"',
+    'grade': 7,
+  },
+]);
+
+use('schoosch');
+// db.institution.drop();
+db.institution.insertMany([
+  {
+    '_id': ObjectId(),
+    'name': 'Гимназия имени Пастернака',
+    'attributes': '',
+  },
+]);
+
+db.schedule.insertMany([
+  {
+    _id: ObjectId(),
+    class_id: ObjectId('614df2592a230f210c2e7295'),
+    day: 1,
+    lesson_ids: [
+      ObjectId('61502c1e3750eb63fb5d0467'),
+      ObjectId('61502c1e3750eb63fb5d0468'),
+    ],
+  },
+]);
+
+db.lesson.insertMany([
+  {
+    _id: ObjectId(),
+    schedule_id: ObjectId('614f7ac7911a17062298a499'),
+    order: 1,
+    name: 'Математика',
+    venue: 'кабинет 12',
+  },
+  {
+    _id: ObjectId(),
+    schedule_id: ObjectId('614f7ac7911a17062298a499'),
+    order: 2,
+    name: 'История',
+    venue: 'кабинет 65',
+  },
+]);
+
+
+
+
+db.class.aggregate([
+  { 
+    $lookup: {
+      from: 'institution',
+      localField: 'institution_id',
+      foreignField: '_id',
+      as: 'institution',
+    },
+  },
+]);
+
+
+db.schedule.aggregate([
+  {
+    $lookup: {
+      from: 'class',
+      localField: 'class_id',
+      foreignField: '_id',
+      as: 'class',
+    },
+  },
+]);
+
+db.schedule.aggregate([
+  {
+    $match: {
+      day: 1,
+    }
+  },
+  {
+    $lookup: {
+      from: 'class',
+      localField: 'class_id',
+      foreignField: '_id',
+      as: 'class',
+    }
+  },
+  {
+    $lookup: {
+      from: 'lesson',
+      localField: 'lesson_ids',
+      foreignField: '_id',
+      as: 'lessons',
+    }
+  },
+]);

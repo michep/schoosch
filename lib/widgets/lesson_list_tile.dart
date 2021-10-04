@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:schoosch/data/datasource_interface.dart';
 import 'package:schoosch/data/lesson_model.dart';
-import 'package:schoosch/data/firestore.dart';
 
 class LessonListTile extends StatefulWidget {
   final LessonModel _lesson;
@@ -27,8 +28,9 @@ class _LessonListTileState extends State<LessonListTile> {
 
   void _onLongPress() {
     setState(() {
+      final fs = Get.find<SchooschDatasource>();
       widget._lesson.ready = !widget._lesson.ready;
-      FS.instance.updateLesson(widget._lesson);
+      fs.updateLesson(widget._lesson);
     });
   }
 }
