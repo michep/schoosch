@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class LessonModel {
-  final DocumentReference ref;
+  // final DocumentReference ref;
   final String id;
   final String name;
   final int order;
@@ -11,7 +9,7 @@ class LessonModel {
   bool ready;
 
   LessonModel(
-    this.ref,
+    // this.ref,
     this.id,
     this.name,
     this.order,
@@ -21,9 +19,9 @@ class LessonModel {
     this.ready = false,
   ]);
 
-  LessonModel.fromMap(DocumentReference ref, String id, Map<String, Object?> map)
+  LessonModel.fromMap(String id, Map<String, Object?> map)
       : this(
-          ref,
+          // ref,
           id,
           map['name']! as String,
           map['order']! as int,

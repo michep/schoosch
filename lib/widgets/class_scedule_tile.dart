@@ -6,16 +6,16 @@ import 'package:schoosch/data/weekday_model.dart';
 import 'package:schoosch/widgets/lesson_list_tile.dart';
 
 class ClassScheduleTile extends StatelessWidget {
-  final ScheduleModel _scedule;
+  final ScheduleModel _schedule;
 
-  const ClassScheduleTile(this._scedule, {Key? key}) : super(key: key);
+  const ClassScheduleTile(this._schedule, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final fs = Get.find<SchooschDatasource>();
     return ExpansionTile(
       title: FutureBuilder<WeekdaysModel>(
-        future: fs.getWeekdayNameModel(_scedule.day),
+        future: fs.getWeekdayNameModel(_schedule.day),
         builder: (context, weekday) {
           return weekday.hasData
               ? Text(
@@ -25,7 +25,7 @@ class ClassScheduleTile extends StatelessWidget {
               : Container();
         },
       ),
-      children: [..._scedule.lessons.map((_les) => LessonListTile(_les))],
+      children: [..._schedule.lessons.map((_les) => LessonListTile(_les))],
     );
   }
 }

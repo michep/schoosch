@@ -35,6 +35,20 @@ db.schedule.insertMany([
   },
 ]);
 
+
+db.lessontime.insertMany([
+  {'_id': 1, 'from': "09:00", 'till': "09:40"},
+  {'_id': 2, 'from': "09:50", 'till': "10:30"},
+  {'_id': 3, 'from': "10:55", 'till': "11:35"},
+  {'_id': 4, 'from': "11:45", 'till': "12:25"},
+  {'_id': 5, 'from': "12:35", 'till': "13:15"},
+  {'_id': 6, 'from': "13:45", 'till': "14:25"},
+  {'_id': 7, 'from': "14:35", 'till': "15:15"},
+  {'_id': 8, 'from': "15:25", 'till': "16:05"},
+  {'_id': 9, 'from': "16:20", 'till': "17:00"},
+  {'_id': 10, 'from': "17:10", 'till': "17:50"},
+  ]);
+
 db.lesson.insertMany([
   {
     _id: ObjectId(),
@@ -53,6 +67,8 @@ db.lesson.insertMany([
 ]);
 
 
+db.class.find();
+db.schedule.find();
 
 
 db.class.aggregate([
@@ -81,9 +97,10 @@ db.schedule.aggregate([
 db.schedule.aggregate([
   {
     $match: {
-      day: 1,
+      class_id: ObjectId('61502d307129de936b5e7d37'),
     }
   },
+]);
   {
     $lookup: {
       from: 'class',
@@ -98,6 +115,14 @@ db.schedule.aggregate([
       localField: 'lesson_ids',
       foreignField: '_id',
       as: 'lessons',
+    }
+  },
+  {
+    $lookup: {
+      from: 'lessontime',
+      localField: 'lessons.order',
+      foreignField: '_id',
+      as: 'times',
     }
   },
 ]);

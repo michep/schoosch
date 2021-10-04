@@ -13,6 +13,6 @@ abstract class SchooschDatasource {
   Future<List<ClassModel>> getClassesModel();
   Future<List<ScheduleModel>> getSchedulesModel(String classId);
   Future<List<ScheduleModel>> getSchedulesWithLessonsModel(String classId);
-  Future<List<LessonModel>> getLessonsModel(String classId, String schedId);
+  // Future<List<LessonModel>> getLessonsModel(String classId, String schedId);
   Future<void> updateLesson(LessonModel lesson);
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/data/datasource_interface.dart';
-import 'package:schoosch/data/firestore.dart';
+import 'package:schoosch/data/mongo.dart';
 import 'package:schoosch/views/class_selection.dart';
 
 Future<void> main() async {
@@ -11,7 +11,7 @@ Future<void> main() async {
   // await FS.instance.init();
   await Get.putAsync<SchooschDatasource>(
     () async {
-      var fs = FS();
+      var fs = MDB();
       await fs.init();
       return fs;
     },

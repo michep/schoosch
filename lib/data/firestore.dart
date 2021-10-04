@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/data/lesson_model.dart';
 import 'package:schoosch/data/lessontime_model.dart';
@@ -94,7 +93,6 @@ class FS extends GetxController implements SchooschDatasource {
     });
   }
 
-  @override
   Future<List<LessonModel>> getLessonsModel(String classId, String schedId) {
     return Future(() async {
       List<LessonModel> _lessmods = [];
@@ -104,7 +102,7 @@ class FS extends GetxController implements SchooschDatasource {
         var _time = await getLessontimeModel(_less.data()['order']);
         Map<String, dynamic> _timeMap = {'timeFrom': _time.from, 'timeTill': _time.till};
         _timeMap.addAll(_less.data());
-        _lessmods.add(LessonModel.fromMap(_less.reference, _less.id, _timeMap));
+//        _lessmods.add(LessonModel.fromMap(_less.reference, _less.id, _timeMap));
       }
       return _lessmods;
     });
@@ -112,6 +110,7 @@ class FS extends GetxController implements SchooschDatasource {
 
   @override
   Future<void> updateLesson(LessonModel lesson) async {
-    await lesson.ref.update(lesson.toMap());
+    // await lesson.ref.update(lesson.toMap());
+    return;
   }
 }
