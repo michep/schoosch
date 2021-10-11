@@ -1,78 +1,151 @@
-use('schoosch');
-//db.class.drop();
-db.class.insertMany([
-  {
-    'institution_id': ObjectId('614ded51a68f6c3043120f63'),
-    'name': 'Десятый класс',
-    'grade': 10,
-  },
-  {
-    'institution_id': ObjectId('614ded51a68f6c3043120f63'),
-    'name': 'Седьмой класс "Жаворонки"',
-    'grade': 7,
-  },
-]);
-
-use('schoosch');
-// db.institution.drop();
-db.institution.insertMany([
-  {
-    '_id': ObjectId(),
-    'name': 'Гимназия имени Пастернака',
-    'attributes': '',
-  },
-]);
-
-db.schedule.insertMany([
-  {
-    _id: ObjectId(),
-    class_id: ObjectId('614df2592a230f210c2e7295'),
-    day: 1,
-    lesson_ids: [
-      ObjectId('61502c1e3750eb63fb5d0467'),
-      ObjectId('61502c1e3750eb63fb5d0468'),
-    ],
-  },
-]);
-
-
+db.lessontime.drop();
 db.lessontime.insertMany([
-  {'_id': 1, 'from': "09:00", 'till': "09:40"},
-  {'_id': 2, 'from': "09:50", 'till': "10:30"},
-  {'_id': 3, 'from': "10:55", 'till': "11:35"},
-  {'_id': 4, 'from': "11:45", 'till': "12:25"},
-  {'_id': 5, 'from': "12:35", 'till': "13:15"},
-  {'_id': 6, 'from': "13:45", 'till': "14:25"},
-  {'_id': 7, 'from': "14:35", 'till': "15:15"},
-  {'_id': 8, 'from': "15:25", 'till': "16:05"},
-  {'_id': 9, 'from': "16:20", 'till': "17:00"},
-  {'_id': 10, 'from': "17:10", 'till': "17:50"},
-  ]);
+  {'_id': 1, 'from': '09:00', 'till': '09:40'},
+  {'_id': 2, 'from': '09:50', 'till': '10:30'},
+  {'_id': 3, 'from': '10:55', 'till': '11:35'},
+  {'_id': 4, 'from': '11:45', 'till': '12:25'},
+  {'_id': 5, 'from': '12:35', 'till': '13:15'},
+  {'_id': 6, 'from': '13:45', 'till': '14:25'},
+  {'_id': 7, 'from': '14:35', 'till': '15:15'},
+  {'_id': 8, 'from': '15:25', 'till': '16:05'},
+  {'_id': 9, 'from': '16:20', 'till': '17:00'},
+  {'_id': 10, 'from': '17:10', 'till': '17:50'},
+]);
 
-db.lesson.insertMany([
-  {
-    _id: ObjectId(),
-    schedule_id: ObjectId('614f7ac7911a17062298a499'),
-    order: 1,
-    name: 'Математика',
-    venue: 'кабинет 12',
-  },
-  {
-    _id: ObjectId(),
-    schedule_id: ObjectId('614f7ac7911a17062298a499'),
-    order: 2,
-    name: 'История',
-    venue: 'кабинет 65',
-  },
+db.weekday.drop();
+db.weekday.insertMany([
+  {'_id': 1, 'name': 'Понедельник'},
+  {'_id': 2, 'name': 'Вторник'},
+  {'_id': 3, 'name': 'Среда'},
+  {'_id': 4, 'name': 'Четверг'},
+  {'_id': 5, 'name': 'Пятница'},
+  {'_id': 6, 'name': 'Суббота'},
+  {'_id': 7, 'name': 'Воскресенье'},
+]);
+
+db.institution.drop();
+db.institution.insertMany([
+  {'name': 'Школа 1554', 'attributes': {}},
+  {'name': 'Гимназия им. Пастернака', 'attributes': {}},
 ]);
 
 
-db.class.find();
-db.schedule.find();
+db.class.drop();
+inst_id = db.institution.findOne({'name': 'Гимназия им. Пастернака'})['_id'];
+db.class.insertMany([
+  {'institution_id': inst_id, 'name': 'Десятый класс', 'grade': 10},
+  {'institution_id': inst_id, 'name': '7Б класс', 'grade': 7},
+  {'institution_id': inst_id, 'name': '7А класс', 'grade': 7},
+  {'institution_id': inst_id, 'name': 'первоклашки', 'grade': 1},
+]);
+
+db.schedule.drop();
+inst_id = db.institution.findOne({'name': 'Гимназия им. Пастернака'})['_id'];
+class_id = db.class.findOne({'name': 'десятый класс', 'institution_id': inst_id})['_id'];
+db.schedule.insertMany([
+  {'class_id': class_id, 'day': 1},
+  {'class_id': class_id, 'day': 2},
+  {'class_id': class_id, 'day': 3},
+  {'class_id': class_id, 'day': 4},
+  {'class_id': class_id, 'day': 5},
+]);
+
+inst_id = db.institution.findOne({'name': 'Гимназия им. Пастернака'})['_id'];
+class_id = db.class.findOne({'name': '7Б класс', 'institution_id': inst_id})['_id'];
+db.schedule.insertMany([
+  {'class_id': class_id, 'day': 1},
+  {'class_id': class_id, 'day': 2},
+  {'class_id': class_id, 'day': 3},
+  {'class_id': class_id, 'day': 4},
+  {'class_id': class_id, 'day': 5},
+]);
+
+db.lesson.drop();
+inst_id = db.institution.findOne({'name': 'Гимназия им. Пастернака'})['_id'];
+class_id = db.class.findOne({'name': 'десятый класс', 'institution_id': inst_id})['_id'];
+sched_id = db.schedule.findOne({'day': 3, 'class_id': class_id})['_id'];
+db.lesson.insertMany([
+  {'schedule_id': sched_id, 'name': 'Английский язык', 'venue': '211', 'order': 1},
+  {'schedule_id': sched_id, 'name': 'Английский язык', 'venue': '211', 'order': 2},
+  {'schedule_id': sched_id, 'name': 'Алгебра', 'venue': '211', 'order': 3},
+  {'schedule_id': sched_id, 'name': 'Обществознание', 'venue': '211', 'order': 4},
+  {'schedule_id': sched_id, 'name': 'Обществознание', 'venue': '211', 'order': 5},
+  {'schedule_id': sched_id, 'name': 'Химия', 'venue': '205', 'order': 6},
+  {'schedule_id': sched_id, 'name': 'Геометрия', 'venue': '208', 'order': 7},
+  {'schedule_id': sched_id, 'name': 'Математика (электив)', 'venue': '211', 'order': 8},
+  {'schedule_id': sched_id, 'name': 'Обществознание (электив)', 'venue': '211', 'order': 9},
+  {'schedule_id': sched_id, 'name': 'Обществознание (электив)', 'venue': '211', 'order': 10},
+]);
+sched_id = db.schedule.findOne({'day': 5, 'class_id': class_id})['_id'];
+db.lesson.insertMany([
+  {'schedule_id': sched_id, 'name': 'Английский язык', 'venue': '211', 'order': 1},
+  {'schedule_id': sched_id, 'name': 'Английский язык', 'venue': '211', 'order': 2},
+  {'schedule_id': sched_id, 'name': 'Урок мужества', 'venue': '???', 'order': 3},
+  {'schedule_id': sched_id, 'name': 'Урок мужества', 'venue': '???', 'order': 4},
+  {'schedule_id': sched_id, 'name': 'Английский язык, Ричардсон', 'venue': '211', 'order': 5},
+  {'schedule_id': sched_id, 'name': 'Физкультура', 'venue': 'Спортзал', 'order': 6},
+  {'schedule_id': sched_id, 'name': 'Основы проектирования', 'venue': '511', 'order': 7},
+  {'schedule_id': sched_id, 'name': 'Основы проектирования', 'venue': '511', 'order': 8},
+]);
+sched_id = db.schedule.findOne({'day': 1, 'class_id': class_id})['_id'];
+db.lesson.insertMany([
+  {'schedule_id': sched_id, 'name': 'Алгебра', 'venue': '211', 'order': 1},
+  {'schedule_id': sched_id, 'name': 'Алгебра', 'venue': '211', 'order': 2},
+  {'schedule_id': sched_id, 'name': 'Английский язык', 'venue': '211', 'order': 3},
+  {'schedule_id': sched_id, 'name': 'Английский язык', 'venue': '211', 'order': 4},
+  {'schedule_id': sched_id, 'name': 'География', 'venue': '211', 'order': 5},
+  {'schedule_id': sched_id, 'name': 'Английский язык, Ричардсон', 'venue': '211', 'order': 6},
+  {'schedule_id': sched_id, 'name': 'Физкультура', 'venue': 'Спортзал', 'order': 7},
+  {'schedule_id': sched_id, 'name': 'Физкультура', 'venue': 'Спортзал', 'order': 8},
+]);
+sched_id = db.schedule.findOne({'day': 2, 'class_id': class_id})['_id'];
+db.lesson.insertMany([
+  {'schedule_id': sched_id, 'name': 'Второй иностранный язык', 'venue': '204/205', 'order': 1},
+  {'schedule_id': sched_id, 'name': 'Биология', 'venue': '205', 'order': 2},
+  {'schedule_id': sched_id, 'name': 'Литература', 'venue': '202', 'order': 3},
+  {'schedule_id': sched_id, 'name': 'Литература', 'venue': '202', 'order': 4},
+  {'schedule_id': sched_id, 'name': 'Физика', 'venue': '211', 'order': 5},
+  {'schedule_id': sched_id, 'name': 'МХК', 'venue': '205', 'order': 6},
+  {'schedule_id': sched_id, 'name': 'История', 'venue': '204', 'order': 7},
+]);
+sched_id = db.schedule.findOne({'day': 4, 'class_id': class_id})['_id'];
+db.lesson.insertMany([
+  {'schedule_id': sched_id, 'name': 'Физика', 'venue': '211', 'order': 1},
+  {'schedule_id': sched_id, 'name': 'Биология', 'venue': '205', 'order': 2},
+  {'schedule_id': sched_id, 'name': 'Русский язык', 'venue': '207', 'order': 3},
+  {'schedule_id': sched_id, 'name': 'Русский язык', 'venue': '207', 'order': 4},
+  {'schedule_id': sched_id, 'name': 'Второй иностранный язык', 'venue': '203/503', 'order': 5},
+  {'schedule_id': sched_id, 'name': 'ОБЖ', 'venue': '207', 'order': 6},
+  {'schedule_id': sched_id, 'name': 'Астрономия', 'venue': '211', 'order': 7},
+]);
+
+
+db.weekdata.drop();
+db.weekdata.insertMany([
+  {'_id': 39, 'start': new Date('2021-09-27'), 'end': new Date('2021-10-03')},
+  {'_id': 40, 'start': new Date('2021-10-04'), 'end': new Date('2021-10-10')},
+  {'_id': 41, 'start': new Date('2021-10-11'), 'end': new Date('2021-10-17')},
+]);
+
+db.weekdata.find({
+  $and: [
+    {
+      'start': {
+        $gt: new Date('2021-10-01'),
+        $lt: new Date('2021-10-15'),
+      }
+    },
+  ]
+});
 
 
 db.class.aggregate([
-  { 
+  {
+    $match: {
+      name: 'десятый класс',
+    },
+  },
+  {
     $lookup: {
       from: 'institution',
       localField: 'institution_id',
@@ -80,16 +153,28 @@ db.class.aggregate([
       as: 'institution',
     },
   },
-]);
-
-
-db.schedule.aggregate([
   {
     $lookup: {
-      from: 'class',
-      localField: 'class_id',
-      foreignField: '_id',
-      as: 'class',
+      from: 'schedule',
+      let: {
+        class_id: '$_id',
+      },
+      pipeline: [
+        {
+          $match: {$expr: {$and: [
+            {$eq: ['$class_id', '$$class_id']},
+          ]}},
+        },
+        {
+          $lookup: {
+            from: 'lesson',
+            localField: '_id',
+            foreignField: 'schedule_id',
+            as: 'lessons'
+          },
+        },
+      ],
+      as: 'schedules',
     },
   },
 ]);
@@ -97,32 +182,19 @@ db.schedule.aggregate([
 db.schedule.aggregate([
   {
     $match: {
-      class_id: ObjectId('61502d307129de936b5e7d37'),
-    }
-  },
-]);
-  {
-    $lookup: {
-      from: 'class',
-      localField: 'class_id',
-      foreignField: '_id',
-      as: 'class',
+      'class_id': ObjectId('615d6e4bae312f9bd71d76b4'),
+      'day': 1,
     }
   },
   {
     $lookup: {
       from: 'lesson',
-      localField: 'lesson_ids',
-      foreignField: '_id',
-      as: 'lessons',
-    }
-  },
-  {
-    $lookup: {
-      from: 'lessontime',
-      localField: 'lessons.order',
-      foreignField: '_id',
-      as: 'times',
+      localField: '_id',
+      foreignField: 'schedule_id',
+      as: 'lessons'
     }
   },
 ]);
+
+
+db.lesson.find({'_id': ObjectId('615d7880eeda20e6b6f45b71')});

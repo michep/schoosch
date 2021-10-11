@@ -3,6 +3,7 @@ import 'package:mongo_dart/mongo_dart.dart';
 import 'package:schoosch/data/lesson_model.dart';
 import 'package:schoosch/data/lessontime_model.dart';
 import 'package:schoosch/data/schedule_model.dart';
+import 'package:schoosch/data/weekdata_model.dart';
 import 'package:schoosch/data/weekday_model.dart';
 import 'package:schoosch/data/class_model.dart';
 import 'package:schoosch/data/datasource_interface.dart';
@@ -11,6 +12,7 @@ class MDB extends GetxController implements SchooschDatasource {
   late final Db db;
   final List<WeekdaysModel> _weekdaysCache = [];
   final List<LessontimeModel> _lessontimesCache = [];
+  final List<WeekdataModel> _weekdataCache = [];
 
   @override
   Future<void> init() async {
@@ -18,11 +20,20 @@ class MDB extends GetxController implements SchooschDatasource {
     await db.open();
     await getWeekdayNameModels();
     await getLessontimeModels();
+    await getWeekdataModels();
+  }
+
+  @override
+  Future<void> getWeekdataModels() async {
+    var _weekdata = await db.collection('weekdata').find().toList();
+    for (var _wd in _weekdata) {
+      _weekdataCache.add(WeekdataModel(_wd['_id'].toString(), _wd['start'], _wd['end']));
+    }
   }
 
   @override
   Future<void> getWeekdayNameModels() async {
-    var _weekdays = await db.collection('weekdays').find().toList();
+    var _weekdays = await db.collection('weekday').find().toList();
     for (var _weekday in _weekdays) {
       _weekdaysCache.add(WeekdaysModel(_weekday['_id'].toString(), _weekday['name']));
     }
@@ -37,6 +48,11 @@ class MDB extends GetxController implements SchooschDatasource {
   }
 
   @override
+  Future<List<WeekdataModel>> getWeekdataModel(DateTime date) async {
+    return _weekdataCache.where((_wd) => _wd.start.isBefore(date) && _wd.end.isAfter(date)).toList();
+  }
+
+  @override
   Future<WeekdaysModel> getWeekdayNameModel(int order) async {
     return _weekdaysCache[order - 1];
   }
@@ -48,7 +64,7 @@ class MDB extends GetxController implements SchooschDatasource {
 
   @override
   Future<List<ClassModel>> getClassesModel() async {
-    return db.collection('class').find().map<ClassModel>((event) => ClassModel.fromMap((event['_id'] as ObjectId).$oid, event)).toList();
+    return db.collection('class').find().map<ClassModel>((_class) => ClassModel.fromMap((_class['_id'] as ObjectId).$oid, _class)).toList();
   }
 
   @override
@@ -56,7 +72,7 @@ class MDB extends GetxController implements SchooschDatasource {
     return db
         .collection('schedule')
         .find({'class_id': classId})
-        .map<ScheduleModel>((event) => ScheduleModel.fromMap(event['_id'].toString(), event))
+        .map<ScheduleModel>((_sched) => ScheduleModel.fromMap((_sched['_id'] as ObjectId).$oid, _sched))
         .toList();
   }
 
@@ -69,7 +85,7 @@ class MDB extends GetxController implements SchooschDatasource {
               Match(Expr(Eq(const Field('class_id'), ObjectId.parse(classId)))),
             )
             .addStage(
-              Lookup(from: 'lesson', localField: 'lesson_ids', foreignField: '_id', as: 'lessons'),
+              Lookup(from: 'lesson', localField: '_id', foreignField: 'schedule_id', as: 'lessons'),
             )
             .build())
         .asyncMap<ScheduleModel>((_sched) async {
@@ -79,7 +95,7 @@ class MDB extends GetxController implements SchooschDatasource {
         var _time = await getLessontimeModel(_sched['day']);
         Map<String, dynamic> _tm = {'timeFrom': _time.from, 'timeTill': _time.till};
         _tm.addAll(_less);
-        _lessmods.add(LessonModel.fromMap(_less['_id'].toString(), _tm));
+        _lessmods.add(LessonModel.fromMap((_less['_id'] as ObjectId).$oid, _tm));
       }
       return ScheduleModel.fromMap(
         _sched['_id'].toString(),
@@ -90,8 +106,7 @@ class MDB extends GetxController implements SchooschDatasource {
   }
 
   @override
-  Future<void> updateLesson(LessonModel lesson) {
-    // TODO: implement updateLesson
-    throw UnimplementedError();
+  Future<void> updateLesson(LessonModel lesson) async {
+    db.collection('lesson').updateOne({'_id': ObjectId.parse(lesson.id)}, modify.set('ready', lesson.ready));
   }
 }

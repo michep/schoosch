@@ -6,9 +6,9 @@ import 'package:schoosch/data/lessontime_model.dart';
 import 'package:schoosch/data/schedule_model.dart';
 import 'package:schoosch/data/weekday_model.dart';
 import 'package:schoosch/data/class_model.dart';
-import 'package:schoosch/data/datasource_interface.dart';
 
-class FS extends GetxController implements SchooschDatasource {
+// class FS extends GetxController implements SchooschDatasource {
+class FS extends GetxController {
   late final FirebaseFirestore _store;
   late final FirebaseFirestore _cachedStore;
   final List<WeekdaysModel> _weekdaysCache = [];
@@ -22,13 +22,11 @@ class FS extends GetxController implements SchooschDatasource {
     _cachedStore.settings = const Settings(persistenceEnabled: true);
   }
 
-  @override
   Future<void> init() async {
     await getWeekdayNameModels();
     await getLessontimeModels();
   }
 
-  @override
   Future<void> getWeekdayNameModels() async {
     var _weekdays = await _cachedStore.collection('weekdays').get();
     for (var _weekday in _weekdays.docs) {
@@ -36,7 +34,6 @@ class FS extends GetxController implements SchooschDatasource {
     }
   }
 
-  @override
   Future<void> getLessontimeModels() async {
     var _lessontimes = await _cachedStore.collection('lessonTime').get();
     for (var _lessontime in _lessontimes.docs) {
@@ -44,17 +41,14 @@ class FS extends GetxController implements SchooschDatasource {
     }
   }
 
-  @override
   Future<WeekdaysModel> getWeekdayNameModel(int order) async {
     return _weekdaysCache[order - 1];
   }
 
-  @override
   Future<LessontimeModel> getLessontimeModel(int order) async {
     return _lessontimesCache[order - 1];
   }
 
-  @override
   Future<List<ClassModel>> getClassesModel() {
     return Future(() async => (await _store.collection('class').get())
         .docs
@@ -67,7 +61,6 @@ class FS extends GetxController implements SchooschDatasource {
         .toList());
   }
 
-  @override
   Future<List<ScheduleModel>> getSchedulesModel(String classId) {
     return Future(() async => (await _store.collection('class').doc(classId).collection('schedule').orderBy('day').get())
         .docs
@@ -80,7 +73,6 @@ class FS extends GetxController implements SchooschDatasource {
         .toList());
   }
 
-  @override
   Future<List<ScheduleModel>> getSchedulesWithLessonsModel(String classId) {
     return Future(() async {
       List<ScheduleModel> _schedmods = [];
@@ -108,7 +100,6 @@ class FS extends GetxController implements SchooschDatasource {
     });
   }
 
-  @override
   Future<void> updateLesson(LessonModel lesson) async {
     // await lesson.ref.update(lesson.toMap());
     return;
