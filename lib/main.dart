@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
-// import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/data/datasource_interface.dart';
-import 'package:schoosch/data/mongo.dart';
-import 'package:schoosch/views/class_selection.dart';
+import 'package:schoosch/data/fireauth.dart';
+import 'package:schoosch/data/data_model.dart';
+import 'package:schoosch/views/login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
-  // await FS.instance.init();
-  await Get.putAsync<SchooschDatasource>(
+  await Firebase.initializeApp();
+  await Get.putAsync<DataModel>(
     () async {
-      var fs = MDB();
-      await fs.init();
-      return fs;
+      var data = DataModel.empty();
+      await data.init();
+      return data;
     },
+    permanent: true,
+  );
+  Get.put<FAuth>(
+    FAuth(),
     permanent: true,
   );
   runApp(const MyApp());
@@ -30,7 +33,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ClassSelection(),
+      home: const LoginPage(),
     );
   }
 }

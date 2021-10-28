@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:schoosch/data/class_model.dart';
-import 'package:schoosch/data/datasource_interface.dart';
 import 'package:schoosch/data/schedule_model.dart';
 import 'package:schoosch/widgets/class_scedule_tile.dart';
 import 'package:schoosch/widgets/week_selector.dart';
@@ -12,7 +10,6 @@ class ClassSchedule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fs = Get.find<SchooschDatasource>();
     return Scaffold(
       appBar: AppBar(
         title: Text(_class.name),
@@ -23,7 +20,7 @@ class ClassSchedule extends StatelessWidget {
             const WeekSelector(),
             Expanded(
               child: FutureBuilder<List<ScheduleModel>>(
-                  future: fs.getSchedulesWithLessonsModel(_class.id),
+                  future: _class.schedule,
                   builder: (context, snapshot) {
                     return snapshot.hasData
                         ? SingleChildScrollView(

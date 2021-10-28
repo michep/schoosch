@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 @immutable
 class LessontimeModel {
-  final String order;
+  final String id;
+  final int order;
   final String from;
   final String till;
 
   const LessontimeModel(
+    this.id,
     this.order,
     this.from,
     this.till,
@@ -15,7 +17,8 @@ class LessontimeModel {
   LessontimeModel.fromMap(String id, Map<String, Object?> map)
       : this(
           id,
-          map['from']! as String,
-          map['to']! as String,
+          map['order'] as int,
+          map['from'] as String,
+          map['till'] as String,
         );
 }

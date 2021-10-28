@@ -1,41 +1,33 @@
+import 'package:schoosch/data/curriculum_model.dart';
+import 'package:schoosch/data/lessontime_model.dart';
+import 'package:schoosch/data/venue_model.dart';
+
 class LessonModel {
-  // final DocumentReference ref;
   final String id;
-  final String name;
-  final int order;
-  final String venue;
-  final String timeFrom;
-  final String timeTill;
+  final CurriculumModel curriculum;
+  final VenueModel venue;
+  final LessontimeModel lessontime;
   bool ready;
 
   LessonModel(
-    // this.ref,
     this.id,
-    this.name,
-    this.order,
-    this.venue, [
-    this.timeFrom = '',
-    this.timeTill = '',
+    this.curriculum,
+    this.venue,
+    this.lessontime, [
     this.ready = false,
   ]);
 
-  LessonModel.fromMap(String id, Map<String, Object?> map)
+  LessonModel.fromMap(String id, Map<String, Object?> map, CurriculumModel curriculum, VenueModel venue, LessontimeModel lessontime)
       : this(
-          // ref,
           id,
-          map['name']! as String,
-          map['order']! as int,
-          map['venue']! as String,
-          map['timeFrom']! as String,
-          map['timeTill']! as String,
+          curriculum,
+          venue,
+          lessontime,
           map['ready'] != null ? map['ready'] as bool : false,
         );
 
   Map<String, dynamic> toMap() {
     return {
-      'name': name,
-      'order': order,
-      'venue': venue,
       'ready': ready,
     };
   }

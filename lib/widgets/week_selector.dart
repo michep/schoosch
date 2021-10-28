@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:schoosch/data/datasource_interface.dart';
-import 'package:schoosch/data/weekdata_model.dart';
+import 'package:schoosch/data/firestore.dart';
+import 'package:schoosch/data/yearweek_model.dart';
 
 class WeekSelector extends StatefulWidget {
   const WeekSelector({Key? key}) : super(key: key);
@@ -16,7 +16,7 @@ class _WeekSelectorState extends State<WeekSelector> {
 
   @override
   Widget build(BuildContext context) {
-    final fs = Get.find<SchooschDatasource>();
+    final fs = Get.find<FStore>();
     return Padding(
       padding: const EdgeInsets.only(left: 15.0),
       child: Row(
@@ -29,8 +29,8 @@ class _WeekSelectorState extends State<WeekSelector> {
             'Неделя: ',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          FutureBuilder<List<WeekdataModel>>(
-              future: fs.getWeekdataModel(DateTime.now()),
+          FutureBuilder<List<YearweekModel>>(
+              future: fs.getYearweekModel(DateTime.now()),
               builder: (context, snapshot) {
                 return snapshot.hasData
                     ? Text(

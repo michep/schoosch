@@ -1,0 +1,37 @@
+institution:
+  - name: 'Какая-то школа'
+    address: 'Где-то'
+    inn: 'какой-то'
+    _subcollections:
+      attributes:
+        - name: 'тырыпыры'
+          value: 'тратата'
+
+      class:
+        - name: 'Ну какой-то класс'
+          grade: 5
+
+      people:
+        - firstname: 'Сергей'
+          middlename: 'Сергеевич'
+          lastname: 'Сергеев'
+          type: 'teacher'
+          birtday: 1965-01-01 00:00:00
+          email: sergey@email.addr
+          uid:
+        - firstname: 'Иван'
+          middlename: 'Иванович'
+          lastname: 'Иванов'
+          type: 'student'
+          birtday: 2005-01-01 00:00:00
+          email: ivan@email.addr
+          uid:
+          class_id: '$query|/institution/[name=Какая-то школа]/class/[name=Ну какой-то класс]/[_id]'
+        - firstname: 'Петр'
+          middlename: 'Петрович'
+          lastname: 'Петров'
+          type: 'student'
+          birtday: 2010-01-01 00:00:00
+          email: pert@email.addr
+          uid:
+          class_id: '$query|/institution/[name=Какая-то школа]/class/[name=Ну какой-то класс]/[_id]'

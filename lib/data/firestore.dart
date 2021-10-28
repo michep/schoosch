@@ -6,15 +6,16 @@ import 'package:schoosch/data/lessontime_model.dart';
 import 'package:schoosch/data/schedule_model.dart';
 import 'package:schoosch/data/weekday_model.dart';
 import 'package:schoosch/data/class_model.dart';
+import 'package:schoosch/data/yearweek_model.dart';
 
-// class FS extends GetxController implements SchooschDatasource {
-class FS extends GetxController {
+class FStore extends GetxController {
   late final FirebaseFirestore _store;
   late final FirebaseFirestore _cachedStore;
   final List<WeekdaysModel> _weekdaysCache = [];
   final List<LessontimeModel> _lessontimesCache = [];
+  final List<YearweekModel> _yearweekCache = [];
 
-  FS() {
+  FStore() {
     FirebaseFirestore.instance.clearPersistence();
     _store = FirebaseFirestore.instance;
     _store.settings = const Settings(persistenceEnabled: false);
@@ -25,20 +26,32 @@ class FS extends GetxController {
   Future<void> init() async {
     await getWeekdayNameModels();
     await getLessontimeModels();
+    await getYearweekModels();
   }
 
   Future<void> getWeekdayNameModels() async {
-    var _weekdays = await _cachedStore.collection('weekdays').get();
+    var _weekdays = await _cachedStore.collection('weekday').get();
     for (var _weekday in _weekdays.docs) {
-      _weekdaysCache.add(WeekdaysModel(_weekday.id, _weekday.get('name')));
+      _weekdaysCache.add(WeekdaysModel.fromMap(_weekday.id, _weekday.data()));
     }
   }
 
   Future<void> getLessontimeModels() async {
-    var _lessontimes = await _cachedStore.collection('lessonTime').get();
+    var _lessontimes = await _cachedStore.collection('lessontime').get();
     for (var _lessontime in _lessontimes.docs) {
-      _lessontimesCache.add(LessontimeModel(_lessontime.id, _lessontime.get('from'), _lessontime.get('to')));
+      _lessontimesCache.add(LessontimeModel.fromMap(_lessontime.id, _lessontime.data()));
     }
+  }
+
+  Future<void> getYearweekModels() async {
+    var _yearweeks = await _cachedStore.collection('yearweek').get();
+    for (var _yearweek in _yearweeks.docs) {
+      _yearweekCache.add(YearweekModel.fromMap(_yearweek.id, _yearweek.data()));
+    }
+  }
+
+  Future<List<YearweekModel>> getYearweekModel(DateTime date) async {
+    return _yearweekCache.where((_yw) => _yw.start.isBefore(date) && _yw.end.isAfter(date)).toList();
   }
 
   Future<WeekdaysModel> getWeekdayNameModel(int order) async {
@@ -53,7 +66,7 @@ class FS extends GetxController {
     return Future(() async => (await _store.collection('class').get())
         .docs
         .map(
-          (_class) => ClassModel.fromMap(
+          (_class) => ClassModel.fromMapOld(
             _class.id,
             _class.data(),
           ),

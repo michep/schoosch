@@ -1,0 +1,270 @@
+institution:
+  - name: 'Гимназия им. Пастернака'
+    address: 'Московская область'
+    inn: '789789789'
+    _subcollections:
+      attributes:
+        - name: 'тырыпыры'
+          value: 'тратата'
+
+      venue:
+        - name: 'Спортзал'
+        - name: '202'
+        - name: '204'
+        - name: '205'
+        - name: '207'
+        - name: '208'
+        - name: '211'
+        - name: '511'
+        - name: 'unknown'
+
+      curriculum:
+        - name: 'Алгебра классы 10-11'
+          alias: 'Алгебра'
+          master_id: '$query|/institution/[name=Гимназия им. Пастернака]/people/[firstname=Мария&&middlename=Ивановна&&lastname=Семенова]/[_id]'
+        - name: 'Алгебра классы 5-9'
+          alias: 'Алгебра'
+          master_id: '$query|/institution/[name=Гимназия им. Пастернака]/people/[firstname=Мария&&middlename=Ивановна&&lastname=Семенова]/[_id]'
+        - name: 'Алгебра классы 1-4'
+          alias: 'Алгебра'
+          master_id:
+        - name: 'Английский язык, старшие классы'
+          alias: 'Английский язык'
+          master_id:
+        - name: 'Английский язык (Ричардсон) классы 10-11'
+          master_id:
+        - name: 'География'
+          master_id:
+        - name: 'Физкультура'
+          master_id:
+        - name: 'Французский язык'
+          alias: 'Второй иностранный язык'
+          master_id:
+        - name: 'Немецкий язык'
+          alias: 'Второй иностранный язык'
+          master_id:
+        - name: 'Биология'
+          master_id:
+        - name: 'Литература'
+          master_id:
+        - name: 'Физика'
+          master_id:
+        - name: 'Международная художественная культура'
+          alias: 'МХК'
+          master_id:
+        - name: 'История'
+          master_id:
+        - name: 'Обществознание'
+          master_id:
+        - name: 'Химия'
+          master_id:
+        - name: 'Геометрия'
+          master_id:
+        - name: 'Математика (электив)'
+          master_id:
+        - name: 'Урок мужества'
+          master_id:
+        - name: 'Обществознание (электив)'
+          master_id:
+        - name: 'Основы проектирования'
+          master_id:
+        - name: 'Русский язык'
+          master_id:
+        - name: 'Основы безопасности жизнедеятельности'
+          alias: 'ОБЖ'
+          master_id:
+        - name: 'Астрономия'
+          master_id:
+
+      studygroup:
+        - name: Второй иностранный - французский
+          people_ids:
+            - $query|/institution/[name=Гимназия им. Пастернака]/people/[firstname=Степан&&middlename=Михайлович&&lastname=Чепайкин]/[_id]'
+
+        - name: Второй иностранный - немецкий
+          people_ids:
+            - $query|/institution/[name=Гимназия им. Пастернака]/people/[firstname=Петр&&middlename=Петрович&&lastname=Петров]/[_id]'
+
+      class:
+        - name: 'Десятый класс'
+          grade: 10
+          master_id: '$query|/institution/[name=Гимназия им. Пастернака]/people/[firstname=Мария&&middlename=Ивановна&&lastname=Семенова]/[_id]'
+          _subcollections:
+            schedule:
+              - day: 1
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Алгебра классы 10-11]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Алгебра классы 10-11]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 3
+                      curriculum_id': '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык, старшие классы]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 4
+                      curriculum_id': '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык, старшие классы]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 5
+                      curriculum_id': '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=География]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 6
+                      curriculum_id': '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык (Ричардсон)]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 7
+                      curriculum_id': '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Физкультура]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=Спортзал]/[_id]'
+                    - order: 8
+                      curriculum_id': '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Физкультура]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=Спортзал]/[_id]'
+
+              - day: 2
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Французский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=204]/[_id]'
+                      studygroup_id: '$query|/institution/[name=Гимназия им. Пастернака]/studygroup/[name=Второй иностранный - французский]/[_id]'
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Немецкий язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=205]/[_id]'
+                      studygroup_id: '$query|/institution/[name=Гимназия им. Пастернака]/studygroup/[name=Второй иностранный - немецкий]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Биология]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=205]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Литература]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=202]/[_id]'
+                    - order: 4
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Литература]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=202]/[_id]'
+                    - order: 5
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Физика]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 6
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Международная художественная культура]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=205]/[_id]'
+                    - order: 7
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=История]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=204]/[_id]'
+
+              - day: 3
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык, старшие классы]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык, старшие классы]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Алгебра классы 10-11]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 4
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Обществознание]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 5
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Обществознание]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 6
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Химия]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=205]/[_id]'
+                    - order: 7
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Геометрия]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=208]/[_id]'
+                    - order: 8
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Математика (электив)]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 9
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Обществознание (электив)]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 10
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Обществознание (электив)]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+
+              - day: 4
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Физика]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Биология]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=205]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=207]/[_id]'
+                    - order: 4
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=207]/[_id]'
+                    - order: 5
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Французский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=204]/[_id]'
+                      studygroup_id: '$query|/institution/[name=Гимназия им. Пастернака]/studygroup/[name=Второй иностранный - французский]/[_id]'
+                    - order: 5
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Немецкий язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=205]/[_id]'
+                      studygroup_id: '$query|/institution/[name=Гимназия им. Пастернака]/studygroup/[name=Второй иностранный - немецкий]/[_id]'
+                    - order: 6
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Основы безопасности жизнедеятельности]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=207]/[_id]'
+                    - order: 7
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Астрономия]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+
+              - day: 5
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык, старшие классы]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык, старшие классы]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Урок мужества]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=unknown]/[_id]'
+                    - order: 4
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Урок мужества]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=unknown]/[_id]'
+                    - order: 5
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык (Ричардсон) классы 10-11]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
+                    - order: 6
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Физкультура]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=Спортзал]/[_id]'
+                    - order: 7
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Основы проектирования]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=511]/[_id]'
+                    - order: 8
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Основы проектирования]/[_id]'
+                      venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=511]/[_id]'
+
+        - name: 'Седьмой класс'
+          grade: 7
+          master_id:
+          _subcollections:
+            schedule:
+
+      people:
+        - firstname: 'Мария'
+          middlename: 'Ивановна'
+          lastname: 'Семенова'
+          type: 'teacher'
+          birtday: 1970-01-01 00:00:00
+          uid:
+        - firstname: 'Степан'
+          middlename: 'Михайлович'
+          lastname: 'Чепайкин'
+          type: 'student'
+          birtday: 2005-04-26 00:00:00
+          uid:
+          class_id:
+        - firstname: 'Петр'
+          middlename: 'Петрович'
+          lastname: 'Петров'
+          type: 'student'
+          birtday: 2005-04-26 00:00:00
+          uid:
+          class_id:

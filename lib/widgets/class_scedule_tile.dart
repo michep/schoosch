@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/data/datasource_interface.dart';
+import 'package:schoosch/data/firestore.dart';
 import 'package:schoosch/data/schedule_model.dart';
 import 'package:schoosch/data/weekday_model.dart';
 import 'package:schoosch/widgets/lesson_list_tile.dart';
@@ -12,7 +12,7 @@ class ClassScheduleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fs = Get.find<SchooschDatasource>();
+    final fs = Get.find<FStore>();
     return ExpansionTile(
       title: FutureBuilder<WeekdaysModel>(
         future: fs.getWeekdayNameModel(_schedule.day),

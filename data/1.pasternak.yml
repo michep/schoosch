@@ -1,0 +1,124 @@
+institution:
+  - name: 'Гимназия им. Пастернака'
+    address: 'Московская область'
+    inn: '789789789'
+    _subcollections:
+      attributes:
+        - name: 'тырыпыры'
+          value: 'тратата'
+
+      venue:
+        - name: 'Спортзал'
+        - name: '202'
+        - name: '204'
+        - name: '205'
+        - name: '207'
+        - name: '208'
+        - name: '211'
+        - name: '511'
+        - name: 'unknown'
+
+      class:
+        - name: 'Первый класс'
+          grade: 1
+
+        - name: 'Второй класс'
+          grade: 2
+
+        - name: 'Третий класс'
+          grade: 3
+
+        - name: 'Четвертый класс'
+          grade: 4
+
+        - name: 'Пятый класс'
+          grade: 5
+
+        - name: 'Шестой класс'
+          grade: 6
+
+        - name: 'Седьмой класс'
+          grade: 7
+
+        - name: 'Восьмой класс'
+          grade: 8
+
+        - name: 'Еще один 8 класс'
+          grade: 8
+
+        - name: 'Девятый класс'
+          grade: 9
+
+        - name: 'Десятый класс'
+          grade: 10
+
+        - name: '11 класс'
+          grade: 11
+
+      people:
+        - firstname: 'Мария'
+          middlename: 'Ивановна'
+          lastname: 'Семенова'
+          type: 'teacher'
+          birtday: 1965-01-01 00:00:00
+          email: 
+          uid:
+        - firstname: 'Степан'
+          middlename: 'Михайлович'
+          lastname: 'Чепайкин'
+          type: 'student'
+          birtday: 2005-04-26 00:00:00
+          email: 
+          uid:
+          class_id: '$query|/institution/[name=Гимназия им. Пастернака]/class/[name=Десятый класс]/[_id]'
+        - firstname: 'Петр'
+          middlename: 'Петрович'
+          lastname: 'Петров'
+          type: 'student'
+          birtday: 2010-07-23 00:00:00
+          email: 
+          uid:
+          class_id: '$query|/institution/[name=Гимназия им. Пастернака]/class/[name=Еще один 8 класс]/[_id]'
+
+      studygroup:
+        - name: 'Второй иностранный - французский'
+          people_ids:
+            - '$query|/institution/[name=Гимназия им. Пастернака]/people/[firstname=Степан&&middlename=Михайлович&&lastname=Чепайкин]/[_id]'
+        - name: 'Второй иностранный - немецкий'
+          people_ids:
+            - '$query|/institution/[name=Гимназия им. Пастернака]/people/[firstname=Петр&&middlename=Петрович&&lastname=Петров]/[_id]'
+
+      curriculum:
+        - name: 'Алгебра классы 10-11'
+          alias: 'Алгебра'
+          master_id: '$query|/institution/[name=Гимназия им. Пастернака]/people/[firstname=Мария&&middlename=Ивановна&&lastname=Семенова]/[_id]'
+        - name: 'Алгебра классы 5-9'
+          alias: 'Алгебра'
+        - name: 'Алгебра классы 1-4'
+          alias: 'Алгебра'
+        - name: 'Английский язык, старшие классы'
+          alias: 'Английский язык'
+        - name: 'Английский язык (Ричардсон) классы 10-11'
+        - name: 'География'
+        - name: 'Физкультура'
+        - name: 'Французский язык'
+          alias: 'Второй иностранный язык'
+        - name: 'Немецкий язык'
+          alias: 'Второй иностранный язык'
+        - name: 'Биология'
+        - name: 'Литература'
+        - name: 'Физика'
+        - name: 'Международная художественная культура'
+          alias: 'МХК'
+        - name: 'История'
+        - name: 'Обществознание'
+        - name: 'Химия'
+        - name: 'Геометрия'
+        - name: 'Математика (электив)'
+        - name: 'Урок мужества'
+        - name: 'Обществознание (электив)'
+        - name: 'Основы проектирования'
+        - name: 'Русский язык'
+        - name: 'Основы безопасности жизнедеятельности'
+          alias: 'ОБЖ'
+        - name: 'Астрономия'
