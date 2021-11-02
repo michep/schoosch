@@ -1,23 +1,35 @@
+import 'package:get/get.dart';
+import 'package:schoosch/data/fire_store.dart';
 import 'package:schoosch/data/people_model.dart';
 
 class CurriculumModel {
-  final String id;
-  final String name;
-  final String? alias;
-  final PeopleModel? master;
+  final String _id;
+  final String _name;
+  final String? _alias;
+  PeopleModel? _master;
+  String? _masterId;
 
   CurriculumModel(
-    this.id,
-    this.name,
-    this.alias,
-    this.master,
+    this._id,
+    this._name,
+    this._alias,
   );
 
-  CurriculumModel.fromMap(String id, Map<String, Object?> map, PeopleModel? master)
+  String get id => _id;
+  String get name => _alias ?? _name;
+
+  Future<PeopleModel> get master async {
+    if (_master == null && _masterId != null) {
+      var store = Get.find<FStore>();
+      _master = await store.getPeopleModel(_masterId!);
+    }
+    return _master!;
+  }
+
+  CurriculumModel.fromMap(String id, Map<String, dynamic> map)
       : this(
           id,
-          map['name'] as String,
+          map['name'] != null ? map['name'] as String : '',
           map['alias'] != null ? map['alias'] as String : null,
-          master,
         );
 }

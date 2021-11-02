@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-@immutable
 class YearweekModel {
   final String id;
   final int order;
-  final DateTime start;
-  final DateTime end;
+  final DateTime? start;
+  final DateTime? end;
 
   const YearweekModel(
     this.id,
@@ -17,8 +16,8 @@ class YearweekModel {
   YearweekModel.fromMap(String id, Map<String, Object?> map)
       : this(
           id,
-          map['order'] as int,
-          map['start'] as DateTime,
-          map['end'] as DateTime,
+          map['order'] != null ? map['order'] as int : -1,
+          map['start'] != null ? DateTime.fromMillisecondsSinceEpoch((map['start'] as Timestamp).millisecondsSinceEpoch) : null,
+          map['end'] != null ? DateTime.fromMillisecondsSinceEpoch((map['end'] as Timestamp).millisecondsSinceEpoch) : null,
         );
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:schoosch/data/class_model.dart';
 import 'package:schoosch/data/schedule_model.dart';
 import 'package:schoosch/widgets/class_scedule_tile.dart';
-import 'package:schoosch/widgets/week_selector.dart';
+// import 'package:schoosch/widgets/week_selector.dart';
 
 class ClassSchedule extends StatelessWidget {
   final ClassModel _class;
@@ -17,16 +17,16 @@ class ClassSchedule extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const WeekSelector(),
+            // const WeekSelector(),
             Expanded(
               child: FutureBuilder<List<ScheduleModel>>(
                   future: _class.schedule,
-                  builder: (context, snapshot) {
-                    return snapshot.hasData
+                  builder: (context, schedules) {
+                    return schedules.hasData
                         ? SingleChildScrollView(
                             child: Column(
                               children: [
-                                ...snapshot.data!.map((schedule) => ClassScheduleTile(schedule)),
+                                ...schedules.data!.map((schedule) => ClassScheduleTile(schedule)),
                               ],
                             ),
                           )

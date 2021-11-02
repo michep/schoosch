@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/data/firestore.dart';
+import 'package:schoosch/data/curriculum_model.dart';
+import 'package:schoosch/data/fire_store.dart';
 import 'package:schoosch/data/lesson_model.dart';
+import 'package:schoosch/data/lessontime_model.dart';
+import 'package:schoosch/data/venue_model.dart';
 
 class LessonListTile extends StatefulWidget {
   final LessonModel _lesson;
@@ -16,10 +19,25 @@ class _LessonListTileState extends State<LessonListTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Text(widget._lesson.id),
-      title: Text(widget._lesson.curriculum.name),
-      trailing: Text(widget._lesson.venue.name),
-      subtitle: Text('${widget._lesson.lessontime.from} - ${widget._lesson.lessontime.till}'),
+      leading: Text(widget._lesson.order.toString()),
+      title: FutureBuilder<CurriculumModel>(
+          future: widget._lesson.curriculum,
+          builder: (context, curriculum) {
+            return curriculum.hasData ? Text(curriculum.data!.name) : const Text('');
+          }),
+      trailing: FutureBuilder<VenueModel>(
+          future: widget._lesson.venue,
+          builder: (context, venue) {
+            return venue.hasData ? Text(venue.data!.name) : const Text('');
+          }),
+      subtitle: FutureBuilder<LessontimeModel>(
+          future: widget._lesson.lessontime,
+          builder: (context, lessontime) {
+            return lessontime.hasData
+                ? Text(
+                    '${lessontime.data!.from.hour}:${lessontime.data!.from.minute} \u2014 ${lessontime.data!.till.hour}:${lessontime.data!.till.minute}')
+                : const Text('');
+          }),
       selected: widget._lesson.ready,
       selectedTileColor: Colors.green.shade100,
       onLongPress: _onLongPress,

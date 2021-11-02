@@ -19,22 +19,22 @@ institution:
                       curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Алгебра классы 10-11]/[_id]'
                       venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
                     - order: 3
-                      curriculum_id': '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык, старшие классы]/[_id]'
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык, старшие классы]/[_id]'
                       venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
                     - order: 4
-                      curriculum_id': '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык, старшие классы]/[_id]'
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык, старшие классы]/[_id]'
                       venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
                     - order: 5
-                      curriculum_id': '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=География]/[_id]'
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=География]/[_id]'
                       venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
                     - order: 6
-                      curriculum_id': '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык (Ричардсон) классы 10-11]/[_id]'
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Английский язык (Ричардсон) классы 10-11]/[_id]'
                       venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=211]/[_id]'
                     - order: 7
-                      curriculum_id': '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Физкультура]/[_id]'
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Физкультура]/[_id]'
                       venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=Спортзал]/[_id]'
                     - order: 8
-                      curriculum_id': '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Физкультура]/[_id]'
+                      curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Физкультура]/[_id]'
                       venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=Спортзал]/[_id]'
 
               - day: 2

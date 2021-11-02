@@ -10,6 +10,6 @@ class VenueModel {
   VenueModel.fromMap(String id, Map<String, Object?> map)
       : this(
           id,
-          map['name'] as String,
+          map['name'] != null ? map['name'] as String : '',
         );
 }

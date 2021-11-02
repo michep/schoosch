@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/data/class_model.dart';
-import 'package:schoosch/data/data_model.dart';
+import 'package:schoosch/data/fire_store.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/class_list_tile.dart';
 
 class ClassSelection extends StatelessWidget {
@@ -9,14 +10,12 @@ class ClassSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final data = Get.find<DataModel>();
+    final data = Get.find<FStore>();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Выбор класса'),
-      ),
+      appBar: const MAppBar('Выбор класса'),
       body: SafeArea(
         child: FutureBuilder<List<ClassModel>>(
-          future: data.learningclass,
+          future: data.getClassesModel(),
           builder: (context, snapshot) {
             return snapshot.hasData
                 ? ListView(

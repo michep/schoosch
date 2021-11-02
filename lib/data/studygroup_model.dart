@@ -1,20 +1,18 @@
-import 'package:schoosch/data/people_model.dart';
-
 class StudyGroupModel {
   final String id;
   final String name;
-  final List<PeopleModel> people;
+  final List<String>? peopleIds;
 
   StudyGroupModel(
     this.id,
     this.name,
-    this.people,
+    this.peopleIds,
   );
 
-  StudyGroupModel.fromMap(String id, Map<String, Object?> map, List<PeopleModel> people)
+  StudyGroupModel.fromMap(String id, Map<String, Object?> map)
       : this(
           id,
-          map['name'] as String,
-          people,
+          map['name'] != null ? map['name'] as String : '',
+          map['people_ids'] != null ? map['people_ids'] as List<String> : [],
         );
 }

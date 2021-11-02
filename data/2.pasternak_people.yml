@@ -1,0 +1,38 @@
+institution:
+  - _id: '$query|/institution/[name=Гимназия им. Пастернака]/[_id]'
+    _subcollections:
+      people:
+        - firstname: 'Мария'
+          middlename: 'Ивановна'
+          lastname: 'Семенова'
+          type: 'teacher'
+          birtday: 1965-01-01 00:00:00
+          email: 
+
+        - firstname: 'Степан'
+          middlename: 'Михайлович'
+          lastname: 'Чепайкин'
+          type: 'student'
+          birtday: 2005-04-26 00:00:00
+          email: 'stechep@mail.ru'
+
+        - firstname: 'Петр'
+          middlename: 'Петрович'
+          lastname: 'Петров'
+          type: 'student'
+          birtday: 2010-07-23 00:00:00
+          email: 
+
+        - firstname: 'Михаил'
+          middlename: 'Александрович'
+          lastname: 'Учитель'
+          type: 'teacher'
+          birtday: 1978-08-01 00:00:00
+          email: 'mchepaykin@gmail.com'
+
+        - firstname: 'Михаил'
+          middlename: 'Александрович'
+          lastname: 'Ученик'
+          type: 'student'
+          birtday: 1978-08-01 00:00:00
+          email: 'michep@mail.ru'

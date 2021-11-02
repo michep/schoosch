@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:schoosch/data/firestore.dart';
+import 'package:schoosch/data/fire_store.dart';
 import 'package:schoosch/data/yearweek_model.dart';
 
 class WeekSelector extends StatefulWidget {
@@ -34,7 +34,7 @@ class _WeekSelectorState extends State<WeekSelector> {
               builder: (context, snapshot) {
                 return snapshot.hasData
                     ? Text(
-                        '${DateFormat('dd MMM yy').format(snapshot.data![0].start)} \u2014 ${DateFormat('dd MMM yy').format(snapshot.data![0].end)}')
+                        '${DateFormat('dd MMM yy').format(snapshot.data![0].start!)} \u2014 ${DateFormat('dd MMM yy').format(snapshot.data![0].end!)}')
                     : const Center(
                         child: CircularProgressIndicator(),
                       );

@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-
-@immutable
 class WeekdaysModel {
   final String id;
   final int order;
@@ -15,7 +12,7 @@ class WeekdaysModel {
   WeekdaysModel.fromMap(String id, Map<String, Object?> map)
       : this(
           id,
-          map['order'] as int,
-          map['name'] as String,
+          map['order'] != null ? map['order'] as int : -1,
+          map['name'] != null ? map['name'] as String : '',
         );
 }

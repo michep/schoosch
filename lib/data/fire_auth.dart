@@ -3,12 +3,9 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FAuth extends GetxController {
-  late final FirebaseAuth _auth;
+  late final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  FAuth() {
-    _auth = FirebaseAuth.instance;
-    print(_auth.currentUser);
-  }
+  User? get currentUser => _auth.currentUser;
 
   Future<UserCredential?> signInWithGoogle() async {
     GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -24,8 +21,12 @@ class FAuth extends GetxController {
     }
   }
 
-  Future<UserCredential?> signInWithEmail() async {
-    final credential = await _auth.signInWithEmailAndPassword(email: 'michep@mail.ru', password: '123123123');
+  Future<UserCredential?> signInWithEmail(String email, String password) async {
+    final credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
     return credential;
+  }
+
+  Future<void> logout() {
+    return _auth.signOut();
   }
 }
