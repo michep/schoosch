@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:schoosch/data/class_model.dart';
 import 'package:schoosch/data/schedule_model.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/class_scedule_tile.dart';
 // import 'package:schoosch/widgets/week_selector.dart';
 
@@ -11,9 +12,7 @@ class ClassSchedule extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_class.name),
-      ),
+      appBar: MAppBar(_class.name),
       body: SafeArea(
         child: Column(
           children: [

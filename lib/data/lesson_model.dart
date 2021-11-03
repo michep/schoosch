@@ -18,6 +18,8 @@ class LessonModel {
 
   String get id => _id;
   int get order => _order;
+  String get scheduleId => _scheduleId;
+  String get classId => _classId;
 
   LessonModel(
     this._classId,

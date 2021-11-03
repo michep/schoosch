@@ -18,7 +18,7 @@ class FStore extends GetxController {
   late final DocumentReference _institutionRef;
   late final PeopleModel _currentUser;
   late final ClassModel _currentClass;
-  DateTime _currentDate = DateTime.now();
+  final DateTime _currentDate = DateTime.now();
 
   final List<WeekdaysModel> _weekdaysCache = [];
   final List<YearweekModel> _yearweekCache = [];
@@ -36,28 +36,28 @@ class FStore extends GetxController {
     _institutionRef = _store.collection('institution').doc(await _geInstitutionIdByUserEmail());
     _currentUser = await _getCurrentUserModel();
     _currentClass = await _getCurrentUserClassModel();
-    await getWeekdayNameModels();
-    await getLessontimeModels();
-    await getYearweekModels();
+    await _getWeekdayNameModels();
+    await _getLessontimeModels();
+    await _getYearweekModels();
   }
 
   PeopleModel get currentUser => _currentUser;
 
-  Future<void> getWeekdayNameModels() async {
+  Future<void> _getWeekdayNameModels() async {
     var _weekdays = await _cachedStore.collection('weekday').orderBy('order').get();
     for (var _weekday in _weekdays.docs) {
       _weekdaysCache.add(WeekdaysModel.fromMap(_weekday.id, _weekday.data()));
     }
   }
 
-  Future<void> getYearweekModels() async {
+  Future<void> _getYearweekModels() async {
     var _yearweeks = await _cachedStore.collection('yearweek').orderBy('order').get();
     for (var _yearweek in _yearweeks.docs) {
       _yearweekCache.add(YearweekModel.fromMap(_yearweek.id, _yearweek.data()));
     }
   }
 
-  Future<void> getLessontimeModels() async {
+  Future<void> _getLessontimeModels() async {
     var _lessontimes = await _institutionRef.collection('lessontime').orderBy('order').get();
     for (var _lessontime in _lessontimes.docs) {
       _lessontimesCache.add(LessontimeModel.fromMap(_lessontime.id, _lessontime.data()));
@@ -86,6 +86,10 @@ class FStore extends GetxController {
           ),
         )
         .toList());
+  }
+
+  Future<List<ClassModel>> getCurrentUserClassModel() async {
+    return [_currentClass];
   }
 
   Future<List<ScheduleModel>> getSchedulesModel(String classId) async {
@@ -138,8 +142,14 @@ class FStore extends GetxController {
   }
 
   Future<void> updateLesson(LessonModel lesson) async {
-    // await lesson.ref.update(lesson.toMap());
-    return;
+    return _institutionRef
+        .collection('class')
+        .doc(lesson.classId)
+        .collection('schedule')
+        .doc(lesson.scheduleId)
+        .collection('lesson')
+        .doc(lesson.id)
+        .update(lesson.toMap());
   }
 
   Future<String> _geInstitutionIdByUserEmail() async {
