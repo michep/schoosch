@@ -34,8 +34,8 @@ class _LessonListTileState extends State<LessonListTile> {
           future: widget._lesson.lessontime,
           builder: (context, lessontime) {
             return lessontime.hasData
-                ? Text(
-                    '${lessontime.data!.from.hour}:${lessontime.data!.from.minute} \u2014 ${lessontime.data!.till.hour}:${lessontime.data!.till.minute}')
+                ? Text('${lessontime.data!.from.hour.toString().padLeft(2, '0')}:${lessontime.data!.from.minute.toString().padLeft(2, '0')}'
+                    '\u2014 ${lessontime.data!.till.hour.toString().padLeft(2, '0')}:${lessontime.data!.till.minute.toString().padLeft(2, '0')}')
                 : const Text('');
           }),
       selected: widget._lesson.ready,

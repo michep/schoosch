@@ -51,14 +51,14 @@ class FStore extends GetxController {
   }
 
   Future<void> getYearweekModels() async {
-    var _yearweeks = await _cachedStore.collection('yearweek').get();
+    var _yearweeks = await _cachedStore.collection('yearweek').orderBy('order').get();
     for (var _yearweek in _yearweeks.docs) {
       _yearweekCache.add(YearweekModel.fromMap(_yearweek.id, _yearweek.data()));
     }
   }
 
   Future<void> getLessontimeModels() async {
-    var _lessontimes = await _institutionRef.collection('lessontime').get();
+    var _lessontimes = await _institutionRef.collection('lessontime').orderBy('order').get();
     for (var _lessontime in _lessontimes.docs) {
       _lessontimesCache.add(LessontimeModel.fromMap(_lessontime.id, _lessontime.data()));
     }
