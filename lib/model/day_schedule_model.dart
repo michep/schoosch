@@ -1,25 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/data/fire_store.dart';
-import 'package:schoosch/data/lesson_model.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/lesson_model.dart';
 
-class ScheduleModel {
+class DayScheduleModel {
   final String _classId;
-  final String _id;
-  final int _day;
-  final DateTime _from;
-  final DateTime _till;
+  final String id;
+  final int day;
+  final DateTime from;
+  final DateTime till;
   List<LessonModel>? _lessons;
 
-  ScheduleModel(
+  DayScheduleModel(
     this._classId,
-    this._id,
-    this._day,
-    this._from,
-    this._till,
+    this.id,
+    this.day,
+    this.from,
+    this.till,
   );
 
-  ScheduleModel.fromMap(String classId, String id, Map<String, Object?> map)
+  DayScheduleModel.fromMap(String classId, String id, Map<String, Object?> map)
       : this(
           classId,
           id,
@@ -28,15 +28,10 @@ class ScheduleModel {
           map['till'] != null ? DateTime.fromMillisecondsSinceEpoch((map['till'] as Timestamp).millisecondsSinceEpoch) : DateTime(3000),
         );
 
-  String get id => _id;
-  int get day => _day;
-  DateTime get from => _from;
-  DateTime get till => _till;
-
-  Future<List<LessonModel>> get lessons async {
+  Future<List<LessonModel>> lessons(int week) async {
     if (_lessons == null) {
       var store = Get.find<FStore>();
-      _lessons = await store.getLessonsModel(_classId, _id);
+      _lessons = await store.getLessonsModel(_classId, id, week);
     }
     return _lessons!;
   }

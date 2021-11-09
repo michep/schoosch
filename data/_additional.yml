@@ -3,7 +3,7 @@ institution:
     _subcollections:
       people:
         - firstname: 'Михаил'
-          middlename: 'Алексендрович'
+          middlename: 'Александрович'
           lastname: 'Чепайкин'
           type: 'student'
           birtday: 1978-08-01 00:00:00

@@ -37,7 +37,7 @@ dependencies:
   mongo_dart: ^0.7.2
   intl: ^0.17.0
   firebase_core: ^1.7.0
-  cloud_firestore: ^2.5.3
+  cloud_firestore: ^3.1.0
   firebase_auth: ^3.1.4
   google_sign_in: ^5.2.0
   flutter_signin_button: ^2.0.0

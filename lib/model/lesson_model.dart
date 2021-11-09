@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
-import 'package:schoosch/data/curriculum_model.dart';
-import 'package:schoosch/data/fire_store.dart';
-import 'package:schoosch/data/lessontime_model.dart';
-import 'package:schoosch/data/venue_model.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/curriculum_model.dart';
+import 'package:schoosch/model/lessontime_model.dart';
+import 'package:schoosch/model/venue_model.dart';
 
 class LessonModel {
-  final String _classId;
-  final String _scheduleId;
-  final String _id;
-  final int _order;
+  final String classId;
+  final String scheduleId;
+  final String id;
+  final int order;
   CurriculumModel? _curriculum;
   String? _curriculumId;
   VenueModel? _venue;
@@ -16,16 +16,11 @@ class LessonModel {
   LessontimeModel? _lessontime;
   bool ready;
 
-  String get id => _id;
-  int get order => _order;
-  String get scheduleId => _scheduleId;
-  String get classId => _classId;
-
   LessonModel(
-    this._classId,
-    this._scheduleId,
-    this._id,
-    this._order,
+    this.classId,
+    this.scheduleId,
+    this.id,
+    this.order,
     this._curriculumId,
     this._venueId,
     this.ready,
@@ -61,7 +56,7 @@ class LessonModel {
   Future<LessontimeModel> get lessontime async {
     if (_lessontime == null) {
       var data = Get.find<FStore>();
-      _lessontime = await data.getLessontimeModel(_order);
+      _lessontime = await data.getLessontimeModel(order);
     }
     return _lessontime!;
   }

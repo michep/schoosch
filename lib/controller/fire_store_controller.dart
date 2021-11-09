@@ -1,30 +1,30 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/data/curriculum_model.dart';
-import 'package:schoosch/data/lesson_model.dart';
-import 'package:schoosch/data/lessontime_model.dart';
-import 'package:schoosch/data/people_model.dart';
-import 'package:schoosch/data/schedule_model.dart';
-import 'package:schoosch/data/venue_model.dart';
-import 'package:schoosch/data/weekday_model.dart';
-import 'package:schoosch/data/class_model.dart';
-import 'package:schoosch/data/yearweek_model.dart';
+import 'package:schoosch/controller/week_controller.dart';
+import 'package:schoosch/model/curriculum_model.dart';
+import 'package:schoosch/model/lesson_model.dart';
+import 'package:schoosch/model/lessontime_model.dart';
+import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/day_schedule_model.dart';
+import 'package:schoosch/model/venue_model.dart';
+import 'package:schoosch/model/weekday_model.dart';
+import 'package:schoosch/model/class_model.dart';
+import 'package:schoosch/model/yearweek_model.dart';
 
 class FStore extends GetxController {
-  final String _email;
   late final FirebaseFirestore _store;
   late final FirebaseFirestore _cachedStore;
   late final DocumentReference _institutionRef;
   late final PeopleModel _currentUser;
   late final ClassModel _currentClass;
-  final DateTime _currentDate = DateTime.now();
+  late YearweekModel _currentWeek;
 
   final List<WeekdaysModel> _weekdaysCache = [];
-  final List<YearweekModel> _yearweekCache = [];
+  final Map<int, YearweekModel> _yearweekCache = {};
   final List<LessontimeModel> _lessontimesCache = [];
 
-  FStore(this._email) {
+  FStore() {
     FirebaseFirestore.instance.clearPersistence();
     _store = FirebaseFirestore.instance;
     _store.settings = const Settings(persistenceEnabled: false);
@@ -32,16 +32,18 @@ class FStore extends GetxController {
     _cachedStore.settings = const Settings(persistenceEnabled: true);
   }
 
-  Future<void> init() async {
-    _institutionRef = _store.collection('institution').doc(await _geInstitutionIdByUserEmail());
-    _currentUser = await _getCurrentUserModel();
+  PeopleModel get currentUser => _currentUser;
+  YearweekModel get currentWeek => _currentWeek;
+
+  Future<void> init(String email) async {
+    _institutionRef = _store.collection('institution').doc(await _geInstitutionIdByUserEmail(email));
+    _currentUser = await _getCurrentUserModel(email);
     _currentClass = await _getCurrentUserClassModel();
     await _getWeekdayNameModels();
     await _getLessontimeModels();
     await _getYearweekModels();
+    _currentWeek = await getYearweekModel(DateTime.now());
   }
-
-  PeopleModel get currentUser => _currentUser;
 
   Future<void> _getWeekdayNameModels() async {
     var _weekdays = await _cachedStore.collection('weekday').orderBy('order').get();
@@ -53,7 +55,8 @@ class FStore extends GetxController {
   Future<void> _getYearweekModels() async {
     var _yearweeks = await _cachedStore.collection('yearweek').orderBy('order').get();
     for (var _yearweek in _yearweeks.docs) {
-      _yearweekCache.add(YearweekModel.fromMap(_yearweek.id, _yearweek.data()));
+      var yw = YearweekModel.fromMap(_yearweek.id, _yearweek.data());
+      _yearweekCache[yw.order] = yw;
     }
   }
 
@@ -64,11 +67,15 @@ class FStore extends GetxController {
     }
   }
 
-  Future<List<YearweekModel>> getYearweekModel(DateTime date) async {
-    return _yearweekCache.where((_yw) => _yw.start!.isBefore(date) && _yw.end!.isAfter(date)).toList();
+  Future<YearweekModel> getYearweekModel(DateTime date) async {
+    return _yearweekCache.values.where((_yw) => _yw.start.isBefore(date) && _yw.end.isAfter(date)).first;
   }
 
   Future<WeekdaysModel> getWeekdayNameModel(int order) async {
+    return _weekdaysCache[order - 1];
+  }
+
+  Future<WeekdaysModel> getWeekdayNameModelWithDate(int order) async {
     return _weekdaysCache[order - 1];
   }
 
@@ -88,26 +95,25 @@ class FStore extends GetxController {
         .toList());
   }
 
-  Future<List<ClassModel>> getCurrentUserClassModel() async {
-    return [_currentClass];
+  Future<ClassModel> getCurrentUserClassModel() async {
+    return _currentClass;
   }
 
-  Future<List<ScheduleModel>> getSchedulesModel(String classId) async {
+  Future<List<DayScheduleModel>> getSchedulesModel(String classId) async {
     return Future(() async => (await _institutionRef.collection('class').doc(classId).collection('schedule').orderBy('day').get())
         .docs
         .map(
-          (_schedule) => ScheduleModel.fromMap(
+          (_schedule) => DayScheduleModel.fromMap(
             classId,
             _schedule.id,
             _schedule.data(),
           ),
         )
-        .toList()
-        .where((s) => s.from.isBefore(_currentDate) && s.till.isAfter(_currentDate))
+        .where((s) => s.from.isBefore(_currentWeek.start) && s.till.isAfter(_currentWeek.end))
         .toList());
   }
 
-  Future<List<LessonModel>> getLessonsModel(String classId, String schedId) async {
+  Future<List<LessonModel>> getLessonsModel(String classId, String schedId, int week) async {
     return Future(() async => (await _institutionRef
             .collection('class')
             .doc(classId)
@@ -152,8 +158,8 @@ class FStore extends GetxController {
         .update(lesson.toMap());
   }
 
-  Future<String> _geInstitutionIdByUserEmail() async {
-    var res = await _store.collectionGroup('people').where('email', isEqualTo: _email).limit(1).get();
+  Future<String> _geInstitutionIdByUserEmail(String email) async {
+    var res = await _store.collectionGroup('people').where('email', isEqualTo: email).limit(1).get();
     if (res.docs.isEmpty) {
       throw 'User with provided email was not found in any Institution';
     }
@@ -165,8 +171,8 @@ class FStore extends GetxController {
     return inst.id;
   }
 
-  Future<PeopleModel> _getCurrentUserModel() async {
-    var res = await _institutionRef.collection('people').where('email', isEqualTo: _email).limit(1).get();
+  Future<PeopleModel> _getCurrentUserModel(String email) async {
+    var res = await _institutionRef.collection('people').where('email', isEqualTo: email).limit(1).get();
     if (res.docs.isEmpty) {
       throw 'User with provided email was not found in current Institution';
     }
@@ -179,5 +185,10 @@ class FStore extends GetxController {
       throw 'Current user is not assigned to any class';
     }
     return ClassModel.fromMap(res.docs[0].id, res.docs[0].data());
+  }
+
+  void changeCurrentWeek(int n) {
+    _currentWeek = _yearweekCache[_currentWeek.order + n] ?? _currentWeek;
+    Get.find<CurrentWeek>().currentWeek = _currentWeek;
   }
 }

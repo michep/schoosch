@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/data/class_model.dart';
-import 'package:schoosch/views/class_schedule_page.dart';
+import 'package:schoosch/model/class_model.dart';
+import 'package:schoosch/views/schedule_page.dart';
 
 class ClassListTile extends StatelessWidget {
   final ClassModel _class;
@@ -20,7 +20,7 @@ class ClassListTile extends StatelessWidget {
       trailing: const SizedBox(
         height: 10,
       ),
-      onTap: () => Get.to(() => ClassSchedule(_class)),
+      onTap: () => Get.to(() => SchedulePage(_class)),
     );
   }
 }

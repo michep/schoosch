@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:schoosch/data/fire_store.dart';
-import 'package:schoosch/data/yearweek_model.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
 
 class WeekSelector extends StatefulWidget {
   const WeekSelector({Key? key}) : super(key: key);
@@ -17,34 +16,36 @@ class _WeekSelectorState extends State<WeekSelector> {
   @override
   Widget build(BuildContext context) {
     final fs = Get.find<FStore>();
-    return Padding(
-      padding: const EdgeInsets.only(left: 15.0),
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_left_rounded),
-            onPressed: () {},
-          ),
-          const Text(
-            'Неделя: ',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          FutureBuilder<List<YearweekModel>>(
-              future: fs.getYearweekModel(DateTime.now()),
-              builder: (context, snapshot) {
-                return snapshot.hasData
-                    ? Text(
-                        '${DateFormat('dd MMM yy').format(snapshot.data![0].start!)} \u2014 ${DateFormat('dd MMM yy').format(snapshot.data![0].end!)}')
-                    : const Center(
-                        child: CircularProgressIndicator(),
-                      );
-              }),
-          IconButton(
-            icon: const Icon(Icons.arrow_right),
-            onPressed: () {},
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          iconSize: 36,
+          icon: const Icon(Icons.navigate_before),
+          onPressed: () {
+            changeCurrentWeek(-1);
+          },
+        ),
+        const Text(
+          'Неделя: ',
+          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
+        ),
+        Text('${DateFormat('dd MMM', 'ru').format(fs.currentWeek.start)} \u2014 ${DateFormat('dd MMM', 'ru').format(fs.currentWeek.end)}'),
+        IconButton(
+          iconSize: 36,
+          icon: const Icon(Icons.navigate_next),
+          onPressed: () {
+            changeCurrentWeek(1);
+          },
+        ),
+      ],
     );
+  }
+
+  void changeCurrentWeek(int n) {
+    final fs = Get.find<FStore>();
+    setState(() {
+      fs.changeCurrentWeek(n);
+    });
   }
 }

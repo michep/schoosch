@@ -1,22 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/data/fire_auth.dart';
-import 'package:schoosch/data/fire_store.dart';
-import 'package:schoosch/views/class_selection_page.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:schoosch/controller/fire_auth_controller.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/week_controller.dart';
+import 'package:schoosch/views/home_page.dart';
 import 'package:schoosch/views/login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  initializeDateFormatting();
+  var fauth = FAuth();
   Get.put<FAuth>(
-    FAuth(),
+    fauth,
     permanent: true,
   );
-  var auth = Get.find<FAuth>();
-  if (auth.currentUser != null) {
-    await _authenticated();
+  if (fauth.currentUser != null) {
+    await Get.putAsync<FStore>(() async {
+      FStore store = FStore();
+      await store.init(fauth.currentUser!.email!);
+      return store;
+    });
   }
+  Get.put<CurrentWeek>(CurrentWeek(Get.find<FStore>().currentWeek));
+
   runApp(const MyApp());
 }
 
@@ -31,16 +40,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: auth.currentUser == null ? const LoginPage() : const ClassSelection(),
+      home: auth.currentUser == null ? const LoginPage() : HomePage(),
     );
   }
-}
-
-Future _authenticated() async {
-  final auth = Get.find<FAuth>();
-  await Get.putAsync<FStore>(() async {
-    FStore store = FStore(auth.currentUser!.email!);
-    await store.init();
-    return store;
-  });
 }

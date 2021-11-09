@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+enum personType { student, teacher }
+
 class PeopleModel {
   final String id;
   final String firstname;
@@ -25,7 +27,7 @@ class PeopleModel {
           map['firstname'] != null ? map['firstname'] as String : '',
           map['middlename'] != null ? map['middlename'] as String : '',
           map['lastname'] != null ? map['lastname'] as String : '',
-          map['type'] != null ? map['type'] as String : '',
+          map['type'] != null && map['type'] == 'teacher' ? 'teacher' : 'student',
           map['birthday'] != null ? DateTime.fromMillisecondsSinceEpoch((map['birthday'] as Timestamp).millisecondsSinceEpoch) : null,
           map['email'] != null ? map['email'] as String : '',
         );

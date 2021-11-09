@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/data/fire_auth.dart';
-import 'package:schoosch/data/fire_store.dart';
-import 'package:schoosch/data/people_model.dart';
+import 'package:schoosch/controller/fire_auth_controller.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/people_model.dart';
 import 'package:schoosch/views/login_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
@@ -26,6 +26,7 @@ class ProfilePage extends StatelessWidget {
           children: [
             Text('${_user.lastname} ${_user.firstname} ${_user.middlename}'),
             Text(_user.email),
+            Text(_user.type),
             ElevatedButton(
               onPressed: _logout,
               child: const Text('Выйти из системы'),

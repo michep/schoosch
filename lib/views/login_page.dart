@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/data/fire_auth.dart';
-import 'package:schoosch/data/fire_store.dart';
+import 'package:schoosch/controller/fire_auth_controller.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/views/class_selection_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -117,9 +117,9 @@ class _LoginPageState extends State<LoginPage> {
   void _authenticated(_) {
     final auth = Get.find<FAuth>();
     Get.putAsync<FStore>(() async {
-      FStore store = FStore(auth.currentUser!.email!);
-      await store.init();
+      FStore store = FStore();
+      await store.init(auth.currentUser!.email!);
       return store;
-    }).then((_) => Get.offAll(() => const ClassSelection()));
+    }).then((_) => Get.offAll(() => const ClassSelectionPage()));
   }
 }

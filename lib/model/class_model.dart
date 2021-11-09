@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:schoosch/data/fire_store.dart';
-import 'package:schoosch/data/people_model.dart';
-import 'package:schoosch/data/schedule_model.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/day_schedule_model.dart';
 
 class ClassModel {
   final String _id;
@@ -9,7 +9,7 @@ class ClassModel {
   final int _grade;
   String? _masterId;
   PeopleModel? _master;
-  List<ScheduleModel>? _schedule;
+  List<DayScheduleModel>? _schedule;
 
   ClassModel(
     this._id,
@@ -38,7 +38,7 @@ class ClassModel {
     return _master;
   }
 
-  Future<List<ScheduleModel>> get schedule async {
+  Future<List<DayScheduleModel>> get schedule async {
     if (_schedule == null) {
       var store = Get.find<FStore>();
       _schedule = await store.getSchedulesModel(id);

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:schoosch/data/fire_store.dart';
-import 'package:schoosch/data/people_model.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/people_model.dart';
 
 class CurriculumModel {
   final String _id;
