@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/people_model.dart';
 import 'package:schoosch/model/day_schedule_model.dart';
 
@@ -9,7 +10,7 @@ class ClassModel {
   final int _grade;
   String? _masterId;
   PeopleModel? _master;
-  List<DayScheduleModel>? _schedule;
+  final Map<int, List<DayScheduleModel>> _schedule = {};
 
   ClassModel(
     this._id,
@@ -39,10 +40,11 @@ class ClassModel {
   }
 
   Future<List<DayScheduleModel>> get schedule async {
-    if (_schedule == null) {
+    var cw = Get.find<CurrentWeek>().currentWeek;
+    if (_schedule[cw.order] == null) {
       var store = Get.find<FStore>();
-      _schedule = await store.getSchedulesModel(id);
+      _schedule[cw.order] = await store.getSchedulesModel(id, cw);
     }
-    return _schedule!;
+    return _schedule[cw.order]!;
   }
 }

@@ -4,7 +4,9 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
-import 'package:schoosch/views/class_selection_page.dart';
+import 'package:schoosch/controller/week_controller.dart';
+import 'package:schoosch/views/home_page.dart';
+import 'package:schoosch/widgets/appbar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -29,8 +31,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Вход в приложение'),
+      appBar: const MAppBar(
+        'Вход в приложение',
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -115,11 +117,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _authenticated(_) {
-    final auth = Get.find<FAuth>();
-    Get.putAsync<FStore>(() async {
+    var auth = Get.find<FAuth>();
+    Get.putAsync(() async {
       FStore store = FStore();
       await store.init(auth.currentUser!.email!);
       return store;
-    }).then((_) => Get.offAll(() => const ClassSelectionPage()));
+    }).then((_) {
+      Get.put(CurrentWeek(Get.find<FStore>().getYearweekModelByDate(DateTime.now())));
+      Get.offAll(() => HomePage());
+    });
   }
 }

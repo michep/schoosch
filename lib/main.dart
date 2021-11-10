@@ -18,13 +18,16 @@ Future<void> main() async {
     permanent: true,
   );
   if (fauth.currentUser != null) {
-    await Get.putAsync<FStore>(() async {
+    await Get.putAsync(() async {
       FStore store = FStore();
       await store.init(fauth.currentUser!.email!);
       return store;
+    }).then((value) {
+      Get.put(
+        CurrentWeek(Get.find<FStore>().getYearweekModelByDate(DateTime.now())),
+      );
     });
   }
-  Get.put<CurrentWeek>(CurrentWeek(Get.find<FStore>().currentWeek));
 
   runApp(const MyApp());
 }

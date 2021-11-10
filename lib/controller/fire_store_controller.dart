@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
@@ -18,7 +17,6 @@ class FStore extends GetxController {
   late final DocumentReference _institutionRef;
   late final PeopleModel _currentUser;
   late final ClassModel _currentClass;
-  late YearweekModel _currentWeek;
 
   final List<WeekdaysModel> _weekdaysCache = [];
   final Map<int, YearweekModel> _yearweekCache = {};
@@ -33,7 +31,6 @@ class FStore extends GetxController {
   }
 
   PeopleModel get currentUser => _currentUser;
-  YearweekModel get currentWeek => _currentWeek;
 
   Future<void> init(String email) async {
     _institutionRef = _store.collection('institution').doc(await _geInstitutionIdByUserEmail(email));
@@ -42,7 +39,6 @@ class FStore extends GetxController {
     await _getWeekdayNameModels();
     await _getLessontimeModels();
     await _getYearweekModels();
-    _currentWeek = await getYearweekModel(DateTime.now());
   }
 
   Future<void> _getWeekdayNameModels() async {
@@ -67,8 +63,13 @@ class FStore extends GetxController {
     }
   }
 
-  Future<YearweekModel> getYearweekModel(DateTime date) async {
+  YearweekModel getYearweekModelByDate(DateTime date) {
     return _yearweekCache.values.where((_yw) => _yw.start.isBefore(date) && _yw.end.isAfter(date)).first;
+  }
+
+  YearweekModel? getYearweekModelByWeek(int n) {
+    var wm = _yearweekCache.values.where((_yw) => _yw.order == n);
+    return wm.length != 1 ? null : wm.first;
   }
 
   Future<WeekdaysModel> getWeekdayNameModel(int order) async {
@@ -99,7 +100,7 @@ class FStore extends GetxController {
     return _currentClass;
   }
 
-  Future<List<DayScheduleModel>> getSchedulesModel(String classId) async {
+  Future<List<DayScheduleModel>> getSchedulesModel(String classId, YearweekModel currentWeek) async {
     return Future(() async => (await _institutionRef.collection('class').doc(classId).collection('schedule').orderBy('day').get())
         .docs
         .map(
@@ -109,7 +110,7 @@ class FStore extends GetxController {
             _schedule.data(),
           ),
         )
-        .where((s) => s.from.isBefore(_currentWeek.start) && s.till.isAfter(_currentWeek.end))
+        .where((s) => s.from.isBefore(currentWeek.start) && s.till.isAfter(currentWeek.end))
         .toList());
   }
 
@@ -185,10 +186,5 @@ class FStore extends GetxController {
       throw 'Current user is not assigned to any class';
     }
     return ClassModel.fromMap(res.docs[0].id, res.docs[0].data());
-  }
-
-  void changeCurrentWeek(int n) {
-    _currentWeek = _yearweekCache[_currentWeek.order + n] ?? _currentWeek;
-    Get.find<CurrentWeek>().currentWeek = _currentWeek;
   }
 }

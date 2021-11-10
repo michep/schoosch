@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/day_schedule_model.dart';
 import 'package:schoosch/model/weekday_model.dart';
@@ -14,19 +15,21 @@ class ClassScheduleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fs = Get.find<FStore>();
+    var store = Get.find<FStore>();
+    var cw = Get.find<CurrentWeek>();
+
     return FutureBuilder<List<LessonModel>>(
-        future: _schedule.lessons(fs.currentWeek.order),
+        future: _schedule.lessons(cw.currentWeek.order),
         builder: (context, lessons) {
           return lessons.hasData
               ? ExpansionTile(
                   title: FutureBuilder<WeekdaysModel>(
-                    future: fs.getWeekdayNameModel(_schedule.day),
+                    future: store.getWeekdayNameModel(_schedule.day),
                     builder: (context, weekday) {
                       if (!weekday.hasData) {
                         return const Text('');
                       }
-                      var dd = fs.currentWeek.start.add(Duration(days: weekday.data!.order - 1));
+                      var dd = cw.currentWeek.start.add(Duration(days: weekday.data!.order - 1));
                       var dat = DateFormat('dd MMMM', 'ru').format(dd);
                       return Text(
                         weekday.data!.name + ', ' + dat,

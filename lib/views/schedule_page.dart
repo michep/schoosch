@@ -5,7 +5,6 @@ import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/day_schedule_model.dart';
 import 'package:schoosch/widgets/class_scedule_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
-import 'package:schoosch/widgets/week_selector.dart';
 
 class SchedulePage extends StatelessWidget {
   final ClassModel _class;
@@ -14,33 +13,24 @@ class SchedulePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        children: [
-          const WeekSelector(),
-          Expanded(
-            child: FutureBuilder<List<DayScheduleModel>>(
-              future: _class.schedule,
-              builder: (context, schedules) {
-                if (!schedules.hasData) {
-                  return Utils.progressIndicator();
-                }
-                return SingleChildScrollView(
-                  child: GetBuilder<CurrentWeek>(
-                    builder: (controller) {
-                      return Column(
-                        children: [
-                          ...schedules.data!.map((schedule) => ClassScheduleTile(schedule)),
-                        ],
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+    return FutureBuilder<List<DayScheduleModel>>(
+      future: _class.schedule,
+      builder: (context, schedules) {
+        if (!schedules.hasData) {
+          return Utils.progressIndicator();
+        }
+        return GetBuilder<CurrentWeek>(
+          builder: (controller) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  ...schedules.data!.map((schedule) => ClassScheduleTile(schedule)),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
