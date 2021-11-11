@@ -76,10 +76,6 @@ class FStore extends GetxController {
     return _weekdaysCache[order - 1];
   }
 
-  Future<WeekdaysModel> getWeekdayNameModelWithDate(int order) async {
-    return _weekdaysCache[order - 1];
-  }
-
   Future<LessontimeModel> getLessontimeModel(int order) async {
     return _lessontimesCache[order - 1];
   }

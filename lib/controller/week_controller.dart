@@ -1,26 +1,25 @@
 import 'package:get/get.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/yearweek_model.dart';
 
-import 'fire_store_controller.dart';
-
 class CurrentWeek extends GetxController {
-  late YearweekModel _currentWeek;
+  final _store = Get.find<FStore>();
+  late final Rx<YearweekModel?> _currentWeek = Rx(null);
   int lastChange = 0;
 
-  final _store = Get.find<FStore>();
+  YearweekModel get currentWeek => _currentWeek.value!;
+  Rx<YearweekModel> get currentWeek$ => _currentWeek as Rx<YearweekModel>;
 
-  Rx<YearweekModel> get currentWeek$ => _currentWeek.obs;
-  YearweekModel get currentWeek => _currentWeek;
-
-  CurrentWeek(this._currentWeek);
+  CurrentWeek(YearweekModel yw) {
+    _currentWeek.value = yw;
+  }
 
   bool changeCurrentWeek(int n) {
-    if (_store.getYearweekModelByWeek(_currentWeek.order + n) == null) {
+    if (_store.getYearweekModelByWeek(_currentWeek.value!.order + n) == null) {
       return false;
     }
-    _currentWeek = _store.getYearweekModelByWeek(_currentWeek.order + n)!;
+    _currentWeek.value = _store.getYearweekModelByWeek(_currentWeek.value!.order + n);
     lastChange = n;
-    update();
     return true;
   }
 }

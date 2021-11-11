@@ -1,21 +1,21 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/people_model.dart';
 
+@immutable
 class CurriculumModel {
-  final String _id;
-  final String _name;
-  final String? _alias;
-  PeopleModel? _master;
-  String? _masterId;
+  final String id;
+  late final String _name;
+  late final String? _alias;
+  late final String? _masterId;
+  late final PeopleModel? _master;
 
-  CurriculumModel(
-    this._id,
-    this._name,
-    this._alias,
-  );
+  CurriculumModel.fromMap(this.id, Map<String, dynamic> map) {
+    _name = map['name'] != null ? map['name'] as String : '';
+    _alias = map['alias'] != null ? map['alias'] as String : null;
+  }
 
-  String get id => _id;
   String get name => _alias ?? _name;
 
   Future<PeopleModel> get master async {
@@ -25,11 +25,4 @@ class CurriculumModel {
     }
     return _master!;
   }
-
-  CurriculumModel.fromMap(String id, Map<String, dynamic> map)
-      : this(
-          id,
-          map['name'] != null ? map['name'] as String : '',
-          map['alias'] != null ? map['alias'] as String : null,
-        );
 }

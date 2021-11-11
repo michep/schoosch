@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/views/profile_page.dart';
+import 'package:schoosch/pages/profile_page.dart';
 
 class MAppBar extends StatelessWidget with PreferredSizeWidget {
   const MAppBar(this.title, {this.tabs, this.showProfile = false, Key? key}) : super(key: key);

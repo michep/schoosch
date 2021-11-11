@@ -8,57 +8,31 @@ class LessonModel {
   final String classId;
   final String scheduleId;
   final String id;
-  final int order;
+  late final int order;
+  late final String _curriculumId;
+  late final String _venueId;
+  late bool ready;
   CurriculumModel? _curriculum;
-  String? _curriculumId;
   VenueModel? _venue;
-  String? _venueId;
   LessontimeModel? _lessontime;
-  bool ready;
 
-  LessonModel(
-    this.classId,
-    this.scheduleId,
-    this.id,
-    this.order,
-    this._curriculumId,
-    this._venueId,
-    this.ready,
-  );
-
-  LessonModel.fromMap(String classId, String scheduleId, String id, Map<String, Object?> map)
-      : this(
-          classId,
-          scheduleId,
-          id,
-          map['order'] != null ? map['order'] as int : -1,
-          map['curriculum_id'] != null ? map['curriculum_id'] as String : '',
-          map['venue_id'] != null ? map['venue_id'] as String : '',
-          map['ready'] != null ? map['ready'] as bool : false,
-        );
+  LessonModel.fromMap(this.classId, this.scheduleId, this.id, Map<String, Object?> map) {
+    order = map['order'] != null ? map['order'] as int : -1;
+    _curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : '';
+    _venueId = map['venue_id'] != null ? map['venue_id'] as String : '';
+    ready = map['ready'] != null ? map['ready'] as bool : false;
+  }
 
   Future<CurriculumModel> get curriculum async {
-    if (_curriculum == null && _curriculumId != null) {
-      var data = Get.find<FStore>();
-      _curriculum = await data.getCurriculumModel(_curriculumId!);
-    }
-    return _curriculum!;
+    return _curriculum ??= await Get.find<FStore>().getCurriculumModel(_curriculumId);
   }
 
   Future<VenueModel> get venue async {
-    if (_venue == null && _venueId != null) {
-      var data = Get.find<FStore>();
-      _venue = await data.getVenueModel(_venueId!);
-    }
-    return _venue!;
+    return _venue ??= await Get.find<FStore>().getVenueModel(_venueId);
   }
 
   Future<LessontimeModel> get lessontime async {
-    if (_lessontime == null) {
-      var data = Get.find<FStore>();
-      _lessontime = await data.getLessontimeModel(order);
-    }
-    return _lessontime!;
+    return _lessontime ??= await Get.find<FStore>().getLessontimeModel(order);
   }
 
   Map<String, dynamic> toMap() {

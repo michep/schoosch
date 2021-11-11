@@ -3,14 +3,15 @@ import 'package:get/get.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
-import 'package:schoosch/views/schedule_page.dart';
+import 'package:schoosch/pages/schedule_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/drawer.dart';
-import 'package:schoosch/widgets/utils.dart';
+import 'package:schoosch/controller/utils.dart';
 import 'package:schoosch/widgets/week_selector.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
+
   final cw = Get.find<CurrentWeek>();
 
   @override
@@ -36,9 +37,7 @@ class HomePage extends StatelessWidget {
                   if (!classSnap.hasData) {
                     return Utils.progressIndicator();
                   }
-                  return GetBuilder<CurrentWeek>(
-                    builder: (ctrl) => slideSwitcher(classSnap),
-                  );
+                  return Obx(() => slideSwitcher(classSnap));
                 },
               ),
             ),
@@ -52,6 +51,7 @@ class HomePage extends StatelessWidget {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 200),
       reverseDuration: const Duration(seconds: 0),
+      switchInCurve: Curves.easeIn,
       layoutBuilder: layoutBuilder,
       transitionBuilder: transitionBuilder,
       child: dismissibleSchedule(classSnap),

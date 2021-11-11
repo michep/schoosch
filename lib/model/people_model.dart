@@ -3,32 +3,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 enum personType { student, teacher }
 
 class PeopleModel {
-  final String id;
-  final String firstname;
-  final String middlename;
-  final String lastname;
-  final String type;
-  final DateTime? birthday;
-  final String email;
+  late final String id;
+  late final String firstname;
+  late final String middlename;
+  late final String lastname;
+  late final String type;
+  late final DateTime? birthday;
+  late final String email;
 
-  PeopleModel(
-    this.id,
-    this.firstname,
-    this.middlename,
-    this.lastname,
-    this.type,
-    this.birthday,
-    this.email,
-  );
-
-  PeopleModel.fromMap(String id, Map<String, dynamic> map)
-      : this(
-          id,
-          map['firstname'] != null ? map['firstname'] as String : '',
-          map['middlename'] != null ? map['middlename'] as String : '',
-          map['lastname'] != null ? map['lastname'] as String : '',
-          map['type'] != null && map['type'] == 'teacher' ? 'teacher' : 'student',
-          map['birthday'] != null ? DateTime.fromMillisecondsSinceEpoch((map['birthday'] as Timestamp).millisecondsSinceEpoch) : null,
-          map['email'] != null ? map['email'] as String : '',
-        );
+  PeopleModel.fromMap(this.id, Map<String, dynamic> map) {
+    firstname = map['firstname'] != null ? map['firstname'] as String : '';
+    middlename = map['middlename'] != null ? map['middlename'] as String : '';
+    lastname = map['lastname'] != null ? map['lastname'] as String : '';
+    type = map['type'] != null && map['type'] == 'teacher' ? 'teacher' : 'student';
+    birthday = map['birthday'] != null ? DateTime.fromMillisecondsSinceEpoch((map['birthday'] as Timestamp).millisecondsSinceEpoch) : null;
+    email = map['email'] != null ? map['email'] as String : '';
+  }
 }

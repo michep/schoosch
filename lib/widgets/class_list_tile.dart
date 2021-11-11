@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/class_model.dart';
-import 'package:schoosch/views/schedule_page.dart';
+import 'package:schoosch/pages/schedule_page.dart';
 
 class ClassListTile extends StatelessWidget {
   final ClassModel _class;

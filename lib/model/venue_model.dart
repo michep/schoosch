@@ -1,15 +1,11 @@
+import 'package:flutter/material.dart';
+
+@immutable
 class VenueModel {
   final String id;
-  final String name;
+  late final String name;
 
-  VenueModel(
-    this.id,
-    this.name,
-  );
-
-  VenueModel.fromMap(String id, Map<String, Object?> map)
-      : this(
-          id,
-          map['name'] != null ? map['name'] as String : '',
-        );
+  VenueModel.fromMap(this.id, Map<String, Object?> map) {
+    name = map['name'] != null ? map['name'] as String : '';
+  }
 }

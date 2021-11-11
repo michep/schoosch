@@ -5,8 +5,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
-import 'package:schoosch/views/home_page.dart';
-import 'package:schoosch/views/login_page.dart';
+import 'package:schoosch/pages/home_page.dart';
+import 'package:schoosch/pages/login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
-import 'package:schoosch/views/home_page.dart';
+import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
 class LoginPage extends StatefulWidget {
