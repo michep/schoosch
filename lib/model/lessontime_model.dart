@@ -14,4 +14,8 @@ class LessontimeModel {
     from = TimeOfDay(hour: int.parse(f[0]), minute: int.parse(f[1]));
     till = TimeOfDay(hour: int.parse(t[0]), minute: int.parse(t[1]));
   }
+
+  String format(BuildContext context) {
+    return '${from.format(context)} \u2014 ${till.format(context)}';
+  }
 }

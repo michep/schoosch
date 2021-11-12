@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
-import 'package:schoosch/pages/schedule_page.dart';
+import 'package:schoosch/widgets/schedule.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/drawer.dart';
 import 'package:schoosch/controller/utils.dart';
@@ -63,7 +63,7 @@ class HomePage extends StatelessWidget {
       confirmDismiss: onDismissed,
       key: ValueKey(cw.currentWeek.id),
       resizeDuration: const Duration(seconds: 0),
-      child: SchedulePage(classSnap.data!),
+      child: ScheduleWidget(classSnap.data!),
     );
   }
 

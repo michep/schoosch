@@ -18,7 +18,7 @@ class FStore extends GetxController {
   late final PeopleModel _currentUser;
   late final ClassModel _currentClass;
 
-  final List<WeekdaysModel> _weekdaysCache = [];
+  // final List<WeekdaysModel> _weekdaysCache = [];
   final Map<int, YearweekModel> _yearweekCache = {};
   final List<LessontimeModel> _lessontimesCache = [];
 
@@ -36,17 +36,17 @@ class FStore extends GetxController {
     _institutionRef = _store.collection('institution').doc(await _geInstitutionIdByUserEmail(email));
     _currentUser = await _getCurrentUserModel(email);
     _currentClass = await _getCurrentUserClassModel();
-    await _getWeekdayNameModels();
+    // await _getWeekdayNameModels();
     await _getLessontimeModels();
     await _getYearweekModels();
   }
 
-  Future<void> _getWeekdayNameModels() async {
-    var _weekdays = await _cachedStore.collection('weekday').orderBy('order').get();
-    for (var _weekday in _weekdays.docs) {
-      _weekdaysCache.add(WeekdaysModel.fromMap(_weekday.id, _weekday.data()));
-    }
-  }
+  // Future<void> _getWeekdayNameModels() async {
+  //   var _weekdays = await _cachedStore.collection('weekday').orderBy('order').get();
+  //   for (var _weekday in _weekdays.docs) {
+  //     _weekdaysCache.add(WeekdaysModel.fromMap(_weekday.id, _weekday.data()));
+  //   }
+  // }
 
   Future<void> _getYearweekModels() async {
     var _yearweeks = await _cachedStore.collection('yearweek').orderBy('order').get();
@@ -72,9 +72,9 @@ class FStore extends GetxController {
     return wm.length != 1 ? null : wm.first;
   }
 
-  Future<WeekdaysModel> getWeekdayNameModel(int order) async {
-    return _weekdaysCache[order - 1];
-  }
+  // Future<WeekdaysModel> getWeekdayNameModel(int order) async {
+  //   return _weekdaysCache[order - 1];
+  // }
 
   Future<LessontimeModel> getLessontimeModel(int order) async {
     return _lessontimesCache[order - 1];

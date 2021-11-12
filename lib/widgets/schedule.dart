@@ -6,8 +6,8 @@ import 'package:schoosch/model/day_schedule_model.dart';
 import 'package:schoosch/widgets/class_scedule_tile.dart';
 import 'package:schoosch/controller/utils.dart';
 
-class SchedulePage extends StatelessWidget {
-  SchedulePage(this._class, {Key? key}) : super(key: key);
+class ScheduleWidget extends StatelessWidget {
+  ScheduleWidget(this._class, {Key? key}) : super(key: key);
 
   final ClassModel _class;
   final cw = Get.find<CurrentWeek>();
