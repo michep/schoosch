@@ -8,11 +8,10 @@ import 'package:schoosch/widgets/appbar.dart';
 
 class ProfilePage extends StatelessWidget {
   final _auth = Get.find<FAuth>();
-  final _data = Get.find<FStore>();
   late final PeopleModel _user;
 
   ProfilePage({Key? key}) : super(key: key) {
-    _user = _data.currentUser;
+    _user = Get.find<FStore>().currentUser;
   }
 
   @override

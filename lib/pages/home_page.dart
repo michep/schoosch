@@ -63,7 +63,7 @@ class HomePage extends StatelessWidget {
       confirmDismiss: onDismissed,
       key: ValueKey(cw.currentWeek.id),
       resizeDuration: const Duration(seconds: 0),
-      child: SchedulePage(classSnap.data!, key: ValueKey(cw.currentWeek.id)),
+      child: SchedulePage(classSnap.data!),
     );
   }
 
