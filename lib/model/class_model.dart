@@ -11,7 +11,7 @@ class ClassModel {
   late final String name;
   late final int grade;
   late final String? _masterId;
-  late final PeopleModel? _master;
+  PeopleModel? _master;
   final Map<int, List<DayScheduleModel>> _schedule = {};
 
   ClassModel.fromMap(this.id, Map<String, Object?> map) {

@@ -1,13 +1,15 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/people_model.dart';
 import 'package:schoosch/model/day_schedule_model.dart';
 import 'package:schoosch/model/venue_model.dart';
-import 'package:schoosch/model/weekday_model.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/yearweek_model.dart';
 
@@ -15,14 +17,18 @@ class FStore extends GetxController {
   late final FirebaseFirestore _store;
   late final FirebaseFirestore _cachedStore;
   late final DocumentReference _institutionRef;
-  late final PeopleModel _currentUser;
   late final ClassModel _currentClass;
+  late final FirebaseStorage _fstorage;
+  late final Reference _fstorageRef;
+  late final Uint8List? _logoImagData;
 
-  // final List<WeekdaysModel> _weekdaysCache = [];
   final Map<int, YearweekModel> _yearweekCache = {};
   final List<LessontimeModel> _lessontimesCache = [];
 
+  PeopleModel? _currentUser;
+
   FStore() {
+    _fstorage = FirebaseStorage.instance;
     FirebaseFirestore.instance.clearPersistence();
     _store = FirebaseFirestore.instance;
     _store.settings = const Settings(persistenceEnabled: false);
@@ -30,23 +36,27 @@ class FStore extends GetxController {
     _cachedStore.settings = const Settings(persistenceEnabled: true);
   }
 
-  PeopleModel get currentUser => _currentUser;
+  PeopleModel? get currentUser => _currentUser;
+
+  Uint8List? get logoImageData => _logoImagData;
 
   Future<void> init(String email) async {
     _institutionRef = _store.collection('institution').doc(await _geInstitutionIdByUserEmail(email));
+    _fstorageRef = _fstorage.ref((await _institutionRef.get()).id);
+    _logoImagData = await _getLogoImageData();
     _currentUser = await _getCurrentUserModel(email);
     _currentClass = await _getCurrentUserClassModel();
-    // await _getWeekdayNameModels();
     await _getLessontimeModels();
     await _getYearweekModels();
   }
 
-  // Future<void> _getWeekdayNameModels() async {
-  //   var _weekdays = await _cachedStore.collection('weekday').orderBy('order').get();
-  //   for (var _weekday in _weekdays.docs) {
-  //     _weekdaysCache.add(WeekdaysModel.fromMap(_weekday.id, _weekday.data()));
-  //   }
-  // }
+  void resetCurrentUser() {
+    _currentUser = null;
+  }
+
+  Future<Uint8List?> _getLogoImageData() {
+    return _fstorageRef.child('logo.png').getData();
+  }
 
   Future<void> _getYearweekModels() async {
     var _yearweeks = await _cachedStore.collection('yearweek').orderBy('order').get();
@@ -71,10 +81,6 @@ class FStore extends GetxController {
     var wm = _yearweekCache.values.where((_yw) => _yw.order == n);
     return wm.length != 1 ? null : wm.first;
   }
-
-  // Future<WeekdaysModel> getWeekdayNameModel(int order) async {
-  //   return _weekdaysCache[order - 1];
-  // }
 
   Future<LessontimeModel> getLessontimeModel(int order) async {
     return _lessontimesCache[order - 1];
@@ -177,7 +183,10 @@ class FStore extends GetxController {
   }
 
   Future<ClassModel> _getCurrentUserClassModel() async {
-    var res = await _institutionRef.collection('class').where('student_ids', arrayContains: _currentUser.id).limit(1).get();
+    if (_currentUser == null) {
+      throw 'No current user set';
+    }
+    var res = await _institutionRef.collection('class').where('student_ids', arrayContains: _currentUser!.id).limit(1).get();
     if (res.docs.isEmpty) {
       throw 'Current user is not assigned to any class';
     }

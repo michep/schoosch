@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
       if (creds != null) {
         var u = creds.user;
         if (u != null) {
-          _authenticated(null);
+          await _authenticated(null);
         }
       }
     } on Exception catch (e) {
@@ -102,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
       if (creds != null) {
         var u = creds.user;
         if (u != null) {
-          _authenticated(null);
+          await _authenticated(null);
         }
       }
     } on Exception catch (e) {
@@ -116,13 +116,17 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _authenticated(_) {
+  Future<void> _authenticated(_) async {
     var auth = Get.find<FAuth>();
-    Get.putAsync(() async {
-      FStore store = FStore();
-      await store.init(auth.currentUser!.email!);
-      return store;
-    }).then((_) {
+    Get.delete<FStore>();
+    await Get.putAsync(
+      () async {
+        FStore store = FStore();
+        await store.init(auth.currentUser!.email!);
+        return store;
+      },
+      permanent: true,
+    ).then((_) {
       Get.put(CurrentWeek(Get.find<FStore>().getYearweekModelByDate(DateTime.now())));
       Get.offAll(() => HomePage());
     });

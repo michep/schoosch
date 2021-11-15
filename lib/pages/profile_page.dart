@@ -7,11 +7,10 @@ import 'package:schoosch/pages/login_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
 class ProfilePage extends StatelessWidget {
-  final _auth = Get.find<FAuth>();
   late final PeopleModel _user;
 
   ProfilePage({Key? key}) : super(key: key) {
-    _user = Get.find<FStore>().currentUser;
+    _user = Get.find<FStore>().currentUser!;
   }
 
   @override
@@ -37,7 +36,8 @@ class ProfilePage extends StatelessWidget {
   }
 
   void _logout() async {
-    await _auth.logout();
+    Get.find<FStore>().resetCurrentUser();
+    await Get.find<FAuth>().logout();
     Get.offAll(() => const LoginPage());
   }
 }
