@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
@@ -92,9 +93,7 @@ class FStore extends GetxController {
         .toList());
   }
 
-  Future<ClassModel> getCurrentUserClassModel() async {
-    return _currentClass;
-  }
+  ClassModel get currentClass => _currentClass;
 
   Future<List<DayScheduleModel>> getSchedulesModel(String classId, YearweekModel currentWeek) async {
     return Future(() async => (await _institutionRef.collection('class').doc(classId).collection('schedule').orderBy('day').get())
@@ -182,5 +181,36 @@ class FStore extends GetxController {
       throw 'Current user is not assigned to any class';
     }
     return ClassModel.fromMap(res.docs[0].id, res.docs[0].data());
+  }
+
+  Future<Map<String, PeopleModel>> getUserTeachers() async {
+    var teachers = <String, PeopleModel> {};
+    var mast = await currentClass.master;
+    if(mast != null) {
+      teachers["классный руководитель"] = mast;
+    }
+
+    var days = await currentClass.schedule;
+    for(var day in days) {
+      var dayles = await day.lessons(Get.find<CurrentWeek>().currentWeek.order);
+      for(var les in dayles) {
+        var cur = await les.curriculum;
+        var teach = await cur.master;
+        if(teach != null) {
+          teachers[cur.name] = teach;
+        }
+      }
+    }
+
+    return teachers;
+  }
+
+  Future saveRate(String teacherId, String raterId, DateTime date, int rating) async {
+    Map<String, dynamic> data = {};
+    data['ratedate'] = Timestamp.fromDate(date);
+    data['rater_id'] = raterId;
+    data['rating'] = rating;
+    data['teacher_id'] = teacherId;
+    return _institutionRef.collection('teachersrates').add(data);
   }
 }

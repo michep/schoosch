@@ -31,15 +31,7 @@ class HomePage extends StatelessWidget {
           children: [
             WeekSelector(key: ValueKey(Get.find<CurrentWeek>().currentWeek.id)),
             Expanded(
-              child: FutureBuilder<ClassModel>(
-                future: _store.getCurrentUserClassModel(),
-                builder: (context, classSnap) {
-                  if (!classSnap.hasData) {
-                    return Utils.progressIndicator();
-                  }
-                  return Obx(() => slideSwitcher(classSnap));
-                },
-              ),
+              child: Obx(() => slideSwitcher(_store.currentClass)),
             ),
           ],
         ),
@@ -47,7 +39,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget slideSwitcher(AsyncSnapshot<ClassModel> classSnap) {
+  Widget slideSwitcher(ClassModel classSnap) {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 200),
       reverseDuration: const Duration(seconds: 0),
@@ -58,12 +50,12 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget dismissibleSchedule(AsyncSnapshot<ClassModel> classSnap) {
+  Widget dismissibleSchedule(ClassModel classSnap) {
     return Dismissible(
       confirmDismiss: onDismissed,
       key: ValueKey(cw.currentWeek.id),
       resizeDuration: const Duration(seconds: 0),
-      child: ScheduleWidget(classSnap.data!),
+      child: ScheduleWidget(classSnap),
     );
   }
 
@@ -80,8 +72,10 @@ class HomePage extends StatelessWidget {
   Widget transitionBuilder(Widget child, Animation<double> animation) {
     return SlideTransition(
       position: cw.lastChange == 1
-          ? Tween<Offset>(begin: const Offset(1, 0), end: const Offset(0, 0)).animate(animation)
-          : Tween<Offset>(begin: const Offset(-1, 0), end: const Offset(0, 0)).animate(animation),
+          ? Tween<Offset>(begin: const Offset(1, 0), end: const Offset(0, 0))
+              .animate(animation)
+          : Tween<Offset>(begin: const Offset(-1, 0), end: const Offset(0, 0))
+              .animate(animation),
       child: child,
     );
   }
