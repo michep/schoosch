@@ -111,9 +111,13 @@ institution:
 
         - name: 'Французский язык'
           alias: 'Второй иностранный язык'
+          student_ids:
+            - '$query|/institution/[name=Гимназия им. Пастернака]/people/[firstname=Степан&&middlename=Михайлович&&lastname=Чепайкин]/[_id]'
 
         - name: 'Немецкий язык'
           alias: 'Второй иностранный язык'
+          student_ids:
+            - '$query|/institution/[name=Гимназия им. Пастернака]/people/[firstname=Петр&&middlename=Петрович&&lastname=Петров]/[_id]'
 
         - name: 'Биология'
           master_id:

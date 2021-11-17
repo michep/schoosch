@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/people_model.dart';
-import 'package:schoosch/model/day_schedule_model.dart';
+import 'package:schoosch/model/dayschedule_model.dart';
 
-@immutable
 class ClassModel {
   final String id;
   late final String name;

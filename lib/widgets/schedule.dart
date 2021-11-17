@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/class_model.dart';
-import 'package:schoosch/model/day_schedule_model.dart';
+import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/widgets/class_scedule_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 

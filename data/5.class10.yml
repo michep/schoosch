@@ -45,11 +45,9 @@ institution:
                     - order: 1
                       curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Французский язык]/[_id]'
                       venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=204]/[_id]'
-                      studygroup_id: '$query|/institution/[name=Гимназия им. Пастернака]/studygroup/[name=Второй иностранный - французский]/[_id]'
                     - order: 1
                       curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Немецкий язык]/[_id]'
                       venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=205]/[_id]'
-                      studygroup_id: '$query|/institution/[name=Гимназия им. Пастернака]/studygroup/[name=Второй иностранный - немецкий]/[_id]'
                     - order: 2
                       curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Биология]/[_id]'
                       venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=205]/[_id]'
@@ -125,11 +123,9 @@ institution:
                     - order: 5
                       curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Французский язык]/[_id]'
                       venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=204]/[_id]'
-                      studygroup_id: '$query|/institution/[name=Гимназия им. Пастернака]/studygroup/[name=Второй иностранный - французский]/[_id]'
                     - order: 5
                       curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Немецкий язык]/[_id]'
                       venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=205]/[_id]'
-                      studygroup_id: '$query|/institution/[name=Гимназия им. Пастернака]/studygroup/[name=Второй иностранный - немецкий]/[_id]'
                     - order: 6
                       curriculum_id: '$query|/institution/[name=Гимназия им. Пастернака]/curriculum/[name=Основы безопасности жизнедеятельности]/[_id]'
                       venue_id: '$query|/institution/[name=Гимназия им. Пастернака]/venue/[name=207]/[_id]'

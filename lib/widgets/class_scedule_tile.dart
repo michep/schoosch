@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/lesson_model.dart';
-import 'package:schoosch/model/day_schedule_model.dart';
+import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/widgets/lesson_list_tile.dart';
 
 class ClassScheduleTile extends StatelessWidget {
@@ -16,7 +16,7 @@ class ClassScheduleTile extends StatelessWidget {
     var cw = Get.find<CurrentWeek>();
 
     return FutureBuilder<List<LessonModel>>(
-        future: _schedule.lessons(cw.currentWeek.order),
+        future: _schedule.studentLessons(cw.currentWeek.order),
         builder: (context, snap) {
           if (!snap.hasData) {
             return Container();

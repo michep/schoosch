@@ -3,12 +3,11 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/people_model.dart';
-import 'package:schoosch/model/day_schedule_model.dart';
+import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/yearweek_model.dart';
@@ -87,7 +86,7 @@ class FStore extends GetxController {
   }
 
   Future<List<ClassModel>> getClassesModel() async {
-    return Future(() async => (await _institutionRef.collection('class').orderBy('grade').get())
+    return (await _institutionRef.collection('class').orderBy('grade').get())
         .docs
         .map(
           (_class) => ClassModel.fromMap(
@@ -95,7 +94,7 @@ class FStore extends GetxController {
             _class.data(),
           ),
         )
-        .toList());
+        .toList();
   }
 
   Future<ClassModel> getCurrentUserClassModel() async {
@@ -103,21 +102,21 @@ class FStore extends GetxController {
   }
 
   Future<List<DayScheduleModel>> getSchedulesModel(String classId, YearweekModel currentWeek) async {
-    return Future(() async => (await _institutionRef.collection('class').doc(classId).collection('schedule').orderBy('day').get())
+    return (await _institutionRef.collection('class').doc(classId).collection('schedule').orderBy('day').get())
         .docs
         .map(
-          (_schedule) => DayScheduleModel.fromMap(
+          (schedule) => DayScheduleModel.fromMap(
             classId,
-            _schedule.id,
-            _schedule.data(),
+            schedule.id,
+            schedule.data(),
           ),
         )
         .where((s) => s.from.isBefore(currentWeek.start) && s.till.isAfter(currentWeek.end))
-        .toList());
+        .toList();
   }
 
   Future<List<LessonModel>> getLessonsModel(String classId, String schedId, int week) async {
-    return Future(() async => (await _institutionRef
+    return (await _institutionRef
             .collection('class')
             .doc(classId)
             .collection('schedule')
@@ -126,13 +125,39 @@ class FStore extends GetxController {
             .orderBy('order')
             .get())
         .docs
-        .map((e) => LessonModel.fromMap(
+        .map((lesson) => LessonModel.fromMap(
               classId,
               schedId,
-              e.id,
-              e.data(),
+              lesson.id,
+              lesson.data(),
             ))
-        .toList());
+        .toList();
+  }
+
+  Future<List<LessonModel>> getCurrentUserLessonsModel(String classId, String schedId, int week) async {
+    List<LessonModel> res = [];
+    var less = await getLessonsModel(classId, schedId, week);
+
+    for (var l in less) {
+      var cur = await l.curriculum;
+      if (cur != null && cur.isAvailableForPerson(_currentUser!.id)) {
+        res.add(l);
+      }
+    }
+    return res;
+  }
+
+  Future<List<LessonModel>> getStudentLessonsModel(String classId, String schedId, int week, String personId) async {
+    List<LessonModel> res = [];
+    var less = await getLessonsModel(classId, schedId, week);
+
+    for (var l in less) {
+      var cur = await l.curriculum;
+      if (cur != null && cur.isAvailableForPerson(personId)) {
+        res.add(l);
+      }
+    }
+    return res;
   }
 
   Future<PeopleModel> getPeopleModel(String id) async {

@@ -23,15 +23,15 @@ class LessonModel {
     ready = map['ready'] != null ? map['ready'] as bool : false;
   }
 
-  Future<CurriculumModel> get curriculum async {
+  Future<CurriculumModel?> get curriculum async {
     return _curriculum ??= await Get.find<FStore>().getCurriculumModel(_curriculumId);
   }
 
-  Future<VenueModel> get venue async {
+  Future<VenueModel?> get venue async {
     return _venue ??= await Get.find<FStore>().getVenueModel(_venueId);
   }
 
-  Future<LessontimeModel> get lessontime async {
+  Future<LessontimeModel?> get lessontime async {
     return _lessontime ??= await Get.find<FStore>().getLessontimeModel(order);
   }
 
