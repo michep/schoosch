@@ -4,7 +4,7 @@ import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/day_schedule_model.dart';
 import 'package:schoosch/widgets/class_scedule_tile.dart';
-import 'package:schoosch/controller/utils.dart';
+import 'package:schoosch/widgets/utils.dart';
 
 class ScheduleWidget extends StatelessWidget {
   ScheduleWidget(this._class, {Key? key}) : super(key: key);

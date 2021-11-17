@@ -6,7 +6,7 @@ import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/widgets/schedule.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/drawer.dart';
-import 'package:schoosch/controller/utils.dart';
+import 'package:schoosch/widgets/utils.dart';
 import 'package:schoosch/widgets/week_selector.dart';
 
 class HomePage extends StatelessWidget {

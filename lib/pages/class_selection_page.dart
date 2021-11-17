@@ -4,7 +4,7 @@ import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/class_list_tile.dart';
-import 'package:schoosch/controller/utils.dart';
+import 'package:schoosch/widgets/utils.dart';
 
 class ClassSelectionPage extends StatelessWidget {
   const ClassSelectionPage({Key? key}) : super(key: key);
