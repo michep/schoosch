@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/day_schedule_model.dart';
@@ -14,7 +13,6 @@ class ClassScheduleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // var store = Get.find<FStore>();
     var cw = Get.find<CurrentWeek>();
 
     return FutureBuilder<List<LessonModel>>(

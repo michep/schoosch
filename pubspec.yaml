@@ -37,6 +37,7 @@ dependencies:
   intl: ^0.17.0
   firebase_core: ^1.7.0
   cloud_firestore: ^3.1.0
+  firebase_storage: ^10.1.0
   firebase_auth: ^3.1.4
   google_sign_in: ^5.2.0
   flutter_signin_button: ^2.0.0
@@ -67,8 +68,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+    # - images/a_dot_burr.jpeg
+    # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

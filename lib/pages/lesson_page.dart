@@ -23,10 +23,7 @@ class LessonPage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            DateFormat('EEEE, d MMMM', 'ru').format(_date).capitalizeFirst!,
-          ),
-          Text(_curiculum.name),
+          Text(fullLessonInfo(context)),
           Text(_venue.name),
         ],
       ),
@@ -35,5 +32,13 @@ class LessonPage extends StatelessWidget {
 
   void onDismissed(DismissDirection dir) {
     Get.back();
+  }
+
+  String fullLessonInfo(BuildContext context) {
+    return DateFormat('d MMMM, EEEE', 'ru').format(_date).capitalizeFirst! +
+        ', ' +
+        _lesson.order.toString() +
+        ' урок, ' +
+        _time.format(context);
   }
 }
