@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: auth.currentUser == null ? const LoginPage() : HomePage(),
+      home: auth.currentUser == null ? const LoginPage() : const HomePage(),
     );
   }
 }

@@ -6,8 +6,8 @@ import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/widgets/class_scedule_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class ScheduleWidget extends StatelessWidget {
-  ScheduleWidget(this._class, {Key? key}) : super(key: key);
+class StudentScheduleWidget extends StatelessWidget {
+  StudentScheduleWidget(this._class, {Key? key}) : super(key: key);
 
   final ClassModel _class;
   final cw = Get.find<CurrentWeek>();
@@ -20,12 +20,10 @@ class ScheduleWidget extends StatelessWidget {
         if (!schedules.hasData) {
           return Utils.progressIndicator();
         }
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              ...schedules.data!.map((schedule) => ClassScheduleTile(schedule)),
-            ],
-          ),
+        return ListView(
+          children: [
+            ...schedules.data!.map((schedule) => ClassScheduleTile(schedule)),
+          ],
         );
       },
     );

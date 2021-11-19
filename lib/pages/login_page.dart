@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
       permanent: true,
     ).then((_) {
       Get.put(CurrentWeek(Get.find<FStore>().getYearweekModelByDate(DateTime.now())));
-      Get.offAll(() => HomePage());
+      Get.offAll(() => const HomePage());
     });
   }
 }

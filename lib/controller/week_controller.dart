@@ -22,4 +22,20 @@ class CurrentWeek extends GetxController {
     lastChange = n;
     return true;
   }
+
+  bool changeToCurrentWeek() {
+    var cw = _store.getYearweekModelByDate(DateTime.now());
+    if (cw.order < currentWeek.order) {
+      lastChange = -1;
+    }
+    if (cw.order > currentWeek.order) {
+      lastChange = 1;
+    }
+    var wm = _store.getYearweekModelByWeek(cw.order);
+    if (wm == null) {
+      return false;
+    }
+    _currentWeek.value = wm;
+    return true;
+  }
 }

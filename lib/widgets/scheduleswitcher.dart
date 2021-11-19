@@ -1,14 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/week_controller.dart';
-import 'package:schoosch/model/class_model.dart';
-import 'package:schoosch/widgets/schedule.dart';
 
-class AnimatedSwipeScheduleSwither extends StatelessWidget {
-  final ClassModel _class;
+class AnimatedSwipeScheduleSwitcher extends StatelessWidget {
   final CurrentWeek _cw = Get.find<CurrentWeek>();
+  final Widget child;
 
-  AnimatedSwipeScheduleSwither(this._class, {Key? key}) : super(key: key);
+  AnimatedSwipeScheduleSwitcher({required this.child, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +20,7 @@ class AnimatedSwipeScheduleSwither extends StatelessWidget {
             confirmDismiss: onDismissed,
             key: ValueKey(_cw.currentWeek.id),
             resizeDuration: const Duration(seconds: 0),
-            child: ScheduleWidget(_class),
+            child: child,
           ),
         ));
   }

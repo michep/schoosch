@@ -11,15 +11,14 @@ class WeekSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
-          iconSize: 36,
-          icon: const Icon(Icons.navigate_before),
-          onPressed: () {
-            cw.changeCurrentWeek(-1);
-          },
+          iconSize: 24,
+          icon: const Icon(Icons.today),
+          onPressed: () => cw.changeToCurrentWeek(),
         ),
+        const Spacer(),
         const Text(
           'Неделя: ',
           style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
@@ -30,10 +29,13 @@ class WeekSelector extends StatelessWidget {
         ),
         IconButton(
           iconSize: 36,
+          icon: const Icon(Icons.navigate_before),
+          onPressed: () => cw.changeCurrentWeek(-1),
+        ),
+        IconButton(
+          iconSize: 36,
           icon: const Icon(Icons.navigate_next),
-          onPressed: () {
-            cw.changeCurrentWeek(1);
-          },
+          onPressed: () => cw.changeCurrentWeek(1),
         ),
       ],
     );
