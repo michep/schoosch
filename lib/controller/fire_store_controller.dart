@@ -183,11 +183,11 @@ class FStore extends GetxController {
     return ClassModel.fromMap(res.docs[0].id, res.docs[0].data());
   }
 
-  Future<Map<String, PeopleModel>> getUserTeachers() async {
-    var teachers = <String, PeopleModel> {};
+  Future<Map<PeopleModel, List<String>>> getUserTeachers() async {
+    var teachers = <PeopleModel, List<String>> {};
     var mast = await currentClass.master;
     if(mast != null) {
-      teachers["классный руководитель"] = mast;
+      teachers[mast] = ["Классный руководитель",];
     }
 
     var days = await currentClass.schedule;
@@ -197,7 +197,12 @@ class FStore extends GetxController {
         var cur = await les.curriculum;
         var teach = await cur.master;
         if(teach != null) {
-          teachers[cur.name] = teach;
+          if(teachers[teach] == null) {
+            teachers[teach] = [cur.name];
+          }
+          else if (!teachers[teach]!.contains(cur.name)) {
+            teachers[teach]!.add(cur.name);
+          }
         }
       }
     }
@@ -205,12 +210,22 @@ class FStore extends GetxController {
     return teachers;
   }
 
-  Future saveRate(String teacherId, String raterId, DateTime date, int rating) async {
+  Future saveRate(String teacherId, String raterId, DateTime date, int rating, String commentary) async {
     Map<String, dynamic> data = {};
     data['ratedate'] = Timestamp.fromDate(date);
     data['rater_id'] = raterId;
     data['rating'] = rating;
     data['teacher_id'] = teacherId;
+    data['commentary'] = commentary;
     return _institutionRef.collection('teachersrates').add(data);
+  }
+
+  Future<double> getAverageTeacherRating(String teacherid) async {
+    double sum = 0;
+    var ratings = await _institutionRef.collection('teachersrates').where('teacher_id', isEqualTo: teacherid).get();
+    for(var i in ratings.docs) {
+      sum += i.get('rating');
+    }
+    return sum / ratings.docs.length;
   }
 }

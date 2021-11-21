@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 enum personType { student, teacher }
 
@@ -19,4 +20,16 @@ class PeopleModel {
     birthday = map['birthday'] != null ? DateTime.fromMillisecondsSinceEpoch((map['birthday'] as Timestamp).millisecondsSinceEpoch) : null;
     email = map['email'] != null ? map['email'] as String : '';
   }
+
+  @override
+  operator ==(other) {
+    if (other is PeopleModel) {
+      return id == other.id;
+    }
+    return this == other;
+  }
+
+  @override
+  int get hashCode => hashValues(id, '');
+
 }

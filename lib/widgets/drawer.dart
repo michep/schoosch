@@ -24,8 +24,8 @@ class MDrawer extends StatelessWidget {
               onPressed: () {
                 Get.to(() => RatePage(teachers: Get.find<FStore>().getUserTeachers(),));
               },
-              icon: Icon(Icons.access_alarms),
-              label: Text("What"),
+              icon: Icon(Icons.insert_emoticon_rounded),
+              label: Text('Оценить учителей'),
             )
           ],
           crossAxisAlignment: CrossAxisAlignment.start,
