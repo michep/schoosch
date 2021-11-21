@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import '../pages/teacher_rate_page.dart';
+import 'package:get/get.dart';
 
 class MDrawer extends StatelessWidget {
   const MDrawer({Key? key}) : super(key: key);
@@ -11,7 +12,6 @@ class MDrawer extends StatelessWidget {
       children: [
         DrawerHeader(
           decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-          // decoration: const BoxDecoration(color: Colors.lightBlueAccent),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -31,6 +31,18 @@ class MDrawer extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        Column(
+          children: [
+            TextButton.icon(
+              onPressed: () {
+                Get.to(() => RatePage(teachers: Get.find<FStore>().getUserTeachers(),));
+              },
+              icon: const Icon(Icons.insert_emoticon_rounded),
+              label: const Text('Оценить учителей'),
+            )
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
         ),
       ],
     );

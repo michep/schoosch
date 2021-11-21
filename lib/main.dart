@@ -43,6 +43,7 @@ class MyApp extends StatelessWidget {
     var auth = Get.find<FAuth>();
     return GetMaterialApp(
       title: 'School Schedule Application',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
