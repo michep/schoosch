@@ -5,8 +5,10 @@ import 'package:schoosch/model/people_model.dart';
 import 'package:get/get.dart';
 
 class RateSheet extends StatefulWidget {
-  RateSheet(this.teach, {Key? key}) : super(key: key);
-  PeopleModel teach;
+  final PeopleModel teach;
+
+  const RateSheet(this.teach, {Key? key}) : super(key: key);
+
   @override
   _RateSheetState createState() => _RateSheetState();
 }
@@ -14,9 +16,8 @@ class RateSheet extends StatefulWidget {
 class _RateSheetState extends State<RateSheet> {
   void rate() {
     var store = Get.find<FStore>();
-    if((rating > 2) || (rating < 2 && cont.text != '')) {
-      store.saveRate(widget.teach.id, store.currentUser!.id, DateTime.now(),
-        rating, cont.text);
+    if ((rating > 2) || (rating < 2 && cont.text != '')) {
+      store.saveRate(widget.teach.id, store.currentUser!.id, DateTime.now(), rating, cont.text);
     }
     Get.back();
     rating = 0;
@@ -40,10 +41,9 @@ class _RateSheetState extends State<RateSheet> {
             onRatingUpdate: (rating) {
               this.rating = rating.round();
               setState(() {
-                if(rating < 3) {
+                if (rating < 3) {
                   showComment = true;
-                }
-                else {
+                } else {
                   showComment = false;
                 }
               });

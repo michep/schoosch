@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            WeekSelector(key: ValueKey(Get.find<CurrentWeek>().currentWeek.id)),
+            WeekSelector(key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber)),
             Expanded(
               child: FutureBuilder<ClassModel>(
                 future: _store.getCurrentUserClassModel(),

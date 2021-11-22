@@ -18,7 +18,7 @@ class AnimatedSwipeScheduleSwitcher extends StatelessWidget {
           transitionBuilder: transitionBuilder,
           child: Dismissible(
             confirmDismiss: onDismissed,
-            key: ValueKey(_cw.currentWeek.id),
+            key: ValueKey(_cw.currentWeek.weekNumber),
             resizeDuration: const Duration(seconds: 0),
             child: child,
           ),

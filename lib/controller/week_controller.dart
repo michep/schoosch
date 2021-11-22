@@ -1,41 +1,32 @@
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
-import 'package:schoosch/model/yearweek_model.dart';
+import 'package:isoweek/isoweek.dart';
 
 class CurrentWeek extends GetxController {
-  final _store = Get.find<FStore>();
-  late final Rx<YearweekModel?> _currentWeek = Rx(null);
+  late final Rx<Week> _currentWeek = Rx(Week.current());
   int lastChange = 0;
 
-  YearweekModel get currentWeek => _currentWeek.value!;
-  Rx<YearweekModel> get currentWeek$ => _currentWeek as Rx<YearweekModel>;
+  Week get currentWeek => _currentWeek.value;
+  Rx<Week> get currentWeek$ => _currentWeek;
 
-  CurrentWeek(YearweekModel yw) {
-    _currentWeek.value = yw;
+  CurrentWeek(Week week) {
+    _currentWeek.value = week;
   }
 
   bool changeCurrentWeek(int n) {
-    if (_store.getYearweekModelByWeek(_currentWeek.value!.order + n) == null) {
-      return false;
-    }
-    _currentWeek.value = _store.getYearweekModelByWeek(_currentWeek.value!.order + n);
+    _currentWeek.value = n >= 0 ? _currentWeek.value.next : _currentWeek.value.previous;
     lastChange = n;
     return true;
   }
 
   bool changeToCurrentWeek() {
-    var cw = _store.getYearweekModelByDate(DateTime.now());
-    if (cw.order < currentWeek.order) {
+    var week = Week.current();
+    if (week.weekNumber < currentWeek.weekNumber || week.year < currentWeek.year) {
       lastChange = -1;
     }
-    if (cw.order > currentWeek.order) {
+    if (week.weekNumber > currentWeek.weekNumber || week.year > currentWeek.year) {
       lastChange = 1;
     }
-    var wm = _store.getYearweekModelByWeek(cw.order);
-    if (wm == null) {
-      return false;
-    }
-    _currentWeek.value = wm;
+    _currentWeek.value = week;
     return true;
   }
 }

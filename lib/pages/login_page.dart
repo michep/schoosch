@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:get/get.dart';
+import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
@@ -127,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
       },
       permanent: true,
     ).then((_) {
-      Get.put(CurrentWeek(Get.find<FStore>().getYearweekModelByDate(DateTime.now())));
+      Get.put(CurrentWeek(Week.current()));
       Get.offAll(() => const HomePage());
     });
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
@@ -27,7 +28,7 @@ Future<void> main() async {
       permanent: true,
     ).then((value) {
       Get.put(
-        CurrentWeek(Get.find<FStore>().getYearweekModelByDate(DateTime.now())),
+        CurrentWeek(Week.current()),
       );
     });
   }

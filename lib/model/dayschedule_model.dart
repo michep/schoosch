@@ -16,7 +16,7 @@ class DayScheduleModel {
 
   DayScheduleModel.fromMap(this.classId, this.id, Map<String, Object?> map) {
     day = map['day'] != null ? map['day'] as int : -1;
-    date = Get.find<CurrentWeek>().currentWeek.start.add(Duration(days: day - 1));
+    date = Get.find<CurrentWeek>().currentWeek.day(0).add(Duration(days: day - 1));
     from = map['from'] != null ? DateTime.fromMillisecondsSinceEpoch((map['from'] as Timestamp).millisecondsSinceEpoch) : DateTime(2000);
     till = map['till'] != null ? DateTime.fromMillisecondsSinceEpoch((map['till'] as Timestamp).millisecondsSinceEpoch) : DateTime(3000);
   }

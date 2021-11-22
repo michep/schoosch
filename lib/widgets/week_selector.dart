@@ -11,7 +11,6 @@ class WeekSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
           iconSize: 24,
@@ -25,7 +24,7 @@ class WeekSelector extends StatelessWidget {
         ),
         Obx(
           () => Text(
-              '${DateFormat('dd MMM', 'ru').format(cw.currentWeek.start)} \u2014 ${DateFormat('dd MMM', 'ru').format(cw.currentWeek.end)}'),
+              '${DateFormat('dd MMM', 'ru').format(cw.currentWeek.day(0))} \u2014 ${DateFormat('dd MMM', 'ru').format(cw.currentWeek.day(7))}'),
         ),
         IconButton(
           iconSize: 36,
