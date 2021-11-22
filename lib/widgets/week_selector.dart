@@ -24,7 +24,7 @@ class WeekSelector extends StatelessWidget {
         ),
         Obx(
           () => Text(
-              '${DateFormat('dd MMM', 'ru').format(cw.currentWeek.day(0))} \u2014 ${DateFormat('dd MMM', 'ru').format(cw.currentWeek.day(7))}'),
+              '${DateFormat('dd MMM', 'ru').format(cw.currentWeek.day(0))} \u2014 ${DateFormat('dd MMM', 'ru').format(cw.currentWeek.day(7).subtract(const Duration(seconds: 1)))}'),
         ),
         IconButton(
           iconSize: 36,

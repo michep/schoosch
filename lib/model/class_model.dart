@@ -28,6 +28,6 @@ class ClassModel {
 
   Future<List<DayScheduleModel>> get schedule async {
     var cw = Get.find<CurrentWeek>().currentWeek;
-    return _schedule[cw.weekNumber] ??= await Get.find<FStore>().getSchedulesModel(id, cw);
+    return _schedule[cw.weekNumber] ??= await Get.find<FStore>().getSchedulesModel(this, cw);
   }
 }

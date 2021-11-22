@@ -22,8 +22,7 @@ class CurrentWeek extends GetxController {
     var week = Week.current();
     if (week.weekNumber < currentWeek.weekNumber || week.year < currentWeek.year) {
       lastChange = -1;
-    }
-    if (week.weekNumber > currentWeek.weekNumber || week.year > currentWeek.year) {
+    } else if (week.weekNumber > currentWeek.weekNumber || week.year > currentWeek.year) {
       lastChange = 1;
     }
     _currentWeek.value = week;

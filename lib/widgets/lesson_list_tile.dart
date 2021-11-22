@@ -39,29 +39,12 @@ class _LessonListTileState extends State<LessonListTile> {
             title: Text(cur.name),
             trailing: Text(ven.name),
             subtitle: Text(tim.format(context)),
-            selected: widget._lesson.ready,
-            selectedTileColor: Colors.green.shade100,
-            onLongPress: _onLongPress,
             onTap: () => _onTap(widget._lesson, cur, ven, tim),
           );
         });
   }
 
-  void _onLongPress() {
-    setState(() {
-      final fs = Get.find<FStore>();
-      widget._lesson.ready = !widget._lesson.ready;
-      fs.updateLesson(widget._lesson);
-    });
-  }
-
   void _onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim) {
-    Get.to(() => LessonPage(
-          les,
-          cur,
-          ven,
-          tim,
-          widget._date,
-        ));
+    Get.to(() => LessonPage(les, cur, ven, tim, widget._date));
   }
 }
