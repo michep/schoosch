@@ -36,7 +36,9 @@ class MDrawer extends StatelessWidget {
           children: [
             TextButton.icon(
               onPressed: () {
-                Get.to(() => RatePage(teachers: Get.find<FStore>().getUserTeachers(),));
+                Get.to(() => RatePage(
+                      teachers: Get.find<FStore>().getTeachersCurrentUser(),
+                    ));
               },
               icon: const Icon(Icons.insert_emoticon_rounded),
               label: const Text('Оценить учителей'),

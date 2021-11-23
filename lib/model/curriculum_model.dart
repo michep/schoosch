@@ -11,10 +11,10 @@ class CurriculumModel {
   PeopleModel? _master;
 
   CurriculumModel.fromMap(this.id, Map<String, dynamic> map) {
-    _name = map['name'] != null ? map['name'] as String : '';
+    _name = map['name'] != null ? map['name'] as String : throw '';
     _alias = map['alias'] != null ? map['alias'] as String : null;
-    _masterId = map['master_id'] != null ? map['master_id'] as String : null;
-    _studentIds = map['student_ids'] != null ? (map['student_ids'] as List<dynamic>).map((e) => e as String).toList() : null;
+    _masterId = map['master_id'] != null ? map['master_id'] as String : null; //TODO: throw
+    _studentIds = map['student_ids'] != null ? (map['student_ids'] as List<dynamic>).map((e) => e as String).toList() : null; //TODO: throw
   }
 
   String get name => _alias ?? _name;

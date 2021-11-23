@@ -17,7 +17,7 @@ class _RateSheetState extends State<RateSheet> {
   void rate() {
     var store = Get.find<FStore>();
     if ((rating > 2) || (rating < 2 && cont.text != '')) {
-      store.saveRate(widget.teach.id, store.currentUser!.id, DateTime.now(), rating, cont.text);
+      store.saveTeacherRate(widget.teach.id, store.currentUser!.id, DateTime.now(), rating, cont.text);
     }
     Get.back();
     rating = 0;
@@ -69,7 +69,7 @@ class _RateSheetState extends State<RateSheet> {
           const SizedBox(
             height: 10,
           ),
-          ElevatedButton(onPressed: rate, child: const Text("оценить")),
+          ElevatedButton(onPressed: rate, child: const Text('оценить')),
         ],
       ),
     );

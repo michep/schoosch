@@ -17,7 +17,8 @@ class DayScheduleModel {
   List<LessonModel>? _studentLessons;
 
   DayScheduleModel.fromMap(this._class, this.id, Map<String, Object?> map) {
-    day = map['day'] != null ? map['day'] as int : -1;
+    day = map['day'] != null ? map['day'] as int : throw 'need day key in schedule';
+    if (day < 1 || day > 7) throw 'incorrect day in schedule';
     date = Get.find<CurrentWeek>().currentWeek.day(0).add(Duration(days: day - 1));
     from = map['from'] != null ? DateTime.fromMillisecondsSinceEpoch((map['from'] as Timestamp).millisecondsSinceEpoch) : DateTime(2000);
     till = map['till'] != null ? DateTime.fromMillisecondsSinceEpoch((map['till'] as Timestamp).millisecondsSinceEpoch) : DateTime(3000);
@@ -28,6 +29,6 @@ class DayScheduleModel {
   }
 
   Future<List<LessonModel>> studentLessons(Week week) async {
-    return _studentLessons ??= await Get.find<FStore>().getCurrentUserLessonsModel(_class, this, week);
+    return _studentLessons ??= await Get.find<FStore>().getLessonsModelCurrentUser(_class, this, week);
   }
 }

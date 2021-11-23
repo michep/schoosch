@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
             WeekSelector(key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber)),
             Expanded(
               child: FutureBuilder<ClassModel>(
-                future: _store.getCurrentUserClassModel(),
+                future: _store.getClassModelCurrentUser(),
                 builder: (context, classSnap) {
                   if (!classSnap.hasData) {
                     return Utils.progressIndicator();

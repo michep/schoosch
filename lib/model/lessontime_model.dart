@@ -8,9 +8,11 @@ class LessontimeModel {
   late final TimeOfDay till;
 
   LessontimeModel.fromMap(this.id, Map<String, Object?> map) {
-    order = map['order'] as int;
-    var f = (map['from'] as String).split(':');
-    var t = (map['till'] as String).split(':');
+    order = map['order'] != null ? map['order'] as int : throw 'need order key in lessontime';
+    var f = map['from'] != null ? (map['from'] as String).split(':') : throw 'need from key in lessontime';
+    if (f.length != 2) throw 'incorrect from in lessontime';
+    var t = map['till'] != null ? (map['till'] as String).split(':') : throw 'need till key in lessontime';
+    if (t.length != 2) throw 'incorrect till in lessontime';
     from = TimeOfDay(hour: int.parse(f[0]), minute: int.parse(f[1]));
     till = TimeOfDay(hour: int.parse(t[0]), minute: int.parse(t[1]));
   }

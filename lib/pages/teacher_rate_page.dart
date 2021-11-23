@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/widgets/rateteachersheet.dart';
 import 'package:schoosch/widgets/utils.dart';
 import 'package:schoosch/model/people_model.dart';
@@ -37,33 +35,32 @@ class _RatePageState extends State<RatePage> {
                       snapshot.data!.keys.toList().isNotEmpty
                           ? Expanded(
                               child: ListView.builder(
+                                itemCount: snapshot.data!.keys.length,
                                 itemBuilder: (context, elem) {
                                   var m = snapshot.data!;
-                                  var keys = m.keys.toList();
-                                  var per = m[keys[elem]]!;
+                                  var teacher = m.keys.toList()[elem];
+                                  var lessons = m[teacher]!;
                                   return Card(
                                     margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 7),
                                     elevation: 4,
                                     child: ListTile(
                                       leading: const Icon(Icons.person),
-                                      title: Text(keys[elem].firstname + ' ' + keys[elem].lastname),
-                                      subtitle: Text(per.join(', ')),
+                                      title: Text(teacher.firstname + ' ' + teacher.lastname),
+                                      subtitle: Text(lessons.join(', ')),
                                       trailing: FutureBuilder<double>(
-                                          future: Get.find<FStore>().getAverageTeacherRating(keys[elem].id),
-                                          // initialData: 0,
+                                          future: teacher.getTeacherAverageRating(),
                                           builder: (context, snapshot) {
-                                            return snapshot.hasData ? Text(snapshot.data!.toStringAsFixed(2)) : const Text('no ratings');
+                                            return snapshot.hasData ? Text(snapshot.data!.toStringAsFixed(2)) : const Text('нет оценок');
                                           }),
                                       onTap: () {
-                                        activateBottomSheet(context, keys[elem]).then((_) => setState(() {}));
+                                        activateBottomSheet(context, teacher).then((_) => setState(() {}));
                                       },
                                     ),
                                   );
                                 },
-                                itemCount: snapshot.data!.keys.length,
                               ),
                             )
-                          : const Text('No Teachers in This class'),
+                          : const Text('Нет учителей'),
                     ],
                   )
                 : Utils.progressIndicator();

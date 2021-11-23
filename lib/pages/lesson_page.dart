@@ -5,6 +5,7 @@ import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
+import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
@@ -26,8 +27,29 @@ class LessonPage extends StatelessWidget {
         children: [
           Text(fullLessonInfo(context)),
           Text(_venue.name),
+          FutureBuilder<List<MarkModel>?>(
+            future: _lesson.marks,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Text('');
+              }
+              if (snapshot.data!.isEmpty) {
+                return const Text('нет оценок в этот день');
+              }
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (BuildContext context, int i) {
+                    return ListTile(
+                      title: Text(snapshot.data![i].mark.toString()),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
           FutureBuilder<List<HomeworkModel>?>(
-              future: _lesson.homework,
+              future: _lesson.studentHomework,
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Text('');
@@ -50,10 +72,6 @@ class LessonPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  void onDismissed(DismissDirection dir) {
-    Get.back();
   }
 
   String fullLessonInfo(BuildContext context) {
