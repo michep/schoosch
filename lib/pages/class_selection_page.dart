@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/class_list_tile.dart';
@@ -11,12 +9,11 @@ class ClassSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final data = Get.find<FStore>();
     return Scaffold(
       appBar: const MAppBar('Выбор класса'),
       body: SafeArea(
         child: FutureBuilder<List<ClassModel>>(
-          future: data.getClassesModel(),
+          future: ClassModel.classes(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Utils.progressIndicator();

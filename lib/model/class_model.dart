@@ -30,4 +30,12 @@ class ClassModel {
     var cw = Get.find<CurrentWeek>().currentWeek;
     return _schedule[cw.weekNumber] ??= await Get.find<FStore>().getSchedulesModel(this, cw);
   }
+
+  static Future<List<ClassModel>> classes() {
+    return Get.find<FStore>().getClassesModel();
+  }
+
+  static Future<ClassModel> classCurrentStudent() {
+    return Get.find<FStore>().getClassModelCurrentUser();
+  }
 }

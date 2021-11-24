@@ -36,6 +36,9 @@ class PeopleModel {
   int get hashCode => hashValues(id, '');
 
   Future<double> getTeacherAverageRating() async {
-    return Get.find<FStore>().getAverageTeacherRating(id);
+    if (type == 'teacher') {
+      return Get.find<FStore>().getAverageTeacherRating(id);
+    }
+    return 0;
   }
 }

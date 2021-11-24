@@ -27,5 +27,5 @@ class CurriculumModel {
     return _master;
   }
 
-  bool isAvailableForPerson(String peopleid) => _studentIds == null || _studentIds!.isEmpty || _studentIds!.contains(peopleid);
+  bool isAvailableForStudent(String peopleid) => _studentIds == null || _studentIds!.isEmpty || _studentIds!.contains(peopleid);
 }

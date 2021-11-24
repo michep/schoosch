@@ -24,6 +24,7 @@ class _LessonListTileState extends State<LessonListTile> {
           widget._lesson.curriculum,
           widget._lesson.venue,
           widget._lesson.lessontime,
+          widget._lesson.marksCurrentStudentAsString,
         ]),
         builder: (context, snap) {
           if (!snap.hasData) {
@@ -33,11 +34,12 @@ class _LessonListTileState extends State<LessonListTile> {
           var cur = list[0] as CurriculumModel;
           var ven = list[1] as VenueModel;
           var tim = list[2] as LessontimeModel;
+          var mar = list[3] as String;
           return ListTile(
             leading: Text(widget._lesson.order.toString()),
             title: Text(cur.name),
-            trailing: Text(ven.name),
-            subtitle: Text(tim.format(context)),
+            trailing: Text(mar),
+            subtitle: Text(tim.format(context) + ', ' + ven.name),
             onTap: () => _onTap(widget._lesson, cur, ven, tim),
           );
         });

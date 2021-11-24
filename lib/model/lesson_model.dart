@@ -42,15 +42,20 @@ class LessonModel {
     return _lessontime ??= await Get.find<FStore>().getLessontimeModel(order);
   }
 
-  Future<List<HomeworkModel>?> get studentHomework async {
+  Future<List<HomeworkModel>?> get homeworkCurrentStudent async {
     return _homework ??= await Get.find<FStore>().getLessonHomeworkCurrentUser(_schedule, (await curriculum)!);
   }
 
-  Future<List<HomeworkModel>?> get allHomework async {
+  Future<List<HomeworkModel>?> get homework async {
     return _homework ??= await Get.find<FStore>().getLessonHomework(_schedule, (await curriculum)!);
   }
 
-  Future<List<MarkModel>?> get marks async {
+  Future<List<MarkModel>?> get marksCurrentStudent async {
     return _marks ??= await Get.find<FStore>().getLessonMarkCurrentUser(_schedule, this);
+  }
+
+  Future<String> get marksCurrentStudentAsString async {
+    var ms = await marksCurrentStudent;
+    return ms != null ? ms.map((e) => e.mark.toString()).join(', ') : '';
   }
 }

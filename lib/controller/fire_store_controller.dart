@@ -81,7 +81,7 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<ClassModel> getClassModelCurrentUser() async {
+  Future<ClassModel> getClassModelCurrentStudent() async {
     return _currentClass;
   }
 
@@ -118,13 +118,13 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<LessonModel>> getLessonsModelCurrentUser(ClassModel aclass, DayScheduleModel schedule, Week week) async {
+  Future<List<LessonModel>> getLessonsModelCurrentStudent(ClassModel aclass, DayScheduleModel schedule, Week week) async {
     List<LessonModel> res = [];
     var less = await getLessonsModel(aclass, schedule, week);
 
     for (var l in less) {
       var cur = await l.curriculum;
-      if (cur != null && cur.isAvailableForPerson(_currentUser!.id)) {
+      if (cur != null && cur.isAvailableForStudent(_currentUser!.id)) {
         res.add(l);
       }
     }
@@ -137,7 +137,7 @@ class FStore extends GetxController {
 
     for (var l in less) {
       var cur = await l.curriculum;
-      if (cur != null && cur.isAvailableForPerson(personId)) {
+      if (cur != null && cur.isAvailableForStudent(personId)) {
         res.add(l);
       }
     }
@@ -191,18 +191,18 @@ class FStore extends GetxController {
     return ClassModel.fromMap(res.docs[0].id, res.docs[0].data());
   }
 
-  Future<Map<PeopleModel, List<String>>> getTeachersCurrentUser() async {
+  Future<Map<PeopleModel, List<String>>> getTeachersCurrentStudent() async {
     var teachers = <PeopleModel, List<String>>{};
-    var mast = await (await getClassModelCurrentUser()).master;
+    var mast = await (await getClassModelCurrentStudent()).master;
     if (mast != null) {
       teachers[mast] = [
         "Классный руководитель",
       ];
     }
 
-    var days = await (await getClassModelCurrentUser()).schedule;
+    var days = await (await getClassModelCurrentStudent()).schedule;
     for (var day in days) {
-      var dayles = await day.studentLessons(Get.find<CurrentWeek>().currentWeek);
+      var dayles = await day.lessonsCurrentStudent(Get.find<CurrentWeek>().currentWeek);
       for (var les in dayles) {
         var cur = await les.curriculum;
         var teach = await cur!.master;

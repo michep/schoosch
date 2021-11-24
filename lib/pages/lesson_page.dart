@@ -28,7 +28,7 @@ class LessonPage extends StatelessWidget {
           Text(fullLessonInfo(context)),
           Text(_venue.name),
           FutureBuilder<List<MarkModel>?>(
-            future: _lesson.marks,
+            future: _lesson.marksCurrentStudent,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Text('');
@@ -42,6 +42,7 @@ class LessonPage extends StatelessWidget {
                   itemBuilder: (BuildContext context, int i) {
                     return ListTile(
                       title: Text(snapshot.data![i].mark.toString()),
+                      subtitle: Text(snapshot.data![i].comment),
                     );
                   },
                 ),
@@ -49,7 +50,7 @@ class LessonPage extends StatelessWidget {
             },
           ),
           FutureBuilder<List<HomeworkModel>?>(
-              future: _lesson.studentHomework,
+              future: _lesson.homeworkCurrentStudent,
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Text('');

@@ -10,7 +10,7 @@ class ProfilePage extends StatelessWidget {
   late final PeopleModel _user;
 
   ProfilePage({Key? key}) : super(key: key) {
-    _user = Get.find<FStore>().currentUser!;
+    // _user = Get.find<FStore>().currentUser!;
   }
 
   @override

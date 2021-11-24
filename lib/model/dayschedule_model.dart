@@ -24,11 +24,11 @@ class DayScheduleModel {
     till = map['till'] != null ? DateTime.fromMillisecondsSinceEpoch((map['till'] as Timestamp).millisecondsSinceEpoch) : DateTime(3000);
   }
 
-  Future<List<LessonModel>> allLessons(Week week) async {
+  Future<List<LessonModel>> lessons(Week week) async {
     return _lessons ??= await Get.find<FStore>().getLessonsModel(_class, this, week);
   }
 
-  Future<List<LessonModel>> studentLessons(Week week) async {
+  Future<List<LessonModel>> lessonsCurrentStudent(Week week) async {
     return _studentLessons ??= await Get.find<FStore>().getLessonsModelCurrentUser(_class, this, week);
   }
 }
