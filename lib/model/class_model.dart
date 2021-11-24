@@ -36,6 +36,6 @@ class ClassModel {
   }
 
   static Future<ClassModel> classCurrentStudent() {
-    return Get.find<FStore>().getClassModelCurrentUser();
+    return Get.find<FStore>().getClassModelCurrentStudent();
   }
 }

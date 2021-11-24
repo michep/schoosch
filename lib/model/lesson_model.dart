@@ -43,7 +43,7 @@ class LessonModel {
   }
 
   Future<List<HomeworkModel>?> get homeworkCurrentStudent async {
-    return _homework ??= await Get.find<FStore>().getLessonHomeworkCurrentUser(_schedule, (await curriculum)!);
+    return _homework ??= await Get.find<FStore>().getLessonHomeworkCurrentStudent(_schedule, (await curriculum)!);
   }
 
   Future<List<HomeworkModel>?> get homework async {
@@ -51,7 +51,7 @@ class LessonModel {
   }
 
   Future<List<MarkModel>?> get marksCurrentStudent async {
-    return _marks ??= await Get.find<FStore>().getLessonMarkCurrentUser(_schedule, this);
+    return _marks ??= await Get.find<FStore>().getLessonMarkCurrentStudent(_schedule, this);
   }
 
   Future<String> get marksCurrentStudentAsString async {

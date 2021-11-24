@@ -238,7 +238,7 @@ class FStore extends GetxController {
     return sum / ratings.docs.length;
   }
 
-  Future<List<HomeworkModel>> getLessonHomeworkCurrentUser(DayScheduleModel schedule, CurriculumModel curriculum) async {
+  Future<List<HomeworkModel>> getLessonHomeworkCurrentStudent(DayScheduleModel schedule, CurriculumModel curriculum) async {
     return getLessonHomeworkStudent(schedule, curriculum, currentUser!);
   }
 
@@ -282,7 +282,7 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<MarkModel>> getLessonMarkCurrentUser(DayScheduleModel schedule, LessonModel lesson) async {
+  Future<List<MarkModel>> getLessonMarkCurrentStudent(DayScheduleModel schedule, LessonModel lesson) async {
     return (await _institutionRef
             .collection('mark')
             .where('date', isGreaterThanOrEqualTo: schedule.date)

@@ -29,6 +29,6 @@ class DayScheduleModel {
   }
 
   Future<List<LessonModel>> lessonsCurrentStudent(Week week) async {
-    return _studentLessons ??= await Get.find<FStore>().getLessonsModelCurrentUser(_class, this, week);
+    return _studentLessons ??= await Get.find<FStore>().getLessonsModelCurrentStudent(_class, this, week);
   }
 }
