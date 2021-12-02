@@ -19,7 +19,7 @@ class PeopleModel {
     middlename = map['middlename'] != null ? map['middlename'] as String : '';
     lastname = map['lastname'] != null ? map['lastname'] as String : throw 'need lastname key in people';
     type = map['type'] != null ? map['type'] as String : throw 'need type key in people';
-    if (!['teacher', 'student'].contains(type)) throw 'incorrect type in people';
+    if (!['teacher', 'student', 'parent', ''].contains(type)) throw 'incorrect type in people';
     birthday = map['birthday'] != null ? DateTime.fromMillisecondsSinceEpoch((map['birthday'] as Timestamp).millisecondsSinceEpoch) : null;
     email = map['email'] != null ? map['email'] as String : ''; //TODO: throw
   }

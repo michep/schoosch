@@ -42,16 +42,16 @@ class LessonModel {
     return _lessontime ??= await Get.find<FStore>().getLessontimeModel(order);
   }
 
-  Future<List<HomeworkModel>?> get homeworkCurrentStudent async {
-    return _homework ??= await Get.find<FStore>().getLessonHomeworkCurrentStudent(_schedule, (await curriculum)!);
+  Future<List<HomeworkModel>?> get homeworksCurrentStudent async {
+    return _homework ??= await Get.find<FStore>().getLessonHomeworksCurrentStudent(_schedule, (await curriculum)!);
   }
 
-  Future<List<HomeworkModel>?> get homework async {
-    return _homework ??= await Get.find<FStore>().getLessonHomework(_schedule, (await curriculum)!);
+  Future<List<HomeworkModel>?> get homeworks async {
+    return _homework ??= await Get.find<FStore>().getLessonHomeworks(_schedule, (await curriculum)!);
   }
 
   Future<List<MarkModel>?> get marksCurrentStudent async {
-    return _marks ??= await Get.find<FStore>().getLessonMarkCurrentStudent(_schedule, this);
+    return _marks ??= await Get.find<FStore>().getLessonMarksCurrentStudent(_schedule, this);
   }
 
   Future<String> get marksCurrentStudentAsString async {

@@ -13,7 +13,7 @@ class ClassSelectionPage extends StatelessWidget {
       appBar: const MAppBar('Выбор класса'),
       body: SafeArea(
         child: FutureBuilder<List<ClassModel>>(
-          future: ClassModel.classes(),
+          future: ClassModel.allClasses(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Utils.progressIndicator();

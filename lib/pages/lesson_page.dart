@@ -50,7 +50,7 @@ class LessonPage extends StatelessWidget {
             },
           ),
           FutureBuilder<List<HomeworkModel>?>(
-              future: _lesson.homeworkCurrentStudent,
+              future: _lesson.homeworksCurrentStudent,
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Text('');

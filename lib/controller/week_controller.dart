@@ -1,31 +1,54 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 
 class CurrentWeek extends GetxController {
   late final Rx<Week> _currentWeek = Rx(Week.current());
-  int lastChange = 0;
+  late final PageController _pageController;
 
   Week get currentWeek => _currentWeek.value;
-  Rx<Week> get currentWeek$ => _currentWeek;
+
+  PageController get pageController => _pageController;
 
   CurrentWeek(Week week) {
     _currentWeek.value = week;
+    _pageController = PageController(initialPage: currentWeek.year * 100 + currentWeek.weekNumber);
   }
 
-  bool changeCurrentWeek(int n) {
-    _currentWeek.value = n >= 0 ? _currentWeek.value.next : _currentWeek.value.previous;
-    lastChange = n;
-    return true;
+  void setIdx(int idx) {
+    _currentWeek.value = Week(year: idx ~/ 100, weekNumber: idx % 100);
+    _pageController.animateToPage(
+      currentWeek.year * 100 + currentWeek.weekNumber,
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeOutExpo,
+    );
   }
 
-  bool changeToCurrentWeek() {
+  void next() {
+    _currentWeek.value = _currentWeek.value.next;
+    _pageController.nextPage(
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeOutExpo,
+    );
+  }
+
+  void previous() {
+    _currentWeek.value = _currentWeek.value.previous;
+    _pageController.previousPage(
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeOutExpo,
+    );
+  }
+
+  Future<void> changeToCurrentWeek() async {
     var week = Week.current();
-    if (week.weekNumber < currentWeek.weekNumber || week.year < currentWeek.year) {
-      lastChange = -1;
-    } else if (week.weekNumber > currentWeek.weekNumber || week.year > currentWeek.year) {
-      lastChange = 1;
-    }
+    var cIdx = week.year * 100 + week.weekNumber;
+    int direction = 0;
+    if (cIdx > (currentWeek.year * 100 + currentWeek.weekNumber)) direction = 1;
+    if (cIdx < (currentWeek.year * 100 + currentWeek.weekNumber)) direction = -1;
+    if (direction == 0) return Future.value();
+    _pageController.jumpToPage(cIdx + -1 * direction);
     _currentWeek.value = week;
-    return true;
+    return _pageController.animateToPage(cIdx, duration: const Duration(milliseconds: 1000), curve: Curves.easeOutExpo);
   }
 }

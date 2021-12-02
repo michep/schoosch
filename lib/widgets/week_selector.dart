@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
 
 class WeekSelector extends StatelessWidget {
@@ -15,28 +16,29 @@ class WeekSelector extends StatelessWidget {
         IconButton(
           iconSize: 24,
           icon: const Icon(Icons.today),
-          onPressed: () => cw.changeToCurrentWeek(),
+          onPressed: cw.changeToCurrentWeek,
         ),
         const Spacer(),
         const Text(
           'Неделя: ',
           style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
         ),
-        Obx(
-          () => Text(
-              '${DateFormat('dd MMM', 'ru').format(cw.currentWeek.day(0))} \u2014 ${DateFormat('dd MMM', 'ru').format(cw.currentWeek.day(7).subtract(const Duration(seconds: 1)))}'),
-        ),
+        Obx(() => Text(formatWeek(cw.currentWeek))),
         IconButton(
           iconSize: 36,
           icon: const Icon(Icons.navigate_before),
-          onPressed: () => cw.changeCurrentWeek(-1),
+          onPressed: cw.previous,
         ),
         IconButton(
           iconSize: 36,
           icon: const Icon(Icons.navigate_next),
-          onPressed: () => cw.changeCurrentWeek(1),
+          onPressed: cw.next,
         ),
       ],
     );
+  }
+
+  String formatWeek(Week week) {
+    return '${DateFormat('dd MMM', 'ru').format(week.day(0))} \u2014 ${DateFormat('dd MMM', 'ru').format(week.day(7).subtract(const Duration(seconds: 1)))}';
   }
 }

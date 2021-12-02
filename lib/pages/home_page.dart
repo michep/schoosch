@@ -4,8 +4,9 @@ import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/drawer.dart';
-import 'package:schoosch/widgets/scheduleswitcher.dart';
-import 'package:schoosch/widgets/student_schedule.dart';
+import 'package:schoosch/widgets/pageswitcher.dart';
+// import 'package:schoosch/widgets/scheduleswitcher.dart';
+// import 'package:schoosch/widgets/student_schedule.dart';
 import 'package:schoosch/widgets/utils.dart';
 import 'package:schoosch/widgets/week_selector.dart';
 
@@ -29,14 +30,13 @@ class HomePage extends StatelessWidget {
             WeekSelector(key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber)),
             Expanded(
               child: FutureBuilder<ClassModel>(
-                future: ClassModel.classCurrentStudent(),
+                future: ClassModel.currentStudentClass(),
                 builder: (context, classSnap) {
-                  if (!classSnap.hasData) {
-                    return Utils.progressIndicator();
-                  }
-                  return AnimatedSwipeScheduleSwitcher(
-                    child: StudentScheduleWidget(classSnap.data!),
-                  );
+                  if (!classSnap.hasData) return Utils.progressIndicator();
+                  // return AnimatedSwipeScheduleSwitcher(
+                  //   child: StudentScheduleWidget(classSnap.data!),
+                  // );
+                  return const SchedulePageView();
                 },
               ),
             ),

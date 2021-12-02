@@ -30,14 +30,13 @@ class FStore extends GetxController {
 
   FStore() {
     _fstorage = FirebaseStorage.instance;
-    FirebaseFirestore.instance.clearPersistence();
     _store = FirebaseFirestore.instance;
     _store.settings = const Settings(persistenceEnabled: false);
-    _cachedStore = FirebaseFirestore.instance;
-    _cachedStore.settings = const Settings(persistenceEnabled: true);
+    _store.clearPersistence();
   }
 
   PeopleModel? get currentUser => _currentUser;
+  ClassModel get currentClass => _currentClass;
 
   Uint8List? get logoImageData => _logoImagData;
 
@@ -81,21 +80,18 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<ClassModel> getClassModelCurrentStudent() async {
-    return _currentClass;
-  }
-
   Future<List<DayScheduleModel>> getSchedulesModel(ClassModel aclass, Week currentWeek) async {
     return (await _institutionRef.collection('class').doc(aclass.id).collection('schedule').orderBy('day').get())
         .docs
         .map(
           (schedule) => DayScheduleModel.fromMap(
             aclass,
+            currentWeek,
             schedule.id,
             schedule.data(),
           ),
         )
-        .where((s) => s.from.isBefore(currentWeek.day(0)) && s.till.isAfter(currentWeek.day(7)))
+        .where((s) => s.from.isBefore(currentWeek.day(5)) && s.till.isAfter(currentWeek.day(4)))
         .toList();
   }
 
@@ -193,16 +189,18 @@ class FStore extends GetxController {
 
   Future<Map<PeopleModel, List<String>>> getTeachersCurrentStudent() async {
     var teachers = <PeopleModel, List<String>>{};
-    var mast = await (await getClassModelCurrentStudent()).master;
+    // var mast = await (await getClassModelCurrentStudent()).master;
+    var mast = await _currentClass.master;
     if (mast != null) {
       teachers[mast] = [
         "Классный руководитель",
       ];
     }
-
-    var days = await (await getClassModelCurrentStudent()).schedule;
+    var cw = Get.find<CurrentWeek>().currentWeek;
+    // var days = await (await getClassModelCurrentStudent()).getSchedulesWeek(cw);
+    var days = await _currentClass.getSchedulesWeek(cw);
     for (var day in days) {
-      var dayles = await day.lessonsCurrentStudent(Get.find<CurrentWeek>().currentWeek);
+      var dayles = await day.lessonsCurrentStudent(cw);
       for (var les in dayles) {
         var cur = await les.curriculum;
         var teach = await cur!.master;
@@ -238,11 +236,11 @@ class FStore extends GetxController {
     return sum / ratings.docs.length;
   }
 
-  Future<List<HomeworkModel>> getLessonHomeworkCurrentStudent(DayScheduleModel schedule, CurriculumModel curriculum) async {
-    return getLessonHomeworkStudent(schedule, curriculum, currentUser!);
+  Future<List<HomeworkModel>> getLessonHomeworksCurrentStudent(DayScheduleModel schedule, CurriculumModel curriculum) async {
+    return getLessonHomeworskStudent(schedule, curriculum, currentUser!);
   }
 
-  Future<List<HomeworkModel>> getLessonHomeworkStudent(DayScheduleModel schedule, CurriculumModel curriculum, PeopleModel student) async {
+  Future<List<HomeworkModel>> getLessonHomeworskStudent(DayScheduleModel schedule, CurriculumModel curriculum, PeopleModel student) async {
     List<HomeworkModel> ret = [];
     var chw = (await _institutionRef
             .collection('homework')
@@ -270,7 +268,7 @@ class FStore extends GetxController {
     return ret;
   }
 
-  Future<List<HomeworkModel>> getLessonHomework(DayScheduleModel schedule, CurriculumModel curriculum) async {
+  Future<List<HomeworkModel>> getLessonHomeworks(DayScheduleModel schedule, CurriculumModel curriculum) async {
     return (await _institutionRef
             .collection('homework')
             .where('date', isGreaterThanOrEqualTo: schedule.date)
@@ -282,7 +280,7 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<MarkModel>> getLessonMarkCurrentStudent(DayScheduleModel schedule, LessonModel lesson) async {
+  Future<List<MarkModel>> getLessonMarksCurrentStudent(DayScheduleModel schedule, LessonModel lesson) async {
     return (await _institutionRef
             .collection('mark')
             .where('date', isGreaterThanOrEqualTo: schedule.date)

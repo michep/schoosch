@@ -5,36 +5,71 @@ institution:
     _subcollections:
       attributes: {}
       lessontime:
-        - order: 1
-          from: '09:00'
-          till: '09:40'
-        - order: 2
-          from: '09:50'
-          till: '10:30'
-        - order: 3
-          from: '10:55'
-          till: '11:35'
-        - order: 4
-          from: '11:45'
-          till: '12:25'
-        - order: 5
-          from: '12:35'
-          till: '13:15'
-        - order: 6
-          from: '13:45'
-          till: '14:25'
-        - order: 7
-          from: '14:35'
-          till: '15:15'
-        - order: 8
-          from: '15:25'
-          till: '16:05'
-        - order: 8
-          from: '16:20'
-          till: '17:00'
-        - order: 10
-          from: '17:10'
-          till: '17:50'
+        - name: 'Расписание младших классов'
+          time:
+            - order: 1
+              from: '09:00'
+              till: '09:40'
+            - order: 2
+              from: '10:05'
+              till: '10:45'
+            - order: 3
+              from: '10:55'
+              till: '11:35'
+            - order: 4
+              from: '11:45'
+              till: '12:25'
+            - order: 5
+              from: '12:55'
+              till: '13:35'
+            - order: 6
+              from: '13:45'
+              till: '14:25'
+            - order: 7
+              from: '14:35'
+              till: '15:15'
+            - order: 8
+              from: '15:25'
+              till: '16:05'
+            - order: 8
+              from: '16:20'
+              till: '17:00'
+            - order: 10
+              from: '17:10'
+              till: '17:50'
+
+        - name: 'Расписание старших классов'
+          time:
+            - order: 1
+              from: '09:00'
+              till: '09:40'
+            - order: 2
+              from: '09:50'
+              till: '10:30'
+            - order: 3
+              from: '10:55'
+              till: '11:35'
+            - order: 4
+              from: '11:45'
+              till: '12:25'
+            - order: 5
+              from: '12:35'
+              till: '13:15'
+            - order: 6
+              from: '13:45'
+              till: '14:25'
+            - order: 7
+              from: '14:35'
+              till: '15:15'
+            - order: 8
+              from: '15:25'
+              till: '16:05'
+            - order: 8
+              from: '16:20'
+              till: '17:00'
+            - order: 10
+              from: '17:10'
+              till: '17:50'
 
       venue:
         - name: 'Спортзал'
@@ -178,60 +213,72 @@ institution:
         - name: 'Первый класс'
           grade: 1
           master_id:
+          lessontime_id: '$query|/institution/[name=Гимназия им. Пастернака]/lessontime/[name=Расписание младших классов]/[_id]'
           student_ids: []
 
         - name: 'Второй класс'
           grade: 2
           master_id:
+          lessontime_id: '$query|/institution/[name=Гимназия им. Пастернака]/lessontime/[name=Расписание младших классов]/[_id]'
           student_ids: []
 
         - name: 'Третий класс'
           grade: 3
           master_id:
+          lessontime_id: '$query|/institution/[name=Гимназия им. Пастернака]/lessontime/[name=Расписание младших классов]/[_id]'
           student_ids: []
 
         - name: 'Четвертый класс'
           grade: 4
           master_id:
+          lessontime_id: '$query|/institution/[name=Гимназия им. Пастернака]/lessontime/[name=Расписание младших классов]/[_id]'
           student_ids: []
 
         - name: 'Пятый класс'
           grade: 5
           master_id:
+          lessontime_id: '$query|/institution/[name=Гимназия им. Пастернака]/lessontime/[name=Расписание старших классов]/[_id]'
           student_ids: []
 
         - name: 'Шестой класс'
           grade: 6
           master_id:
+          lessontime_id: '$query|/institution/[name=Гимназия им. Пастернака]/lessontime/[name=Расписание старших классов]/[_id]'
           student_ids: []
 
         - name: 'Седьмой класс'
           grade: 7
           master_id:
+          lessontime_id: '$query|/institution/[name=Гимназия им. Пастернака]/lessontime/[name=Расписание старших классов]/[_id]'
           student_ids: []
 
         - name: 'Восьмой класс'
           grade: 8
           master_id:
+          lessontime_id: '$query|/institution/[name=Гимназия им. Пастернака]/lessontime/[name=Расписание старших классов]/[_id]'
           student_ids: []
 
         - name: 'Еще один 8 класс'
           grade: 8
           master_id:
+          lessontime_id: '$query|/institution/[name=Гимназия им. Пастернака]/lessontime/[name=Расписание старших классов]/[_id]'
           student_ids: []
 
         - name: 'Девятый класс'
           grade: 9
           master_id:
+          lessontime_id: '$query|/institution/[name=Гимназия им. Пастернака]/lessontime/[name=Расписание старших классов]/[_id]'
           student_ids: []
 
         - name: 'Десятый класс'
           grade: 10
           master_id: '$query|/institution/[name=Гимназия им. Пастернака]/people/[firstname=Мария&&middlename=Ивановна&&lastname=Семенова]/[_id]'
+          lessontime_id: '$query|/institution/[name=Гимназия им. Пастернака]/lessontime/[name=Расписание старших классов]/[_id]'
           student_ids:
             - '$query|/institution/[name=Гимназия им. Пастернака]/people/[firstname=Степан&&middlename=Михайлович&&lastname=Чепайкин]/[_id]'
 
         - name: '11 класс'
           grade: 11
           master_id:
+          lessontime_id: '$query|/institution/[name=Гимназия им. Пастернака]/lessontime/[name=Расписание старших классов]/[_id]'
           student_ids: []
