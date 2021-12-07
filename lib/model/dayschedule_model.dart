@@ -12,8 +12,10 @@ class DayScheduleModel {
   late final int day;
   late final DateTime from;
   late final DateTime till;
-  List<LessonModel>? _lessons;
-  List<LessonModel>? _studentLessons;
+  final List<LessonModel> _lessons = [];
+  bool _lessonsLoaded = false;
+  final List<LessonModel> _studentLessons = [];
+  bool _studentLessonsLoaded = false;
 
   DayScheduleModel.fromMap(this._class, this._week, this.id, Map<String, Object?> map) {
     day = map['day'] != null ? map['day'] as int : throw 'need day key in schedule';
@@ -27,10 +29,18 @@ class DayScheduleModel {
   DateTime get date => _week.days[day - 1];
 
   Future<List<LessonModel>> lessons(Week week) async {
-    return _lessons ??= await Get.find<FStore>().getLessonsModel(_class, this, week);
+    if (!_lessonsLoaded) {
+      _lessons.addAll(await Get.find<FStore>().getLessonsModel(_class, this, week));
+      _lessonsLoaded = true;
+    }
+    return _lessons;
   }
 
   Future<List<LessonModel>> lessonsCurrentStudent(Week week) async {
-    return _studentLessons ??= await Get.find<FStore>().getLessonsModelCurrentStudent(_class, this, week);
+    if (!_studentLessonsLoaded) {
+      _studentLessons.addAll(await Get.find<FStore>().getLessonsModelCurrentStudent(_class, this, week));
+      _studentLessonsLoaded = true;
+    }
+    return _studentLessons;
   }
 }

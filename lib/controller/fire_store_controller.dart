@@ -17,7 +17,6 @@ import 'package:schoosch/model/class_model.dart';
 
 class FStore extends GetxController {
   late final FirebaseFirestore _store;
-  late final FirebaseFirestore _cachedStore;
   late final DocumentReference _institutionRef;
   late final ClassModel _currentClass;
   late final FirebaseStorage _fstorage;
@@ -66,6 +65,20 @@ class FStore extends GetxController {
 
   Future<LessontimeModel> getLessontimeModel(int order) async {
     return _lessontimesCache[order - 1];
+  }
+
+  Future<List<LessontimeModel>> getClassLessontimeModel(String id) async {
+    List<LessontimeModel> res = [];
+    var _lessontimes = await _institutionRef
+        .collection('newlessontime') //TODO: newlessontime => lessontime
+        .doc(id)
+        .collection('time')
+        .orderBy('order')
+        .get();
+    for (var _lessontime in _lessontimes.docs) {
+      res.add(LessontimeModel.fromMap(_lessontime.id, _lessontime.data()));
+    }
+    return res;
   }
 
   Future<List<ClassModel>> getClassesModel() async {

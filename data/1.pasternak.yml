@@ -64,12 +64,18 @@ institution:
             - order: 8
               from: '15:25'
               till: '16:05'
-            - order: 8
-              from: '16:20'
-              till: '17:00'
+            - order: 9
+              from: '16:15'
+              till: '16:55'
             - order: 10
-              from: '17:10'
-              till: '17:50'
+              from: '17:00'
+              till: '17:30'
+            - order: 11
+              from: '18:00'
+              till: '19:00'
+            - order: 12
+              from: '19:00'
+              till: '20:00'
 
       venue:
         - name: 'Спортзал'
