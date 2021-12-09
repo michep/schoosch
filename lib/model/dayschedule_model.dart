@@ -16,6 +16,8 @@ class DayScheduleModel {
   bool _lessonsLoaded = false;
   final List<LessonModel> _studentLessons = [];
   bool _studentLessonsLoaded = false;
+  final List<LessonModel> _teacherLessons = [];
+  bool _teacherLessonsLoaded = false;
 
   DayScheduleModel.fromMap(this._class, this._week, this.id, Map<String, Object?> map) {
     day = map['day'] != null ? map['day'] as int : throw 'need day key in schedule';
@@ -42,5 +44,13 @@ class DayScheduleModel {
       _studentLessonsLoaded = true;
     }
     return _studentLessons;
+  }
+
+  Future<List<LessonModel>> lessonsCurrentTeacher(Week week) async {
+    if (!_teacherLessonsLoaded) {
+      _teacherLessons.addAll(await Get.find<FStore>().getLessonsModelCurrentTeacher(week));
+      _teacherLessonsLoaded = true;
+    }
+    return _teacherLessons;
   }
 }

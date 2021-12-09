@@ -6,10 +6,10 @@ import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/widgets/lesson_list_tile.dart';
 
-class ClassScheduleTile extends StatelessWidget {
+class ClassDayScheduleTile extends StatelessWidget {
   final DayScheduleModel _schedule;
 
-  const ClassScheduleTile(this._schedule, {Key? key}) : super(key: key);
+  const ClassDayScheduleTile(this._schedule, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

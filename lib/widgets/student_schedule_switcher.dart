@@ -6,16 +6,15 @@ import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/widgets/student_schedule.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class SchedulePageView extends StatefulWidget {
-  const SchedulePageView({Key? key}) : super(key: key);
+class StudentScheduleSwitcher extends StatefulWidget {
+  const StudentScheduleSwitcher({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => SchedulePageViewState();
+  State<StatefulWidget> createState() => StudentScheduleSwitcherState();
 }
 
-class SchedulePageViewState extends State<SchedulePageView> {
+class StudentScheduleSwitcherState extends State<StudentScheduleSwitcher> {
   final _cw = Get.find<CurrentWeek>();
-  int currentPage = -1;
 
   @override
   Widget build(BuildContext context) {

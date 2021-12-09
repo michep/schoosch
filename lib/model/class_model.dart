@@ -18,7 +18,7 @@ class ClassModel {
   bool _lessontimesLoaded = false;
   PeopleModel? _master;
 
-  ClassModel.fromMap(this.id, Map<String, Object?> map) {
+  ClassModel.fromMap(this.id, Map<String, dynamic> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in class';
     grade = map['grade'] != null ? map['grade'] as int : throw 'need grade key in class';
     _lessontimeId = map['lessontime_id'] != null ? map['lessontime_id'] as String : throw 'need lessontime_id key in class';
@@ -35,7 +35,7 @@ class ClassModel {
   }
 
   Future<List<DayScheduleModel>> getSchedulesWeek(Week week) async {
-    return _schedule[week] ??= await Get.find<FStore>().getSchedulesModel(this, week);
+    return _schedule[week] ??= await Get.find<FStore>().getSchedulesModelClass(this, week);
   }
 
   Future<List<LessontimeModel>> getLessontimes() async {
