@@ -7,11 +7,9 @@ import 'package:schoosch/pages/login_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
 class ProfilePage extends StatelessWidget {
-  late final PeopleModel _user;
+  final PeopleModel _user;
 
-  ProfilePage({Key? key}) : super(key: key) {
-    _user = Get.find<FStore>().currentUser!;
-  }
+  ProfilePage(this._user, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

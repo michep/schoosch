@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/class_model.dart';
+import 'package:schoosch/model/people_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/drawer.dart';
-import 'package:schoosch/widgets/pageswitcher.dart';
+import 'package:schoosch/widgets/student_schedule_switcher.dart';
+import 'package:schoosch/widgets/teacher_schedule_switcher.dart';
 // import 'package:schoosch/widgets/scheduleswitcher.dart';
 // import 'package:schoosch/widgets/student_schedule.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -36,7 +39,12 @@ class HomePage extends StatelessWidget {
                   // return AnimatedSwipeScheduleSwitcher(
                   //   child: StudentScheduleWidget(classSnap.data!),
                   // );
-                  return const SchedulePageView();
+                  switch (PeopleModel.currentUser.type) {
+                    case 'teacher':
+                      return const TeacherScheduleSwitcher();
+                    default:
+                      return const StudentScheduleSwitcher();
+                  }
                 },
               ),
             ),

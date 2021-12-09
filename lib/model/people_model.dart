@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/class_model.dart';
+import 'package:schoosch/model/dayschedule_model.dart';
+import 'package:schoosch/model/lesson_model.dart';
 
 enum personType { student, teacher }
 
@@ -24,6 +28,8 @@ class PeopleModel {
     email = map['email'] != null ? map['email'] as String : ''; //TODO: throw
   }
 
+  static PeopleModel get currentUser => Get.find<FStore>().currentUser!;
+
   @override
   operator ==(other) {
     if (other is PeopleModel) {
@@ -36,9 +42,13 @@ class PeopleModel {
   int get hashCode => hashValues(id, '');
 
   Future<double> getTeacherAverageRating() async {
-    if (type == 'teacher') {
-      return Get.find<FStore>().getAverageTeacherRating(id);
-    }
-    return 0;
+    assert(type != 'teacher', 'only for teachers');
+    return Get.find<FStore>().getAverageTeacherRating(id);
+  }
+
+  Future<List<DayScheduleModel>> getTeacherDaySchedules(Week week) async {
+    assert(type != 'teacher', 'only for teachers');
+    // Get.find<FStore>().getSchedulesModelCurrentTeacher(week);
+    return [];
   }
 }
