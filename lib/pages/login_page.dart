@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
             Center(
               child: SignInButton(
                 Buttons.GoogleDark,
-                text: 'Вход c помощью Google',
+                // text: 'Вход c помощью Google',
                 onPressed: _onPressedGoogle,
               ),
             ),
