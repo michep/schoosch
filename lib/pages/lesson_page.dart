@@ -16,39 +16,33 @@ class LessonPage extends StatelessWidget {
   final VenueModel _venue;
   final LessontimeModel _time;
 
-  const LessonPage(this._lesson, this._curiculum, this._venue, this._time, this._date, {Key? key}) : super(key: key);
+  const LessonPage(
+      this._lesson, this._curiculum, this._venue, this._time, this._date,
+      {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MAppBar(_curiculum.name),
+      appBar: MAppBar("Урок"),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(fullLessonInfo(context)),
-          Text(_venue.name),
-          FutureBuilder<List<MarkModel>?>(
-            future: _lesson.marksCurrentStudent,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Text('');
-              }
-              if (snapshot.data!.isEmpty) {
-                return const Text('нет оценок в этот день');
-              }
-              return Expanded(
-                child: ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (BuildContext context, int i) {
-                    return ListTile(
-                      title: Text(snapshot.data![i].mark.toString()),
-                      subtitle: Text(snapshot.data![i].comment),
-                    );
-                  },
-                ),
-              );
-            },
+          // Text(fullLessonInfo(context)),
+          SizedBox(height: 10,),
+          Text(
+            _curiculum.name,
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
+          SizedBox(height: 10,),
+          Text(DateFormat('d MMMM, EEEE', 'ru').format(_date).capitalizeFirst!),
+          SizedBox(height: 5,),
+          Text(_lesson.order.toString() + ' урок'),
+          SizedBox(height: 5,),
+          Text(_time.format(context)),
+          SizedBox(height: 5,),
+          Text(_venue.name),
+          SizedBox(height: 5,),
           FutureBuilder<List<HomeworkModel>?>(
               future: _lesson.homeworkCurrentStudent,
               builder: (context, snapshot) {
@@ -56,20 +50,78 @@ class LessonPage extends StatelessWidget {
                   return const Text('');
                 }
                 if (snapshot.data!.isEmpty) {
-                  return const Text('нет домашнего задания на этот день');
+                  return Card(
+                    elevation: 3,
+                    child: Center(
+                      child: Container(
+                        child: const Text(
+                          'нет домашнего задания на этот день!',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        margin: EdgeInsets.symmetric(vertical: 15),
+                      ),
+                    ),
+                  );
                 }
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (BuildContext context, int i) {
-                      return ListTile(
-                        title: Text(snapshot.data![i].text),
-                        onLongPress: () {},
-                      );
-                    },
-                  ),
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (BuildContext context, int i) {
+                    return Card(
+                      elevation: 3,
+                      child: Container(
+                        margin: EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Д/З", style: TextStyle(fontWeight: FontWeight.bold),),
+                            Text(snapshot.data![i].text),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 );
               }),
+          FutureBuilder<List<MarkModel>?>(
+            future: _lesson.marksCurrentStudent,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Text('');
+              }
+              if (snapshot.data!.isEmpty) {
+                return Center(
+                  child: Container(
+                    child: const Text('нет оценок в этот день'),
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                  ),
+                );
+              }
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (BuildContext context, int i) {
+                    return Card(
+                      elevation: 3,
+                      child: ListTile(
+                        leading: Container(
+                          padding: EdgeInsets.all(6),
+                          child: Text(
+                            snapshot.data![i].mark.toString(),
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.red, width: 1.5),
+                              borderRadius: BorderRadius.circular(4)),
+                        ),
+                        title: Text(snapshot.data![i].comment),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
         ],
       ),
     );

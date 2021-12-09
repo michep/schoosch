@@ -38,14 +38,26 @@ class _LessonListTileState extends State<LessonListTile> {
           return ListTile(
             leading: Text(widget._lesson.order.toString()),
             title: Text(cur.name),
-            trailing: Text(mar),
+            trailing: mar != ""
+                ? Container(
+                    child: Text(mar),
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: Colors.red, width: 1.5),
+                    ),
+                  )
+                : Container(
+                    width: 0,
+                  ),
             subtitle: Text(tim.format(context) + ', ' + ven.name),
             onTap: () => _onTap(widget._lesson, cur, ven, tim),
           );
         });
   }
 
-  void _onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim) {
+  void _onTap(LessonModel les, CurriculumModel cur, VenueModel ven,
+      LessontimeModel tim) {
     Get.to(() => LessonPage(les, cur, ven, tim, widget._date));
   }
 }

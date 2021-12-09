@@ -51,8 +51,8 @@ class _RateSheetState extends State<RateSheet> {
             minRating: 1,
             updateOnDrag: true,
             glow: false,
-            itemSize: 60.0,
-            itemPadding: const EdgeInsets.symmetric(horizontal: 10),
+            itemSize: MediaQuery.of(context).size.width * 0.14,
+            itemPadding: const EdgeInsets.symmetric(horizontal: 5),
           ),
           const SizedBox(
             height: 10,
