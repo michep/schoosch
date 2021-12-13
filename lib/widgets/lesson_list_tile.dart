@@ -41,7 +41,7 @@ class _LessonListTileState extends State<LessonListTile> {
             trailing: mar != ""
                 ? Container(
                     child: Text(mar),
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       border: Border.all(color: Colors.red, width: 1.5),
@@ -56,8 +56,7 @@ class _LessonListTileState extends State<LessonListTile> {
         });
   }
 
-  void _onTap(LessonModel les, CurriculumModel cur, VenueModel ven,
-      LessontimeModel tim) {
+  void _onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim) {
     Get.to(() => LessonPage(les, cur, ven, tim, widget._date));
   }
 }

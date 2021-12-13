@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/people_model.dart';
@@ -8,8 +7,6 @@ import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/drawer.dart';
 import 'package:schoosch/widgets/student_schedule_switcher.dart';
 import 'package:schoosch/widgets/teacher_schedule_switcher.dart';
-// import 'package:schoosch/widgets/scheduleswitcher.dart';
-// import 'package:schoosch/widgets/student_schedule.dart';
 import 'package:schoosch/widgets/utils.dart';
 import 'package:schoosch/widgets/week_selector.dart';
 
@@ -36,9 +33,6 @@ class HomePage extends StatelessWidget {
                 future: ClassModel.currentStudentClass(),
                 builder: (context, classSnap) {
                   if (!classSnap.hasData) return Utils.progressIndicator();
-                  // return AnimatedSwipeScheduleSwitcher(
-                  //   child: StudentScheduleWidget(classSnap.data!),
-                  // );
                   switch (PeopleModel.currentUser.type) {
                     case 'teacher':
                       return const TeacherScheduleSwitcher();

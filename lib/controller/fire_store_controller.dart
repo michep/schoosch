@@ -17,13 +17,13 @@ import 'package:schoosch/model/class_model.dart';
 
 class FStore extends GetxController {
   late final FirebaseFirestore _store;
-  late final DocumentReference _institutionRef;
-  late final ClassModel _currentClass;
   late final FirebaseStorage _fstorage;
-  late final Reference _fstorageRef;
-  late final Uint8List? _logoImagData;
+  late DocumentReference _institutionRef;
+  late ClassModel _currentClass;
+  late Reference _fstorageRef;
+  late Uint8List? _logoImagData;
 
-  final List<LessontimeModel> _lessontimesCache = [];
+  // List<LessontimeModel> _lessontimesCache = [];
 
   PeopleModel? _currentUser;
 
@@ -45,7 +45,7 @@ class FStore extends GetxController {
     _logoImagData = await _getLogoImageData();
     _currentUser = await _getCurrentUserModel(email);
     _currentClass = await getStudentClassModel();
-    await _getLessontimeModels();
+    // await _getLessontimeModels();
   }
 
   void resetCurrentUser() {
@@ -56,16 +56,16 @@ class FStore extends GetxController {
     return _fstorageRef.child('logo.png').getData();
   }
 
-  Future<void> _getLessontimeModels() async {
-    var _lessontimes = await _institutionRef.collection('lessontime').orderBy('order').get();
-    for (var _lessontime in _lessontimes.docs) {
-      _lessontimesCache.add(LessontimeModel.fromMap(_lessontime.id, _lessontime.data()));
-    }
-  }
+  // Future<void> _getLessontimeModels() async {
+  //   var _lessontimes = await _institutionRef.collection('lessontime').orderBy('order').get();
+  //   for (var _lessontime in _lessontimes.docs) {
+  //     _lessontimesCache.add(LessontimeModel.fromMap(_lessontime.id, _lessontime.data()));
+  //   }
+  // }
 
-  Future<LessontimeModel> getLessontimeModel(int order) async {
-    return _lessontimesCache[order - 1];
-  }
+  // Future<LessontimeModel> getLessontimeModel(int order) async {
+  //   return _lessontimesCache[order - 1];
+  // }
 
   Future<List<LessontimeModel>> getClassLessontimeModel(String id) async {
     List<LessontimeModel> res = [];

@@ -21,35 +21,35 @@ class LessonPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MAppBar("Урок"),
+      appBar: const MAppBar("Урок"),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Text(fullLessonInfo(context)),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Text(
             _curiculum.name,
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Text(DateFormat('d MMMM, EEEE', 'ru').format(_date).capitalizeFirst!),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Text(_lesson.order.toString() + ' урок'),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Text(_time.format(context)),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Text(_venue.name),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           FutureBuilder<List<HomeworkModel>?>(
@@ -67,7 +67,7 @@ class LessonPage extends StatelessWidget {
                           'нет домашнего задания на этот день!',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        margin: EdgeInsets.symmetric(vertical: 15),
+                        margin: const EdgeInsets.symmetric(vertical: 15),
                       ),
                     ),
                   );
@@ -79,11 +79,11 @@ class LessonPage extends StatelessWidget {
                     return Card(
                       elevation: 3,
                       child: Container(
-                        margin: EdgeInsets.all(8),
+                        margin: const EdgeInsets.all(8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               "Д/З",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -105,7 +105,7 @@ class LessonPage extends StatelessWidget {
                 return Center(
                   child: Container(
                     child: const Text('нет оценок в этот день'),
-                    margin: EdgeInsets.symmetric(vertical: 10),
+                    margin: const EdgeInsets.symmetric(vertical: 10),
                   ),
                 );
               }
@@ -117,10 +117,10 @@ class LessonPage extends StatelessWidget {
                       elevation: 3,
                       child: ListTile(
                         leading: Container(
-                          padding: EdgeInsets.all(6),
+                          padding: const EdgeInsets.all(6),
                           child: Text(
                             snapshot.data![i].mark.toString(),
-                            style: TextStyle(fontSize: 20),
+                            style: const TextStyle(fontSize: 20),
                           ),
                           decoration:
                               BoxDecoration(border: Border.all(color: Colors.red, width: 1.5), borderRadius: BorderRadius.circular(4)),
