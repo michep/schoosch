@@ -38,7 +38,18 @@ class _LessonListTileState extends State<LessonListTile> {
           return ListTile(
             leading: Text(widget._lesson.order.toString()),
             title: Text(cur.name),
-            trailing: Text(mar),
+            trailing: mar != ""
+                ? Container(
+                    child: Text(mar),
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: Colors.red, width: 1.5),
+                    ),
+                  )
+                : Container(
+                    width: 0,
+                  ),
             subtitle: Text(tim.format(context) + ', ' + ven.name),
             onTap: () => _onTap(widget._lesson, cur, ven, tim),
           );

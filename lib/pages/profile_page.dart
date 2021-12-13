@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/people_model.dart';
 import 'package:schoosch/pages/login_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
@@ -9,7 +8,7 @@ import 'package:schoosch/widgets/appbar.dart';
 class ProfilePage extends StatelessWidget {
   final PeopleModel _user;
 
-  ProfilePage(this._user, {Key? key}) : super(key: key);
+  const ProfilePage(this._user, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class ProfilePage extends StatelessWidget {
   }
 
   void _logout() async {
-    Get.find<FStore>().resetCurrentUser();
+    // Get.find<FStore>().resetCurrentUser();
     await Get.find<FAuth>().logout();
     Get.offAll(() => const LoginPage());
   }

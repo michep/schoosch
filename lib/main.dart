@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
@@ -14,23 +15,13 @@ Future<void> main() async {
   await Firebase.initializeApp();
   initializeDateFormatting();
   var fauth = FAuth();
-  Get.put<FAuth>(
-    fauth,
-    permanent: true,
-  );
+  var fstore = FStore();
+  Get.put<FAuth>(fauth);
+  Get.put<FStore>(fstore);
+  Get.put(CurrentWeek(Week.current()));
+
   if (fauth.currentUser != null) {
-    await Get.putAsync(
-      () async {
-        FStore store = FStore();
-        await store.init(fauth.currentUser!.email!);
-        return store;
-      },
-      permanent: true,
-    ).then((value) {
-      Get.put(
-        CurrentWeek(Week.current()),
-      );
-    });
+    await fstore.init(fauth.currentUser!.email!);
   }
 
   runApp(const MyApp());
@@ -41,14 +32,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var auth = Get.find<FAuth>();
     return GetMaterialApp(
       title: 'School Schedule Application',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: auth.currentUser == null ? const LoginPage() : const HomePage(),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.userChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return const HomePage();
+          }
+          return const LoginPage();
+        },
+      ),
     );
   }
 }

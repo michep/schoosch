@@ -21,12 +21,80 @@ class LessonPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MAppBar(_curiculum.name),
+      appBar: const MAppBar("Урок"),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(fullLessonInfo(context)),
+          // Text(fullLessonInfo(context)),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            _curiculum.name,
+            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(DateFormat('d MMMM, EEEE', 'ru').format(_date).capitalizeFirst!),
+          const SizedBox(
+            height: 5,
+          ),
+          Text(_lesson.order.toString() + ' урок'),
+          const SizedBox(
+            height: 5,
+          ),
+          Text(_time.format(context)),
+          const SizedBox(
+            height: 5,
+          ),
           Text(_venue.name),
+          const SizedBox(
+            height: 5,
+          ),
+          FutureBuilder<List<HomeworkModel>?>(
+              future: _lesson.homeworksCurrentStudent,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Text('');
+                }
+                if (snapshot.data!.isEmpty) {
+                  return Card(
+                    elevation: 3,
+                    child: Center(
+                      child: Container(
+                        child: const Text(
+                          'нет домашнего задания на этот день!',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        margin: const EdgeInsets.symmetric(vertical: 15),
+                      ),
+                    ),
+                  );
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (BuildContext context, int i) {
+                    return Card(
+                      elevation: 3,
+                      child: Container(
+                        margin: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Д/З",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(snapshot.data![i].text),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }),
           FutureBuilder<List<MarkModel>?>(
             future: _lesson.marksCurrentStudent,
             builder: (context, snapshot) {
@@ -34,15 +102,31 @@ class LessonPage extends StatelessWidget {
                 return const Text('');
               }
               if (snapshot.data!.isEmpty) {
-                return const Text('нет оценок в этот день');
+                return Center(
+                  child: Container(
+                    child: const Text('нет оценок в этот день'),
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                );
               }
               return Expanded(
                 child: ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int i) {
-                    return ListTile(
-                      title: Text(snapshot.data![i].mark.toString()),
-                      subtitle: Text(snapshot.data![i].comment),
+                    return Card(
+                      elevation: 3,
+                      child: ListTile(
+                        leading: Container(
+                          padding: const EdgeInsets.all(6),
+                          child: Text(
+                            snapshot.data![i].mark.toString(),
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                          decoration:
+                              BoxDecoration(border: Border.all(color: Colors.red, width: 1.5), borderRadius: BorderRadius.circular(4)),
+                        ),
+                        title: Text(snapshot.data![i].comment),
+                      ),
                     );
                   },
                 ),
