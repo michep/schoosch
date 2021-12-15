@@ -5,7 +5,7 @@ import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 
-enum personType { student, teacher }
+import 'class_model.dart';
 
 class PeopleModel {
   late final String id;
@@ -16,7 +16,20 @@ class PeopleModel {
   late final DateTime? birthday;
   late final String email;
 
-  PeopleModel.fromMap(this.id, Map<String, dynamic> map) {
+  factory PeopleModel(String id, Map<String, dynamic> map) {
+    var type = map['type'] != null ? map['type'] as String : throw 'need type key in people';
+    if (!['teacher', 'student', 'parent', ''].contains(type)) throw 'incorrect type in people';
+    switch (type) {
+      case 'teacher':
+        return TeacherModel.fromMap(id, map);
+      case 'parent':
+        return ParentModel.fromMap(id, map);
+      default:
+        return StudentModel.fromMap(id, map);
+    }
+  }
+
+  PeopleModel._fromMap(this.id, Map<String, dynamic> map) {
     firstname = map['firstname'] != null ? map['firstname'] as String : throw 'need firstname key in people';
     middlename = map['middlename'] != null ? map['middlename'] as String : '';
     lastname = map['lastname'] != null ? map['lastname'] as String : throw 'need lastname key in people';
@@ -26,7 +39,7 @@ class PeopleModel {
     email = map['email'] != null ? map['email'] as String : ''; //TODO: throw
   }
 
-  static PeopleModel get currentUser => Get.find<FStore>().currentUser!;
+  static PeopleModel? get currentUser => Get.find<FStore>().currentUser;
 
   @override
   operator ==(other) {
@@ -38,15 +51,36 @@ class PeopleModel {
 
   @override
   int get hashCode => hashValues(id, '');
+}
 
-  Future<double> getTeacherAverageRating() async {
-    assert(type != 'teacher', 'only for teachers');
-    return Get.find<FStore>().getAverageTeacherRating(id);
+class StudentModel extends PeopleModel {
+  late ClassModel _studentClass;
+  bool _studentClassLoaded = false;
+
+  StudentModel.fromMap(String id, Map<String, dynamic> map) : super._fromMap(id, map);
+
+  Future<ClassModel> get studentClass async {
+    if (!_studentClassLoaded) {
+      _studentClass = await Get.find<FStore>().getStudentClass(this);
+      _studentClassLoaded = true;
+    }
+    return _studentClass;
+  }
+}
+
+class TeacherModel extends PeopleModel {
+  TeacherModel.fromMap(String id, Map<String, dynamic> map) : super._fromMap(id, map);
+
+  Future<double> get averageRating async {
+    return Get.find<FStore>().getAverageTeacherRating(this);
   }
 
   Future<List<DayScheduleModel>> getTeacherDaySchedules(Week week) async {
-    assert(type != 'teacher', 'only for teachers');
     // Get.find<FStore>().getSchedulesModelCurrentTeacher(week);
     return [];
   }
+}
+
+class ParentModel extends PeopleModel {
+  ParentModel.fromMap(String id, Map<String, dynamic> map) : super._fromMap(id, map);
 }

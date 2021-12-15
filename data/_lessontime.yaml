@@ -1,7 +1,7 @@
 institution:
   - _id: '$query|/institution/[name=Гимназия им. Пастернака]/[_id]'
     _subcollections:
-      newlessontime:
+      lessontime:
         - name: 'Расписание младших классов'
           _subcollections:
             time:

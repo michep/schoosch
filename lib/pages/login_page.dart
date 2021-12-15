@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -19,14 +21,21 @@ class _LoginPageState extends State<LoginPage> {
   final username = TextEditingController();
   final password = TextEditingController();
   final auth = Get.find<FAuth>();
+  late StreamSubscription sub;
 
   @override
   void initState() {
-    super.initState();
     if (auth.currentUser != null) {
       SchedulerBinding.instance!.addPostFrameCallback((_) => _authenticated(auth.currentUser!));
     }
-    auth.userChanges$.listen(_authenticated);
+    sub = auth.userChanges$.listen(_authenticated);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    sub.cancel();
+    super.dispose();
   }
 
   @override
@@ -50,8 +59,8 @@ class _LoginPageState extends State<LoginPage> {
       store.resetCurrentUser();
     }
     if (user != null && store.currentUser == null) {
-      await store.init(user.email!);
-      Get.offAll(() => const HomePage());
+      store.init(user.email!).then((_) => Get.offAll(() => const HomePage()));
+      // Get.offAll(() => const HomePage());
     }
   }
 }

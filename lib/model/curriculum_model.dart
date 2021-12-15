@@ -22,7 +22,7 @@ class CurriculumModel {
   Future<PeopleModel?> get master async {
     if (_master == null && _masterId != null) {
       var store = Get.find<FStore>();
-      _master = await store.getPeopleModel(_masterId!);
+      _master = await store.getPeople(_masterId!);
     }
     return _master;
   }

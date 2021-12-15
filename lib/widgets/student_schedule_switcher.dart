@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/class_model.dart';
+import 'package:schoosch/model/people_model.dart';
 import 'package:schoosch/widgets/student_schedule.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -19,7 +20,7 @@ class StudentScheduleSwitcherState extends State<StudentScheduleSwitcher> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<ClassModel>(
-        future: ClassModel.currentStudentClass(),
+        future: (PeopleModel.currentUser as StudentModel).studentClass,
         builder: (context, classSnap) {
           if (!classSnap.hasData) return Utils.progressIndicator();
           return PageView.custom(

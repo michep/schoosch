@@ -29,10 +29,10 @@ class MarkModel {
   }
 
   Future<PeopleModel> get teacher async {
-    return Get.find<FStore>().getPeopleModel(_teacherId);
+    return Get.find<FStore>().getPeople(_teacherId);
   }
 
   Future<PeopleModel> get student async {
-    return Get.find<FStore>().getPeopleModel(_studentId);
+    return Get.find<FStore>().getPeople(_studentId);
   }
 }

@@ -33,11 +33,11 @@ class LessonModel {
   }
 
   Future<CurriculumModel?> get curriculum async {
-    return _curriculum ??= await Get.find<FStore>().getCurriculumModel(_curriculumId);
+    return _curriculum ??= await Get.find<FStore>().getCurriculum(_curriculumId);
   }
 
   Future<VenueModel?> get venue async {
-    return _venue ??= await Get.find<FStore>().getVenueModel(_venueId);
+    return _venue ??= await Get.find<FStore>().getVenue(_venueId);
   }
 
   Future<LessontimeModel> get lessontime async {
@@ -46,7 +46,7 @@ class LessonModel {
 
   Future<List<HomeworkModel>?> get homeworksCurrentStudent async {
     if (!_homeworkLoaded) {
-      _homework.addAll(await Get.find<FStore>().getLessonHomeworksCurrentStudent(_schedule, (await curriculum)!));
+      _homework.addAll(await Get.find<FStore>().getLessonHomeworksForCurrentStudent(_schedule, (await curriculum)!));
       _homeworkLoaded = true;
     }
     return _homework;
@@ -62,7 +62,7 @@ class LessonModel {
 
   Future<List<MarkModel>?> get marksCurrentStudent async {
     if (!_marksLoaded) {
-      _marks.addAll(await Get.find<FStore>().getLessonMarksCurrentStudent(_schedule, this));
+      _marks.addAll(await Get.find<FStore>().getLessonMarksForCurrentStudent(_schedule, this));
       _marksLoaded = true;
     }
 

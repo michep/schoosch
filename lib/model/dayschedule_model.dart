@@ -4,6 +4,7 @@ import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
+import 'package:schoosch/model/people_model.dart';
 
 class DayScheduleModel {
   final ClassModel _class;
@@ -30,23 +31,24 @@ class DayScheduleModel {
 
   DateTime get date => _week.days[day - 1];
 
-  Future<List<LessonModel>> lessons(Week week) async {
+  Future<List<LessonModel>> allLessons(Week week) async {
     if (!_lessonsLoaded) {
-      _lessons.addAll(await Get.find<FStore>().getLessonsModel(_class, this, week));
+      _lessons.addAll(await Get.find<FStore>().getScheduleLessons(_class, this, week));
       _lessonsLoaded = true;
     }
     return _lessons;
   }
 
-  Future<List<LessonModel>> lessonsCurrentStudent(Week week) async {
+  Future<List<LessonModel>> lessonsForStudent(Week week) async {
     if (!_studentLessonsLoaded) {
-      _studentLessons.addAll(await Get.find<FStore>().getLessonsModelCurrentStudent(_class, this, week));
+      _studentLessons
+          .addAll(await Get.find<FStore>().getScheduleLessonsForStudent(_class, this, week, PeopleModel.currentUser as StudentModel));
       _studentLessonsLoaded = true;
     }
     return _studentLessons;
   }
 
-  Future<List<LessonModel>> lessonsCurrentTeacher(Week week) async {
+  Future<List<LessonModel>> lessonsForTeacher(Week week) async {
     if (!_teacherLessonsLoaded) {
       _teacherLessons.addAll(await Get.find<FStore>().getLessonsModelCurrentTeacher(week));
       _teacherLessonsLoaded = true;

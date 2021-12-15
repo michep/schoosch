@@ -26,21 +26,21 @@ class ClassModel {
     map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
   }
 
-  Future<PeopleModel?> get master async {
+  Future<TeacherModel?> get master async {
     if (_master == null && _masterId != null) {
       var store = Get.find<FStore>();
-      _master = await store.getPeopleModel(_masterId!);
+      _master = await store.getPeople(_masterId!);
     }
-    return _master;
+    return _master as TeacherModel;
   }
 
   Future<List<DayScheduleModel>> getSchedulesWeek(Week week) async {
-    return _schedule[week] ??= await Get.find<FStore>().getSchedulesModelClass(this, week);
+    return _schedule[week] ??= await Get.find<FStore>().getClassWeekSchedule(this, week);
   }
 
   Future<List<LessontimeModel>> getLessontimes() async {
     if (!_lessontimesLoaded) {
-      _lessontimes.addAll(await Get.find<FStore>().getClassLessontimeModel(_lessontimeId)); //TODO: fallboack to default lessontimes?
+      _lessontimes.addAll(await Get.find<FStore>().getLessontime(_lessontimeId)); //TODO: fallboack to default lessontimes?
       _lessontimesLoaded = true;
     }
     return _lessontimes;
@@ -51,11 +51,11 @@ class ClassModel {
     return _lessontimes[n - 1];
   }
 
-  static Future<List<ClassModel>> allClasses() {
-    return Get.find<FStore>().getClassesModel();
+  Future<Map<TeacherModel, List<String>>> get teachers async {
+    return Get.find<FStore>().getClassTeachers(this);
   }
 
-  static Future<ClassModel> currentStudentClass() async {
-    return Get.find<FStore>().currentClass;
+  static Future<List<ClassModel>> get classes {
+    return Get.find<FStore>().getClasses();
   }
 }

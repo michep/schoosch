@@ -9,7 +9,7 @@ class TeacherScheduleWidget extends StatelessWidget {
   const TeacherScheduleWidget(this._teacher, this._week, {Key? key}) : super(key: key);
 
   final Week _week;
-  final PeopleModel _teacher;
+  final TeacherModel _teacher;
 
   @override
   Widget build(BuildContext context) {

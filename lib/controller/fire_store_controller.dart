@@ -19,7 +19,7 @@ class FStore extends GetxController {
   late final FirebaseFirestore _store;
   late final FirebaseStorage _fstorage;
   late DocumentReference _institutionRef;
-  late ClassModel _currentClass;
+  // late ClassModel _currentClass;
   late Reference _fstorageRef;
   late Uint8List? _logoImagData;
 
@@ -35,17 +35,14 @@ class FStore extends GetxController {
   }
 
   PeopleModel? get currentUser => _currentUser;
-  ClassModel get currentClass => _currentClass;
 
   Uint8List? get logoImageData => _logoImagData;
 
-  Future<void> init(String email) async {
-    _institutionRef = _store.collection('institution').doc(await _geInstitutionIdByUserEmail(email));
+  Future<void> init(String userEmail) async {
+    _institutionRef = _store.collection('institution').doc(await _geInstitutionIdByUserEmail(userEmail));
     _fstorageRef = _fstorage.ref((await _institutionRef.get()).id);
     _logoImagData = await _getLogoImageData();
-    _currentUser = await _getCurrentUserModel(email);
-    _currentClass = await getStudentClassModel();
-    // await _getLessontimeModels();
+    _currentUser = await _getCurrentUserByEmail(userEmail);
   }
 
   void resetCurrentUser() {
@@ -56,32 +53,16 @@ class FStore extends GetxController {
     return _fstorageRef.child('logo.png').getData();
   }
 
-  // Future<void> _getLessontimeModels() async {
-  //   var _lessontimes = await _institutionRef.collection('lessontime').orderBy('order').get();
-  //   for (var _lessontime in _lessontimes.docs) {
-  //     _lessontimesCache.add(LessontimeModel.fromMap(_lessontime.id, _lessontime.data()));
-  //   }
-  // }
-
-  // Future<LessontimeModel> getLessontimeModel(int order) async {
-  //   return _lessontimesCache[order - 1];
-  // }
-
-  Future<List<LessontimeModel>> getClassLessontimeModel(String id) async {
+  Future<List<LessontimeModel>> getLessontime(String id) async {
     List<LessontimeModel> res = [];
-    var _lessontimes = await _institutionRef
-        .collection('newlessontime') //TODO: newlessontime => lessontime
-        .doc(id)
-        .collection('time')
-        .orderBy('order')
-        .get();
+    var _lessontimes = await _institutionRef.collection('lessontime').doc(id).collection('time').orderBy('order').get();
     for (var _lessontime in _lessontimes.docs) {
       res.add(LessontimeModel.fromMap(_lessontime.id, _lessontime.data()));
     }
     return res;
   }
 
-  Future<List<ClassModel>> getClassesModel() async {
+  Future<List<ClassModel>> getClasses() async {
     return (await _institutionRef.collection('class').orderBy('grade').get())
         .docs
         .map(
@@ -93,7 +74,7 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<DayScheduleModel>> getSchedulesModelClass(ClassModel aclass, Week currentWeek) async {
+  Future<List<DayScheduleModel>> getClassWeekSchedule(ClassModel aclass, Week currentWeek) async {
     return (await _institutionRef.collection('class').doc(aclass.id).collection('schedule').orderBy('day').get())
         .docs
         .map(
@@ -108,7 +89,7 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<LessonModel>> getLessonsModel(ClassModel aclass, DayScheduleModel schedule, Week week) async {
+  Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule, Week week) async {
     return (await _institutionRef
             .collection('class')
             .doc(aclass.id)
@@ -127,34 +108,35 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<LessonModel>> getLessonsModelCurrentStudent(ClassModel aclass, DayScheduleModel schedule, Week week) async {
-    return getLessonsModelStudent(aclass, schedule, week, _currentUser!.id);
+  Future<List<LessonModel>> getScheduleLessonsForCurrentStudent(ClassModel aclass, DayScheduleModel schedule, Week week) async {
+    return getScheduleLessonsForStudent(aclass, schedule, week, _currentUser as StudentModel);
   }
 
-  Future<List<LessonModel>> getLessonsModelStudent(ClassModel aclass, DayScheduleModel schedule, Week week, String personId) async {
+  Future<List<LessonModel>> getScheduleLessonsForStudent(
+      ClassModel aclass, DayScheduleModel schedule, Week week, StudentModel student) async {
     List<LessonModel> res = [];
-    var less = await getLessonsModel(aclass, schedule, week);
+    var less = await getScheduleLessons(aclass, schedule, week);
 
     for (var l in less) {
       var cur = await l.curriculum;
-      if (cur != null && cur.isAvailableForStudent(personId)) {
+      if (cur != null && cur.isAvailableForStudent(student.id)) {
         res.add(l);
       }
     }
     return res;
   }
 
-  Future<PeopleModel> getPeopleModel(String id) async {
+  Future<PeopleModel> getPeople(String id) async {
     var res = await _institutionRef.collection('people').doc(id).get();
-    return PeopleModel.fromMap(res.id, res.data()!);
+    return PeopleModel(res.id, res.data()!);
   }
 
-  Future<CurriculumModel> getCurriculumModel(String id) async {
+  Future<CurriculumModel> getCurriculum(String id) async {
     var res = await _institutionRef.collection('curriculum').doc(id).get();
     return CurriculumModel.fromMap(res.id, res.data()!);
   }
 
-  Future<VenueModel> getVenueModel(String id) async {
+  Future<VenueModel> getVenue(String id) async {
     var res = await _institutionRef.collection('venue').doc(id).get();
     return VenueModel.fromMap(res.id, res.data()!);
   }
@@ -172,40 +154,37 @@ class FStore extends GetxController {
     return inst.id;
   }
 
-  Future<PeopleModel> _getCurrentUserModel(String email) async {
+  Future<PeopleModel> _getCurrentUserByEmail(String email) async {
     var res = await _institutionRef.collection('people').where('email', isEqualTo: email).limit(1).get();
     if (res.docs.isEmpty) {
       throw 'User with provided email was not found in current Institution';
     }
-    return PeopleModel.fromMap(res.docs[0].id, res.docs[0].data());
+    return PeopleModel(res.docs[0].id, res.docs[0].data());
   }
 
-  Future<ClassModel> getStudentClassModel() async {
-    if (_currentUser == null) {
-      throw 'No current user set';
-    }
-    var res = await _institutionRef.collection('class').where('student_ids', arrayContains: _currentUser!.id).limit(1).get();
+  Future<ClassModel> getStudentClass(PeopleModel student) async {
+    var res = await _institutionRef.collection('class').where('student_ids', arrayContains: student.id).limit(1).get();
     if (res.docs.isEmpty) {
       throw 'Current user is not assigned to any class';
     }
     return ClassModel.fromMap(res.docs[0].id, res.docs[0].data());
   }
 
-  Future<Map<PeopleModel, List<String>>> getTeachersCurrentStudent() async {
-    var teachers = <PeopleModel, List<String>>{};
-    var mast = await _currentClass.master;
+  Future<Map<TeacherModel, List<String>>> getClassTeachers(ClassModel aclass) async {
+    var teachers = <TeacherModel, List<String>>{};
+    var mast = await aclass.master;
     if (mast != null) {
       teachers[mast] = [
         'Классный руководитель',
       ];
     }
     var cw = Get.find<CurrentWeek>().currentWeek;
-    var days = await _currentClass.getSchedulesWeek(cw);
+    var days = await aclass.getSchedulesWeek(cw);
     for (var day in days) {
-      var dayles = await day.lessonsCurrentStudent(cw);
+      var dayles = await day.lessonsForStudent(cw);
       for (var les in dayles) {
         var cur = await les.curriculum;
-        var teach = await cur!.master;
+        var teach = (await cur!.master) as TeacherModel?;
         if (teach != null) {
           if (teachers[teach] == null) {
             teachers[teach] = [cur.name];
@@ -219,30 +198,31 @@ class FStore extends GetxController {
     return teachers;
   }
 
-  Future saveTeacherRate(String teacherId, String raterId, DateTime date, int rating, String commentary) async {
+  Future saveTeacherRating(TeacherModel teacher, PeopleModel user, DateTime date, int rating, String comment) async {
     Map<String, dynamic> data = {};
     data['ratedate'] = Timestamp.fromDate(date);
-    data['rater_id'] = raterId;
+    data['rater_id'] = user.id;
     data['rating'] = rating;
-    data['teacher_id'] = teacherId;
-    data['commentary'] = commentary;
+    data['teacher_id'] = teacher.id;
+    data['commentary'] = comment;
     return _institutionRef.collection('teachersrates').add(data);
   }
 
-  Future<double> getAverageTeacherRating(String teacherid) async {
+  Future<double> getAverageTeacherRating(TeacherModel teacher) async {
     double sum = 0;
-    var ratings = await _institutionRef.collection('teachersrates').where('teacher_id', isEqualTo: teacherid).get();
+    var ratings = await _institutionRef.collection('teachersrates').where('teacher_id', isEqualTo: teacher.id).get();
     for (var i in ratings.docs) {
       sum += i.get('rating');
     }
     return sum / ratings.docs.length;
   }
 
-  Future<List<HomeworkModel>> getLessonHomeworksCurrentStudent(DayScheduleModel schedule, CurriculumModel curriculum) async {
-    return getLessonHomeworskStudent(schedule, curriculum, currentUser!);
+  Future<List<HomeworkModel>> getLessonHomeworksForCurrentStudent(DayScheduleModel schedule, CurriculumModel curriculum) async {
+    return getLessonHomeworskForStudent(schedule, curriculum, currentUser! as StudentModel);
   }
 
-  Future<List<HomeworkModel>> getLessonHomeworskStudent(DayScheduleModel schedule, CurriculumModel curriculum, PeopleModel student) async {
+  Future<List<HomeworkModel>> getLessonHomeworskForStudent(
+      DayScheduleModel schedule, CurriculumModel curriculum, StudentModel student) async {
     List<HomeworkModel> ret = [];
     var chw = (await _institutionRef
             .collection('homework')
@@ -282,7 +262,7 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<MarkModel>> getLessonMarksCurrentStudent(DayScheduleModel schedule, LessonModel lesson) async {
+  Future<List<MarkModel>> getLessonMarksForCurrentStudent(DayScheduleModel schedule, LessonModel lesson) async {
     return (await _institutionRef
             .collection('mark')
             .where('date', isGreaterThanOrEqualTo: schedule.date)

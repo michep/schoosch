@@ -28,7 +28,7 @@ class TeacherScheduleSwitcherState extends State<TeacherScheduleSwitcher> {
       childrenDelegate: SliverChildBuilderDelegate(
         (context, idx) {
           return TeacherScheduleWidget(
-            PeopleModel.currentUser,
+            PeopleModel.currentUser as TeacherModel,
             Week(year: 2021, weekNumber: idx % 100),
             key: ValueKey(idx),
           );

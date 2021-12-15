@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/people_model.dart';
 import '../pages/teacher_rate_page.dart';
 import 'package:get/get.dart';
 
@@ -37,7 +38,7 @@ class MDrawer extends StatelessWidget {
             TextButton.icon(
               onPressed: () {
                 Get.to(() => RatePage(
-                      teachers: Get.find<FStore>().getTeachersCurrentStudent(),
+                      aclass: (Get.find<FStore>().currentUser! as StudentModel).studentClass,
                     ));
               },
               icon: const Icon(Icons.insert_emoticon_rounded),
