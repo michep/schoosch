@@ -52,7 +52,7 @@ class MDrawer extends StatelessWidget {
         TextButton.icon(
           onPressed: () {
             Get.to(() => RatePage(
-                  aclass: (Get.find<FStore>().currentUser! as StudentModel).studentClass,
+                  aclass: (StudentModel.currentUser).studentClass,
                 ));
           },
           icon: const Icon(Icons.insert_emoticon_rounded),

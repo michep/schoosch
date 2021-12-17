@@ -1,5 +1,6 @@
 institution:
-  - name: 'Какая-то школа'
+  - _id: 'l7wAAoJOWsumDKFDqBCP'
+    name: 'Какая-то школа'
     address: 'Где-то'
     inn: 'какой-то'
     _subcollections:
@@ -7,31 +8,292 @@ institution:
         - name: 'тырыпыры'
           value: 'тратата'
 
-      class:
-        - name: 'Ну какой-то класс'
-          grade: 5
+      lessontime:
+        - name: 'Всеобщее расписание'
+          _subcollections:
+            time:
+              - order: 1
+                from: '08:00'
+                till: '08:45'
+              - order: 2
+                from: '09:00'
+                till: '09:45'
+              - order: 3
+                from: '10:10'
+                till: '10:55'
+              - order: 4
+                from: '11:10'
+                till: '11:55'
+              - order: 5
+                from: '12:20'
+                till: '13:05'
+              - order: 6
+                from: '13:20'
+                till: '14:05'
+
+      venue:
+        - name: '100'
+        - name: '200'
+        - name: '300'
+        - name: '400'
 
       people:
         - firstname: 'Сергей'
           middlename: 'Сергеевич'
-          lastname: 'Сергеев'
+          lastname: 'Учитель'
           type: 'teacher'
           birtday: 1965-01-01 00:00:00
-          email: sergey@email.addr
-          uid:
+          email: 'michep@mail.ru'
+
+        - firstname: 'Николай'
+          middlename: 'Николаевич'
+          lastname: 'Учитель'
+          type: 'teacher'
+          birtday: 1970-05-05 00:00:00
+          email: 'nikolay@email.addr'
+
         - firstname: 'Иван'
           middlename: 'Иванович'
-          lastname: 'Иванов'
+          lastname: 'Студент'
           type: 'student'
           birtday: 2005-01-01 00:00:00
-          email: ivan@email.addr
-          uid:
-          class_id: '$query|/institution/[name=Какая-то школа]/class/[name=Ну какой-то класс]/[_id]'
+          email: 'ivan@email.addr'
+
         - firstname: 'Петр'
           middlename: 'Петрович'
-          lastname: 'Петров'
+          lastname: 'Студент'
           type: 'student'
           birtday: 2010-01-01 00:00:00
-          email: pert@email.addr
-          uid:
-          class_id: '$query|/institution/[name=Какая-то школа]/class/[name=Ну какой-то класс]/[_id]'
+          email: 'pert@email.addr'
+
+        - firstname: 'Дмитрий'
+          middlename: 'Дмитриевич'
+          lastname: 'Студент'
+          type: 'student'
+          birtday: 2010-01-01 00:00:00
+          email: 'dima@email.addr'
+
+      curriculum:
+        - name: 'Математика 9'
+          alias: 'Урок математики'
+          master_id: '$query|/institution/[name=Какая-то школа]/people/[firstname=Сергей&&middlename=Сергеевич&&lastname=Учитель]/[_id]'
+
+        - name: 'Математика 10'
+          alias: 'Урок математики'
+          master_id: '$query|/institution/[name=Какая-то школа]/people/[firstname=Николай&&middlename=Николаевич&&lastname=Учитель]/[_id]'
+
+        - name: 'Русский язык'
+          alias:
+          master_id: '$query|/institution/[name=Какая-то школа]/people/[firstname=Николай&&middlename=Николаевич&&lastname=Учитель]/[_id]'
+
+        - name: 'Рисование'
+          alias: 'Художничество'
+          master_id: '$query|/institution/[name=Какая-то школа]/people/[firstname=Сергей&&middlename=Сергеевич&&lastname=Учитель]/[_id]'
+
+      class:
+        - name: 'Один класс'
+          grade: 10
+          master_id: '$query|/institution/[name=Какая-то школа]/people/[firstname=Сергей&&middlename=Сергеевич&&lastname=Учитель]/[_id]'
+          lessontime_id: '$query|/institution/[name=Какая-то школа]/lessontime/[name=Всеобщее расписание]/[_id]'
+          student_ids:
+            - '$query|/institution/[name=Какая-то школа]/people/[firstname=Иван&&middlename=Иванович&&lastname=Студент]/[_id]'
+            - '$query|/institution/[name=Какая-то школа]/people/[firstname=Петр&&middlename=Петрович&&lastname=Студент]/[_id]'
+          _subcollections:
+            schedule:
+              - day: 1
+                from: 2021-09-01 00:00:00
+                till: 
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Математика 10]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=100]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Математика 10]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=100]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=300]/[_id]'
+              - day: 2
+                from: 2021-09-01 00:00:00
+                till: 
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Математика 10]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=100]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=400]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=300]/[_id]'
+                    - order: 4
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=100]/[_id]'
+              - day: 3
+                from: 2021-09-01 00:00:00
+                till: 
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=200]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=200]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=400]/[_id]'
+              - day: 4
+                from: 2021-09-01 00:00:00
+                till: 
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Математика 10]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=300]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=200]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=300]/[_id]'
+              - day: 5
+                from: 2021-09-01 00:00:00
+                till: 
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Математика 10]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=100]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=200]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=400]/[_id]'
+                    - order: 4
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=100]/[_id]'
+
+        - name: 'Другой класс'
+          grade: 9
+          master_id: '$query|/institution/[name=Какая-то школа]/people/[firstname=Николай&&middlename=Николаевич&&lastname=Учитель]/[_id]'
+          lessontime_id: '$query|/institution/[name=Какая-то школа]/lessontime/[name=Всеобщее расписание]/[_id]'
+          student_ids:
+            - '$query|/institution/[name=Какая-то школа]/people/[firstname=Дмитрий&&middlename=Дмитриевич&&lastname=Студент]/[_id]'
+          _subcollections:
+            schedule:
+              - day: 1
+                from: 2021-09-01 00:00:00
+                till: 
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Математика 9]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=200]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Математика 9]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=200]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=400]/[_id]'
+                    - order: 4
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=200]/[_id]'
+              - day: 2
+                from: 2021-09-01 00:00:00
+                till: 
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Математика 9]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=300]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=100]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=200]/[_id]'
+                    - order: 4
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=400]/[_id]'
+              - day: 3
+                from: 2021-09-01 00:00:00
+                till: 
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=300]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=200]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=300]/[_id]'
+              - day: 4
+                from: 2021-09-01 00:00:00
+                till: 2021-10-31 23:59:59
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Математика 9]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=100]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=100]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=200]/[_id]'
+                    - order: 4
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=400]/[_id]'
+              - day: 5
+                from: 2021-09-01 00:00:00
+                till: 2021-10-31 23:59:59
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Математика 9]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=200]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=300]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=100]/[_id]'
+
+
+              - day: 4
+                from: 2021-11-01 00:00:00
+                till: 
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Математика 9]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=100]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=100]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=200]/[_id]'
+                    - order: 4
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=400]/[_id]'
+              - day: 5
+                from: 2021-11-01 00:00:00
+                till: 
+                _subcollections:
+                  lesson:
+                    - order: 1
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Математика 9]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=200]/[_id]'
+                    - order: 2
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Рисование]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=300]/[_id]'
+                    - order: 3
+                      curriculum_id: '$query|/institution/[name=Какая-то школа]/curriculum/[name=Русский язык]/[_id]'
+                      venue_id: '$query|/institution/[name=Какая-то школа]/venue/[name=100]/[_id]'

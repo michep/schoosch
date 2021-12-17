@@ -6,17 +6,17 @@ import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/pages/lesson_page.dart';
 
-class LessonListTile extends StatefulWidget {
+class TeacherLessonListTile extends StatefulWidget {
   final LessonModel _lesson;
   final DateTime _date;
 
-  const LessonListTile(this._lesson, this._date, {Key? key}) : super(key: key);
+  const TeacherLessonListTile(this._lesson, this._date, {Key? key}) : super(key: key);
 
   @override
-  State<LessonListTile> createState() => _LessonListTileState();
+  State<TeacherLessonListTile> createState() => _TeacherLessonListTileState();
 }
 
-class _LessonListTileState extends State<LessonListTile> {
+class _TeacherLessonListTileState extends State<TeacherLessonListTile> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -24,7 +24,6 @@ class _LessonListTileState extends State<LessonListTile> {
           widget._lesson.curriculum,
           widget._lesson.venue,
           widget._lesson.lessontime,
-          widget._lesson.marksCurrentStudentAsString,
         ]),
         builder: (context, snap) {
           if (!snap.hasData) {
@@ -34,24 +33,13 @@ class _LessonListTileState extends State<LessonListTile> {
           var cur = list[0] as CurriculumModel;
           var ven = list[1] as VenueModel;
           var tim = list[2] as LessontimeModel;
-          var mar = list[3] as String;
+          // var mar = list[3] as String;
           return ListTile(
             leading: Text(widget._lesson.order.toString()),
             title: Text(cur.name),
-            trailing: mar != ""
-                ? Container(
-                    child: Text(mar),
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: Colors.red, width: 1.5),
-                    ),
-                  )
-                : Container(
-                    width: 0,
-                  ),
+            trailing: Text(widget._lesson.aclass.name),
             subtitle: Text(tim.format(context) + ', ' + ven.name),
-            onTap: () => _onTap(widget._lesson, cur, ven, tim),
+            // onTap: () => _onTap(widget._lesson, cur, ven, tim),
           );
         });
   }

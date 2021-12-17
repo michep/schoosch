@@ -13,11 +13,19 @@ class StudentScheduleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<DayScheduleModel>>(
+    return FutureBuilder<List<StudentScheduleModel>>(
       future: _class.getSchedulesWeek(_week),
       builder: (context, schedules) {
         if (!schedules.hasData) {
           return Utils.progressIndicator();
+        }
+        if (schedules.data!.isEmpty) {
+          return const Center(
+            child: Text(
+              'нет расписания на эту неделю',
+              style: TextStyle(fontSize: 16),
+            ),
+          );
         }
         return ListView(
           children: [

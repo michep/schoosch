@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+
 import 'package:schoosch/model/dayschedule_model.dart';
 
 import 'class_model.dart';
@@ -59,9 +60,11 @@ class StudentModel extends PeopleModel {
 
   StudentModel.fromMap(String id, Map<String, dynamic> map) : super._fromMap(id, map);
 
+  static StudentModel get currentUser => Get.find<FStore>().currentUser as StudentModel;
+
   Future<ClassModel> get studentClass async {
     if (!_studentClassLoaded) {
-      _studentClass = await Get.find<FStore>().getStudentClass(this);
+      _studentClass = await Get.find<FStore>().getClassForStudent(this);
       _studentClassLoaded = true;
     }
     return _studentClass;
@@ -69,18 +72,27 @@ class StudentModel extends PeopleModel {
 }
 
 class TeacherModel extends PeopleModel {
+  final Map<Week, List<TeacherScheduleModel>> _schedule = {};
+
   TeacherModel.fromMap(String id, Map<String, dynamic> map) : super._fromMap(id, map);
+
+  static TeacherModel get currentUser => Get.find<FStore>().currentUser as TeacherModel;
 
   Future<double> get averageRating async {
     return Get.find<FStore>().getAverageTeacherRating(this);
   }
 
-  Future<List<DayScheduleModel>> getTeacherDaySchedules(Week week) async {
-    // Get.find<FStore>().getSchedulesModelCurrentTeacher(week);
-    return [];
+  Future<void> createRating(PeopleModel user, int rating, String comment) async {
+    return Get.find<FStore>().saveTeacherRating(this, user, DateTime.now(), rating, comment);
+  }
+
+  Future<List<TeacherScheduleModel>> getSchedulesWeek(Week week) async {
+    return _schedule[week] ??= await Get.find<FStore>().getTeacherWeekSchedule(this, week);
   }
 }
 
 class ParentModel extends PeopleModel {
   ParentModel.fromMap(String id, Map<String, dynamic> map) : super._fromMap(id, map);
+
+  static ParentModel get currentUser => Get.find<FStore>().currentUser as ParentModel;
 }

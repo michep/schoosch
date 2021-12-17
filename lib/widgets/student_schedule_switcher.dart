@@ -20,7 +20,7 @@ class StudentScheduleSwitcherState extends State<StudentScheduleSwitcher> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<ClassModel>(
-        future: (PeopleModel.currentUser as StudentModel).studentClass,
+        future: (StudentModel.currentUser).studentClass,
         builder: (context, classSnap) {
           if (!classSnap.hasData) return Utils.progressIndicator();
           return PageView.custom(
@@ -30,7 +30,7 @@ class StudentScheduleSwitcherState extends State<StudentScheduleSwitcher> {
               (context, idx) {
                 return StudentScheduleWidget(
                   classSnap.data!,
-                  Week(year: 2021, weekNumber: idx % 100),
+                  Week(year: idx ~/ 100, weekNumber: idx % 100),
                   key: ValueKey(idx),
                 );
               },

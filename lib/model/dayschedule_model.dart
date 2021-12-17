@@ -15,10 +15,6 @@ class DayScheduleModel {
   late final DateTime till;
   final List<LessonModel> _lessons = [];
   bool _lessonsLoaded = false;
-  final List<LessonModel> _studentLessons = [];
-  bool _studentLessonsLoaded = false;
-  final List<LessonModel> _teacherLessons = [];
-  bool _teacherLessonsLoaded = false;
 
   DayScheduleModel.fromMap(this._class, this._week, this.id, Map<String, Object?> map) {
     day = map['day'] != null ? map['day'] as int : throw 'need day key in schedule';
@@ -27,9 +23,9 @@ class DayScheduleModel {
     till = map['till'] != null ? DateTime.fromMillisecondsSinceEpoch((map['till'] as Timestamp).millisecondsSinceEpoch) : DateTime(3000);
   }
 
-  ClassModel get aclass => _class;
-
   DateTime get date => _week.days[day - 1];
+
+  ClassModel get aclass => _class;
 
   Future<List<LessonModel>> allLessons(Week week) async {
     if (!_lessonsLoaded) {
@@ -38,21 +34,34 @@ class DayScheduleModel {
     }
     return _lessons;
   }
+}
 
-  Future<List<LessonModel>> lessonsForStudent(Week week) async {
+class StudentScheduleModel extends DayScheduleModel {
+  final List<LessonModel> _studentLessons = [];
+  bool _studentLessonsLoaded = false;
+
+  StudentScheduleModel.fromMap(ClassModel _class, Week _week, String id, Map<String, Object?> map) : super.fromMap(_class, _week, id, map);
+
+  Future<List<LessonModel>> lessonsForStudent(StudentModel student, Week week) async {
     if (!_studentLessonsLoaded) {
-      _studentLessons
-          .addAll(await Get.find<FStore>().getScheduleLessonsForStudent(_class, this, week, PeopleModel.currentUser as StudentModel));
+      _studentLessons.addAll(await Get.find<FStore>().getScheduleLessonsForStudent(_class, this, week, student));
       _studentLessonsLoaded = true;
     }
     return _studentLessons;
   }
+}
 
-  Future<List<LessonModel>> lessonsForTeacher(Week week) async {
-    if (!_teacherLessonsLoaded) {
-      _teacherLessons.addAll(await Get.find<FStore>().getLessonsModelCurrentTeacher(week));
-      _teacherLessonsLoaded = true;
-    }
+class TeacherScheduleModel extends DayScheduleModel {
+  late final List<LessonModel> _teacherLessons = [];
+
+  TeacherScheduleModel.fromMap(ClassModel _class, Week _week, String id, Map<String, Object?> map) : super.fromMap(_class, _week, id, map);
+
+  void addLessons(List<LessonModel> lessons) {
+    _teacherLessons.addAll(lessons);
+    _teacherLessons.sort((a, b) => a.order.compareTo(b.order));
+  }
+
+  Future<List<LessonModel>> lessonsForTeacher(TeacherModel teacher, Week week) async {
     return _teacherLessons;
   }
 }

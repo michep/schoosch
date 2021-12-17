@@ -6,6 +6,7 @@ import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
+import 'package:schoosch/model/people_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
@@ -53,7 +54,7 @@ class LessonPage extends StatelessWidget {
             height: 5,
           ),
           FutureBuilder<List<HomeworkModel>?>(
-              future: _lesson.homeworksCurrentStudent,
+              future: _lesson.homeworksForStudent(StudentModel.currentUser),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Text('');
@@ -96,7 +97,7 @@ class LessonPage extends StatelessWidget {
                 );
               }),
           FutureBuilder<List<MarkModel>?>(
-            future: _lesson.marksCurrentStudent,
+            future: _lesson.marksForStudent(StudentModel.currentUser),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Text('');

@@ -19,12 +19,8 @@ class FStore extends GetxController {
   late final FirebaseFirestore _store;
   late final FirebaseStorage _fstorage;
   late DocumentReference _institutionRef;
-  // late ClassModel _currentClass;
   late Reference _fstorageRef;
   late Uint8List? _logoImagData;
-
-  // List<LessontimeModel> _lessontimesCache = [];
-
   PeopleModel? _currentUser;
 
   FStore() {
@@ -42,7 +38,7 @@ class FStore extends GetxController {
     _institutionRef = _store.collection('institution').doc(await _geInstitutionIdByUserEmail(userEmail));
     _fstorageRef = _fstorage.ref((await _institutionRef.get()).id);
     _logoImagData = await _getLogoImageData();
-    _currentUser = await _getCurrentUserByEmail(userEmail);
+    _currentUser = await _getUserByEmail(userEmail);
   }
 
   void resetCurrentUser() {
@@ -74,11 +70,11 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<DayScheduleModel>> getClassWeekSchedule(ClassModel aclass, Week currentWeek) async {
+  Future<List<StudentScheduleModel>> getClassWeekSchedule(ClassModel aclass, Week currentWeek) async {
     return (await _institutionRef.collection('class').doc(aclass.id).collection('schedule').orderBy('day').get())
         .docs
         .map(
-          (schedule) => DayScheduleModel.fromMap(
+          (schedule) => StudentScheduleModel.fromMap(
             aclass,
             currentWeek,
             schedule.id,
@@ -108,12 +104,8 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<LessonModel>> getScheduleLessonsForCurrentStudent(ClassModel aclass, DayScheduleModel schedule, Week week) async {
-    return getScheduleLessonsForStudent(aclass, schedule, week, _currentUser as StudentModel);
-  }
-
   Future<List<LessonModel>> getScheduleLessonsForStudent(
-      ClassModel aclass, DayScheduleModel schedule, Week week, StudentModel student) async {
+      ClassModel aclass, StudentScheduleModel schedule, Week week, StudentModel student) async {
     List<LessonModel> res = [];
     var less = await getScheduleLessons(aclass, schedule, week);
 
@@ -154,7 +146,7 @@ class FStore extends GetxController {
     return inst.id;
   }
 
-  Future<PeopleModel> _getCurrentUserByEmail(String email) async {
+  Future<PeopleModel> _getUserByEmail(String email) async {
     var res = await _institutionRef.collection('people').where('email', isEqualTo: email).limit(1).get();
     if (res.docs.isEmpty) {
       throw 'User with provided email was not found in current Institution';
@@ -162,7 +154,7 @@ class FStore extends GetxController {
     return PeopleModel(res.docs[0].id, res.docs[0].data());
   }
 
-  Future<ClassModel> getStudentClass(PeopleModel student) async {
+  Future<ClassModel> getClassForStudent(PeopleModel student) async {
     var res = await _institutionRef.collection('class').where('student_ids', arrayContains: student.id).limit(1).get();
     if (res.docs.isEmpty) {
       throw 'Current user is not assigned to any class';
@@ -178,10 +170,10 @@ class FStore extends GetxController {
         'Классный руководитель',
       ];
     }
-    var cw = Get.find<CurrentWeek>().currentWeek;
+    var cw = Get.find<CurrentWeek>().currentWeek; //TODO: currentWeek should be parameter
     var days = await aclass.getSchedulesWeek(cw);
     for (var day in days) {
-      var dayles = await day.lessonsForStudent(cw);
+      var dayles = await day.lessonsForStudent(StudentModel.currentUser, cw);
       for (var les in dayles) {
         var cur = await les.curriculum;
         var teach = (await cur!.master) as TeacherModel?;
@@ -217,11 +209,7 @@ class FStore extends GetxController {
     return sum / ratings.docs.length;
   }
 
-  Future<List<HomeworkModel>> getLessonHomeworksForCurrentStudent(DayScheduleModel schedule, CurriculumModel curriculum) async {
-    return getLessonHomeworskForStudent(schedule, curriculum, currentUser! as StudentModel);
-  }
-
-  Future<List<HomeworkModel>> getLessonHomeworskForStudent(
+  Future<List<HomeworkModel>> getLessonHomeworksForStudent(
       DayScheduleModel schedule, CurriculumModel curriculum, StudentModel student) async {
     List<HomeworkModel> ret = [];
     var chw = (await _institutionRef
@@ -262,40 +250,61 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<MarkModel>> getLessonMarksForCurrentStudent(DayScheduleModel schedule, LessonModel lesson) async {
+  Future<List<MarkModel>> getLessonMarksForStudent(DayScheduleModel schedule, LessonModel lesson, StudentModel student) async {
     return (await _institutionRef
             .collection('mark')
             .where('date', isGreaterThanOrEqualTo: schedule.date)
             .where('date', isLessThan: schedule.date.add(const Duration(hours: 23, minutes: 59)))
             .where('curriculum_id', isEqualTo: (await lesson.curriculum)!.id)
             .where('lesson_order', isEqualTo: lesson.order)
-            .where('student_id', isEqualTo: currentUser!.id)
+            .where('student_id', isEqualTo: student.id)
             .get())
         .docs
         .map((e) => MarkModel.fromMap(e.id, e.data()))
         .toList();
   }
 
-  Future<List<CurriculumModel>> getCurriculumsModelCurrentTeacher() async {
-    return (await _institutionRef.collection('curriculum').where('master_id', isEqualTo: _currentUser!.id).get())
-        .docs
-        .map((e) => CurriculumModel.fromMap(e.id, e.data()))
-        .toList();
-  }
-
-  Future<List<LessonModel>> getLessonsModelCurrentTeacher(Week week) async {
-    List<LessonModel> ret = [];
-    var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: _currentUser!.id).get();
+  Future<List<TeacherScheduleModel>> getTeacherWeekSchedule(TeacherModel teacher, Week week) async {
+    var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: teacher.id).get();
+    List<String> curriculumIds = [];
     for (var curr in curriculums.docs) {
-      var lessons = await _store.collectionGroup('lesson').where('curriculum_id', isEqualTo: curr.id).get();
-      for (var less in lessons.docs) {
-        var schedDoc = await curr.reference.parent.parent!.get();
-        var aclassDoc = await schedDoc.reference.parent.parent!.get();
-        var aclass = ClassModel.fromMap(aclassDoc.id, aclassDoc.data()!);
-        var sched = DayScheduleModel.fromMap(aclass, week, schedDoc.id, schedDoc.data()!);
-        ret.add(LessonModel.fromMap(aclass, sched, less.id, less.data()));
+      curriculumIds.add(curr.id);
+    }
+    var lessons = await _store.collectionGroup('lesson').where('curriculum_id', whereIn: curriculumIds).get();
+    Map<String, List<QueryDocumentSnapshot<Map<String, dynamic>>>> schedulesMap = {};
+    for (var lesson in lessons.docs) {
+      var schedule = lesson.reference.parent.parent!;
+      if (schedulesMap[schedule.path] == null) schedulesMap[schedule.path] = [];
+      schedulesMap[schedule.path]!.add(lesson);
+    }
+    Map<int, TeacherScheduleModel> days = {};
+    for (var schedulePath in schedulesMap.keys) {
+      var schedule = await _store.doc(schedulePath).get();
+      var fr = schedule.get('from') != null
+          ? DateTime.fromMillisecondsSinceEpoch((schedule.get('from') as Timestamp).millisecondsSinceEpoch)
+          : DateTime(2000);
+      var ti = schedule.get('till') != null
+          ? DateTime.fromMillisecondsSinceEpoch((schedule.get('till') as Timestamp).millisecondsSinceEpoch)
+          : DateTime(3000);
+      if (fr.isBefore(week.day(5)) && ti.isAfter(week.day(4))) {
+        var day = schedule.get('day');
+        var aclass = await schedule.reference.parent.parent!.get();
+        var classmodel = ClassModel.fromMap(aclass.id, aclass.data()!);
+        if (days[day] == null) {
+          var schedulemodel = TeacherScheduleModel.fromMap(classmodel, week, schedule.id, schedule.data()!);
+          days[day] = schedulemodel;
+        }
+        var schedulemodel = days[day]!;
+        List<LessonModel> lessonsList = [];
+        for (var lesson in schedulesMap[schedulePath]!) {
+          var lessonmodel = LessonModel.fromMap(classmodel, schedulemodel, lesson.id, lesson.data());
+          lessonsList.add(lessonmodel);
+        }
+        schedulemodel.addLessons(lessonsList);
       }
     }
-    return ret;
+    var res = days.values.toList();
+    res.sort((a, b) => a.day.compareTo(b.day));
+    return res;
   }
 }

@@ -11,7 +11,7 @@ class ClassModel {
   late final int grade;
   late final String? _masterId;
   late final String _lessontimeId;
-  final Map<Week, List<DayScheduleModel>> _schedule = {};
+  final Map<Week, List<StudentScheduleModel>> _schedule = {};
   final List<String> _studentIds = [];
   final List<PeopleModel> _students = [];
   final List<LessontimeModel> _lessontimes = [];
@@ -34,7 +34,7 @@ class ClassModel {
     return _master as TeacherModel;
   }
 
-  Future<List<DayScheduleModel>> getSchedulesWeek(Week week) async {
+  Future<List<StudentScheduleModel>> getSchedulesWeek(Week week) async {
     return _schedule[week] ??= await Get.find<FStore>().getClassWeekSchedule(this, week);
   }
 

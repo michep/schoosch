@@ -14,7 +14,6 @@ class TeacherScheduleSwitcher extends StatefulWidget {
 
 class TeacherScheduleSwitcherState extends State<TeacherScheduleSwitcher> {
   final _cw = Get.find<CurrentWeek>();
-  int currentPage = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +23,8 @@ class TeacherScheduleSwitcherState extends State<TeacherScheduleSwitcher> {
       childrenDelegate: SliverChildBuilderDelegate(
         (context, idx) {
           return TeacherScheduleWidget(
-            PeopleModel.currentUser as TeacherModel,
-            Week(year: 2021, weekNumber: idx % 100),
+            TeacherModel.currentUser,
+            Week(year: idx ~/ 100, weekNumber: idx % 100),
             key: ValueKey(idx),
           );
         },

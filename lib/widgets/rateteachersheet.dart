@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:schoosch/model/people_model.dart';
 import 'package:get/get.dart';
 
 class RateSheet extends StatefulWidget {
-  final TeacherModel teach;
+  final TeacherModel teacher;
 
-  const RateSheet(this.teach, {Key? key}) : super(key: key);
+  const RateSheet(this.teacher, {Key? key}) : super(key: key);
 
   @override
   _RateSheetState createState() => _RateSheetState();
@@ -16,16 +15,15 @@ class RateSheet extends StatefulWidget {
 class _RateSheetState extends State<RateSheet> {
   int rating = 0;
   bool showComment = false;
-  TextEditingController cont = TextEditingController();
+  TextEditingController comment = TextEditingController();
 
   void rate() {
-    var store = Get.find<FStore>();
-    if ((rating > 2) || (rating < 2 && cont.text != '')) {
-      store.saveTeacherRating(widget.teach, store.currentUser!, DateTime.now(), rating, cont.text);
+    if ((rating > 2) || (rating < 2 && comment.text != '')) {
+      widget.teacher.createRating(PeopleModel.currentUser!, rating, comment.text);
     }
     Get.back();
     rating = 0;
-    cont.clear();
+    comment.clear();
   }
 
   @override
@@ -61,7 +59,7 @@ class _RateSheetState extends State<RateSheet> {
             margin: const EdgeInsets.symmetric(horizontal: 30),
             child: showComment == true
                 ? TextField(
-                    controller: cont,
+                    controller: comment,
                     decoration: const InputDecoration(labelText: 'объясните свой выбор:'),
                   )
                 : Container(),
