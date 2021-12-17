@@ -18,10 +18,6 @@ class TeacherScheduleSwitcherState extends State<TeacherScheduleSwitcher> {
 
   @override
   Widget build(BuildContext context) {
-    // return FutureBuilder<ClassModel>(
-    //     future: ClassModel.currentStudentClass(),
-    //     builder: (context, classSnap) {
-    //       if (!classSnap.hasData) return Utils.progressIndicator();
     return PageView.custom(
       controller: _cw.pageController,
       onPageChanged: _cw.setIdx,
@@ -35,6 +31,5 @@ class TeacherScheduleSwitcherState extends State<TeacherScheduleSwitcher> {
         },
       ),
     );
-    // });
   }
 }

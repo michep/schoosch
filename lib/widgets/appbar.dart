@@ -14,6 +14,8 @@ class MAppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(title),
+      backgroundColor: Theme.of(context).primaryColor,
+      foregroundColor: Colors.white,
       actions: showProfile
           ? const [
               IconButton(

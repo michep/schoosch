@@ -59,8 +59,8 @@ class _LoginPageState extends State<LoginPage> {
       store.resetCurrentUser();
     }
     if (user != null && store.currentUser == null) {
-      store.init(user.email!).then((_) => Get.offAll(() => const HomePage()));
-      // Get.offAll(() => const HomePage());
+      await store.init(user.email!);
+      Get.offAll(() => const HomePage());
     }
   }
 }

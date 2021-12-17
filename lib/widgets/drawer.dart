@@ -18,7 +18,11 @@ class MDrawer extends StatelessWidget {
             children: [
               const Text(
                 'Schoosch / Скуш',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
               Expanded(
                 child: Get.find<FStore>().logoImageData != null
@@ -34,20 +38,29 @@ class MDrawer extends StatelessWidget {
           ),
         ),
         Column(
-          children: [
-            TextButton.icon(
-              onPressed: () {
-                Get.to(() => RatePage(
-                      aclass: (Get.find<FStore>().currentUser! as StudentModel).studentClass,
-                    ));
-              },
-              icon: const Icon(Icons.insert_emoticon_rounded),
-              label: const Text('Оценить учителей'),
-            )
-          ],
           crossAxisAlignment: CrossAxisAlignment.start,
+          children: menuItems(),
         ),
       ],
     );
+  }
+
+  List<Widget> menuItems() {
+    List<Widget> items = [];
+    if (PeopleModel.currentUser?.type == 'student') {
+      items.add(
+        TextButton.icon(
+          onPressed: () {
+            Get.to(() => RatePage(
+                  aclass: (Get.find<FStore>().currentUser! as StudentModel).studentClass,
+                ));
+          },
+          icon: const Icon(Icons.insert_emoticon_rounded),
+          label: const Text('Оценить учителей'),
+        ),
+      );
+    }
+
+    return items;
   }
 }
