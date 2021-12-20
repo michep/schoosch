@@ -45,8 +45,14 @@ class FStore extends GetxController {
     _currentUser = null;
   }
 
-  Future<Uint8List?> _getLogoImageData() {
-    return _fstorageRef.child('logo.png').getData();
+  Future<Uint8List?> _getLogoImageData() async {
+    Uint8List? data;
+    try {
+      data = await _fstorageRef.child('logo.png').getData();
+    } catch (error) {
+      return null;
+    }
+    return data;
   }
 
   Future<List<LessontimeModel>> getLessontime(String id) async {
