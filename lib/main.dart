@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
@@ -13,8 +15,14 @@ import 'model/people_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   initializeDateFormatting();
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: 'AIzaSyBtR7RR_pEv77tcGCIa7TtuZazqkUb45f0',
+          appId: '1:245847143504:web:bc41654fbb85ce87918d55',
+          messagingSenderId: '245847143504',
+          projectId: 'schoosch-8e6d4',
+          storageBucket: 'schoosch-8e6d4.appspot.com'));
   var fauth = FAuth();
   var fstore = FStore();
   Get.put<FAuth>(fauth);
@@ -25,6 +33,8 @@ Future<void> main() async {
     await fstore.init(fauth.currentUser!.email!);
   }
 
+  print(kIsWeb);
+
   runApp(const MyApp());
 }
 
@@ -34,6 +44,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      scrollBehavior: AppScrollBehavior(),
       title: 'School Schedule Application',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -42,4 +53,12 @@ class MyApp extends StatelessWidget {
       home: PeopleModel.currentUser != null ? const HomePage() : const LoginPage(),
     );
   }
+}
+
+class AppScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      };
 }
