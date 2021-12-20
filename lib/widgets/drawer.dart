@@ -16,9 +16,9 @@ class MDrawer extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Schoosch / Скуш',
-                style: TextStyle(
+              Text(
+                Get.find<FStore>().currentInstitution!.name,
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 20,

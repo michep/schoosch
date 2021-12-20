@@ -54,8 +54,4 @@ class ClassModel {
   Future<Map<TeacherModel, List<String>>> get teachers async {
     return Get.find<FStore>().getClassTeachers(this);
   }
-
-  static Future<List<ClassModel>> get classes {
-    return Get.find<FStore>().getClasses();
-  }
 }

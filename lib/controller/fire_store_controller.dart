@@ -7,6 +7,7 @@ import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
+import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
@@ -22,6 +23,7 @@ class FStore extends GetxController {
   late Reference _fstorageRef;
   late Uint8List? _logoImagData;
   PeopleModel? _currentUser;
+  InstitutionModel? _institution;
 
   FStore() {
     _fstorage = FirebaseStorage.instance;
@@ -31,11 +33,12 @@ class FStore extends GetxController {
   }
 
   PeopleModel? get currentUser => _currentUser;
-
+  InstitutionModel? get currentInstitution => _institution;
   Uint8List? get logoImageData => _logoImagData;
 
   Future<void> init(String userEmail) async {
-    _institutionRef = _store.collection('institution').doc(await _geInstitutionIdByUserEmail(userEmail));
+    _institution = await _geInstitutionIdByUserEmail(userEmail);
+    _institutionRef = _store.collection('institution').doc(_institution!.id);
     _fstorageRef = _fstorage.ref((await _institutionRef.get()).id);
     _logoImagData = await _getLogoImageData();
     _currentUser = await _getUserByEmail(userEmail);
@@ -139,7 +142,7 @@ class FStore extends GetxController {
     return VenueModel.fromMap(res.id, res.data()!);
   }
 
-  Future<String> _geInstitutionIdByUserEmail(String email) async {
+  Future<InstitutionModel> _geInstitutionIdByUserEmail(String email) async {
     var res = await _store.collectionGroup('people').where('email', isEqualTo: email).limit(1).get();
     if (res.docs.isEmpty) {
       throw 'User with provided email was not found in any Institution';
@@ -149,7 +152,7 @@ class FStore extends GetxController {
     if (!inst.exists) {
       throw 'Institution was not found';
     }
-    return inst.id;
+    return InstitutionModel.fromMap(inst.id, inst.data()!);
   }
 
   Future<PeopleModel> _getUserByEmail(String email) async {
