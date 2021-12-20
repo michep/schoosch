@@ -5,19 +5,19 @@ import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/people_model.dart';
-import 'package:schoosch/widgets/studentlesson_list_tile.dart';
+import 'package:schoosch/widgets/teacher/teacherlesson_list_tile.dart';
 
-class ClassDayScheduleTile extends StatelessWidget {
-  final StudentScheduleModel _schedule;
+class TeacherDayScheduleTile extends StatelessWidget {
+  final TeacherScheduleModel _schedule;
 
-  const ClassDayScheduleTile(this._schedule, {Key? key}) : super(key: key);
+  const TeacherDayScheduleTile(this._schedule, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var cw = Get.find<CurrentWeek>();
 
     return FutureBuilder<List<LessonModel>>(
-        future: _schedule.lessonsForStudent(StudentModel.currentUser, cw.currentWeek),
+        future: _schedule.lessonsForTeacher(TeacherModel.currentUser, cw.currentWeek),
         builder: (context, snap) {
           if (!snap.hasData) {
             return Container();
@@ -28,7 +28,7 @@ class ClassDayScheduleTile extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             children: [
-              ...snap.data!.map((_les) => StudentLessonListTile(_les, _schedule.date)),
+              ...snap.data!.map((_les) => TeacherLessonListTile(_les, _schedule.date)),
             ],
           );
         });

@@ -4,8 +4,8 @@ import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/people_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/drawer.dart';
-import 'package:schoosch/widgets/student_schedule_switcher.dart';
-import 'package:schoosch/widgets/teacher_schedule_switcher.dart';
+import 'package:schoosch/widgets/student/student_schedule_switcher.dart';
+import 'package:schoosch/widgets/teacher/teacher_schedule_switcher.dart';
 import 'package:schoosch/widgets/week_selector.dart';
 
 class HomePage extends StatelessWidget {
@@ -38,11 +38,18 @@ class HomePage extends StatelessWidget {
   Widget mainPage(PeopleModel user) {
     switch (user.type) {
       case 'teacher':
-        return const TeacherScheduleSwitcher();
+        return TeacherScheduleSwitcher(TeacherModel.currentUser);
       case 'parent':
-        throw 'parent view not implemented yet';
+        return FutureBuilder<StudentModel>(
+            future: ParentModel.currentUser.selectedStudent,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container();
+              }
+              return StudentScheduleSwitcher(snapshot.data!);
+            });
       default:
-        return const StudentScheduleSwitcher();
+        return StudentScheduleSwitcher(StudentModel.currentUser);
     }
   }
 }

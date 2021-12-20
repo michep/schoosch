@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:isoweek/isoweek.dart';
-import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
-import 'package:schoosch/widgets/student_dayschedule_tile.dart';
+import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/widgets/teacher/teacher_dayschedule_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class StudentScheduleWidget extends StatelessWidget {
-  const StudentScheduleWidget(this._class, this._week, {Key? key}) : super(key: key);
-
-  final ClassModel _class;
+class TeacherScheduleWidget extends StatelessWidget {
+  final TeacherModel _teacher;
   final Week _week;
+
+  const TeacherScheduleWidget(this._teacher, this._week, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<StudentScheduleModel>>(
-      future: _class.getSchedulesWeek(_week),
+    return FutureBuilder<List<TeacherScheduleModel>>(
+      future: _teacher.getSchedulesWeek(_week),
       builder: (context, schedules) {
         if (!schedules.hasData) {
           return Utils.progressIndicator();
@@ -29,7 +29,7 @@ class StudentScheduleWidget extends StatelessWidget {
         }
         return ListView(
           children: [
-            ...schedules.data!.map((schedule) => ClassDayScheduleTile(schedule)),
+            ...schedules.data!.map((schedule) => TeacherDayScheduleTile(schedule)),
           ],
         );
       },

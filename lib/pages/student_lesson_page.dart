@@ -10,14 +10,15 @@ import 'package:schoosch/model/people_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
-class LessonPage extends StatelessWidget {
+class StudentLessonPage extends StatelessWidget {
+  final StudentModel _student;
   final DateTime _date;
   final LessonModel _lesson;
   final CurriculumModel _curiculum;
   final VenueModel _venue;
   final LessontimeModel _time;
 
-  const LessonPage(this._lesson, this._curiculum, this._venue, this._time, this._date, {Key? key}) : super(key: key);
+  const StudentLessonPage(this._student, this._lesson, this._curiculum, this._venue, this._time, this._date, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,7 @@ class LessonPage extends StatelessWidget {
             height: 5,
           ),
           FutureBuilder<List<HomeworkModel>?>(
-              future: _lesson.homeworksForStudent(StudentModel.currentUser),
+              future: _lesson.homeworksForStudent(_student),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Text('');
@@ -97,7 +98,7 @@ class LessonPage extends StatelessWidget {
                 );
               }),
           FutureBuilder<List<MarkModel>?>(
-            future: _lesson.marksForStudent(StudentModel.currentUser),
+            future: _lesson.marksForStudent(_student),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Text('');

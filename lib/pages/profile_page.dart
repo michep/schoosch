@@ -33,7 +33,6 @@ class ProfilePage extends StatelessWidget {
   }
 
   void _logout() async {
-    // Get.find<FStore>().resetCurrentUser();
     await Get.find<FAuth>().logout();
     Get.offAll(() => const LoginPage());
   }

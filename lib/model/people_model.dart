@@ -92,7 +92,27 @@ class TeacherModel extends PeopleModel {
 }
 
 class ParentModel extends PeopleModel {
-  ParentModel.fromMap(String id, Map<String, dynamic> map) : super._fromMap(id, map);
+  final List<String> _studentIds = [];
+  final List<StudentModel> _students = [];
+  bool _studentsLoaded = false;
+  StudentModel? selectedChild;
+
+  ParentModel.fromMap(String id, Map<String, dynamic> map) : super._fromMap(id, map) {
+    map['student_ids'] != null
+        ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String))
+        : throw 'need student_ids key in people for parent';
+  }
+
+  Future<StudentModel> get selectedStudent async {
+    if (!_studentsLoaded) {
+      var store = Get.find<FStore>();
+      for (var id in _studentIds) {
+        _students.add(await store.getPeople(id) as StudentModel);
+      }
+    }
+    selectedChild = _students[0];
+    return selectedChild as StudentModel;
+  }
 
   static ParentModel get currentUser => Get.find<FStore>().currentUser as ParentModel;
 }
