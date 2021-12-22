@@ -16,13 +16,20 @@ import 'model/people_model.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   initializeDateFormatting();
-  await Firebase.initializeApp(
+  if (kIsWeb) {
+    await Firebase.initializeApp(
       options: const FirebaseOptions(
           apiKey: 'AIzaSyBtR7RR_pEv77tcGCIa7TtuZazqkUb45f0',
-          appId: '1:245847143504:web:bc41654fbb85ce87918d55',
-          messagingSenderId: '245847143504',
+          authDomain: 'schoosch-8e6d4.firebaseapp.com',
+          databaseURL: 'https://schoosch-8e6d4-default-rtdb.europe-west1.firebasedatabase.app',
           projectId: 'schoosch-8e6d4',
-          storageBucket: 'schoosch-8e6d4.appspot.com'));
+          storageBucket: 'schoosch-8e6d4.appspot.com',
+          messagingSenderId: '245847143504',
+          appId: '1:245847143504:web:bc41654fbb85ce87918d55'),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
   var fauth = FAuth();
   var fstore = FStore();
   Get.put<FAuth>(fauth);

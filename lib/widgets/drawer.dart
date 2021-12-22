@@ -47,12 +47,12 @@ class MDrawer extends StatelessWidget {
 
   List<Widget> menuItems() {
     List<Widget> items = [];
-    if (PeopleModel.currentUser?.type == 'student') {
+    if (PeopleModel.currentUser!.types.contains('student')) {
       items.add(
         TextButton.icon(
           onPressed: () {
             Get.to(() => RatePage(
-                  aclass: (StudentModel.currentUser).studentClass,
+                  aclass: PeopleModel.currentUser!.asStudent!.studentClass,
                 ));
           },
           icon: const Icon(Icons.insert_emoticon_rounded),

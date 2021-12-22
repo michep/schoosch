@@ -129,7 +129,7 @@ class FStore extends GetxController {
 
   Future<PeopleModel> getPeople(String id) async {
     var res = await _institutionRef.collection('people').doc(id).get();
-    return PeopleModel(res.id, res.data()!);
+    return PeopleModel.fromMap(res.id, res.data()!);
   }
 
   Future<CurriculumModel> getCurriculum(String id) async {
@@ -160,7 +160,7 @@ class FStore extends GetxController {
     if (res.docs.isEmpty) {
       throw 'User with provided email was not found in current Institution';
     }
-    return PeopleModel(res.docs[0].id, res.docs[0].data());
+    return PeopleModel.fromMap(res.docs[0].id, res.docs[0].data());
   }
 
   Future<ClassModel> getClassForStudent(PeopleModel student) async {
@@ -182,7 +182,7 @@ class FStore extends GetxController {
     var cw = Get.find<CurrentWeek>().currentWeek; //TODO: currentWeek should be parameter
     var days = await aclass.getSchedulesWeek(cw);
     for (var day in days) {
-      var dayles = await day.lessonsForStudent(StudentModel.currentUser, cw);
+      var dayles = await day.lessonsForStudent(PeopleModel.currentUser!.asStudent!, cw);
       for (var les in dayles) {
         var cur = await les.curriculum;
         var teach = (await cur!.master) as TeacherModel?;
