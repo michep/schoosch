@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/pages/admin_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
@@ -22,27 +23,8 @@ class ProfilePage extends StatelessWidget {
           children: [
             Text(_user.fullName),
             Text(_user.email),
-            Row(children: [
-              Text(_user.currentType),
-              ElevatedButton(
-                child: const Text('сменить тип'),
-                onPressed: () => _changeTypeBottomsheet(_user),
-              ),
-            ]),
-            _user.currentType == 'parent'
-                ? Row(children: [
-                    FutureBuilder<StudentModel>(
-                        future: _user.asParent!.currentChild,
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) return Container();
-                          return Text(snapshot.data!.fullName);
-                        }),
-                    ElevatedButton(
-                      onPressed: () => _changeChildBottomsheet(_user.asParent!),
-                      child: const Text('сменить ребенка'),
-                    ),
-                  ])
-                : Container(),
+            _changeTypeW(_user),
+            _chateChildW(_user),
             ElevatedButton(
               onPressed: _logout,
               child: const Text('Выйти из системы'),
@@ -53,25 +35,27 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  void _changeTypeBottomsheet(PeopleModel user) {
-    Get.bottomSheet(
-      Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ...user.types.map((e) => ElevatedButton(
-                  onPressed: () => _changeType(user, e),
-                  child: Text(e),
-                )),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget _chateChildW(PeopleModel user) {
+    return user.currentType == 'parent'
+        ? FutureBuilder(
+            future: Future.wait([user.asParent!.currentChild, user.asParent!.children]),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return Container();
+              var list = snapshot.data! as List<dynamic>;
+              var currentChild = list[0] as StudentModel;
+              var children = list[1] as List<StudentModel>;
 
-  void _changeType(PeopleModel user, String type) {
-    user.setType(type);
-    Get.offAll(() => const HomePage());
+              return Row(children: [
+                Text(currentChild.fullName),
+                children.length > 1
+                    ? ElevatedButton(
+                        onPressed: () => _changeChildBottomsheet(user.asParent!),
+                        child: const Text('сменить ребенка'),
+                      )
+                    : Container(),
+              ]);
+            })
+        : Container();
   }
 
   void _changeChildBottomsheet(ParentModel user) {
@@ -95,13 +79,52 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  void _changeChild(ParentModel parent, StudentModel student) {
-    parent.setChild(student);
-    Get.offAll(() => const HomePage());
+  void _changeChild(ParentModel parent, StudentModel student) async {
+    if (await parent.currentChild != student) {
+      parent.setChild(student);
+      Get.offAll(() => const HomePage());
+    }
+    Get.back();
   }
 
   void _logout() async {
     await Get.find<FAuth>().logout();
     Get.offAll(() => const LoginPage());
+  }
+
+  Widget _changeTypeW(PeopleModel user) {
+    return Row(children: [
+      Text(user.currentType),
+      user.types.length > 1
+          ? ElevatedButton(
+              child: const Text('сменить тип'),
+              onPressed: () => _changeTypeBottomsheet(user),
+            )
+          : Container(),
+    ]);
+  }
+
+  void _changeTypeBottomsheet(PeopleModel user) {
+    Get.bottomSheet(
+      Card(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ...user.types.map((e) => ElevatedButton(
+                  onPressed: () => _changeType(user, e),
+                  child: Text(e),
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _changeType(PeopleModel user, String type) {
+    if (user.currentType != type) {
+      user.setType(type);
+      type == 'admin' ? Get.offAll(() => const AdminPage()) : Get.offAll(() => const HomePage());
+    }
+    Get.back();
   }
 }

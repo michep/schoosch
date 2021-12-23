@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/people_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
-import 'package:schoosch/widgets/drawer.dart';
+import 'package:schoosch/widgets/mdrawer.dart';
 import 'package:schoosch/widgets/student/student_schedule_switcher.dart';
 import 'package:schoosch/widgets/teacher/teacher_schedule_switcher.dart';
 import 'package:schoosch/widgets/week_selector.dart';

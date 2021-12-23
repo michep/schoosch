@@ -8,6 +8,7 @@ import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
+import 'package:schoosch/pages/admin_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';
 
@@ -40,8 +41,6 @@ Future<void> main() async {
     await fstore.init(fauth.currentUser!.email!);
   }
 
-  print(kIsWeb);
-
   runApp(const MyApp());
 }
 
@@ -57,7 +56,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: PeopleModel.currentUser != null ? const HomePage() : const LoginPage(),
+      home: PeopleModel.currentUser != null
+          ? PeopleModel.currentUser!.currentType == 'admin'
+              ? const AdminPage()
+              : const HomePage()
+          : const LoginPage(),
     );
   }
 }

@@ -7,6 +7,8 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/pages/admin_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
@@ -60,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
     }
     if (user != null && store.currentUser == null) {
       await store.init(user.email!);
-      Get.offAll(() => const HomePage());
+      PeopleModel.currentUser!.currentType == 'admin' ? Get.offAll(() => const AdminPage()) : Get.offAll(() => const HomePage());
     }
   }
 }

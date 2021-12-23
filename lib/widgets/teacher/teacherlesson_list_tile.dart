@@ -4,7 +4,6 @@ import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/venue_model.dart';
-import 'package:schoosch/pages/student_lesson_page.dart';
 import 'package:schoosch/pages/teacher_lesson_page.dart';
 
 class TeacherLessonListTile extends StatefulWidget {

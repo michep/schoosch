@@ -44,7 +44,7 @@ class PeopleModel {
             _currentType = t;
             break;
           case 'admin':
-            UnimplementedError;
+            _currentType = t;
             break;
           default:
             throw 'incorrect type in people';
@@ -130,7 +130,8 @@ class ParentModel extends PeopleModel {
       var store = Get.find<FStore>();
       for (var id in _studentIds) {
         // _students.add(await store.getPeople(id) as StudentModel);
-        _students.add((await store.getPeople(id)).asStudent!);
+        var p = await store.getPeople(id);
+        if (p.currentType == 'student') _students.add(p.asStudent!);
       }
       _studentsLoaded = true;
     }
