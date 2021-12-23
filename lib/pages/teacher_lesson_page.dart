@@ -50,6 +50,30 @@ class TeacherLessonPage extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
+          FutureBuilder<List<StudentModel>>(
+            future: _lesson.aclass.students,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Text('');
+              }
+              if (snapshot.data!.isEmpty) {
+                return Text("нет учеников");
+              }
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, i) {
+                    return Card(
+                      child: ListTile(
+                        title: Text(snapshot.data![i].fullName),
+                        
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
         ],
       ),
     );

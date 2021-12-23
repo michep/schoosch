@@ -13,9 +13,10 @@ class ClassModel {
   late final String _lessontimeId;
   final Map<Week, List<StudentScheduleModel>> _schedule = {};
   final List<String> _studentIds = [];
-  final List<PeopleModel> _students = [];
+  final List<StudentModel> _students = [];
   final List<LessontimeModel> _lessontimes = [];
   bool _lessontimesLoaded = false;
+  bool _studentsLoaded = false;
   PeopleModel? _master;
 
   ClassModel.fromMap(this.id, Map<String, dynamic> map) {
@@ -53,5 +54,13 @@ class ClassModel {
 
   Future<Map<TeacherModel, List<String>>> get teachers async {
     return Get.find<FStore>().getClassTeachers(this);
+  }
+
+  Future<List<StudentModel>> get students async {
+    if(!_studentsLoaded) {
+      _students.addAll((await Get.find<FStore>().getAllPeople(_studentIds)).map((e) => e as StudentModel));
+      _studentsLoaded = true; 
+    }
+    return _students;
   }
 }
