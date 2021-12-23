@@ -182,7 +182,7 @@ class FStore extends GetxController {
     var cw = Get.find<CurrentWeek>().currentWeek; //TODO: currentWeek should be parameter
     var days = await aclass.getSchedulesWeek(cw);
     for (var day in days) {
-      var dayles = await day.lessonsForStudent(PeopleModel.currentUser!.asStudent!, cw);
+      var dayles = await day.lessonsForStudent(PeopleModel.currentStudent!, cw);
       for (var les in dayles) {
         var cur = await les.curriculum;
         var teach = (await cur!.master) as TeacherModel?;

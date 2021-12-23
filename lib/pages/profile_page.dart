@@ -22,7 +22,6 @@ class ProfilePage extends StatelessWidget {
           children: [
             Text(_user.fullName),
             Text(_user.email),
-            // Text(widget._user.currentType),
             Row(children: [
               Text(_user.currentType),
               ElevatedButton(

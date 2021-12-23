@@ -50,11 +50,13 @@ class PeopleModel {
             throw 'incorrect type in people';
         }
       }
-      currentType$.value = _currentType;
     }
   }
 
   static PeopleModel? get currentUser => Get.find<FStore>().currentUser;
+  static StudentModel? get currentStudent => currentUser?._student;
+  static TeacherModel? get currentTeacher => currentUser?._teacher;
+  static ParentModel? get currentParent => currentUser?._parent;
 
   StudentModel? get asStudent => _student;
   TeacherModel? get asTeacher => _teacher;
@@ -64,9 +66,6 @@ class PeopleModel {
   String get abbreviatedName => middlename != '' ? '${firstname[0]} ${middlename[0]} $lastname' : '$firstname $lastname';
 
   String get currentType => _currentType;
-  // set setType(String val) => _currentType = val;
-
-  RxString get currentType$ => _currentType.obs;
   void setType(String val) => _currentType = val;
 
   @override

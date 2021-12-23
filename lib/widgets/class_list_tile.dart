@@ -22,7 +22,7 @@ class ClassListTile extends StatelessWidget {
       trailing: const SizedBox(
         height: 10,
       ),
-      onTap: () => Get.to(() => StudentScheduleWidget(PeopleModel.currentUser!.asStudent!, _class, Get.find<CurrentWeek>().currentWeek)),
+      onTap: () => Get.to(() => StudentScheduleWidget(PeopleModel.currentStudent!, _class, Get.find<CurrentWeek>().currentWeek)),
     );
   }
 }
