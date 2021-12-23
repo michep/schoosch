@@ -96,135 +96,154 @@ institution:
         - firstname: 'Егор'
           middlename: 'А'
           lastname: 'Баранов'
-          type: 'student'
           birtday: 2005-01-01 00:00:00
           email: 'email@addr.com'
+          type:
+            - 'student'
 
         - firstname: 'Мансур'
           middlename: 'Б'
           lastname: 'Мустаев'
-          type: 'student'
           birtday: 2005-01-01 00:00:00
           email: 'email1@addr.com'
+          type:
+            - 'student'
 
         - firstname: 'Ян'
           middlename: 'В'
           lastname: 'Федотов'
-          type: 'student'
           birtday: 2005-01-01 00:00:00
           email: 'email2@addr.com'
+          type:
+            - 'student'
 
         - firstname: 'Степан'
           middlename: 'Михайлович'
           lastname: 'Чепайкин'
-          type: 'student'
           birtday: 2005-01-01 00:00:00
           email: 'stechep@mail.ru'
+          type:
+            - 'student'
 
         - firstname: 'Василий'
           middlename: 'Анатольевич'
           lastname: 'Арапов'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email3@addr.com'
+          type:
+            - 'teacher'
 
         - firstname: 'Елена'
           middlename: 'Аркадьевна'
           lastname: 'Дядюра'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email4@addr.com'
+          type:
+            - 'teacher'
 
         - firstname: 'Александр'
           middlename: 'Владимирович'
           lastname: 'Дубровин'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email5@addr.com'
+          type:
+            - 'teacher'
 
         - firstname: 'Александр'
           middlename: 'Михайлович'
           lastname: 'Манафов'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email6@addr.com'
+          type:
+            - 'teacher'
 
         - firstname: 'Ирина'
           middlename: 'Валерьевна'
           lastname: 'Мартынова'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email7@addr.com'
+          type:
+            - 'teacher'
 
         - firstname: 'Рич'
           middlename: 'Ричардсон'
           lastname: 'А'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email8@addr.com'
+          type:
+            - 'teacher'
 
         - firstname: 'И'
           middlename: 'В'
           lastname: 'Епишин'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email9@addr.com'
+          type:
+            - 'teacher'
 
         - firstname: 'Галина'
           middlename: 'Викторовна'
           lastname: 'Гусева'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email10@addr.com'
+          type:
+            - 'teacher'
 
         - firstname: 'Н'
           middlename: 'Н'
           lastname: 'Самохина'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email11@addr.com'
+          type:
+            - 'teacher'
 
         - firstname: 'Д'
           middlename: 'Е'
           lastname: 'Павлюк'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email12@addr.com'
+          type:
+            - 'teacher'
 
         - firstname: 'Немецкий'
           middlename: 'Язык'
           lastname: 'Учитель'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email3@addr.com'
+          type:
+            - 'teacher'
         
         - firstname: 'Французский'
           middlename: 'Язык'
           lastname: 'Учитель'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email4@addr.com'
+          type:
+            - 'teacher'
 
         - firstname: 'Русский'
           middlename: 'Язык'
           lastname: 'Учитель'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email5@addr.com'
+          type:
+            - 'teacher'
 
         - firstname: 'Л'
           middlename: 'Н'
           lastname: 'Каратеева'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email5@addr.com'
+          type:
+            - 'teacher'
 
         - firstname: 'Базыр'
           middlename: 'А'
           lastname: 'Абамаджапов'
-          type: 'teacher'
           birtday: 1985-01-01 00:00:00
           email: 'email6@addr.com'
+          type:
+            - 'teacher'
         
       curriculum:
         - name: 'Алгебра классы 9-11'

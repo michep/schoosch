@@ -41,37 +41,42 @@ institution:
         - firstname: 'Сергей'
           middlename: 'Сергеевич'
           lastname: 'Учитель'
-          type: 'teacher'
           birtday: 1965-01-01 00:00:00
           email: 'michep@mail.ru'
+          type:
+            - 'teacher'
 
         - firstname: 'Николай'
           middlename: 'Николаевич'
           lastname: 'Учитель'
-          type: 'teacher'
           birtday: 1970-05-05 00:00:00
           email: 'nikolay@email.addr'
+          type:
+            - 'teacher'
 
         - firstname: 'Иван'
           middlename: 'Иванович'
           lastname: 'Студент'
-          type: 'student'
           birtday: 2005-01-01 00:00:00
           email: 'ivan@email.addr'
+          type:
+            - 'student'
 
         - firstname: 'Петр'
           middlename: 'Петрович'
           lastname: 'Студент'
-          type: 'student'
           birtday: 2010-01-01 00:00:00
           email: 'pert@email.addr'
+          type:
+            - 'student'
 
         - firstname: 'Дмитрий'
           middlename: 'Дмитриевич'
           lastname: 'Студент'
-          type: 'student'
           birtday: 2010-01-01 00:00:00
           email: 'dima@email.addr'
+          type:
+            - 'student'
 
       curriculum:
         - name: 'Математика 9'
