@@ -64,9 +64,6 @@ class PeopleModel {
   TeacherModel? get asTeacher => _asTeacher;
   ParentModel? get asParent => _asParent;
 
-  String get fullName => middlename != '' ? '$firstname $middlename $lastname' : '$firstname $lastname';
-  String get abbreviatedName => middlename != '' ? '${firstname[0]} ${middlename[0]} $lastname' : '$firstname $lastname';
-
   String get currentType => _currentType;
   void setType(String val) => _currentType = val;
 
