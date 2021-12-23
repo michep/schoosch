@@ -52,6 +52,9 @@ class PeopleModel {
 
   @override
   int get hashCode => hashValues(id, '');
+
+  String get fullName => middlename != '' ? '$lastname $firstname $middlename' : '$lastname $firstname';
+  String get abbreviatedName => middlename != '' ? '$lastname ${firstname[0]}. ${middlename[0]}.' : '$lastname ${firstname[0]}.';
 }
 
 class StudentModel extends PeopleModel {

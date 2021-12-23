@@ -132,6 +132,15 @@ class FStore extends GetxController {
     return PeopleModel(res.id, res.data()!);
   }
 
+  Future<List<PeopleModel>> getAllPeople(List<String> ids) async {
+    List<PeopleModel> res = [];
+    for(var id in ids) {
+      var p = await getPeople(id);
+      res.add(p);
+    }
+    return res;
+  }
+
   Future<CurriculumModel> getCurriculum(String id) async {
     var res = await _institutionRef.collection('curriculum').doc(id).get();
     return CurriculumModel.fromMap(res.id, res.data()!);
