@@ -120,7 +120,7 @@ class FStore extends GetxController {
 
     for (var l in less) {
       var cur = await l.curriculum;
-      if (cur != null && cur.isAvailableForStudent(student.id)) {
+      if (cur != null && cur.isAvailableForStudent(student.id!)) {
         res.add(l);
       }
     }
@@ -180,6 +180,15 @@ class FStore extends GetxController {
           ),
         )
         .toList();
+  }
+
+  Future saveVenue(VenueModel venue) async {
+    if (venue.id != null) {
+      return _institutionRef.collection('venue').doc(venue.id).set(venue.toMap());
+    } else {
+      var v = await _institutionRef.collection('venue').add(venue.toMap());
+      venue.id = v.id;
+    }
   }
 
   Future<VenueModel> getVenue(String id) async {

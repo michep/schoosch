@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/institution_model.dart';
-import 'package:schoosch/pages/admin/institution_page.dart';
+import 'package:schoosch/pages/admin/curriculum_list.dart';
+import 'package:schoosch/pages/admin/institution.dart';
+import 'package:schoosch/pages/admin/people_list.dart';
+import 'package:schoosch/pages/admin/venue_list.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
 
 class AdminDrawer extends StatelessWidget {
@@ -19,19 +22,49 @@ class AdminDrawer extends StatelessWidget {
               child: const Text('Информация об учебном заведении'),
               onPressed: openInstitutionPage,
             ),
-            TextButton(onPressed: () {}, child: const Text('Кабинеты и помещения')),
-            TextButton(onPressed: () {}, child: const Text('Сотрудники, учителя и ученики')),
-            TextButton(onPressed: () {}, child: const Text('Учебные предметы')),
-            TextButton(onPressed: () {}, child: const Text('Классы')),
-            TextButton(onPressed: () {}, child: const Text('Расписание уроков на неделю')),
+            TextButton(
+              child: const Text('Кабинеты и помещения'),
+              onPressed: openVenuePage,
+            ),
+            TextButton(
+              child: const Text('Сотрудники, учителя и ученики'),
+              onPressed: openPeoplePage,
+            ),
+            TextButton(
+              child: const Text('Учебные предметы'),
+              onPressed: openCurriculumPage,
+            ),
+            TextButton(
+              child: const Text('Классы'),
+              onPressed: () {},
+            ),
+            TextButton(
+              child: const Text('Расписание уроков на неделю'),
+              onPressed: () {},
+            ),
           ],
         ),
       ],
     );
   }
 
-  Future<void> openInstitutionPage() async {
+  void openInstitutionPage() {
     Get.back();
     Get.to<String>(() => InstitutionPage(InstitutionModel.currentInstitution));
+  }
+
+  void openVenuePage() {
+    Get.back();
+    Get.to(() => VenueListPage(InstitutionModel.currentInstitution));
+  }
+
+  Future<void> openPeoplePage() async {
+    Get.back();
+    Get.to<String>(() => PeopleListPage(InstitutionModel.currentInstitution));
+  }
+
+  Future<void> openCurriculumPage() async {
+    Get.back();
+    Get.to<String>(() => CurriculumListPage(InstitutionModel.currentInstitution));
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,7 +10,7 @@ import 'package:schoosch/model/dayschedule_model.dart';
 import 'class_model.dart';
 
 class PersonModel {
-  late final String id;
+  late final String? id;
   late final String firstname;
   late final String middlename;
   late final String lastname;
@@ -23,26 +22,45 @@ class PersonModel {
   late final StudentModel? _asStudent;
   late final TeacherModel? _asTeacher;
 
+  PersonModel.empty()
+      : this.fromMap(null, <String, dynamic>{
+          'firstname': '',
+          'middlename': '',
+          'lastname': '',
+          'email': '',
+          'type': <String>['student'],
+        });
+
+  PersonModel.emptyParent()
+      : this.fromMap(null, <String, dynamic>{
+          'firstname': '',
+          'middlename': '',
+          'lastname': '',
+          'email': '',
+          'type': <String>['parent'],
+          'student_ids': <String>[],
+        });
+
   PersonModel.fromMap(this.id, Map<String, dynamic> map, [bool _recursive = true]) {
     firstname = map['firstname'] != null ? map['firstname'] as String : throw 'need firstname key in people';
     middlename = map['middlename'] != null ? map['middlename'] as String : '';
     lastname = map['lastname'] != null ? map['lastname'] as String : throw 'need lastname key in people';
     birthday = map['birthday'] != null ? DateTime.fromMillisecondsSinceEpoch((map['birthday'] as Timestamp).millisecondsSinceEpoch) : null;
-    email = map['email'] != null ? map['email'] as String : ''; //TODO: throw
+    email = map['email'] != null ? map['email'] as String : throw 'need email key in people';
     map['type'] != null ? types.addAll((map['type'] as List<dynamic>).map((e) => e as String)) : throw 'need type key in people';
     if (_recursive) {
       for (var t in types) {
         switch (t) {
+          case 'parent':
+            _asParent = ParentModel.fromMap(id, map);
+            _currentType = t;
+            break;
           case 'student':
             _asStudent = StudentModel.fromMap(id, map);
             _currentType = t;
             break;
           case 'teacher':
             _asTeacher = TeacherModel.fromMap(id, map);
-            _currentType = t;
-            break;
-          case 'parent':
-            _asParent = ParentModel.fromMap(id, map);
             _currentType = t;
             break;
           case 'admin':
@@ -87,12 +105,7 @@ class StudentModel extends PersonModel {
   ParentModel? parent;
   bool _studentClassLoaded = false;
 
-  StudentModel.fromMap(String id, Map<String, dynamic> map)
-      : super.fromMap(
-          id,
-          map,
-          false,
-        );
+  StudentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
   Future<ClassModel> get studentClass async {
     if (!_studentClassLoaded) {
@@ -106,7 +119,7 @@ class StudentModel extends PersonModel {
 class TeacherModel extends PersonModel {
   final Map<Week, List<TeacherScheduleModel>> _schedule = {};
 
-  TeacherModel.fromMap(String id, Map<String, dynamic> map) : super.fromMap(id, map, false);
+  TeacherModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
   Future<double> get averageRating async {
     return Get.find<FStore>().getAverageTeacherRating(this);
@@ -127,7 +140,7 @@ class ParentModel extends PersonModel {
   bool _studentsLoaded = false;
   StudentModel? _selectedChild;
 
-  ParentModel.fromMap(String id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
+  ParentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
     map['student_ids'] != null
         ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String))
         : throw 'need student_ids key in people for parent';
