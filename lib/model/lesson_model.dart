@@ -6,7 +6,7 @@ import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
-import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 
 class LessonModel {

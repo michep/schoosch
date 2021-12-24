@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/institution_model.dart';
 
 Widget drawerHeader(BuildContext context) {
   return DrawerHeader(
@@ -9,7 +10,7 @@ Widget drawerHeader(BuildContext context) {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          Get.find<FStore>().currentInstitution!.name,
+          InstitutionModel.currentInstitution.name,
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,

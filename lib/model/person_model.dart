@@ -10,7 +10,7 @@ import 'package:schoosch/model/dayschedule_model.dart';
 
 import 'class_model.dart';
 
-class PeopleModel {
+class PersonModel {
   late final String id;
   late final String firstname;
   late final String middlename;
@@ -23,7 +23,7 @@ class PeopleModel {
   late final StudentModel? _asStudent;
   late final TeacherModel? _asTeacher;
 
-  PeopleModel.fromMap(this.id, Map<String, dynamic> map, [bool _recursive = true]) {
+  PersonModel.fromMap(this.id, Map<String, dynamic> map, [bool _recursive = true]) {
     firstname = map['firstname'] != null ? map['firstname'] as String : throw 'need firstname key in people';
     middlename = map['middlename'] != null ? map['middlename'] as String : '';
     lastname = map['lastname'] != null ? map['lastname'] as String : throw 'need lastname key in people';
@@ -55,7 +55,7 @@ class PeopleModel {
     }
   }
 
-  static PeopleModel? get currentUser => Get.find<FStore>().currentUser;
+  static PersonModel? get currentUser => Get.find<FStore>().currentUser;
   static StudentModel? get currentStudent => currentUser?._asStudent;
   static TeacherModel? get currentTeacher => currentUser?._asTeacher;
   static ParentModel? get currentParent => currentUser?._asParent;
@@ -69,7 +69,7 @@ class PeopleModel {
 
   @override
   operator ==(other) {
-    if (other is PeopleModel) {
+    if (other is PersonModel) {
       return id == other.id;
     }
     return this == other;
@@ -82,7 +82,7 @@ class PeopleModel {
   String get abbreviatedName => middlename != '' ? '$lastname ${firstname[0]}. ${middlename[0]}.' : '$lastname ${firstname[0]}.';
 }
 
-class StudentModel extends PeopleModel {
+class StudentModel extends PersonModel {
   late final ClassModel _studentClass;
   ParentModel? parent;
   bool _studentClassLoaded = false;
@@ -103,7 +103,7 @@ class StudentModel extends PeopleModel {
   }
 }
 
-class TeacherModel extends PeopleModel {
+class TeacherModel extends PersonModel {
   final Map<Week, List<TeacherScheduleModel>> _schedule = {};
 
   TeacherModel.fromMap(String id, Map<String, dynamic> map) : super.fromMap(id, map, false);
@@ -112,7 +112,7 @@ class TeacherModel extends PeopleModel {
     return Get.find<FStore>().getAverageTeacherRating(this);
   }
 
-  Future<void> createRating(PeopleModel user, int rating, String comment) async {
+  Future<void> createRating(PersonModel user, int rating, String comment) async {
     return Get.find<FStore>().saveTeacherRating(this, user, DateTime.now(), rating, comment);
   }
 
@@ -121,7 +121,7 @@ class TeacherModel extends PeopleModel {
   }
 }
 
-class ParentModel extends PeopleModel {
+class ParentModel extends PersonModel {
   final List<String> _studentIds = [];
   final List<StudentModel> _students = [];
   bool _studentsLoaded = false;
@@ -137,7 +137,7 @@ class ParentModel extends PeopleModel {
     if (!_studentsLoaded) {
       var store = Get.find<FStore>();
       for (var id in _studentIds) {
-        var p = await store.getPeople(id);
+        var p = await store.getPerson(id);
         if (p.currentType == 'student') {
           p.asStudent!.parent = this;
           _students.add(p.asStudent!);

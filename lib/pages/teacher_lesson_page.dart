@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
-import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
@@ -67,7 +67,6 @@ class TeacherLessonPage extends StatelessWidget {
                     return Card(
                       child: ListTile(
                         title: Text(snapshot.data![i].fullName),
-                        
                       ),
                     );
                   },

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/profile_page.dart';
 
 class MAppBar extends StatelessWidget with PreferredSizeWidget {
@@ -32,6 +32,6 @@ class MAppBar extends StatelessWidget with PreferredSizeWidget {
   Size get preferredSize => tabs != null ? const Size.fromHeight(132) : const Size.fromHeight(48);
 
   static void _profile() {
-    Get.to(() => ProfilePage(PeopleModel.currentUser!));
+    Get.to(() => ProfilePage(PersonModel.currentUser!));
   }
 }

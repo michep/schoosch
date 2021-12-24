@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
-import 'package:schoosch/model/people_model.dart';
-import 'package:schoosch/pages/admin_page.dart';
+import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/pages/admin/admin_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
 class ProfilePage extends StatelessWidget {
-  final PeopleModel _user;
+  final PersonModel _user;
 
   const ProfilePage(this._user, {Key? key}) : super(key: key);
 
@@ -35,7 +35,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _chateChildW(PeopleModel user) {
+  Widget _chateChildW(PersonModel user) {
     return user.currentType == 'parent'
         ? FutureBuilder(
             future: Future.wait([user.asParent!.currentChild, user.asParent!.children]),
@@ -92,7 +92,7 @@ class ProfilePage extends StatelessWidget {
     Get.offAll(() => const LoginPage());
   }
 
-  Widget _changeTypeW(PeopleModel user) {
+  Widget _changeTypeW(PersonModel user) {
     return Row(children: [
       Text(user.currentType),
       user.types.length > 1
@@ -104,7 +104,7 @@ class ProfilePage extends StatelessWidget {
     ]);
   }
 
-  void _changeTypeBottomsheet(PeopleModel user) {
+  void _changeTypeBottomsheet(PersonModel user) {
     Get.bottomSheet(
       Card(
         child: Column(
@@ -120,7 +120,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  void _changeType(PeopleModel user, String type) {
+  void _changeType(PersonModel user, String type) {
     if (user.currentType != type) {
       user.setType(type);
       type == 'admin' ? Get.offAll(() => const AdminPage()) : Get.offAll(() => const HomePage());

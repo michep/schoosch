@@ -8,29 +8,17 @@ import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
-import 'package:schoosch/pages/admin_page.dart';
+import 'package:schoosch/firebase_options.dart';
+import 'package:schoosch/pages/admin/admin_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';
 
-import 'model/people_model.dart';
+import 'model/person_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   initializeDateFormatting();
-  if (kIsWeb) {
-    await Firebase.initializeApp(
-      options: const FirebaseOptions(
-          apiKey: 'AIzaSyBtR7RR_pEv77tcGCIa7TtuZazqkUb45f0',
-          authDomain: 'schoosch-8e6d4.firebaseapp.com',
-          databaseURL: 'https://schoosch-8e6d4-default-rtdb.europe-west1.firebasedatabase.app',
-          projectId: 'schoosch-8e6d4',
-          storageBucket: 'schoosch-8e6d4.appspot.com',
-          messagingSenderId: '245847143504',
-          appId: '1:245847143504:web:bc41654fbb85ce87918d55'),
-    );
-  } else {
-    await Firebase.initializeApp();
-  }
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var fauth = FAuth();
   var fstore = FStore();
   Get.put<FAuth>(fauth);
@@ -56,8 +44,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: PeopleModel.currentUser != null
-          ? PeopleModel.currentUser!.currentType == 'admin'
+      home: PersonModel.currentUser != null
+          ? PersonModel.currentUser!.currentType == 'admin'
               ? const AdminPage()
               : const HomePage()
           : const LoginPage(),

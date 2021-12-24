@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
-import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/teacher/teacher_schedule.dart';
 
 class TeacherScheduleSwitcher extends StatefulWidget {

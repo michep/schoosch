@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
-import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/teacher/teacher_dayschedule_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 

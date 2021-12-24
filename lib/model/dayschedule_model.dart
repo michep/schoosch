@@ -4,7 +4,7 @@ import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
-import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/person_model.dart';
 
 class DayScheduleModel {
   final ClassModel _class;

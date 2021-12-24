@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/class_model.dart';
-import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/student/student_schedule.dart';
 
 class ClassListTile extends StatelessWidget {
@@ -22,7 +22,7 @@ class ClassListTile extends StatelessWidget {
       trailing: const SizedBox(
         height: 10,
       ),
-      onTap: () => Get.to(() => StudentScheduleWidget(PeopleModel.currentStudent!, _class, Get.find<CurrentWeek>().currentWeek)),
+      onTap: () => Get.to(() => StudentScheduleWidget(PersonModel.currentStudent!, _class, Get.find<CurrentWeek>().currentWeek)),
     );
   }
 }

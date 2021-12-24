@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:schoosch/widgets/admindrawer.dart';
+import 'package:schoosch/pages/admin/admin_drawer.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
 class AdminPage extends StatelessWidget {
@@ -7,17 +7,17 @@ class AdminPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      drawer: Drawer(
+    return Scaffold(
+      drawer: const Drawer(
         child: AdminDrawer(),
       ),
-      appBar: MAppBar(
+      appBar: const MAppBar(
         'Schoosch / Скуш',
         showProfile: true,
       ),
       body: SafeArea(
         child: Center(
-          child: Text('admin page'),
+          child: Text(MediaQuery.of(context).size.aspectRatio.toStringAsFixed(2)),
         ),
       ),
     );

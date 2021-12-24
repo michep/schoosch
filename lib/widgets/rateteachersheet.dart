@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:get/get.dart';
 
 class RateSheet extends StatefulWidget {
@@ -19,7 +19,7 @@ class _RateSheetState extends State<RateSheet> {
 
   void rate() {
     if ((rating > 2) || (rating < 2 && comment.text != '')) {
-      widget.teacher.createRating(PeopleModel.currentUser!, rating, comment.text);
+      widget.teacher.createRating(PersonModel.currentUser!, rating, comment.text);
     }
     Get.back();
     rating = 0;

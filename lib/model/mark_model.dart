@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
-import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/person_model.dart';
 
 class MarkModel {
   late final String id;
@@ -28,11 +28,11 @@ class MarkModel {
     mark = map['mark'] != null ? map['mark'] as int : throw 'need mark key in mark';
   }
 
-  Future<PeopleModel> get teacher async {
-    return Get.find<FStore>().getPeople(_teacherId);
+  Future<PersonModel> get teacher async {
+    return Get.find<FStore>().getPerson(_teacherId);
   }
 
-  Future<PeopleModel> get student async {
-    return Get.find<FStore>().getPeople(_studentId);
+  Future<PersonModel> get student async {
+    return Get.find<FStore>().getPerson(_studentId);
   }
 }

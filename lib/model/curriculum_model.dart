@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
-import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/person_model.dart';
 
 class CurriculumModel {
   final String id;
@@ -8,7 +8,7 @@ class CurriculumModel {
   late final String? _alias;
   late final String? _masterId;
   final List<String> _studentIds = [];
-  PeopleModel? _master;
+  PersonModel? _master;
 
   CurriculumModel.fromMap(this.id, Map<String, dynamic> map) {
     _name = map['name'] != null ? map['name'] as String : throw '';
@@ -19,10 +19,10 @@ class CurriculumModel {
 
   String get name => _alias ?? _name;
 
-  Future<PeopleModel?> get master async {
+  Future<PersonModel?> get master async {
     if (_master == null && _masterId != null) {
       var store = Get.find<FStore>();
-      _master = await store.getPeople(_masterId!);
+      _master = await store.getPerson(_masterId!);
     }
     return _master;
   }

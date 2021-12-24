@@ -11,7 +11,7 @@ import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
-import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/model/class_model.dart';
@@ -22,7 +22,7 @@ class FStore extends GetxController {
   late DocumentReference _institutionRef;
   late Reference _fstorageRef;
   late Uint8List? _logoImagData;
-  PeopleModel? _currentUser;
+  PersonModel? _currentUser;
   InstitutionModel? _institution;
 
   FStore() {
@@ -32,14 +32,14 @@ class FStore extends GetxController {
     _store.clearPersistence();
   }
 
-  PeopleModel? get currentUser => _currentUser;
+  PersonModel? get currentUser => _currentUser;
   InstitutionModel? get currentInstitution => _institution;
   Uint8List? get logoImageData => _logoImagData;
 
   Future<void> init(String userEmail) async {
     _institution = await _geInstitutionIdByUserEmail(userEmail);
     _institutionRef = _store.collection('institution').doc(_institution!.id);
-    _fstorageRef = _fstorage.ref((await _institutionRef.get()).id);
+    _fstorageRef = _fstorage.ref(_institutionRef.id);
     _logoImagData = await _getLogoImageData();
     _currentUser = await _getUserByEmail(userEmail);
   }
@@ -67,7 +67,7 @@ class FStore extends GetxController {
     return res;
   }
 
-  Future<List<ClassModel>> getClasses() async {
+  Future<List<ClassModel>> getAllClasses() async {
     return (await _institutionRef.collection('class').orderBy('grade').get())
         .docs
         .map(
@@ -127,23 +127,59 @@ class FStore extends GetxController {
     return res;
   }
 
-  Future<PeopleModel> getPeople(String id) async {
+  Future<PersonModel> getPerson(String id) async {
     var res = await _institutionRef.collection('people').doc(id).get();
-    return PeopleModel.fromMap(res.id, res.data()!);
+    return PersonModel.fromMap(res.id, res.data()!);
   }
 
-  Future<List<PeopleModel>> getAllPeople(List<String> ids) async {
-    List<PeopleModel> res = [];
-    for(var id in ids) {
-      var p = await getPeople(id);
+  Future<List<PersonModel>> getAllPeople() async {
+    return (await _institutionRef.collection('people').get())
+        .docs
+        .map(
+          (person) => PersonModel.fromMap(
+            person.id,
+            person.data(),
+          ),
+        )
+        .toList();
+  }
+
+  Future<List<PersonModel>> getPeopleByIds(List<String> ids) async {
+    List<PersonModel> res = [];
+    for (var id in ids) {
+      var p = await getPerson(id);
       res.add(p);
     }
     return res;
   }
 
+  Future<List<CurriculumModel>> getAllCurriculums() async {
+    return (await _institutionRef.collection('curriculum').get())
+        .docs
+        .map(
+          (curr) => CurriculumModel.fromMap(
+            curr.id,
+            curr.data(),
+          ),
+        )
+        .toList();
+  }
+
   Future<CurriculumModel> getCurriculum(String id) async {
     var res = await _institutionRef.collection('curriculum').doc(id).get();
     return CurriculumModel.fromMap(res.id, res.data()!);
+  }
+
+  Future<List<VenueModel>> getAllVenues() async {
+    return (await _institutionRef.collection('venue').get())
+        .docs
+        .map(
+          (venue) => VenueModel.fromMap(
+            venue.id,
+            venue.data(),
+          ),
+        )
+        .toList();
   }
 
   Future<VenueModel> getVenue(String id) async {
@@ -164,15 +200,15 @@ class FStore extends GetxController {
     return InstitutionModel.fromMap(inst.id, inst.data()!);
   }
 
-  Future<PeopleModel> _getUserByEmail(String email) async {
+  Future<PersonModel> _getUserByEmail(String email) async {
     var res = await _institutionRef.collection('people').where('email', isEqualTo: email).limit(1).get();
     if (res.docs.isEmpty) {
       throw 'User with provided email was not found in current Institution';
     }
-    return PeopleModel.fromMap(res.docs[0].id, res.docs[0].data());
+    return PersonModel.fromMap(res.docs[0].id, res.docs[0].data());
   }
 
-  Future<ClassModel> getClassForStudent(PeopleModel student) async {
+  Future<ClassModel> getClassForStudent(PersonModel student) async {
     var res = await _institutionRef.collection('class').where('student_ids', arrayContains: student.id).limit(1).get();
     if (res.docs.isEmpty) {
       throw 'Current user is not assigned to any class';
@@ -191,7 +227,7 @@ class FStore extends GetxController {
     var cw = Get.find<CurrentWeek>().currentWeek; //TODO: currentWeek should be parameter
     var days = await aclass.getSchedulesWeek(cw);
     for (var day in days) {
-      var dayles = await day.lessonsForStudent(PeopleModel.currentStudent!, cw);
+      var dayles = await day.lessonsForStudent(PersonModel.currentStudent!, cw);
       for (var les in dayles) {
         var cur = await les.curriculum;
         var teach = (await cur!.master) as TeacherModel?;
@@ -208,7 +244,7 @@ class FStore extends GetxController {
     return teachers;
   }
 
-  Future saveTeacherRating(TeacherModel teacher, PeopleModel user, DateTime date, int rating, String comment) async {
+  Future saveTeacherRating(TeacherModel teacher, PersonModel user, DateTime date, int rating, String comment) async {
     Map<String, dynamic> data = {};
     data['ratedate'] = Timestamp.fromDate(date);
     data['rater_id'] = user.id;

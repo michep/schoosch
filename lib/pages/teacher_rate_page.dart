@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/widgets/rateteachersheet.dart';
 import 'package:schoosch/widgets/utils.dart';
-import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/person_model.dart';
 
 class RatePage extends StatefulWidget {
   const RatePage({required this.aclass, Key? key}) : super(key: key);

@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/lessontime_model.dart';
-import 'package:schoosch/model/people_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 
 class ClassModel {
@@ -17,7 +17,7 @@ class ClassModel {
   final List<LessontimeModel> _lessontimes = [];
   bool _lessontimesLoaded = false;
   bool _studentsLoaded = false;
-  PeopleModel? _master;
+  PersonModel? _master;
 
   ClassModel.fromMap(this.id, Map<String, dynamic> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in class';
@@ -30,7 +30,7 @@ class ClassModel {
   Future<TeacherModel?> get master async {
     if (_master == null && _masterId != null) {
       var store = Get.find<FStore>();
-      _master = await store.getPeople(_masterId!);
+      _master = await store.getPerson(_masterId!);
     }
     return _master as TeacherModel;
   }
@@ -57,9 +57,9 @@ class ClassModel {
   }
 
   Future<List<StudentModel>> get students async {
-    if(!_studentsLoaded) {
-      _students.addAll((await Get.find<FStore>().getAllPeople(_studentIds)).map((e) => e.asStudent!));
-      _studentsLoaded = true; 
+    if (!_studentsLoaded) {
+      _students.addAll((await Get.find<FStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
+      _studentsLoaded = true;
     }
     return _students;
   }
