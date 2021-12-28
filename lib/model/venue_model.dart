@@ -20,7 +20,7 @@ class VenueModel {
     return res;
   }
 
-  Future save() async {
+  Future<void> save() async {
     return Get.find<FStore>().saveVenue(this);
   }
 }

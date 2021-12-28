@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/venue_model.dart';
-import 'package:schoosch/pages/admin/venue.dart';
+import 'package:schoosch/pages/admin/venue_edit.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class VenueListPage extends StatefulWidget {

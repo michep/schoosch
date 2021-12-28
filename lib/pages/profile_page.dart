@@ -40,7 +40,7 @@ class ProfilePage extends StatelessWidget {
         ? FutureBuilder(
             future: Future.wait([user.asParent!.currentChild, user.asParent!.children]),
             builder: (context, snapshot) {
-              if (!snapshot.hasData) return Container();
+              if (!snapshot.hasData) return const SizedBox.shrink();
               var list = snapshot.data! as List<dynamic>;
               var currentChild = list[0] as StudentModel;
               var children = list[1] as List<StudentModel>;
@@ -52,10 +52,10 @@ class ProfilePage extends StatelessWidget {
                         onPressed: () => _changeChildBottomsheet(user.asParent!),
                         child: const Text('сменить ребенка'),
                       )
-                    : Container(),
+                    : const SizedBox.shrink(),
               ]);
             })
-        : Container();
+        : const SizedBox.shrink();
   }
 
   void _changeChildBottomsheet(ParentModel user) {
@@ -64,7 +64,7 @@ class ProfilePage extends StatelessWidget {
         child: FutureBuilder<List<StudentModel>>(
             future: user.children,
             builder: (context, snapshot) {
-              if (!snapshot.hasData) return Container();
+              if (!snapshot.hasData) return const SizedBox.shrink();
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -100,7 +100,7 @@ class ProfilePage extends StatelessWidget {
               child: const Text('сменить тип'),
               onPressed: () => _changeTypeBottomsheet(user),
             )
-          : Container(),
+          : const SizedBox.shrink(),
     ]);
   }
 

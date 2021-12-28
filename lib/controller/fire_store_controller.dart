@@ -153,6 +153,15 @@ class FStore extends GetxController {
     return res;
   }
 
+  Future<void> savePerson(PersonModel person) async {
+    if (person.id != null) {
+      return _institutionRef.collection('people').doc(person.id).set(person.toMap());
+    } else {
+      var v = await _institutionRef.collection('people').add(person.toMap());
+      person.id = v.id;
+    }
+  }
+
   Future<List<CurriculumModel>> getAllCurriculums() async {
     return (await _institutionRef.collection('curriculum').get())
         .docs
@@ -182,7 +191,7 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future saveVenue(VenueModel venue) async {
+  Future<void> saveVenue(VenueModel venue) async {
     if (venue.id != null) {
       return _institutionRef.collection('venue').doc(venue.id).set(venue.toMap());
     } else {

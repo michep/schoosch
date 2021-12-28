@@ -25,7 +25,7 @@ Widget drawerHeader(BuildContext context) {
                     Get.find<FStore>().logoImageData!,
                   ),
                 )
-              : Container(),
+              : const SizedBox.shrink(),
         ),
       ],
     ),

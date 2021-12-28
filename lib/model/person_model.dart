@@ -10,36 +10,17 @@ import 'package:schoosch/model/dayschedule_model.dart';
 import 'class_model.dart';
 
 class PersonModel {
-  late final String? id;
-  late final String firstname;
-  late final String middlename;
-  late final String lastname;
-  late final List<String> types = [];
+  late String? id;
+  late String firstname;
+  late String middlename;
+  late String lastname;
+  late List<String> types = [];
   late String _currentType;
-  late final DateTime? birthday;
-  late final String email;
-  late final ParentModel? _asParent;
-  late final StudentModel? _asStudent;
-  late final TeacherModel? _asTeacher;
-
-  PersonModel.empty()
-      : this.fromMap(null, <String, dynamic>{
-          'firstname': '',
-          'middlename': '',
-          'lastname': '',
-          'email': '',
-          'type': <String>['student'],
-        });
-
-  PersonModel.emptyParent()
-      : this.fromMap(null, <String, dynamic>{
-          'firstname': '',
-          'middlename': '',
-          'lastname': '',
-          'email': '',
-          'type': <String>['parent'],
-          'student_ids': <String>[],
-        });
+  late DateTime? birthday;
+  late String email;
+  ParentModel? _asParent;
+  StudentModel? _asStudent;
+  TeacherModel? _asTeacher;
 
   PersonModel.fromMap(this.id, Map<String, dynamic> map, [bool _recursive = true]) {
     firstname = map['firstname'] != null ? map['firstname'] as String : throw 'need firstname key in people';
@@ -98,12 +79,36 @@ class PersonModel {
 
   String get fullName => middlename != '' ? '$lastname $firstname $middlename' : '$lastname $firstname';
   String get abbreviatedName => middlename != '' ? '$lastname ${firstname[0]}. ${middlename[0]}.' : '$lastname ${firstname[0]}.';
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> res = {};
+    res['firstname'] = firstname;
+    res['middlename'] = middlename;
+    res['lastname'] = lastname;
+    res['birthday'] = birthday != null ? Timestamp.fromDate(birthday!) : null;
+    res['email'] = email;
+    res['type'] = types;
+    return res;
+  }
+
+  Future<void> save() async {
+    Get.find<FStore>().savePerson(this);
+  }
 }
 
 class StudentModel extends PersonModel {
   late final ClassModel _studentClass;
   ParentModel? parent;
   bool _studentClassLoaded = false;
+
+  StudentModel.empty()
+      : super.fromMap(null, <String, dynamic>{
+          'firstname': '',
+          'middlename': '',
+          'lastname': '',
+          'email': '',
+          'type': <String>['student'],
+        });
 
   StudentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
@@ -114,10 +119,24 @@ class StudentModel extends PersonModel {
     }
     return _studentClass;
   }
+
+  @override
+  Future<void> save() async {
+    return Get.find<FStore>().savePerson(this);
+  }
 }
 
 class TeacherModel extends PersonModel {
   final Map<Week, List<TeacherScheduleModel>> _schedule = {};
+
+  TeacherModel.empty()
+      : super.fromMap(null, <String, dynamic>{
+          'firstname': '',
+          'middlename': '',
+          'lastname': '',
+          'email': '',
+          'type': <String>['teacher'],
+        });
 
   TeacherModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
@@ -135,21 +154,31 @@ class TeacherModel extends PersonModel {
 }
 
 class ParentModel extends PersonModel {
-  final List<String> _studentIds = [];
+  final List<String> studentIds = [];
   final List<StudentModel> _students = [];
   bool _studentsLoaded = false;
   StudentModel? _selectedChild;
 
+  ParentModel.empty()
+      : super.fromMap(null, <String, dynamic>{
+          'firstname': '',
+          'middlename': '',
+          'lastname': '',
+          'email': '',
+          'type': <String>['parent'],
+          'student_ids': <String>[],
+        });
+
   ParentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
     map['student_ids'] != null
-        ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String))
+        ? studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String))
         : throw 'need student_ids key in people for parent';
   }
 
   Future<List<StudentModel>> get children async {
     if (!_studentsLoaded) {
       var store = Get.find<FStore>();
-      for (var id in _studentIds) {
+      for (var id in studentIds) {
         var p = await store.getPerson(id);
         if (p.currentType == 'student') {
           p.asStudent!.parent = this;
@@ -166,4 +195,11 @@ class ParentModel extends PersonModel {
   }
 
   void setChild(StudentModel val) => _selectedChild = val;
+
+  @override
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> res = super.toMap();
+    res['student_ids'] = studentIds;
+    return res;
+  }
 }

@@ -21,7 +21,7 @@ class ClassDayScheduleTile extends StatelessWidget {
         future: _schedule.lessonsForStudent(_student, cw.currentWeek),
         builder: (context, snap) {
           if (!snap.hasData) {
-            return Container();
+            return const SizedBox.shrink();
           }
           return ExpansionTile(
             title: Text(

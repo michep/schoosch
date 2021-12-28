@@ -12,7 +12,7 @@ class HomeworkModel {
     text = map['text'] != null ? map['text'] as String : throw 'need text key in homework';
     date = map['date'] != null ? DateTime.fromMillisecondsSinceEpoch((map['date'] as Timestamp).millisecondsSinceEpoch) : DateTime(2000);
     _curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in homework';
-    _studentId = map['student_id'] != null ? map['student_id'] as String : '';
+    _studentId = map['student_id'] != null ? map['student_id'] as String : null;
     _teacherId = map['teacher_id'] != null ? map['teacher_id'] as String : throw 'need teacher_id key in homework';
   }
 }

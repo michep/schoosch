@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/admin/person.dart';
+import 'package:schoosch/pages/admin/person_edit.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class PeopleListPage extends StatefulWidget {
@@ -37,6 +37,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
                       onTap: () => onTap(v),
                       title: Text(v.fullName),
                       trailing: const Icon(Icons.chevron_right),
+                      subtitle: Text(v.types.toString()),
                     ),
                   ),
                 ],
@@ -73,15 +74,22 @@ class _PeopleListPageState extends State<PeopleListPage> {
       ),
     );
     String? res;
+    PersonModel nperson;
     if (type != null) {
-      if (type == 'student' || type == 'teacher') {
-        var nperson = PersonModel.empty();
-        res = await Get.to<String>(() => PersonPage(nperson));
+      switch (type) {
+        case 'teacher':
+          nperson = TeacherModel.empty();
+          break;
+        case 'parent':
+          nperson = ParentModel.empty();
+          break;
+        case 'student':
+          nperson = StudentModel.empty();
+          break;
+        default:
+          return;
       }
-      if (type == 'parent') {
-        var nperson = PersonModel.emptyParent();
-        res = await Get.to<String>(() => PersonPage(nperson));
-      }
+      res = await Get.to<String>(() => PersonPage(nperson));
       if (res != null && res == 'refresh') {
         setState(() {});
       }
