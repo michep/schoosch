@@ -221,24 +221,25 @@ class _PersonPageState extends State<PersonPage> {
   }
 
   Future save(PersonModel person) async {
-    var per = person;
     if (_formKey.currentState!.validate()) {
-      per.types.clear();
-      if (isStudent) person.types.add('student');
-      if (isTeacher) person.types.add('teacher');
-      if (isParent) person.types.add('parent');
-      if (isAdmin) person.types.add('admin');
-      if (person.types.contains('parent')) {
-        if (person.asParent == null) {
-          var map = person.toMap();
-          map['student_ids'] = [];
-          for (var e in children) {
-            map['student_ids'].add(e.id!);
-          }
+      var per = person;
+      if (isParent) {
+        if (per.asParent == null) {
+          Map<String, dynamic> map = {};
+          map.addAll(person.toMap());
+          map['type'] = ['parent'];
+          map['student_ids'] = children.map((e) => e.id!).toList();
           per = PersonModel.fromMap(person.id, map);
         }
         per = per.asParent!;
+        (per as ParentModel).studentIds.clear();
+        per.studentIds.addAll(children.map((e) => e.id!));
       }
+      per.types.clear();
+      if (isStudent) per.types.addIf(!per.types.contains('student'), 'student');
+      if (isTeacher) per.types.addIf(!per.types.contains('teacher'), 'teacher');
+      if (isParent) per.types.addIf(!per.types.contains('parent'), 'parent');
+      if (isAdmin) per.types.addIf(!per.types.contains('admin'), 'admin');
       per.firstname = _firstname.text;
       per.middlename = _middlename.text;
       per.lastname = _lastname.text;
