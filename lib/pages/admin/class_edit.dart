@@ -1,44 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/model/curriculum_model.dart';
+import 'package:schoosch/model/class_model.dart';
+import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/pages/admin/daylessontime_list.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class CurriculumPage extends StatefulWidget {
-  final CurriculumModel curriculum;
+class ClassPage extends StatefulWidget {
+  final ClassModel aclass;
 
-  const CurriculumPage(this.curriculum, {Key? key}) : super(key: key);
+  const ClassPage(this.aclass, {Key? key}) : super(key: key);
 
   @override
-  State<CurriculumPage> createState() => _VenuePageState();
+  State<ClassPage> createState() => _ClassPageState();
 }
 
-class _VenuePageState extends State<CurriculumPage> {
+class _ClassPageState extends State<ClassPage> {
   final TextEditingController _name = TextEditingController();
-  final TextEditingController _alias = TextEditingController();
+  final TextEditingController _grade = TextEditingController();
   final TextEditingController _mastercont = TextEditingController();
+  final TextEditingController _daylessontimecont = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final List<StudentModel> students = [];
   TeacherModel? master;
+  DayLessontimeModel? dayLessontime;
 
   @override
   void initState() {
-    _name.value = TextEditingValue(text: widget.curriculum.name);
-    _alias.value = TextEditingValue(text: widget.curriculum.alias ?? '');
-    widget.curriculum.students.then((value) {
+    _name.value = TextEditingValue(text: widget.aclass.name);
+    _grade.value = TextEditingValue(text: widget.aclass.grade.toString());
+    widget.aclass.students.then((value) {
       setState(() {
         students.addAll(value);
       });
     });
-    widget.curriculum.master.then((value) {
+    widget.aclass.master.then((value) {
       if (value != null) {
         setState(() {
           _mastercont.text = value.fullName;
           master = value;
         });
       }
+    });
+    widget.aclass.getDayLessontime().then((value) {
+      setState(() {
+        _daylessontimecont.text = value.name;
+        dayLessontime = value;
+      });
     });
     super.initState();
   }
@@ -47,11 +57,11 @@ class _VenuePageState extends State<CurriculumPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.curriculum.aliasOrName),
+        title: Text(widget.aclass.name),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
-            onPressed: () => delete(widget.curriculum),
+            onPressed: () => delete(widget.aclass),
           ),
         ],
       ),
@@ -70,33 +80,62 @@ class _VenuePageState extends State<CurriculumPage> {
                         controller: _name,
                         decoration: const InputDecoration(
                           label: Text(
-                            'Название учебного предмета',
+                            'Название учебного класса',
                           ),
                         ),
                         validator: (value) => Utils.validateTextNotEmpty(value, 'Название должно быть заполнено'),
                       ),
                       TextFormField(
-                        controller: _alias,
+                        controller: _grade,
+                        keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                           label: Text(
-                            'Альтернативное название',
+                            'Год обучения',
                           ),
                         ),
+                        validator: (value) => Utils.validateTextNotEmpty(value, 'Год обучения должен быть заполнен'),
                       ),
                       masterFormField(context),
+                      dayLessontimeField(context),
                     ],
                   ),
                 ),
                 childrenFormField(context),
                 ElevatedButton(
                   child: const Text('Сохранить изменения'),
-                  onPressed: () => save(widget.curriculum),
+                  onPressed: () => save(widget.aclass),
                 ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget dayLessontimeField(BuildContext context) {
+    return TextFormField(
+      controller: _daylessontimecont,
+      enableInteractiveSelection: false,
+      showCursor: false,
+      keyboardType: TextInputType.none,
+      decoration: InputDecoration(
+        label: const Text(
+          'Расписание времени уроков',
+        ),
+        suffixIcon: Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: dayLessontime == null
+                ? IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: selectDayLessontime,
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: removeDayLessontime,
+                  )),
+      ),
+      validator: (value) => Utils.validateTextNotEmpty(value, 'Расписание должно быть выбрано'),
     );
   }
 
@@ -108,7 +147,7 @@ class _VenuePageState extends State<CurriculumPage> {
       keyboardType: TextInputType.none,
       decoration: InputDecoration(
         label: const Text(
-          'Преподаватель',
+          'Классный руководитель',
         ),
         suffixIcon: Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -122,7 +161,7 @@ class _VenuePageState extends State<CurriculumPage> {
                     onPressed: removeMaster,
                   )),
       ),
-      validator: (value) => Utils.validateTextNotEmpty(value, 'Преподаватель должен быть выбран'),
+      validator: (value) => Utils.validateTextNotEmpty(value, 'Классный руководитель должен быть выбран'),
     );
   }
 
@@ -131,7 +170,7 @@ class _VenuePageState extends State<CurriculumPage> {
       initialValue: students,
       builder: (fieldstate) => ExpansionTile(
         controlAffinity: ListTileControlAffinity.leading,
-        title: Text('Группа учащихся (${students.length})'),
+        title: Text('Учащиея класса (${students.length})'),
         subtitle: fieldstate.hasError
             ? Text(fieldstate.errorText!, style: TextStyle(fontSize: 12, color: Theme.of(context).errorColor))
             : const SizedBox.shrink(),
@@ -164,6 +203,12 @@ class _VenuePageState extends State<CurriculumPage> {
     }
   }
 
+  void removeChild(StudentModel student) {
+    setState(() {
+      students.remove(student);
+    });
+  }
+
   Future<void> selectMaster() async {
     var res = await Get.to<PersonModel>(() => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true));
     if (res != null) {
@@ -181,25 +226,35 @@ class _VenuePageState extends State<CurriculumPage> {
     });
   }
 
-  void removeChild(StudentModel student) {
+  Future<void> selectDayLessontime() async {
+    var res = await Get.to<DayLessontimeModel>(() => DayLessontimeListPage(InstitutionModel.currentInstitution, selectionMode: true));
+    if (res != null) {
+      setState(() {
+        _daylessontimecont.text = res.name;
+        dayLessontime = res;
+      });
+    }
+  }
+
+  void removeDayLessontime() {
     setState(() {
-      students.remove(student);
+      dayLessontime = null;
+      _daylessontimecont.text = '';
     });
   }
 
-  Future<void> save(CurriculumModel curriculum) async {
+  Future<void> save(ClassModel aclass) async {
     if (_formKey.currentState!.validate()) {
-      curriculum.name = _name.text;
-      curriculum.alias = _alias.text == '' ? null : _alias.text;
-      if (master != null) curriculum.masterId = master!.id;
-      curriculum.studentIds.clear();
-      for (var s in students) {
-        curriculum.studentIds.add(s.id!);
-      }
-      await curriculum.save();
+      aclass.name = _name.text;
+      aclass.grade = int.parse(_grade.text);
+      aclass.masterId = master!.id!;
+      aclass.dayLessontimeId = dayLessontime!.id!;
+      aclass.studentIds.clear();
+      aclass.studentIds.addAll(students.map((e) => e.id!));
+      aclass.save();
       Get.back(result: 'refresh');
     }
   }
 
-  Future<void> delete(CurriculumModel curriculum) async {}
+  Future<void> delete(ClassModel aclass) async {}
 }

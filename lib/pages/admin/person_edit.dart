@@ -9,7 +9,7 @@ import 'package:schoosch/widgets/utils.dart';
 class PersonPage extends StatefulWidget {
   final PersonModel person;
 
-  PersonPage(this.person, {Key? key}) : super(key: key) {}
+  const PersonPage(this.person, {Key? key}) : super(key: key);
 
   @override
   State<PersonPage> createState() => _PersonPageState();

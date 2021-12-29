@@ -13,16 +13,16 @@ class CurriculumListPage extends StatefulWidget {
   const CurriculumListPage(this.institution, {this.selectionMode = false, Key? key}) : super(key: key);
 
   @override
-  State<CurriculumListPage> createState() => _VenueListPageState();
+  State<CurriculumListPage> createState() => _CurriculumListPageState();
 }
 
-class _VenueListPageState extends State<CurriculumListPage> {
+class _CurriculumListPageState extends State<CurriculumListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Кабинеты и помещения'),
-        actions: widget.selectionMode ? [] : [IconButton(onPressed: newVenue, icon: const Icon(Icons.add))],
+        title: const Text('Учебные предметы'),
+        actions: widget.selectionMode ? [] : [IconButton(onPressed: newCurriculum, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
         child: FutureBuilder<List<CurriculumModel>>(
@@ -64,7 +64,7 @@ class _VenueListPageState extends State<CurriculumListPage> {
     }
   }
 
-  Future newVenue() async {
+  Future newCurriculum() async {
     var ncurr = CurriculumModel.empty();
     var res = await Get.to<String>(() => CurriculumPage(ncurr));
     if (res != null && res == 'refresh') {

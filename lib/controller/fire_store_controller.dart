@@ -10,6 +10,7 @@ import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
+import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
@@ -71,6 +72,20 @@ class FStore extends GetxController {
     return res;
   }
 
+  Future<DayLessontimeModel> getDayLessontime(String id) async {
+    var res = await _institutionRef.collection('lessontime').doc(id).get();
+    return DayLessontimeModel.fromMap(res.id, res.data()!);
+  }
+
+  Future<List<DayLessontimeModel>> getAllDayLessontime() async {
+    List<DayLessontimeModel> res = [];
+    var _timenames = await _institutionRef.collection('lessontime').get();
+    for (var val in _timenames.docs) {
+      res.add(DayLessontimeModel.fromMap(val.id, val.data()));
+    }
+    return res;
+  }
+
   Future<List<ClassModel>> getAllClasses() async {
     return (await _institutionRef.collection('class').orderBy('grade').get())
         .docs
@@ -96,6 +111,15 @@ class FStore extends GetxController {
         )
         .where((s) => s.from.isBefore(currentWeek.day(5)) && s.till.isAfter(currentWeek.day(4)))
         .toList();
+  }
+
+  Future<void> saveClass(ClassModel aclass) async {
+    if (aclass.id != null) {
+      return _institutionRef.collection('class').doc(aclass.id).set(aclass.toMap());
+    } else {
+      var v = await _institutionRef.collection('class').add(aclass.toMap());
+      aclass.id = v.id;
+    }
   }
 
   Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule, Week week) async {
@@ -261,7 +285,7 @@ class FStore extends GetxController {
       var dayles = await day.lessonsForStudent(PersonModel.currentStudent!, cw);
       for (var les in dayles) {
         var cur = await les.curriculum;
-        var teach = (await cur!.master) as TeacherModel?;
+        var teach = await cur!.master;
         if (teach != null) {
           if (teachers[teach] == null) {
             teachers[teach] = [cur.aliasOrName];

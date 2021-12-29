@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/institution_model.dart';
+import 'package:schoosch/pages/admin/class_list.dart';
 import 'package:schoosch/pages/admin/curriculum_list.dart';
 import 'package:schoosch/pages/admin/institution.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
@@ -35,8 +36,8 @@ class AdminDrawer extends StatelessWidget {
               onPressed: openCurriculumPage,
             ),
             TextButton(
-              child: const Text('Классы'),
-              onPressed: () {},
+              child: const Text('Учебные классы'),
+              onPressed: openClassPage,
             ),
             TextButton(
               child: const Text('Расписание уроков на неделю'),
@@ -50,7 +51,7 @@ class AdminDrawer extends StatelessWidget {
 
   void openInstitutionPage() {
     Get.back();
-    Get.to<String>(() => InstitutionPage(InstitutionModel.currentInstitution));
+    Get.to(() => InstitutionPage(InstitutionModel.currentInstitution));
   }
 
   void openVenuePage() {
@@ -60,11 +61,16 @@ class AdminDrawer extends StatelessWidget {
 
   Future<void> openPeoplePage() async {
     Get.back();
-    Get.to<String>(() => PeopleListPage(InstitutionModel.currentInstitution));
+    Get.to(() => PeopleListPage(InstitutionModel.currentInstitution));
   }
 
   Future<void> openCurriculumPage() async {
     Get.back();
-    Get.to<String>(() => CurriculumListPage(InstitutionModel.currentInstitution));
+    Get.to(() => CurriculumListPage(InstitutionModel.currentInstitution));
+  }
+
+  Future<void> openClassPage() async {
+    Get.back();
+    Get.to(() => ClassListPage(InstitutionModel.currentInstitution));
   }
 }

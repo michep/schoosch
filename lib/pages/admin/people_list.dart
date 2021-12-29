@@ -21,7 +21,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Сотрудники, учителя и ученики'),
-        actions: widget.selectionMode ? [] : [IconButton(onPressed: newPerson, icon: const Icon(Icons.add))],
+        actions: [IconButton(onPressed: newPerson, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
         child: FutureBuilder<List<PersonModel>>(

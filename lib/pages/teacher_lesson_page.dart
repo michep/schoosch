@@ -58,7 +58,7 @@ class TeacherLessonPage extends StatelessWidget {
                 return const Text('');
               }
               if (snapshot.data!.isEmpty) {
-                return Text("нет учеников");
+                return const Text("нет учеников");
               }
               return Expanded(
                 child: ListView.builder(
