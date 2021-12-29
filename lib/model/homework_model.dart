@@ -9,10 +9,10 @@ class HomeworkModel {
   late final DateTime date;
 
   HomeworkModel.fromMap(this.id, Map<String, dynamic> map) {
-    text = map['text'] != null ? map['text'] as String : throw 'need text key in homework';
+    text = map['text'] != null ? map['text'] as String : throw 'need text key in homework  $id';
     date = map['date'] != null ? DateTime.fromMillisecondsSinceEpoch((map['date'] as Timestamp).millisecondsSinceEpoch) : DateTime(2000);
-    _curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in homework';
+    _curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in homework  $id';
     _studentId = map['student_id'] != null ? map['student_id'] as String : null;
-    _teacherId = map['teacher_id'] != null ? map['teacher_id'] as String : throw 'need teacher_id key in homework';
+    _teacherId = map['teacher_id'] != null ? map['teacher_id'] as String : throw 'need teacher_id key in homework  $id';
   }
 }

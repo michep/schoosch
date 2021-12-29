@@ -44,6 +44,10 @@ class FStore extends GetxController {
     _currentUser = await _getUserByEmail(userEmail);
   }
 
+  Future<void> reset() async {
+    return init(_currentUser!.email);
+  }
+
   void resetCurrentUser() {
     _currentUser = null;
   }
@@ -179,6 +183,15 @@ class FStore extends GetxController {
     return CurriculumModel.fromMap(res.id, res.data()!);
   }
 
+  Future<void> saveCurriculum(CurriculumModel curriculum) async {
+    if (curriculum.id != null) {
+      return _institutionRef.collection('curriculum').doc(curriculum.id).set(curriculum.toMap());
+    } else {
+      var v = await _institutionRef.collection('curriculum').add(curriculum.toMap());
+      curriculum.id = v.id;
+    }
+  }
+
   Future<List<VenueModel>> getAllVenues() async {
     return (await _institutionRef.collection('venue').get())
         .docs
@@ -251,9 +264,9 @@ class FStore extends GetxController {
         var teach = (await cur!.master) as TeacherModel?;
         if (teach != null) {
           if (teachers[teach] == null) {
-            teachers[teach] = [cur.name];
-          } else if (!teachers[teach]!.contains(cur.name)) {
-            teachers[teach]!.add(cur.name);
+            teachers[teach] = [cur.aliasOrName];
+          } else if (!teachers[teach]!.contains(cur.aliasOrName)) {
+            teachers[teach]!.add(cur.aliasOrName);
           }
         }
       }

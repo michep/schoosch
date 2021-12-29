@@ -25,9 +25,9 @@ class LessonModel {
   LessontimeModel? _lessontime;
 
   LessonModel.fromMap(this.aclass, this._schedule, this.id, Map<String, Object?> map) {
-    order = map['order'] != null ? map['order'] as int : throw 'need order key in lesson';
-    _curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in lesson';
-    _venueId = map['venue_id'] != null ? map['venue_id'] as String : throw 'need venue_id key in lesson';
+    order = map['order'] != null ? map['order'] as int : throw 'need order key in lesson $id';
+    _curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in lesson $id';
+    _venueId = map['venue_id'] != null ? map['venue_id'] as String : throw 'need venue_id key in lesson $id';
   }
 
   Future<CurriculumModel?> get curriculum async {

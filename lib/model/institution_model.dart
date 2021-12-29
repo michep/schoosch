@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/class_model.dart';
+import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 
@@ -11,7 +12,7 @@ class InstitutionModel {
   late final Map<String, String> attributes;
 
   InstitutionModel.fromMap(this.id, Map<String, dynamic> map) {
-    name = map['name'] != null ? map['name'] as String : throw 'need name key in institution';
+    name = map['name'] != null ? map['name'] as String : throw 'need name key in institution $id';
     address = map['address'] != null ? map['address'] as String : '';
   }
 
@@ -27,5 +28,9 @@ class InstitutionModel {
 
   Future<List<ClassModel>> get classes {
     return Get.find<FStore>().getAllClasses();
+  }
+
+  Future<List<CurriculumModel>> get curriculums {
+    return Get.find<FStore>().getAllCurriculums();
   }
 }

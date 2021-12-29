@@ -29,7 +29,7 @@ class TeacherLessonPage extends StatelessWidget {
             height: 10,
           ),
           Text(
-            _curiculum.name,
+            _curiculum.aliasOrName,
             style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           const SizedBox(

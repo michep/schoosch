@@ -20,9 +20,9 @@ class ClassModel {
   PersonModel? _master;
 
   ClassModel.fromMap(this.id, Map<String, dynamic> map) {
-    name = map['name'] != null ? map['name'] as String : throw 'need name key in class';
-    grade = map['grade'] != null ? map['grade'] as int : throw 'need grade key in class';
-    _lessontimeId = map['lessontime_id'] != null ? map['lessontime_id'] as String : throw 'need lessontime_id key in class';
+    name = map['name'] != null ? map['name'] as String : throw 'need name key in class $id';
+    grade = map['grade'] != null ? map['grade'] as int : throw 'need grade key in class $id';
+    _lessontimeId = map['lessontime_id'] != null ? map['lessontime_id'] as String : throw 'need lessontime_id key in class $id';
     _masterId = map['master_id'] != null ? map['master_id'] as String : null;
     map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
   }

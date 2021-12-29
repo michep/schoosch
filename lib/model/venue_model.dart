@@ -11,7 +11,7 @@ class VenueModel {
         });
 
   VenueModel.fromMap(this.id, Map<String, Object?> map) {
-    name = map['name'] != null ? map['name'] as String : throw 'need name key in venue';
+    name = map['name'] != null ? map['name'] as String : throw 'need name key in venue $id';
   }
 
   Map<String, dynamic> toMap() {

@@ -12,7 +12,7 @@ import 'class_model.dart';
 class PersonModel {
   late String? id;
   late String firstname;
-  late String middlename;
+  late String? middlename;
   late String lastname;
   late List<String> types = [];
   late String _currentType;
@@ -23,12 +23,12 @@ class PersonModel {
   TeacherModel? _asTeacher;
 
   PersonModel.fromMap(this.id, Map<String, dynamic> map, [bool _recursive = true]) {
-    firstname = map['firstname'] != null ? map['firstname'] as String : throw 'need firstname key in people';
-    middlename = map['middlename'] != null ? map['middlename'] as String : '';
-    lastname = map['lastname'] != null ? map['lastname'] as String : throw 'need lastname key in people';
+    firstname = map['firstname'] != null ? map['firstname'] as String : throw 'need firstname key in people $id';
+    middlename = map['middlename'] != null ? map['middlename'] as String : null;
+    lastname = map['lastname'] != null ? map['lastname'] as String : throw 'need lastname key in people $id';
     birthday = map['birthday'] != null ? DateTime.fromMillisecondsSinceEpoch((map['birthday'] as Timestamp).millisecondsSinceEpoch) : null;
-    email = map['email'] != null ? map['email'] as String : throw 'need email key in people';
-    map['type'] != null ? types.addAll((map['type'] as List<dynamic>).map((e) => e as String)) : throw 'need type key in people';
+    email = map['email'] != null ? map['email'] as String : throw 'need email key in people $id';
+    map['type'] != null ? types.addAll((map['type'] as List<dynamic>).map((e) => e as String)) : throw 'need type key in people $id';
     if (_recursive) {
       for (var t in types) {
         switch (t) {
@@ -48,7 +48,7 @@ class PersonModel {
             _currentType = t;
             break;
           default:
-            throw 'incorrect type in people';
+            throw 'incorrect type in people $id';
         }
       }
     }
@@ -77,8 +77,8 @@ class PersonModel {
   @override
   int get hashCode => hashValues(id, '');
 
-  String get fullName => middlename != '' ? '$lastname $firstname $middlename' : '$lastname $firstname';
-  String get abbreviatedName => middlename != '' ? '$lastname ${firstname[0]}. ${middlename[0]}.' : '$lastname ${firstname[0]}.';
+  String get fullName => middlename != null ? '$lastname $firstname $middlename' : '$lastname $firstname';
+  String get abbreviatedName => middlename != null ? '$lastname ${firstname[0]}. ${middlename![0]}.' : '$lastname ${firstname[0]}.';
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> res = {};
@@ -172,7 +172,7 @@ class ParentModel extends PersonModel {
   ParentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
     map['student_ids'] != null
         ? studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String))
-        : throw 'need student_ids key in people for parent';
+        : throw 'need student_ids key in people for parent $id';
   }
 
   Future<List<StudentModel>> get children async {

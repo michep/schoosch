@@ -39,7 +39,7 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
           var mar = list[3] as String;
           return ListTile(
             leading: Text(widget._lesson.order.toString()),
-            title: Text(cur.name),
+            title: Text(cur.aliasOrName),
             trailing: mar != ""
                 ? Container(
                     child: Text(mar),

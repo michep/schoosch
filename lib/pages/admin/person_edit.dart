@@ -31,7 +31,7 @@ class _PersonPageState extends State<PersonPage> {
   @override
   void initState() {
     _lastname.value = TextEditingValue(text: widget.person.lastname);
-    _middlename.value = TextEditingValue(text: widget.person.middlename);
+    _middlename.value = TextEditingValue(text: widget.person.middlename == null ? '' : widget.person.middlename!);
     _firstname.value = TextEditingValue(text: widget.person.firstname);
     _email.value = TextEditingValue(text: widget.person.email);
     _birthday = widget.person.birthday;
@@ -156,7 +156,8 @@ class _PersonPageState extends State<PersonPage> {
 
   Widget childrenFormField(BuildContext context) {
     return FormField<List<StudentModel>>(
-      validator: (_) {
+      initialValue: children,
+      validator: (value) {
         return (children.isEmpty) ? 'Нужно выбрать учащегося' : null;
       },
       builder: (fieldstate) => ExpansionTile(
@@ -241,7 +242,7 @@ class _PersonPageState extends State<PersonPage> {
       if (isParent) per.types.addIf(!per.types.contains('parent'), 'parent');
       if (isAdmin) per.types.addIf(!per.types.contains('admin'), 'admin');
       per.firstname = _firstname.text;
-      per.middlename = _middlename.text;
+      per.middlename = _middlename.text == '' ? null : _middlename.text;
       per.lastname = _lastname.text;
       per.email = _email.text;
       per.birthday = _birthday;
