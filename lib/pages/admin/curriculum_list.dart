@@ -57,7 +57,7 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
     if (widget.selectionMode) {
       return Get.back(result: curriculum);
     } else {
-      var res = await Get.to<String>(() => CurriculumPage(curriculum));
+      var res = await Get.to<String>(() => CurriculumPage(curriculum, curriculum.name));
       if (res != null && res == 'refresh') {
         setState(() {});
       }
@@ -66,7 +66,7 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
 
   Future newCurriculum() async {
     var ncurr = CurriculumModel.empty();
-    var res = await Get.to<String>(() => CurriculumPage(ncurr));
+    var res = await Get.to<String>(() => CurriculumPage(ncurr, 'Новый учебный предмет'));
     if (res != null && res == 'refresh') {
       setState(() {});
     }

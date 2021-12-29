@@ -10,8 +10,8 @@ class ClassModel {
   late String? id;
   late String name;
   late int grade;
-  late String masterId;
-  late String dayLessontimeId;
+  late String? masterId;
+  late String? dayLessontimeId;
   final Map<Week, List<StudentScheduleModel>> _schedule = {};
   final List<String> studentIds = [];
   final List<StudentModel> _students = [];
@@ -23,7 +23,7 @@ class ClassModel {
   ClassModel.empty()
       : this.fromMap(null, <String, dynamic>{
           'name': '',
-          'grade': null,
+          'grade': 0,
           'master_id': '',
           'lessontime_id': '',
           'student_ids': <String>[],
@@ -38,9 +38,10 @@ class ClassModel {
   }
 
   Future<TeacherModel?> get master async {
-    if (_master == null && masterId != null) {
+    if (masterId == null || masterId!.isEmpty) return null;
+    if (_master == null) {
       var store = Get.find<FStore>();
-      _master = await store.getPerson(masterId);
+      _master = await store.getPerson(masterId!);
     }
     return _master!.asTeacher;
   }
@@ -49,9 +50,10 @@ class ClassModel {
     return _schedule[week] ??= await Get.find<FStore>().getClassWeekSchedule(this, week);
   }
 
-  Future<List<LessontimeModel>> getLessontimes() async {
+  Future<List<LessontimeModel?>?> getLessontimes() async {
+    if (dayLessontimeId == null || dayLessontimeId!.isEmpty) return null;
     if (!_lessontimesLoaded) {
-      _lessontimes.addAll(await Get.find<FStore>().getLessontime(dayLessontimeId)); //TODO: fallboack to default lessontimes?
+      _lessontimes.addAll(await Get.find<FStore>().getLessontime(dayLessontimeId!)); //TODO: fallboack to default lessontimes?
       _lessontimesLoaded = true;
     }
     return _lessontimes;
@@ -62,8 +64,9 @@ class ClassModel {
     return _lessontimes[n - 1];
   }
 
-  Future<DayLessontimeModel> getDayLessontime() async {
-    return Get.find<FStore>().getDayLessontime(dayLessontimeId);
+  Future<DayLessontimeModel?> getDayLessontime() async {
+    if (dayLessontimeId == null || dayLessontimeId!.isEmpty) return null;
+    return Get.find<FStore>().getDayLessontime(dayLessontimeId!);
   }
 
   Future<Map<TeacherModel, List<String>>> get teachers async {

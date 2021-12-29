@@ -30,6 +30,7 @@ class CurriculumModel {
   String get aliasOrName => alias ?? name;
 
   Future<TeacherModel?> get master async {
+    if (masterId == null || masterId!.isEmpty) return null;
     if (_master == null && masterId != null) {
       var store = Get.find<FStore>();
       _master = await store.getPerson(masterId!);

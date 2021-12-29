@@ -8,8 +8,9 @@ import 'package:schoosch/widgets/utils.dart';
 
 class CurriculumPage extends StatefulWidget {
   final CurriculumModel curriculum;
+  final String title;
 
-  const CurriculumPage(this.curriculum, {Key? key}) : super(key: key);
+  const CurriculumPage(this.curriculum, this.title, {Key? key}) : super(key: key);
 
   @override
   State<CurriculumPage> createState() => _VenuePageState();
@@ -47,7 +48,7 @@ class _VenuePageState extends State<CurriculumPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.curriculum.aliasOrName),
+        title: Text(widget.title),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
@@ -103,7 +104,6 @@ class _VenuePageState extends State<CurriculumPage> {
   Widget masterFormField(BuildContext context) {
     return TextFormField(
       controller: _mastercont,
-      enableInteractiveSelection: false,
       showCursor: false,
       keyboardType: TextInputType.none,
       decoration: InputDecoration(
@@ -127,6 +127,7 @@ class _VenuePageState extends State<CurriculumPage> {
   }
 
   Widget childrenFormField(BuildContext context) {
+    var iconColor = Theme.of(context).primaryColor;
     return FormField<List<StudentModel>>(
       initialValue: students,
       builder: (fieldstate) => ExpansionTile(
@@ -144,7 +145,7 @@ class _VenuePageState extends State<CurriculumPage> {
         ),
         children: [
           ...students.map((s) => ListTile(
-                title: Text(s.fullName),
+                title: SelectableText(s.fullName),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () => removeChild(s),

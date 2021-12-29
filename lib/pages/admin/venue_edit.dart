@@ -5,8 +5,9 @@ import 'package:schoosch/widgets/utils.dart';
 
 class VenuePage extends StatefulWidget {
   final VenueModel venue;
+  final String title;
 
-  const VenuePage(this.venue, {Key? key}) : super(key: key);
+  const VenuePage(this.venue, this.title, {Key? key}) : super(key: key);
 
   @override
   State<VenuePage> createState() => _VenuePageState();
@@ -26,7 +27,7 @@ class _VenuePageState extends State<VenuePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.venue.name),
+        title: Text(widget.title),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),

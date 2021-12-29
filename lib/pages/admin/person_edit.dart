@@ -8,8 +8,9 @@ import 'package:schoosch/widgets/utils.dart';
 
 class PersonPage extends StatefulWidget {
   final PersonModel person;
+  final String title;
 
-  const PersonPage(this.person, {Key? key}) : super(key: key);
+  const PersonPage(this.person, this.title, {Key? key}) : super(key: key);
 
   @override
   State<PersonPage> createState() => _PersonPageState();
@@ -53,7 +54,7 @@ class _PersonPageState extends State<PersonPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.person.fullName),
+        title: Text(widget.title),
         actions: [
           IconButton(onPressed: () => delete(widget.person), icon: const Icon(Icons.delete)),
         ],
@@ -175,7 +176,7 @@ class _PersonPageState extends State<PersonPage> {
         ),
         children: [
           ...children.map((s) => ListTile(
-                title: Text(s.fullName),
+                title: SelectableText(s.fullName),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () => removeChild(s),

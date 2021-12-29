@@ -50,7 +50,7 @@ class _VenueListPageState extends State<VenueListPage> {
     if (widget.selectionMode) {
       return Get.back(result: venue);
     } else {
-      var res = await Get.to<String>(() => VenuePage(venue));
+      var res = await Get.to<String>(() => VenuePage(venue, venue.name));
       if (res != null && res == 'refresh') {
         setState(() {});
       }
@@ -59,7 +59,7 @@ class _VenueListPageState extends State<VenueListPage> {
 
   Future newVenue() async {
     var nvenue = VenueModel.empty();
-    var res = await Get.to<String>(() => VenuePage(nvenue));
+    var res = await Get.to<String>(() => VenuePage(nvenue, 'Новый кабинет'));
     if (res != null && res == 'refresh') {
       setState(() {});
     }

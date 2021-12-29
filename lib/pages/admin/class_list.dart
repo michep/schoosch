@@ -51,7 +51,7 @@ class _ClassListPageState extends State<ClassListPage> {
     if (widget.selectionMode) {
       return Get.back(result: aclass);
     } else {
-      var res = await Get.to<String>(() => ClassPage(aclass));
+      var res = await Get.to<String>(() => ClassPage(aclass, aclass.name));
       if (res != null && res == 'refresh') {
         setState(() {});
       }
@@ -60,7 +60,7 @@ class _ClassListPageState extends State<ClassListPage> {
 
   Future newClass() async {
     var nclass = ClassModel.empty();
-    var res = await Get.to<String>(() => ClassPage(nclass));
+    var res = await Get.to<String>(() => ClassPage(nclass, 'Новый учебный класс'));
     if (res != null && res == 'refresh') {
       setState(() {});
     }

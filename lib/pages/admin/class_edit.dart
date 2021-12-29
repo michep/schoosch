@@ -10,8 +10,9 @@ import 'package:schoosch/widgets/utils.dart';
 
 class ClassPage extends StatefulWidget {
   final ClassModel aclass;
+  final String title;
 
-  const ClassPage(this.aclass, {Key? key}) : super(key: key);
+  const ClassPage(this.aclass, this.title, {Key? key}) : super(key: key);
 
   @override
   State<ClassPage> createState() => _ClassPageState();
@@ -30,7 +31,7 @@ class _ClassPageState extends State<ClassPage> {
   @override
   void initState() {
     _name.value = TextEditingValue(text: widget.aclass.name);
-    _grade.value = TextEditingValue(text: widget.aclass.grade.toString());
+    _grade.value = TextEditingValue(text: widget.aclass.grade != 0 ? widget.aclass.grade.toString() : '');
     widget.aclass.students.then((value) {
       setState(() {
         students.addAll(value);
@@ -45,10 +46,12 @@ class _ClassPageState extends State<ClassPage> {
       }
     });
     widget.aclass.getDayLessontime().then((value) {
-      setState(() {
-        _daylessontimecont.text = value.name;
-        dayLessontime = value;
-      });
+      if (value != null) {
+        setState(() {
+          _daylessontimecont.text = value.name;
+          dayLessontime = value;
+        });
+      }
     });
     super.initState();
   }
@@ -57,7 +60,7 @@ class _ClassPageState extends State<ClassPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.aclass.name),
+        title: Text(widget.title),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
@@ -116,7 +119,6 @@ class _ClassPageState extends State<ClassPage> {
   Widget dayLessontimeField(BuildContext context) {
     return TextFormField(
       controller: _daylessontimecont,
-      enableInteractiveSelection: false,
       showCursor: false,
       keyboardType: TextInputType.none,
       decoration: InputDecoration(
@@ -142,7 +144,6 @@ class _ClassPageState extends State<ClassPage> {
   Widget masterFormField(BuildContext context) {
     return TextFormField(
       controller: _mastercont,
-      enableInteractiveSelection: false,
       showCursor: false,
       keyboardType: TextInputType.none,
       decoration: InputDecoration(
@@ -183,7 +184,7 @@ class _ClassPageState extends State<ClassPage> {
         ),
         children: [
           ...students.map((s) => ListTile(
-                title: Text(s.fullName),
+                title: SelectableText(s.fullName),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () => removeChild(s),

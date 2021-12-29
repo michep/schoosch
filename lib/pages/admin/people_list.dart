@@ -51,7 +51,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
     if (widget.selectionMode) {
       return Get.back(result: person);
     } else {
-      var res = await Get.to<String>(() => PersonPage(person));
+      var res = await Get.to<String>(() => PersonPage(person, person.fullName));
       if (res != null && res == 'refresh') {
         setState(() {});
       }
@@ -89,7 +89,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
         default:
           return;
       }
-      res = await Get.to<String>(() => PersonPage(nperson));
+      res = await Get.to<String>(() => PersonPage(nperson, 'Новый $type'));
       if (res != null && res == 'refresh') {
         setState(() {});
       }
