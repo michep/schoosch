@@ -254,6 +254,29 @@ class FStore extends GetxController {
     return _institutionRef.collection('teachersrates').add(data);
   }
 
+  Future saveMark(TeacherModel user, PersonModel student, CurriculumModel curriculum, DateTime date, int mark, int lessonOrder, String markType, String comment) async {
+    Map<String, dynamic> data = {};
+    data['comment'] = comment;
+    data['curriculum_id'] = curriculum.id;
+    data['date'] = Timestamp.fromDate(date);
+    data['lesson_order'] = lessonOrder;
+    data['mark'] = mark;
+    data['student_id'] = student.id;
+    data['teacher_id'] = user.id;
+    data['type'] = markType;
+    return _institutionRef.collection('mark').add(data);
+  }
+
+  Future saveHomework(String homeworkText, CurriculumModel curriculum, TeacherModel teacher, DateTime date, {StudentModel? student}) async {
+    Map<String, dynamic> data = {};
+    data['text'] = homeworkText;
+    data['student_id'] = student?.id;
+    data['teacher_id'] = teacher.id;
+    data['curriculum_id'] = curriculum.id;
+    data['date'] = date;
+    return _institutionRef.collection('homework').add(data);
+  }
+
   Future<double> getAverageTeacherRating(TeacherModel teacher) async {
     double sum = 0;
     var ratings = await _institutionRef.collection('teachersrates').where('teacher_id', isEqualTo: teacher.id).get();
@@ -268,20 +291,23 @@ class FStore extends GetxController {
     List<HomeworkModel> ret = [];
     var chw = (await _institutionRef
             .collection('homework')
-            .where('date', isGreaterThanOrEqualTo: schedule.date)
-            .where('date', isLessThan: schedule.date.add(const Duration(hours: 23, minutes: 59)))
+            // .where('date', isGreaterThanOrEqualTo: schedule.date)
+            .where('date', isLessThan: schedule.date)
             .where('curriculum_id', isEqualTo: curriculum.id)
             .where('student_id', isNull: true)
+            .orderBy('date', descending: true)
+            .limit(1)
             .get())
         .docs
         .map((e) => HomeworkModel.fromMap(e.id, e.data()))
         .toList();
     var cwhu = (await _institutionRef
             .collection('homework')
-            .where('date', isGreaterThanOrEqualTo: schedule.date)
             .where('date', isLessThan: schedule.date.add(const Duration(hours: 23, minutes: 59)))
             .where('curriculum_id', isEqualTo: curriculum.id)
             .where('student_id', isEqualTo: student.id)
+            .orderBy('date', descending: true)
+            .limit(1)
             .get())
         .docs
         .map((e) => HomeworkModel.fromMap(e.id, e.data()))

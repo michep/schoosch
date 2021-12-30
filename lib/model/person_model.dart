@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/curriculum_model.dart';
 
 import 'package:schoosch/model/dayschedule_model.dart';
 
@@ -118,6 +119,14 @@ class TeacherModel extends PersonModel {
 
   Future<List<TeacherScheduleModel>> getSchedulesWeek(Week week) async {
     return _schedule[week] ??= await Get.find<FStore>().getTeacherWeekSchedule(this, week);
+  }
+
+  Future<void> createMark(PersonModel student, int mark, int lessonorder, CurriculumModel curriculum, String marktype,  DateTime date, {String comment = ""}) async {
+    return Get.find<FStore>().saveMark(this, student, curriculum, date, mark, lessonorder, marktype, comment);
+  }
+
+  Future<void> createHomework(String homeworkText, CurriculumModel curriculum, DateTime date, {StudentModel? student}) async {
+    return Get.find<FStore>().saveHomework(homeworkText, curriculum, this, date, student: student);
   }
 }
 
