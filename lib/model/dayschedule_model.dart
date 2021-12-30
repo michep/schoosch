@@ -17,8 +17,8 @@ class DayScheduleModel {
   bool _lessonsLoaded = false;
 
   DayScheduleModel.fromMap(this._class, this._week, this.id, Map<String, Object?> map) {
-    day = map['day'] != null ? map['day'] as int : throw 'need day key in schedule';
-    if (day < 1 || day > 7) throw 'incorrect day in schedule';
+    day = map['day'] != null ? map['day'] as int : throw 'need day key in schedule  $id';
+    if (day < 1 || day > 7) throw 'incorrect day in schedule $id';
     from = map['from'] != null ? DateTime.fromMillisecondsSinceEpoch((map['from'] as Timestamp).millisecondsSinceEpoch) : DateTime(2000);
     till = map['till'] != null ? DateTime.fromMillisecondsSinceEpoch((map['till'] as Timestamp).millisecondsSinceEpoch) : DateTime(3000);
   }

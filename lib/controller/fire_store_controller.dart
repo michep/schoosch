@@ -10,6 +10,7 @@ import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
+import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
@@ -44,6 +45,10 @@ class FStore extends GetxController {
     _currentUser = await _getUserByEmail(userEmail);
   }
 
+  Future<void> reset() async {
+    return init(_currentUser!.email);
+  }
+
   void resetCurrentUser() {
     _currentUser = null;
   }
@@ -63,6 +68,20 @@ class FStore extends GetxController {
     var _lessontimes = await _institutionRef.collection('lessontime').doc(id).collection('time').orderBy('order').get();
     for (var _lessontime in _lessontimes.docs) {
       res.add(LessontimeModel.fromMap(_lessontime.id, _lessontime.data()));
+    }
+    return res;
+  }
+
+  Future<DayLessontimeModel> getDayLessontime(String id) async {
+    var res = await _institutionRef.collection('lessontime').doc(id).get();
+    return DayLessontimeModel.fromMap(res.id, res.data()!);
+  }
+
+  Future<List<DayLessontimeModel>> getAllDayLessontime() async {
+    List<DayLessontimeModel> res = [];
+    var _timenames = await _institutionRef.collection('lessontime').get();
+    for (var val in _timenames.docs) {
+      res.add(DayLessontimeModel.fromMap(val.id, val.data()));
     }
     return res;
   }
@@ -94,6 +113,15 @@ class FStore extends GetxController {
         .toList();
   }
 
+  Future<void> saveClass(ClassModel aclass) async {
+    if (aclass.id != null) {
+      return _institutionRef.collection('class').doc(aclass.id).set(aclass.toMap());
+    } else {
+      var v = await _institutionRef.collection('class').add(aclass.toMap());
+      aclass.id = v.id;
+    }
+  }
+
   Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule, Week week) async {
     return (await _institutionRef
             .collection('class')
@@ -120,7 +148,7 @@ class FStore extends GetxController {
 
     for (var l in less) {
       var cur = await l.curriculum;
-      if (cur != null && cur.isAvailableForStudent(student.id)) {
+      if (cur != null && cur.isAvailableForStudent(student.id!)) {
         res.add(l);
       }
     }
@@ -153,6 +181,15 @@ class FStore extends GetxController {
     return res;
   }
 
+  Future<void> savePerson(PersonModel person) async {
+    if (person.id != null) {
+      return _institutionRef.collection('people').doc(person.id).set(person.toMap());
+    } else {
+      var v = await _institutionRef.collection('people').add(person.toMap());
+      person.id = v.id;
+    }
+  }
+
   Future<List<CurriculumModel>> getAllCurriculums() async {
     return (await _institutionRef.collection('curriculum').get())
         .docs
@@ -170,6 +207,15 @@ class FStore extends GetxController {
     return CurriculumModel.fromMap(res.id, res.data()!);
   }
 
+  Future<void> saveCurriculum(CurriculumModel curriculum) async {
+    if (curriculum.id != null) {
+      return _institutionRef.collection('curriculum').doc(curriculum.id).set(curriculum.toMap());
+    } else {
+      var v = await _institutionRef.collection('curriculum').add(curriculum.toMap());
+      curriculum.id = v.id;
+    }
+  }
+
   Future<List<VenueModel>> getAllVenues() async {
     return (await _institutionRef.collection('venue').get())
         .docs
@@ -180,6 +226,15 @@ class FStore extends GetxController {
           ),
         )
         .toList();
+  }
+
+  Future<void> saveVenue(VenueModel venue) async {
+    if (venue.id != null) {
+      return _institutionRef.collection('venue').doc(venue.id).set(venue.toMap());
+    } else {
+      var v = await _institutionRef.collection('venue').add(venue.toMap());
+      venue.id = v.id;
+    }
   }
 
   Future<VenueModel> getVenue(String id) async {
@@ -230,12 +285,12 @@ class FStore extends GetxController {
       var dayles = await day.lessonsForStudent(PersonModel.currentStudent!, cw);
       for (var les in dayles) {
         var cur = await les.curriculum;
-        var teach = (await cur!.master) as TeacherModel?;
+        var teach = await cur!.master;
         if (teach != null) {
           if (teachers[teach] == null) {
-            teachers[teach] = [cur.name];
-          } else if (!teachers[teach]!.contains(cur.name)) {
-            teachers[teach]!.add(cur.name);
+            teachers[teach] = [cur.aliasOrName];
+          } else if (!teachers[teach]!.contains(cur.aliasOrName)) {
+            teachers[teach]!.add(cur.aliasOrName);
           }
         }
       }

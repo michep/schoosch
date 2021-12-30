@@ -62,7 +62,7 @@ class _RateSheetState extends State<RateSheet> {
                     controller: comment,
                     decoration: const InputDecoration(labelText: 'объясните свой выбор:'),
                   )
-                : Container(),
+                : const SizedBox.shrink(),
           ),
           const SizedBox(
             height: 10,

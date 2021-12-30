@@ -41,8 +41,7 @@ class _AddHomeworkSheetState extends State<AddHomeworkSheet> {
         ),
         ElevatedButton.icon(
           onPressed: () async {
-            var per = await Get.find<FStore>().getPerson(widget.teacher.id);
-            per.asTeacher!.createHomework(cont.text, widget.curriculum, widget.date, student: widget.student);
+            widget.teacher.createHomework(cont.text, widget.curriculum, widget.date, student: widget.student);
             cont.clear();
             Get.back();
           },

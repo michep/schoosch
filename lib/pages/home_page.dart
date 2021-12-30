@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
           future: PersonModel.currentParent!.currentChild,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Container();
+              return const SizedBox.shrink();
             }
             return StudentScheduleSwitcher(snapshot.data!);
           });
