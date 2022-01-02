@@ -21,6 +21,7 @@ class PersonModel {
   ParentModel? _asParent;
   StudentModel? _asStudent;
   TeacherModel? _asTeacher;
+  PersonModel? up;
 
   PersonModel.fromMap(this.id, Map<String, dynamic> map, [bool _recursive = true]) {
     firstname = map['firstname'] != null ? map['firstname'] as String : throw 'need firstname key in people $id';
@@ -33,15 +34,15 @@ class PersonModel {
       for (var t in types) {
         switch (t) {
           case 'parent':
-            _asParent = ParentModel.fromMap(id, map);
+            _asParent = ParentModel.fromMap(id, map)..up = this;
             _currentType = t;
             break;
           case 'student':
-            _asStudent = StudentModel.fromMap(id, map);
+            _asStudent = StudentModel.fromMap(id, map)..up = this;
             _currentType = t;
             break;
           case 'teacher':
-            _asTeacher = TeacherModel.fromMap(id, map);
+            _asTeacher = TeacherModel.fromMap(id, map)..up = this;
             _currentType = t;
             break;
           case 'admin':

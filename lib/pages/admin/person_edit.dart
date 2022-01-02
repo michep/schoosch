@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,11 +42,21 @@ class _PersonPageState extends State<PersonPage> {
     if (widget.person.types.contains('parent')) isParent = true;
     if (widget.person.types.contains('admin')) isAdmin = true;
     if (isParent) {
-      widget.person.asParent!.children.then((value) {
-        setState(() {
-          children.addAll(value);
+      if (widget.person.asParent != null) {
+        widget.person.asParent!.children.then((value) {
+          setState(() {
+            children.clear();
+            children.addAll(value);
+          });
         });
-      });
+      } else {
+        widget.person.up!.asParent!.children.then((value) {
+          setState(() {
+            children.clear();
+            children.addAll(value);
+          });
+        });
+      }
     }
     super.initState();
   }
@@ -120,7 +131,6 @@ class _PersonPageState extends State<PersonPage> {
                             'Связанные учащиеся',
                             style: TextStyle(color: Theme.of(context).disabledColor),
                           ),
-                          // trailing: const Icon(Icons.chevron_right),
                         ),
                       ),
                 CheckboxListTile(
@@ -158,8 +168,8 @@ class _PersonPageState extends State<PersonPage> {
   Widget childrenFormField(BuildContext context) {
     return FormField<List<StudentModel>>(
       initialValue: children,
-      validator: (value) {
-        return (children.isEmpty) ? 'Нужно выбрать учащегося' : null;
+      validator: (_) {
+        return (children.isEmpty) ? 'Нужно выбрать учащихся' : null;
       },
       builder: (fieldstate) => ExpansionTile(
         controlAffinity: ListTileControlAffinity.leading,
@@ -177,9 +187,18 @@ class _PersonPageState extends State<PersonPage> {
         children: [
           ...children.map((s) => ListTile(
                 title: SelectableText(s.fullName),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => removeChild(s),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.open_in_new),
+                      onPressed: () => openChild(s),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => removeChild(s),
+                    ),
+                  ],
                 ),
               )),
         ],
@@ -188,8 +207,27 @@ class _PersonPageState extends State<PersonPage> {
   }
 
   Future<void> addChild() async {
-    var res = await Get.to<PersonModel>(() => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true));
-    if (res != null && !children.contains(res)) {
+    var res = await Get.to<PersonModel>(
+      () => PeopleListPage(
+        InstitutionModel.currentInstitution,
+        selectionMode: true,
+        type: 'student',
+      ),
+      transition: Transition.rightToLeft,
+    );
+    if (res is PersonModel) {
+      if (res.asStudent == null) {
+        Utils.showErrorSnackbar(
+          'Выбранный персонаж не является учащимся',
+        );
+        return;
+      }
+      if (children.contains(res)) {
+        Utils.showErrorSnackbar(
+          'Выбранный учащийся уже присутствует в группе',
+        );
+        return;
+      }
       setState(() {
         children.add(res.asStudent!);
       });
@@ -200,6 +238,17 @@ class _PersonPageState extends State<PersonPage> {
     setState(() {
       children.remove(student);
     });
+  }
+
+  Future<void> openChild(StudentModel student) async {
+    var res = await Get.to<String>(
+      () => PersonPage(student, student.fullName),
+      transition: Transition.rightToLeft,
+      preventDuplicates: false,
+    );
+    if (res != null && res == 'refresh') {
+      setState(() {});
+    }
   }
 
   void roleChecked(String role, bool? value) {
@@ -223,32 +272,50 @@ class _PersonPageState extends State<PersonPage> {
   }
 
   Future save(PersonModel person) async {
+    Map<String, dynamic> map = {};
     if (_formKey.currentState!.validate()) {
-      var per = person;
+      // var per = person;
+      // if (isParent) {
+      //     Map<String, dynamic> map = {};
+      //     map.addAll(person.toMap());
+      //     map['type'] = ['parent'];
+      //     map['student_ids'] = children.map((e) => e.id!).toList();
+      //     per = PersonModel.fromMap(person.id, map);
+      //   per = per.asParent!;
+      //   (per as ParentModel).studentIds.clear();
+      //   per.studentIds.addAll(children.map((e) => e.id!));
+      // }
+      // per.types.clear();
+      // if (isStudent) per.types.addIf(!per.types.contains('student'), 'student');
+      // if (isTeacher) per.types.addIf(!per.types.contains('teacher'), 'teacher');
+      // if (isParent) per.types.addIf(!per.types.contains('parent'), 'parent');
+      // if (isAdmin) per.types.addIf(!per.types.contains('admin'), 'admin');
+      // per.firstname = _firstname.text;
+      // per.middlename = _middlename.text == '' ? null : _middlename.text;
+      // per.lastname = _lastname.text;
+      // per.email = _email.text;
+      // per.birthday = _birthday;
       if (isParent) {
-        if (per.asParent == null) {
-          Map<String, dynamic> map = {};
-          map.addAll(person.toMap());
-          map['type'] = ['parent'];
-          map['student_ids'] = children.map((e) => e.id!).toList();
-          per = PersonModel.fromMap(person.id, map);
-        }
-        per = per.asParent!;
-        (per as ParentModel).studentIds.clear();
-        per.studentIds.addAll(children.map((e) => e.id!));
+        map['student_ids'] = children.map((e) => e.id!).toList();
       }
-      per.types.clear();
-      if (isStudent) per.types.addIf(!per.types.contains('student'), 'student');
-      if (isTeacher) per.types.addIf(!per.types.contains('teacher'), 'teacher');
-      if (isParent) per.types.addIf(!per.types.contains('parent'), 'parent');
-      if (isAdmin) per.types.addIf(!per.types.contains('admin'), 'admin');
-      per.firstname = _firstname.text;
-      per.middlename = _middlename.text == '' ? null : _middlename.text;
-      per.lastname = _lastname.text;
-      per.email = _email.text;
-      per.birthday = _birthday;
-      await per.save();
-      Get.back(result: 'refresh');
+      map['type'] = <String>[];
+      if (isStudent) map['type'].add('student');
+      if (isTeacher) map['type'].add('teacher');
+      if (isParent) map['type'].add('parent');
+      if (isAdmin) map['type'].add('admin');
+      map['firstname'] = _firstname.text;
+      map['middlename'] = _middlename.text == '' ? null : _middlename.text;
+      map['lastname'] = _lastname.text;
+      map['email'] = _email.text;
+      map['birthday'] = _birthday != null ? Timestamp.fromDate(_birthday!) : null;
+
+      var per = PersonModel.fromMap(person.id, map);
+      if (isParent) {
+        await per.asParent!.save();
+      } else {
+        await per.save();
+      }
+      Get.back<PersonModel>(result: per);
     }
   }
 

@@ -6,6 +6,7 @@ import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/daylessontime_list.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
+import 'package:schoosch/pages/admin/person_edit.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class ClassPage extends StatefulWidget {
@@ -151,16 +152,26 @@ class _ClassPageState extends State<ClassPage> {
           'Классный руководитель',
         ),
         suffixIcon: Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: master == null
-                ? IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: selectMaster,
-                  )
-                : IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: removeMaster,
-                  )),
+          padding: const EdgeInsets.only(right: 8.0),
+          child: master == null
+              ? IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: selectMaster,
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.open_in_new),
+                      onPressed: openMaster,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: removeMaster,
+                    ),
+                  ],
+                ),
+        ),
       ),
       validator: (value) => Utils.validateTextNotEmpty(value, 'Классный руководитель должен быть выбран'),
     );
@@ -169,9 +180,12 @@ class _ClassPageState extends State<ClassPage> {
   Widget childrenFormField(BuildContext context) {
     return FormField<List<StudentModel>>(
       initialValue: students,
+      validator: (_) {
+        return students.isEmpty ? 'Нужно выбрать учащихся' : null;
+      },
       builder: (fieldstate) => ExpansionTile(
         controlAffinity: ListTileControlAffinity.leading,
-        title: Text('Учащиея класса (${students.length})'),
+        title: Text('Учащиеяся класса (${students.length})'),
         subtitle: fieldstate.hasError
             ? Text(fieldstate.errorText!, style: TextStyle(fontSize: 12, color: Theme.of(context).errorColor))
             : const SizedBox.shrink(),
@@ -185,9 +199,18 @@ class _ClassPageState extends State<ClassPage> {
         children: [
           ...students.map((s) => ListTile(
                 title: SelectableText(s.fullName),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => removeChild(s),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.open_in_new),
+                      onPressed: () => openChild(s),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => removeChild(s),
+                    ),
+                  ],
                 ),
               )),
         ],
@@ -196,10 +219,50 @@ class _ClassPageState extends State<ClassPage> {
   }
 
   Future<void> addChild() async {
-    var res = await Get.to<PersonModel>(() => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true));
-    if (res != null && !students.contains(res)) {
+    var res = await Get.to<PersonModel>(
+      () => PeopleListPage(
+        InstitutionModel.currentInstitution,
+        selectionMode: true,
+        type: 'student',
+      ),
+      transition: Transition.rightToLeft,
+    );
+    if (res is PersonModel) {
+      if (res.asStudent == null) {
+        Utils.showErrorSnackbar(
+          'Выбранный персонаж не является учащимся',
+        );
+        return;
+      }
+      if (students.contains(res)) {
+        Utils.showErrorSnackbar(
+          'Выбранный учащийся уже присутствует в группе',
+        );
+        return;
+      }
       setState(() {
         students.add(res.asStudent!);
+      });
+    }
+  }
+
+  Future<void> openChild(StudentModel student) async {
+    var res = await Get.to<PersonModel>(
+      () => PersonPage(student, student.fullName),
+      transition: Transition.rightToLeft,
+    );
+    if (res is PersonModel) {
+      if (res.asStudent == null) {
+        removeChild(student);
+        Utils.showErrorSnackbar(
+          'Выбранный персонаж больше не является учащимся',
+        );
+        return;
+      }
+      setState(() {
+        var i = students.indexOf(student);
+        students.remove(student);
+        students.insert(i, res.asStudent!);
       });
     }
   }
@@ -211,11 +274,45 @@ class _ClassPageState extends State<ClassPage> {
   }
 
   Future<void> selectMaster() async {
-    var res = await Get.to<PersonModel>(() => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true));
-    if (res != null) {
+    var res = await Get.to<PersonModel>(
+      () => PeopleListPage(
+        InstitutionModel.currentInstitution,
+        selectionMode: true,
+        type: 'teacher',
+      ),
+      transition: Transition.rightToLeft,
+    );
+    if (res is PersonModel) {
+      if (res.asTeacher == null) {
+        removeMaster();
+        Utils.showErrorSnackbar(
+          'Выбранный персонаж не является преподавателем',
+        );
+        return;
+      }
       setState(() {
         _mastercont.text = res.fullName;
         master = res.asTeacher;
+      });
+    }
+  }
+
+  Future<void> openMaster() async {
+    var res = await Get.to<PersonModel>(
+      () => PersonPage(master!, master!.fullName),
+      transition: Transition.rightToLeft,
+    );
+    if (res is PersonModel) {
+      if (res.asTeacher == null) {
+        removeMaster();
+        Utils.showErrorSnackbar(
+          'Выбранный персонаж больше не является преподавателем',
+        );
+        return;
+      }
+      setState(() {
+        _mastercont.text = res.fullName;
+        master = res.asTeacher; // TODO: check that person is still teacher
       });
     }
   }
@@ -228,7 +325,10 @@ class _ClassPageState extends State<ClassPage> {
   }
 
   Future<void> selectDayLessontime() async {
-    var res = await Get.to<DayLessontimeModel>(() => DayLessontimeListPage(InstitutionModel.currentInstitution, selectionMode: true));
+    var res = await Get.to<DayLessontimeModel>(() => DayLessontimeListPage(
+          InstitutionModel.currentInstitution,
+          selectionMode: true,
+        ));
     if (res != null) {
       setState(() {
         _daylessontimecont.text = res.name;

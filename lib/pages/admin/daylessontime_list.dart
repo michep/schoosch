@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/institution_model.dart';
-import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/admin/curriculum_edit.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class DayLessontimeListPage extends StatefulWidget {
