@@ -241,13 +241,24 @@ class _PersonPageState extends State<PersonPage> {
   }
 
   Future<void> openChild(StudentModel student) async {
-    var res = await Get.to<String>(
+    var res = await Get.to<PersonModel>(
       () => PersonPage(student, student.fullName),
       transition: Transition.rightToLeft,
       preventDuplicates: false,
     );
-    if (res != null && res == 'refresh') {
-      setState(() {});
+    if (res is PersonModel) {
+      if (res.asStudent == null) {
+        removeChild(student);
+        Utils.showErrorSnackbar(
+          'Выбранный персонаж больше не является учащимся',
+        );
+        return;
+      }
+      setState(() {
+        var i = children.indexOf(student);
+        children.remove(student);
+        children.insert(i, res.asStudent!);
+      });
     }
   }
 
@@ -274,27 +285,6 @@ class _PersonPageState extends State<PersonPage> {
   Future save(PersonModel person) async {
     Map<String, dynamic> map = {};
     if (_formKey.currentState!.validate()) {
-      // var per = person;
-      // if (isParent) {
-      //     Map<String, dynamic> map = {};
-      //     map.addAll(person.toMap());
-      //     map['type'] = ['parent'];
-      //     map['student_ids'] = children.map((e) => e.id!).toList();
-      //     per = PersonModel.fromMap(person.id, map);
-      //   per = per.asParent!;
-      //   (per as ParentModel).studentIds.clear();
-      //   per.studentIds.addAll(children.map((e) => e.id!));
-      // }
-      // per.types.clear();
-      // if (isStudent) per.types.addIf(!per.types.contains('student'), 'student');
-      // if (isTeacher) per.types.addIf(!per.types.contains('teacher'), 'teacher');
-      // if (isParent) per.types.addIf(!per.types.contains('parent'), 'parent');
-      // if (isAdmin) per.types.addIf(!per.types.contains('admin'), 'admin');
-      // per.firstname = _firstname.text;
-      // per.middlename = _middlename.text == '' ? null : _middlename.text;
-      // per.lastname = _lastname.text;
-      // per.email = _email.text;
-      // per.birthday = _birthday;
       if (isParent) {
         map['student_ids'] = children.map((e) => e.id!).toList();
       }

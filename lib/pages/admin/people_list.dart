@@ -149,7 +149,6 @@ class _PeopleListPageState extends State<PeopleListPage> {
         ),
       ),
     );
-    String? res;
     PersonModel nperson;
     if (type != null) {
       switch (type) {
@@ -165,10 +164,10 @@ class _PeopleListPageState extends State<PeopleListPage> {
         default:
           return;
       }
-      res = await Get.to<String>(
+      var res = await Get.to<PersonModel>(
         () => PersonPage(nperson, 'Новый $type'),
       );
-      if (res != null && res == 'refresh') {
+      if (res is PersonModel) {
         setState(() {});
       }
     }
