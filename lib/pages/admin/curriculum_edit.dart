@@ -132,13 +132,60 @@ class _VenuePageState extends State<CurriculumPage> {
                   ],
                 ),
         ),
-        // : IconButton(
-        //     icon: const Icon(Icons.delete),
-        //     onPressed: removeMaster,
-        //   )),
       ),
       validator: (value) => Utils.validateTextNotEmpty(value, 'Преподаватель должен быть выбран'),
     );
+  }
+
+  Future<void> selectMaster() async {
+    var res = await Get.to<PersonModel>(
+      () => PeopleListPage(
+        InstitutionModel.currentInstitution,
+        selectionMode: true,
+        type: 'teacher',
+      ),
+      transition: Transition.rightToLeft,
+    );
+    if (res is PersonModel) {
+      if (res.asTeacher == null) {
+        removeMaster();
+        Utils.showErrorSnackbar(
+          'Выбранный персонаж не является преподавателем',
+        );
+        return;
+      }
+      setState(() {
+        _mastercont.text = res.fullName;
+        master = res.asTeacher;
+      });
+    }
+  }
+
+  Future<void> openMaster() async {
+    var res = await Get.to<PersonModel>(
+      () => PersonPage(master!, master!.fullName),
+      transition: Transition.rightToLeft,
+    );
+    if (res is PersonModel) {
+      if (res.asTeacher == null) {
+        removeMaster();
+        Utils.showErrorSnackbar(
+          'Выбранный персонаж больше не является преподавателем',
+        );
+        return;
+      }
+      setState(() {
+        _mastercont.text = res.fullName;
+        master = res.asTeacher;
+      });
+    }
+  }
+
+  void removeMaster() {
+    setState(() {
+      master = null;
+      _mastercont.text = '';
+    });
   }
 
   Widget childrenFormField(BuildContext context) {
@@ -223,7 +270,7 @@ class _VenuePageState extends State<CurriculumPage> {
       setState(() {
         var i = students.indexOf(student);
         students.remove(student);
-        students.insert(i, res.asStudent!); // TODO: check that person is still student
+        students.insert(i, res.asStudent!);
       });
     }
   }
@@ -234,61 +281,17 @@ class _VenuePageState extends State<CurriculumPage> {
     });
   }
 
-  Future<void> selectMaster() async {
-    var res = await Get.to<PersonModel>(
-      () => PeopleListPage(
-        InstitutionModel.currentInstitution,
-        selectionMode: true,
-        type: 'teacher',
-      ),
-      transition: Transition.rightToLeft,
-    );
-    if (res is PersonModel) {
-      if (res.asTeacher == null) {
-        removeMaster();
-        Utils.showErrorSnackbar(
-          'Выбранный персонаж не является преподавателем',
-        );
-        return;
-      }
-      setState(() {
-        _mastercont.text = res.fullName;
-        master = res.asTeacher;
-      });
-    }
-  }
-
-  Future<void> openMaster() async {
-    var res = await Get.to<PersonModel>(
-      () => PersonPage(master!, master!.fullName),
-      transition: Transition.rightToLeft,
-    );
-    if (res is PersonModel) {
-      setState(() {
-        _mastercont.text = res.fullName;
-        master = res.asTeacher; // TODO: check that person is still teacher
-      });
-    }
-  }
-
-  void removeMaster() {
-    setState(() {
-      master = null;
-      _mastercont.text = '';
-    });
-  }
-
   Future<void> save(CurriculumModel curriculum) async {
     if (_formKey.currentState!.validate()) {
-      curriculum.name = _name.text;
-      curriculum.alias = _alias.text == '' ? null : _alias.text;
-      if (master != null) curriculum.masterId = master!.id;
-      curriculum.studentIds.clear();
-      for (var s in students) {
-        curriculum.studentIds.add(s.id!);
-      }
-      await curriculum.save();
-      Get.back(result: 'refresh');
+      Map<String, dynamic> map = {};
+      map['name'] = _name.text;
+      map['alias'] = _alias.text.isNotEmpty ? _alias.text : null;
+      map['master_id'] = master!.id!;
+      map['student_ids'] = students.map((e) => e.id!).toList();
+
+      var ncurriculum = CurriculumModel.fromMap(curriculum.id, map);
+      await ncurriculum.save();
+      Get.back<CurriculumModel>(result: ncurriculum);
     }
   }
 

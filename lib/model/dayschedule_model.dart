@@ -5,34 +5,61 @@ import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/widgets/utils.dart';
 
 class DayScheduleModel {
   final ClassModel _class;
-  late final Week _week;
-  final String id;
-  late final int day;
-  late final DateTime from;
-  late final DateTime till;
+  String? _id;
+  late int day;
+  late final DateTime? from;
+  late final DateTime? till;
   final List<LessonModel> _lessons = [];
   bool _lessonsLoaded = false;
 
-  DayScheduleModel.fromMap(this._class, this._week, this.id, Map<String, Object?> map) {
-    day = map['day'] != null ? map['day'] as int : throw 'need day key in schedule  $id';
-    if (day < 1 || day > 7) throw 'incorrect day in schedule $id';
-    from = map['from'] != null ? DateTime.fromMillisecondsSinceEpoch((map['from'] as Timestamp).millisecondsSinceEpoch) : DateTime(2000);
-    till = map['till'] != null ? DateTime.fromMillisecondsSinceEpoch((map['till'] as Timestamp).millisecondsSinceEpoch) : DateTime(3000);
-  }
-
-  DateTime get date => _week.days[day - 1];
-
+  String? get id => _id;
   ClassModel get aclass => _class;
 
-  Future<List<LessonModel>> allLessons(Week week) async {
-    if (!_lessonsLoaded) {
-      _lessons.addAll(await Get.find<FStore>().getScheduleLessons(_class, this, week));
+  DayScheduleModel.empty(ClassModel aclass, int day)
+      : this.fromMap(aclass, null, <String, dynamic>{
+          'day': day,
+          'from': Timestamp.fromDate(DateTime(1900)),
+          'till': null,
+        });
+
+  DayScheduleModel.fromMap(this._class, this._id, Map<String, dynamic> map) {
+    day = map['day'] != null ? map['day'] as int : throw 'need day key in schedule $_id';
+    if (day < 1 || day > 7) throw 'incorrect day in schedule $id';
+    from = map['from'] != null
+        ? DateTime.fromMillisecondsSinceEpoch((map['from'] as Timestamp).millisecondsSinceEpoch)
+        : throw 'need from key in schedule $_id';
+    till = map['till'] != null ? DateTime.fromMillisecondsSinceEpoch((map['till'] as Timestamp).millisecondsSinceEpoch) : null;
+  }
+
+  String get formatPeriod {
+    return Utils.formatPeriod(from!, till);
+  }
+
+  Future<List<LessonModel>> allLessons({bool forceRefresh = false}) async {
+    if (!_lessonsLoaded || forceRefresh) {
+      _lessons.clear();
+      _lessons.addAll(await Get.find<FStore>().getScheduleLessons(_class, this));
       _lessonsLoaded = true;
     }
     return _lessons;
+  }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> res = {};
+    res['day'] = day;
+    res['from'] = from;
+    res['till'] = till;
+    return res;
+  }
+
+  Future<DayScheduleModel> save() async {
+    var id = await Get.find<FStore>().saveDaySchedule(this);
+    _id ??= id;
+    return this;
   }
 }
 
@@ -40,11 +67,11 @@ class StudentScheduleModel extends DayScheduleModel {
   final List<LessonModel> _studentLessons = [];
   bool _studentLessonsLoaded = false;
 
-  StudentScheduleModel.fromMap(ClassModel _class, Week _week, String id, Map<String, Object?> map) : super.fromMap(_class, _week, id, map);
+  StudentScheduleModel.fromMap(ClassModel _class, String id, Map<String, Object?> map) : super.fromMap(_class, id, map);
 
   Future<List<LessonModel>> lessonsForStudent(StudentModel student, Week week) async {
     if (!_studentLessonsLoaded) {
-      _studentLessons.addAll(await Get.find<FStore>().getScheduleLessonsForStudent(_class, this, week, student));
+      _studentLessons.addAll(await Get.find<FStore>().getScheduleLessonsForStudent(_class, this, student));
       _studentLessonsLoaded = true;
     }
     return _studentLessons;
@@ -54,7 +81,7 @@ class StudentScheduleModel extends DayScheduleModel {
 class TeacherScheduleModel extends DayScheduleModel {
   late final List<LessonModel> _teacherLessons = [];
 
-  TeacherScheduleModel.fromMap(ClassModel _class, Week _week, String id, Map<String, Object?> map) : super.fromMap(_class, _week, id, map);
+  TeacherScheduleModel.fromMap(ClassModel _class, String id, Map<String, Object?> map) : super.fromMap(_class, id, map);
 
   void addLessons(List<LessonModel> lessons) {
     _teacherLessons.addAll(lessons);

@@ -37,7 +37,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
           children: [
             Card(
               child: ExpansionTile(
-                title: const Text('Поиск'),
+                title: inSearch ? const Text('Поиск', style: TextStyle(fontStyle: FontStyle.italic)) : const Text('Поиск'),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
@@ -120,21 +120,22 @@ class _PeopleListPageState extends State<PeopleListPage> {
     return person.fullName.toUpperCase().contains(_name.text.toUpperCase()) && (typeValue == 'all' || person.types.contains(typeValue));
   }
 
-  Future onTap(PersonModel person) async {
+  bool get inSearch {
+    return _name.text.isNotEmpty || typeValue != 'all';
+  }
+
+  Future<void> onTap(PersonModel person) async {
     if (widget.selectionMode) {
-      return Get.back(result: person);
+      return Get.back<PersonModel>(result: person);
     } else {
-      var res = await Get.to<PersonModel>(
-        () => PersonPage(person, person.fullName),
-        transition: Transition.rightToLeft,
-      );
+      var res = await Get.to<PersonModel>(() => PersonPage(person, person.fullName), transition: Transition.rightToLeft);
       if (res is PersonModel) {
         setState(() {});
       }
     }
   }
 
-  Future newPerson() async {
+  Future<void> newPerson() async {
     List<String> types = ['student', 'teacher', 'parent'];
     var type = await Get.bottomSheet<String>(
       Card(
@@ -164,9 +165,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
         default:
           return;
       }
-      var res = await Get.to<PersonModel>(
-        () => PersonPage(nperson, 'Новый $type'),
-      );
+      var res = await Get.to<PersonModel>(() => PersonPage(nperson, 'Новый $type'));
       if (res is PersonModel) {
         setState(() {});
       }

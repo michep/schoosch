@@ -10,8 +10,9 @@ import 'package:schoosch/widgets/student/studentlesson_list_tile.dart';
 class ClassDayScheduleTile extends StatelessWidget {
   final StudentScheduleModel _schedule;
   final StudentModel _student;
+  final DateTime _date;
 
-  const ClassDayScheduleTile(this._schedule, this._student, {Key? key}) : super(key: key);
+  const ClassDayScheduleTile(this._schedule, this._student, this._date, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +26,11 @@ class ClassDayScheduleTile extends StatelessWidget {
           }
           return ExpansionTile(
             title: Text(
-              DateFormat('EEEE, d MMMM', 'ru').format(_schedule.date).capitalizeFirst!,
+              DateFormat('EEEE, d MMMM', 'ru').format(_date).capitalizeFirst!,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             children: [
-              ...snap.data!.map((_les) => StudentLessonListTile(_student, _les, _schedule.date)),
+              ...snap.data!.map((_les) => StudentLessonListTile(_student, _les, _date)),
             ],
           );
         });

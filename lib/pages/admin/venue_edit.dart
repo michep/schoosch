@@ -63,9 +63,12 @@ class _VenuePageState extends State<VenuePage> {
 
   Future<void> save(VenueModel venue) async {
     if (_formKey.currentState!.validate()) {
-      venue.name = _name.text;
-      await venue.save();
-      Get.back(result: 'refresh');
+      Map<String, dynamic> map = {};
+      map['name'] = _name.text;
+
+      var nvenue = VenueModel.fromMap(venue.id, map);
+      await nvenue.save();
+      Get.back<VenueModel>(result: nvenue);
     }
   }
 

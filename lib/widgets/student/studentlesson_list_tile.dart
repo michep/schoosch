@@ -26,7 +26,7 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
           widget._lesson.curriculum,
           widget._lesson.venue,
           widget._lesson.lessontime,
-          widget._lesson.marksForStudentAsString(widget._student),
+          widget._lesson.marksForStudentAsString(widget._student, widget._date),
         ]),
         builder: (context, snap) {
           if (!snap.hasData) {

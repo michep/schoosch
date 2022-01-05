@@ -3,14 +3,16 @@ import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class CurriculumModel {
-  String? id;
-  late String name;
-  late String? alias;
-  late String? masterId;
-  final List<String> studentIds = [];
-  PersonModel? _master;
+  String? _id;
+  late final String name;
+  late final String? alias;
+  late final String _masterId;
+  final List<String> _studentIds = [];
   final List<StudentModel> _students = [];
   bool _studentsLoaded = false;
+  TeacherModel? _master;
+
+  String? get id => _id;
 
   CurriculumModel.empty()
       : this.fromMap(null, <String, dynamic>{
@@ -20,44 +22,46 @@ class CurriculumModel {
           'student_ids': <String>[],
         });
 
-  CurriculumModel.fromMap(this.id, Map<String, dynamic> map) {
+  CurriculumModel.fromMap(this._id, Map<String, dynamic> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in curriculum $id';
     alias = map['alias'] != null ? map['alias'] as String : null;
-    masterId = map['master_id'] != null ? map['master_id'] as String : throw 'need master_id key in curriculum $id';
-    map['student_ids'] != null ? studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
+    _masterId = map['master_id'] != null ? map['master_id'] as String : throw 'need master_id key in curriculum $id';
+    map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
   }
 
   String get aliasOrName => alias ?? name;
 
   Future<TeacherModel?> get master async {
-    if (masterId == null || masterId!.isEmpty) return null;
-    if (_master == null && masterId != null) {
+    if (_masterId.isEmpty) return null;
+    if (_master == null) {
       var store = Get.find<FStore>();
-      _master = await store.getPerson(masterId!);
+      _master = (await store.getPerson(_masterId)).asTeacher;
     }
-    return _master?.asTeacher;
+    return _master;
   }
 
   Future<List<StudentModel>> get students async {
     if (!_studentsLoaded) {
-      _students.addAll((await Get.find<FStore>().getPeopleByIds(studentIds)).map((e) => e.asStudent!).toList());
+      _students.addAll((await Get.find<FStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
       _studentsLoaded = true;
     }
     return _students;
   }
 
-  bool isAvailableForStudent(String studentId) => studentIds.isEmpty || studentIds.contains(studentId);
+  bool isAvailableForStudent(String studentId) => _studentIds.isEmpty || _studentIds.contains(studentId);
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> res = {};
     res['name'] = name;
     res['alias'] = alias;
-    res['master_id'] = masterId;
-    res['student_ids'] = studentIds;
+    res['master_id'] = _masterId;
+    res['student_ids'] = _studentIds;
     return res;
   }
 
-  Future<void> save() async {
-    return Get.find<FStore>().saveCurriculum(this);
+  Future<CurriculumModel> save() async {
+    var id = await Get.find<FStore>().saveCurriculum(this);
+    _id ??= id;
+    return this;
   }
 }

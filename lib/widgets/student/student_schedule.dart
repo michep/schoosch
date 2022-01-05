@@ -31,7 +31,7 @@ class StudentScheduleWidget extends StatelessWidget {
         }
         return ListView(
           children: [
-            ...schedules.data!.map((schedule) => ClassDayScheduleTile(schedule, _student)),
+            ...schedules.data!.map((schedule) => ClassDayScheduleTile(schedule, _student, _week.day(schedule.day - 1))),
           ],
         );
       },

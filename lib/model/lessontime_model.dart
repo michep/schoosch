@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
-@immutable
 class LessontimeModel {
-  final String id;
+  String? _id;
   late final int order;
   late final TimeOfDay from;
   late final TimeOfDay till;
 
-  LessontimeModel.fromMap(this.id, Map<String, Object?> map) {
+  String? get id => _id;
+
+  LessontimeModel.fromMap(this._id, Map<String, Object?> map) {
     order = map['order'] != null ? map['order'] as int : throw 'need order key in lessontime $id';
     var f = map['from'] != null ? (map['from'] as String).split(':') : throw 'need from key in lessontime $id';
     if (f.length != 2) throw 'incorrect from in lessontime $id';

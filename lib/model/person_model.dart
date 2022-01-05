@@ -10,20 +10,22 @@ import 'package:schoosch/model/dayschedule_model.dart';
 import 'class_model.dart';
 
 class PersonModel {
-  late String? id;
-  late String firstname;
-  late String? middlename;
-  late String lastname;
+  late String? _id;
+  late final String firstname;
+  late final String? middlename;
+  late final String lastname;
+  late final String email;
   late List<String> types = [];
+  late final DateTime? birthday;
   late String _currentType;
-  late DateTime? birthday;
-  late String email;
   ParentModel? _asParent;
   StudentModel? _asStudent;
   TeacherModel? _asTeacher;
   PersonModel? up;
 
-  PersonModel.fromMap(this.id, Map<String, dynamic> map, [bool _recursive = true]) {
+  String? get id => _id;
+
+  PersonModel.fromMap(this._id, Map<String, dynamic> map, [bool _recursive = true]) {
     firstname = map['firstname'] != null ? map['firstname'] as String : throw 'need firstname key in people $id';
     middlename = map['middlename'] != null ? map['middlename'] as String : null;
     lastname = map['lastname'] != null ? map['lastname'] as String : throw 'need lastname key in people $id';
@@ -92,8 +94,10 @@ class PersonModel {
     return res;
   }
 
-  Future<void> save() async {
-    Get.find<FStore>().savePerson(this);
+  Future<PersonModel> save() async {
+    var id = await Get.find<FStore>().savePerson(this);
+    _id ??= id;
+    return this;
   }
 }
 
@@ -119,11 +123,6 @@ class StudentModel extends PersonModel {
       _studentClassLoaded = true;
     }
     return _studentClass;
-  }
-
-  @override
-  Future<void> save() async {
-    return Get.find<FStore>().savePerson(this);
   }
 }
 

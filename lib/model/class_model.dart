@@ -7,18 +7,21 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 
 class ClassModel {
-  late String? id;
-  late String name;
-  late int grade;
-  late String? masterId;
-  late String? dayLessontimeId;
-  final Map<Week, List<StudentScheduleModel>> _schedule = {};
-  final List<String> studentIds = [];
+  String? _id;
+  late final String name;
+  late final int grade;
+  late final String _masterId;
+  late final String _dayLessontimeId;
+  final List<String> _studentIds = [];
   final List<StudentModel> _students = [];
+  bool _studentsLoaded = false;
   final List<LessontimeModel> _lessontimes = [];
   bool _lessontimesLoaded = false;
-  bool _studentsLoaded = false;
-  PersonModel? _master;
+  TeacherModel? _master;
+  final Map<Week, List<StudentScheduleModel>> _weekSchedules = {};
+  final Map<int, List<StudentScheduleModel>> _daySchedules = {};
+
+  String? get id => _id;
 
   ClassModel.empty()
       : this.fromMap(null, <String, dynamic>{
@@ -29,31 +32,38 @@ class ClassModel {
           'student_ids': <String>[],
         });
 
-  ClassModel.fromMap(this.id, Map<String, dynamic> map) {
-    name = map['name'] != null ? map['name'] as String : throw 'need name key in class $id';
-    grade = map['grade'] != null ? map['grade'] as int : throw 'need grade key in class $id';
-    dayLessontimeId = map['lessontime_id'] != null ? map['lessontime_id'] as String : throw 'need lessontime_id key in class $id';
-    masterId = map['master_id'] != null ? map['master_id'] as String : throw 'need master_id key in class $id';
-    map['student_ids'] != null ? studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
+  ClassModel.fromMap(this._id, Map<String, dynamic> map) {
+    name = map['name'] != null ? map['name'] as String : throw 'need name key in class $_id';
+    grade = map['grade'] != null ? map['grade'] as int : throw 'need grade key in class $_id';
+    _dayLessontimeId = map['lessontime_id'] != null ? map['lessontime_id'] as String : throw 'need lessontime_id key in class $_id';
+    _masterId = map['master_id'] != null ? map['master_id'] as String : throw 'need master_id key in class $_id';
+    map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
   }
 
   Future<TeacherModel?> get master async {
-    if (masterId == null || masterId!.isEmpty) return null;
+    if (_masterId.isEmpty) return null;
     if (_master == null) {
       var store = Get.find<FStore>();
-      _master = await store.getPerson(masterId!);
+      _master = (await store.getPerson(_masterId)).asTeacher;
     }
-    return _master!.asTeacher;
+    return _master!;
   }
 
   Future<List<StudentScheduleModel>> getSchedulesWeek(Week week) async {
-    return _schedule[week] ??= await Get.find<FStore>().getClassWeekSchedule(this, week);
+    return _weekSchedules[week] ??= await Get.find<FStore>().getClassWeekSchedule(this, week);
+  }
+
+  Future<List<StudentScheduleModel>> getSchedulesDay(int day, {bool forceRefresh = false}) async {
+    if (_daySchedules[day] == null || forceRefresh) {
+      _daySchedules[day] = await Get.find<FStore>().getClassDaySchedule(this, day);
+    }
+    return _daySchedules[day]!;
   }
 
   Future<List<LessontimeModel?>?> getLessontimes() async {
-    if (dayLessontimeId == null || dayLessontimeId!.isEmpty) return null;
+    if (_dayLessontimeId.isEmpty) return null;
     if (!_lessontimesLoaded) {
-      _lessontimes.addAll(await Get.find<FStore>().getLessontime(dayLessontimeId!)); //TODO: fallboack to default lessontimes?
+      _lessontimes.addAll(await Get.find<FStore>().getLessontime(_dayLessontimeId)); //TODO: fallboack to default lessontimes?
       _lessontimesLoaded = true;
     }
     return _lessontimes;
@@ -65,8 +75,8 @@ class ClassModel {
   }
 
   Future<DayLessontimeModel?> getDayLessontime() async {
-    if (dayLessontimeId == null || dayLessontimeId!.isEmpty) return null;
-    return Get.find<FStore>().getDayLessontime(dayLessontimeId!);
+    if (_dayLessontimeId.isEmpty) return null;
+    return Get.find<FStore>().getDayLessontime(_dayLessontimeId);
   }
 
   Future<Map<TeacherModel, List<String>>> get teachers async {
@@ -75,7 +85,7 @@ class ClassModel {
 
   Future<List<StudentModel>> get students async {
     if (!_studentsLoaded) {
-      _students.addAll((await Get.find<FStore>().getPeopleByIds(studentIds)).map((e) => e.asStudent!));
+      _students.addAll((await Get.find<FStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
       _studentsLoaded = true;
     }
     return _students;
@@ -85,13 +95,15 @@ class ClassModel {
     Map<String, dynamic> res = {};
     res['name'] = name;
     res['grade'] = grade;
-    res['master_id'] = masterId;
-    res['student_ids'] = studentIds;
-    res['lessontime_id'] = dayLessontimeId;
+    res['master_id'] = _masterId;
+    res['student_ids'] = _studentIds;
+    res['lessontime_id'] = _dayLessontimeId;
     return res;
   }
 
-  Future<void> save() async {
-    return Get.find<FStore>().saveClass(this);
+  Future<ClassModel> save() async {
+    var id = await Get.find<FStore>().saveClass(this);
+    _id ??= id;
+    return this;
   }
 }

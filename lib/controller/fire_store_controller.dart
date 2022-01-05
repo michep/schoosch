@@ -98,31 +98,55 @@ class FStore extends GetxController {
         .toList();
   }
 
+  Future<String> saveClass(ClassModel aclass) async {
+    if (aclass.id != null) {
+      await _institutionRef.collection('class').doc(aclass.id).set(aclass.toMap());
+      return aclass.id!;
+    } else {
+      var v = await _institutionRef.collection('class').add(aclass.toMap());
+      return v.id;
+    }
+  }
+
   Future<List<StudentScheduleModel>> getClassWeekSchedule(ClassModel aclass, Week currentWeek) async {
     return (await _institutionRef.collection('class').doc(aclass.id).collection('schedule').orderBy('day').get())
         .docs
         .map(
           (schedule) => StudentScheduleModel.fromMap(
             aclass,
-            currentWeek,
             schedule.id,
             schedule.data(),
           ),
         )
-        .where((s) => s.from.isBefore(currentWeek.day(5)) && s.till.isAfter(currentWeek.day(4)))
+        .where((s) => s.from!.isBefore(currentWeek.day(5)) && (s.till == null || s.till!.isAfter(currentWeek.day(4))))
         .toList();
   }
 
-  Future<void> saveClass(ClassModel aclass) async {
-    if (aclass.id != null) {
-      return _institutionRef.collection('class').doc(aclass.id).set(aclass.toMap());
+  Future<List<StudentScheduleModel>> getClassDaySchedule(ClassModel aclass, int day) async {
+    return (await _institutionRef.collection('class').doc(aclass.id).collection('schedule').orderBy('from').get())
+        .docs
+        .map(
+          (schedule) => StudentScheduleModel.fromMap(
+            aclass,
+            schedule.id,
+            schedule.data(),
+          ),
+        )
+        .where((s) => s.day == day)
+        .toList();
+  }
+
+  Future<String> saveDaySchedule(DayScheduleModel schedule) async {
+    if (schedule.id != null) {
+      await _institutionRef.collection('class').doc(schedule.aclass.id).collection('schedule').doc(schedule.id).set(schedule.toMap());
+      return schedule.id!;
     } else {
-      var v = await _institutionRef.collection('class').add(aclass.toMap());
-      aclass.id = v.id;
+      var v = await _institutionRef.collection('class').doc(schedule.aclass.id).collection('schedule').add(schedule.toMap());
+      return v.id;
     }
   }
 
-  Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule, Week week) async {
+  Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule) async {
     return (await _institutionRef
             .collection('class')
             .doc(aclass.id)
@@ -141,10 +165,9 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<LessonModel>> getScheduleLessonsForStudent(
-      ClassModel aclass, StudentScheduleModel schedule, Week week, StudentModel student) async {
+  Future<List<LessonModel>> getScheduleLessonsForStudent(ClassModel aclass, StudentScheduleModel schedule, StudentModel student) async {
     List<LessonModel> res = [];
-    var less = await getScheduleLessons(aclass, schedule, week);
+    var less = await getScheduleLessons(aclass, schedule);
 
     for (var l in less) {
       var cur = await l.curriculum;
@@ -153,6 +176,29 @@ class FStore extends GetxController {
       }
     }
     return res;
+  }
+
+  Future<String> saveLesson(LessonModel lesson) async {
+    if (lesson.id != null) {
+      await _institutionRef
+          .collection('class')
+          .doc(lesson.aclass.id)
+          .collection('schedule')
+          .doc(lesson.schedule.id)
+          .collection('lesson')
+          .doc(lesson.id)
+          .set(lesson.toMap());
+      return lesson.id!;
+    } else {
+      var v = await _institutionRef
+          .collection('class')
+          .doc(lesson.aclass.id)
+          .collection('schedule')
+          .doc(lesson.schedule.id)
+          .collection('lesson')
+          .add(lesson.toMap());
+      return v.id;
+    }
   }
 
   Future<PersonModel> getPerson(String id) async {
@@ -181,12 +227,13 @@ class FStore extends GetxController {
     return res;
   }
 
-  Future<void> savePerson(PersonModel person) async {
+  Future<String> savePerson(PersonModel person) async {
     if (person.id != null) {
-      return _institutionRef.collection('people').doc(person.id).set(person.toMap());
+      await _institutionRef.collection('people').doc(person.id).set(person.toMap());
+      return person.id!;
     } else {
       var v = await _institutionRef.collection('people').add(person.toMap());
-      person.id = v.id;
+      return v.id;
     }
   }
 
@@ -207,12 +254,13 @@ class FStore extends GetxController {
     return CurriculumModel.fromMap(res.id, res.data()!);
   }
 
-  Future<void> saveCurriculum(CurriculumModel curriculum) async {
+  Future<String> saveCurriculum(CurriculumModel curriculum) async {
     if (curriculum.id != null) {
-      return _institutionRef.collection('curriculum').doc(curriculum.id).set(curriculum.toMap());
+      await _institutionRef.collection('curriculum').doc(curriculum.id).set(curriculum.toMap());
+      return curriculum.id!;
     } else {
       var v = await _institutionRef.collection('curriculum').add(curriculum.toMap());
-      curriculum.id = v.id;
+      return v.id;
     }
   }
 
@@ -228,12 +276,13 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<void> saveVenue(VenueModel venue) async {
+  Future<String> saveVenue(VenueModel venue) async {
     if (venue.id != null) {
-      return _institutionRef.collection('venue').doc(venue.id).set(venue.toMap());
+      await _institutionRef.collection('venue').doc(venue.id).set(venue.toMap());
+      return venue.id!;
     } else {
       var v = await _institutionRef.collection('venue').add(venue.toMap());
-      venue.id = v.id;
+      return v.id;
     }
   }
 
@@ -247,7 +296,6 @@ class FStore extends GetxController {
     if (res.docs.isEmpty) {
       throw 'User with provided email was not found in any Institution';
     }
-    // var instid = res.docs[0].reference.parent.parent!.get();
     var inst = await res.docs[0].reference.parent.parent!.get();
     if (!inst.exists) {
       throw 'Institution was not found';
@@ -299,14 +347,14 @@ class FStore extends GetxController {
     return teachers;
   }
 
-  Future saveTeacherRating(TeacherModel teacher, PersonModel user, DateTime date, int rating, String comment) async {
+  Future<void> saveTeacherRating(TeacherModel teacher, PersonModel user, DateTime date, int rating, String comment) async {
     Map<String, dynamic> data = {};
     data['ratedate'] = Timestamp.fromDate(date);
     data['rater_id'] = user.id;
     data['rating'] = rating;
     data['teacher_id'] = teacher.id;
     data['commentary'] = comment;
-    return _institutionRef.collection('teachersrates').add(data);
+    await _institutionRef.collection('teachersrates').add(data);
   }
 
   Future<double> getAverageTeacherRating(TeacherModel teacher) async {
@@ -319,12 +367,12 @@ class FStore extends GetxController {
   }
 
   Future<List<HomeworkModel>> getLessonHomeworksForStudent(
-      DayScheduleModel schedule, CurriculumModel curriculum, StudentModel student) async {
+      DayScheduleModel schedule, CurriculumModel curriculum, StudentModel student, DateTime date) async {
     List<HomeworkModel> ret = [];
     var chw = (await _institutionRef
             .collection('homework')
-            .where('date', isGreaterThanOrEqualTo: schedule.date)
-            .where('date', isLessThan: schedule.date.add(const Duration(hours: 23, minutes: 59)))
+            .where('date', isGreaterThanOrEqualTo: date)
+            .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
             .where('curriculum_id', isEqualTo: curriculum.id)
             .where('student_id', isNull: true)
             .get())
@@ -333,8 +381,8 @@ class FStore extends GetxController {
         .toList();
     var cwhu = (await _institutionRef
             .collection('homework')
-            .where('date', isGreaterThanOrEqualTo: schedule.date)
-            .where('date', isLessThan: schedule.date.add(const Duration(hours: 23, minutes: 59)))
+            .where('date', isGreaterThanOrEqualTo: date)
+            .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
             .where('curriculum_id', isEqualTo: curriculum.id)
             .where('student_id', isEqualTo: student.id)
             .get())
@@ -347,11 +395,11 @@ class FStore extends GetxController {
     return ret;
   }
 
-  Future<List<HomeworkModel>> getLessonHomeworks(DayScheduleModel schedule, CurriculumModel curriculum) async {
+  Future<List<HomeworkModel>> getLessonHomeworks(DayScheduleModel schedule, CurriculumModel curriculum, DateTime date) async {
     return (await _institutionRef
             .collection('homework')
-            .where('date', isGreaterThanOrEqualTo: schedule.date)
-            .where('date', isLessThan: schedule.date.add(const Duration(hours: 23, minutes: 59)))
+            .where('date', isGreaterThanOrEqualTo: date)
+            .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
             .where('curriculum_id', isEqualTo: curriculum.id)
             .get())
         .docs
@@ -359,11 +407,12 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<MarkModel>> getLessonMarksForStudent(DayScheduleModel schedule, LessonModel lesson, StudentModel student) async {
+  Future<List<MarkModel>> getLessonMarksForStudent(
+      DayScheduleModel schedule, LessonModel lesson, StudentModel student, DateTime date) async {
     return (await _institutionRef
             .collection('mark')
-            .where('date', isGreaterThanOrEqualTo: schedule.date)
-            .where('date', isLessThan: schedule.date.add(const Duration(hours: 23, minutes: 59)))
+            .where('date', isGreaterThanOrEqualTo: date)
+            .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
             .where('curriculum_id', isEqualTo: (await lesson.curriculum)!.id)
             .where('lesson_order', isEqualTo: lesson.order)
             .where('student_id', isEqualTo: student.id)
@@ -400,7 +449,7 @@ class FStore extends GetxController {
         var aclass = await schedule.reference.parent.parent!.get();
         var classmodel = ClassModel.fromMap(aclass.id, aclass.data()!);
         if (days[day] == null) {
-          var schedulemodel = TeacherScheduleModel.fromMap(classmodel, week, schedule.id, schedule.data()!);
+          var schedulemodel = TeacherScheduleModel.fromMap(classmodel, schedule.id, schedule.data()!);
           days[day] = schedulemodel;
         }
         var schedulemodel = days[day]!;

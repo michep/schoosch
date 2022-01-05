@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
+import 'package:schoosch/widgets/utils.dart';
 
 class WeekSelector extends StatelessWidget {
   WeekSelector({Key? key}) : super(key: key);
@@ -39,6 +39,6 @@ class WeekSelector extends StatelessWidget {
   }
 
   String formatWeek(Week week) {
-    return '${DateFormat('dd MMM', 'ru').format(week.day(0))} \u2014 ${DateFormat('dd MMM', 'ru').format(week.day(7).subtract(const Duration(seconds: 1)))}';
+    return Utils.formatPeriod(week.day(0), week.day(7).subtract(const Duration(seconds: 1)), format: 'dd MMM');
   }
 }

@@ -31,7 +31,7 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
           children: [
             Card(
               child: ExpansionTile(
-                title: const Text('Поиск'),
+                title: inSearch ? const Text('Поиск', style: TextStyle(fontStyle: FontStyle.italic)) : const Text('Поиск'),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
@@ -88,21 +88,25 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
         (curriculum.alias != null && curriculum.alias!.toUpperCase().contains(_name.text.toUpperCase()));
   }
 
-  Future onTap(CurriculumModel curriculum) async {
+  bool get inSearch {
+    return _name.text.isNotEmpty;
+  }
+
+  Future<void> onTap(CurriculumModel curriculum) async {
     if (widget.selectionMode) {
-      return Get.back(result: curriculum);
+      return Get.back<CurriculumModel>(result: curriculum);
     } else {
-      var res = await Get.to<String>(() => CurriculumPage(curriculum, curriculum.name), transition: Transition.rightToLeft);
-      if (res != null && res == 'refresh') {
+      var res = await Get.to<CurriculumModel>(() => CurriculumPage(curriculum, curriculum.name), transition: Transition.rightToLeft);
+      if (res is CurriculumModel) {
         setState(() {});
       }
     }
   }
 
-  Future newCurriculum() async {
+  Future<void> newCurriculum() async {
     var ncurr = CurriculumModel.empty();
-    var res = await Get.to<String>(() => CurriculumPage(ncurr, 'Новый учебный предмет'));
-    if (res != null && res == 'refresh') {
+    var res = await Get.to<CurriculumModel>(() => CurriculumPage(ncurr, 'Новый учебный предмет'));
+    if (res is CurriculumModel) {
       setState(() {});
     }
   }

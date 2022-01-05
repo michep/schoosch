@@ -35,7 +35,8 @@ class _DayLessontimeListPageState extends State<DayLessontimeListPage> {
                     (v) => ListTile(
                       onTap: () => onTap(v),
                       title: Text(v.name),
-                      trailing: const Icon(Icons.chevron_right),
+                      leading: widget.selectionMode ? const Icon(Icons.chevron_left) : null,
+                      trailing: widget.selectionMode ? null : const Icon(Icons.chevron_right),
                     ),
                   ),
                 ],
@@ -47,10 +48,10 @@ class _DayLessontimeListPageState extends State<DayLessontimeListPage> {
 
   Future<void> onTap(DayLessontimeModel dayLessontime) async {
     if (widget.selectionMode) {
-      return Get.back(result: dayLessontime);
+      return Get.back<DayLessontimeModel>(result: dayLessontime);
     } else {
-      // var res = await Get.to<String>(() => DayLessontimePage(dayLessontime));
-      // if (res != null && res == 'refresh') {
+      // var res = await Get.to<DayLessontimeModel>(() => DayLessontimePage(dayLessontime));
+      // if (res is DayLessontimeModel) {
       setState(() {});
       // }
     }
@@ -58,8 +59,8 @@ class _DayLessontimeListPageState extends State<DayLessontimeListPage> {
 
   Future<void> newDayLessontime() async {
     //   var ndaylt = DayLessontimeModel.empty();
-    //   var res = await Get.to<String>(() => DayLessontimePage(ndaylt));
-    //   if (res != null && res == 'refresh') {
+    //   var res = await Get.to<DayLessontimeModel>(() => DayLessontimePage(ndaylt));
+    //   if (res is DayLessontimeModel) {
     //     setState(() {});
     //   }
   }

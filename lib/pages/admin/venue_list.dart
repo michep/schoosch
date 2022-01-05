@@ -30,7 +30,7 @@ class _VenueListPageState extends State<VenueListPage> {
           children: [
             Card(
               child: ExpansionTile(
-                title: const Text('Поиск'),
+                title: inSearch ? const Text('Поиск', style: TextStyle(fontStyle: FontStyle.italic)) : const Text('Поиск'),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
@@ -80,21 +80,25 @@ class _VenueListPageState extends State<VenueListPage> {
     return venue.name.toUpperCase().contains(_name.text.toUpperCase());
   }
 
+  bool get inSearch {
+    return _name.text.isNotEmpty;
+  }
+
   Future onTap(VenueModel venue) async {
     if (widget.selectionMode) {
-      return Get.back(result: venue);
+      return Get.back<VenueModel>(result: venue);
     } else {
-      var res = await Get.to<String>(() => VenuePage(venue, venue.name), transition: Transition.rightToLeft);
-      if (res != null && res == 'refresh') {
+      var res = await Get.to<VenueModel>(() => VenuePage(venue, venue.name), transition: Transition.rightToLeft);
+      if (res is VenueModel) {
         setState(() {});
       }
     }
   }
 
-  Future newVenue() async {
+  Future<void> newVenue() async {
     var nvenue = VenueModel.empty();
-    var res = await Get.to<String>(() => VenuePage(nvenue, 'Новый кабинет'));
-    if (res != null && res == 'refresh') {
+    var res = await Get.to<VenueModel>(() => VenuePage(nvenue, 'Новый кабинет'));
+    if (res is VenueModel) {
       setState(() {});
     }
   }

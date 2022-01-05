@@ -7,13 +7,15 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 
 class InstitutionModel {
-  late final String id;
+  String? _id;
   late final String name;
   late final String address;
-  late final Map<String, String> attributes;
+  final Map<String, String> attributes = {};
 
-  InstitutionModel.fromMap(this.id, Map<String, dynamic> map) {
-    name = map['name'] != null ? map['name'] as String : throw 'need name key in institution $id';
+  String? get id => _id;
+
+  InstitutionModel.fromMap(this._id, Map<String, dynamic> map) {
+    name = map['name'] != null ? map['name'] as String : throw 'need name key in institution $_id';
     address = map['address'] != null ? map['address'] as String : '';
   }
 

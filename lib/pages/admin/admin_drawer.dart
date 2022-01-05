@@ -25,7 +25,7 @@ class AdminDrawer extends StatelessWidget {
             ),
             TextButton(
               child: const Text('Кабинеты и помещения'),
-              onPressed: openVenuePage,
+              onPressed: openVenuesPage,
             ),
             TextButton(
               child: const Text('Сотрудники, учителя и ученики'),
@@ -33,15 +33,15 @@ class AdminDrawer extends StatelessWidget {
             ),
             TextButton(
               child: const Text('Учебные предметы'),
-              onPressed: openCurriculumPage,
+              onPressed: openCurriculumsPage,
             ),
             TextButton(
               child: const Text('Учебные классы'),
-              onPressed: openClassPage,
+              onPressed: openClassesPage,
             ),
             TextButton(
               child: const Text('Расписание уроков на неделю'),
-              onPressed: () {},
+              onPressed: openSchedulesPage,
             ),
           ],
         ),
@@ -49,28 +49,33 @@ class AdminDrawer extends StatelessWidget {
     );
   }
 
-  void openInstitutionPage() {
-    Get.back();
+  Future<void> openInstitutionPage() async {
+    // Get.back();
     Get.to(() => InstitutionPage(InstitutionModel.currentInstitution));
   }
 
-  void openVenuePage() {
-    Get.back();
+  Future<void> openVenuesPage() async {
+    // Get.back();
     Get.to(() => VenueListPage(InstitutionModel.currentInstitution));
   }
 
   Future<void> openPeoplePage() async {
-    Get.back();
+    // Get.back();
     Get.to(() => PeopleListPage(InstitutionModel.currentInstitution));
   }
 
-  Future<void> openCurriculumPage() async {
-    Get.back();
+  Future<void> openCurriculumsPage() async {
+    // Get.back();
     Get.to(() => CurriculumListPage(InstitutionModel.currentInstitution));
   }
 
-  Future<void> openClassPage() async {
-    Get.back();
+  Future<void> openClassesPage() async {
+    // Get.back();
     Get.to(() => ClassListPage(InstitutionModel.currentInstitution));
+  }
+
+  Future<void> openSchedulesPage() async {
+    // Get.back();
+    Get.to(() => ClassListPage(InstitutionModel.currentInstitution, listMode: ClassListMode.schedules));
   }
 }

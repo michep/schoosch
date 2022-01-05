@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_field/date_field.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
@@ -108,14 +109,23 @@ class _PersonPageState extends State<PersonPage> {
                         ),
                         validator: (value) => Utils.validateTextNotEmpty(value, 'Email адрес должен быть заполнен'),
                       ),
-                      DateTimeFormField(
+                      DateTimeField(
                         initialValue: _birthday,
-                        onDateSelected: (DateTime? date) => _birthday = date,
+                        format: DateFormat('dd MMM yyyy', 'ru'),
+                        onChanged: (DateTime? date) => _birthday = date,
                         decoration: const InputDecoration(
                           label: Text('Дата рождения'),
                         ),
-                        mode: DateTimeFieldPickerMode.date,
                         validator: (value) => Utils.validateDateTimeNotEmpty(value, ''),
+                        onShowPicker: (context, currentValue) async {
+                          final date = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime(1900),
+                            initialDate: currentValue ?? DateTime.now(),
+                            lastDate: DateTime(2100),
+                          );
+                          return date;
+                        },
                       ),
                     ],
                   ),
@@ -283,8 +293,8 @@ class _PersonPageState extends State<PersonPage> {
   }
 
   Future save(PersonModel person) async {
-    Map<String, dynamic> map = {};
     if (_formKey.currentState!.validate()) {
+      Map<String, dynamic> map = {};
       if (isParent) {
         map['student_ids'] = children.map((e) => e.id!).toList();
       }
@@ -299,13 +309,13 @@ class _PersonPageState extends State<PersonPage> {
       map['email'] = _email.text;
       map['birthday'] = _birthday != null ? Timestamp.fromDate(_birthday!) : null;
 
-      var per = PersonModel.fromMap(person.id, map);
+      var nperson = PersonModel.fromMap(person.id, map);
       if (isParent) {
-        await per.asParent!.save();
+        await nperson.asParent!.save();
       } else {
-        await per.save();
+        await nperson.save();
       }
-      Get.back<PersonModel>(result: per);
+      Get.back<PersonModel>(result: nperson);
     }
   }
 

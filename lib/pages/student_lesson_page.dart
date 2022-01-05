@@ -55,7 +55,7 @@ class StudentLessonPage extends StatelessWidget {
             height: 5,
           ),
           FutureBuilder<List<HomeworkModel>?>(
-              future: _lesson.homeworksForStudent(_student),
+              future: _lesson.homeworksForStudent(_student, _date),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Text('');
@@ -98,7 +98,7 @@ class StudentLessonPage extends StatelessWidget {
                 );
               }),
           FutureBuilder<List<MarkModel>?>(
-            future: _lesson.marksForStudent(_student),
+            future: _lesson.marksForStudent(_student, _date),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Text('');

@@ -2,15 +2,17 @@ import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 
 class VenueModel {
-  late String? id;
+  late String? _id;
   late String name;
+
+  String? get id => _id;
 
   VenueModel.empty()
       : this.fromMap(null, <String, dynamic>{
           'name': '',
         });
 
-  VenueModel.fromMap(this.id, Map<String, Object?> map) {
+  VenueModel.fromMap(this._id, Map<String, Object?> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in venue $id';
   }
 
@@ -20,7 +22,9 @@ class VenueModel {
     return res;
   }
 
-  Future<void> save() async {
-    return Get.find<FStore>().saveVenue(this);
+  Future<VenueModel> save() async {
+    var id = await Get.find<FStore>().saveVenue(this);
+    _id ??= id;
+    return this;
   }
 }
