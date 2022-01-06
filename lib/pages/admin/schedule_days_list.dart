@@ -68,7 +68,7 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
     var nschedule = DayScheduleModel.empty(widget.aclass, day);
     nschedule.day = day;
     var res = await Get.to<DayScheduleModel>(
-        () => ScheduleLessonsListPage(widget.aclass, nschedule, '${nschedule.aclass.name}, ${Utils.dayName(nschedule.day - 1)}'));
+        () => ScheduleLessonsListPage(widget.aclass, nschedule, '${nschedule.aclass.name}, ${Utils.dayName(day)}'));
     if (res is DayScheduleModel) {
       setState(() {});
     }
