@@ -38,7 +38,7 @@ class ProfilePage extends StatelessWidget {
   Widget _chateChildW(PersonModel user) {
     return user.currentType == 'parent'
         ? FutureBuilder(
-            future: Future.wait([user.asParent!.currentChild, user.asParent!.children]),
+            future: Future.wait([user.asParent!.currentChild, user.asParent!.children()]),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return const SizedBox.shrink();
               var list = snapshot.data! as List<dynamic>;
@@ -62,7 +62,7 @@ class ProfilePage extends StatelessWidget {
     Get.bottomSheet(
       Card(
         child: FutureBuilder<List<StudentModel>>(
-            future: user.children,
+            future: user.children(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return const SizedBox.shrink();
               return Column(

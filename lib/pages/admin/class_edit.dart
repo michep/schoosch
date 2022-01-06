@@ -8,6 +8,8 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/daylessontime_list.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
+import 'package:schoosch/widgets/selectablevalue_field.dart';
+import 'package:schoosch/widgets/selectablevaluelist_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class ClassPage extends StatefulWidget {
@@ -34,27 +36,6 @@ class _ClassPageState extends State<ClassPage> {
   void initState() {
     _name.value = TextEditingValue(text: widget.aclass.name);
     _grade.value = TextEditingValue(text: widget.aclass.grade != 0 ? widget.aclass.grade.toString() : '');
-    widget.aclass.students.then((value) {
-      setState(() {
-        students.addAll(value);
-      });
-    });
-    widget.aclass.master.then((value) {
-      if (value != null) {
-        setState(() {
-          _mastercont.text = value.fullName;
-          master = value;
-        });
-      }
-    });
-    widget.aclass.getDayLessontime().then((value) {
-      if (value != null) {
-        setState(() {
-          _daylessontimecont.text = value.name;
-          dayLessontime = value;
-        });
-      }
-    });
     super.initState();
   }
 
@@ -101,12 +82,45 @@ class _ClassPageState extends State<ClassPage> {
                         ),
                         validator: gradeValidator,
                       ),
-                      masterFormField(context),
-                      dayLessontimeField(context),
+                      SelectableValueFormField<PersonModel>(
+                        title: 'Преподаватель',
+                        initFutureFunc: initMaster,
+                        titleFunc: (value) => value?.fullName ?? '',
+                        listFunc: () => PeopleListPage(
+                          InstitutionModel.currentInstitution,
+                          selectionMode: true,
+                          type: 'teacher',
+                        ),
+                        detailsFunc: () => PersonPage(master!, master!.fullName),
+                        validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Преподаватель должен быть выбран'),
+                        callback: (value) => setMaster(value),
+                      ),
+                      SelectableValueFormField<DayLessontimeModel>(
+                        title: 'Расписание времени уроков',
+                        initFutureFunc: initLessonTime,
+                        titleFunc: (value) => value?.name ?? '',
+                        listFunc: () => DayLessontimeListPage(
+                          InstitutionModel.currentInstitution,
+                          selectionMode: true,
+                        ),
+                        // detailsFunc: () => PersonPage(master!, master!.fullName),
+                        validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Расписание должно быть выбрано'),
+                        callback: (value) => setLessonTime(value),
+                      ),
                     ],
                   ),
                 ),
-                childrenFormField(context),
+                SelectableValueListFormField<PersonModel>(
+                  title: 'Учащиеяся класса',
+                  initListFutureFunc: initStudents,
+                  titleFunc: (value) => value?.fullName ?? '',
+                  listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'student'),
+                  detailsFunc: (value) => PersonPage(value!, value.fullName),
+                  listValidatorFunc: () => students.isEmpty ? 'Нужно выбрать учащихся' : null,
+                  addElementFunc: addChild,
+                  setElementFunc: setChild,
+                  removeElementFunc: removeChild,
+                ),
                 ElevatedButton(
                   child: const Text('Сохранить изменения'),
                   onPressed: () => save(widget.aclass),
@@ -119,6 +133,39 @@ class _ClassPageState extends State<ClassPage> {
     );
   }
 
+  Future<PersonModel> initMaster() async {
+    return widget.aclass.master.then((value) {
+      if (value != null) {
+        _mastercont.text = value.fullName;
+        master = value;
+      }
+      return master as PersonModel;
+    });
+  }
+
+  bool setMaster(PersonModel? value) {
+    if (value != null) {
+      if (value.asTeacher != null) {
+        master = value.asTeacher;
+        return true;
+      } else {
+        if (value is TeacherModel) {
+          master = (value);
+          return true;
+        } else {
+          master = null;
+          Utils.showErrorSnackbar(
+            'Выбранный персонаж не является преподавателем',
+          );
+          return false;
+        }
+      }
+    } else {
+      master = null;
+      return true;
+    }
+  }
+
   String? gradeValidator(String? value) {
     String? err;
     err = Utils.validateTextNotEmpty(value, 'Год обучения должен быть заполнен');
@@ -128,234 +175,68 @@ class _ClassPageState extends State<ClassPage> {
     if (g < 1 || g > 11) return 'Год обучения должен быть между 1 и 11';
   }
 
-  Widget dayLessontimeField(BuildContext context) {
-    return TextFormField(
-      controller: _daylessontimecont,
-      showCursor: false,
-      keyboardType: TextInputType.none,
-      decoration: InputDecoration(
-        label: const Text(
-          'Расписание времени уроков',
-        ),
-        suffixIcon: Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: dayLessontime == null
-                ? IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: selectDayLessontime,
-                  )
-                : IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: removeDayLessontime,
-                  )),
-      ),
-      validator: (value) => Utils.validateTextNotEmpty(value, 'Расписание должно быть выбрано'),
-    );
-  }
-
-  Widget masterFormField(BuildContext context) {
-    return TextFormField(
-      controller: _mastercont,
-      showCursor: false,
-      keyboardType: TextInputType.none,
-      decoration: InputDecoration(
-        label: const Text(
-          'Классный руководитель',
-        ),
-        suffixIcon: Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: master == null
-              ? IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: selectMaster,
-                )
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.open_in_new),
-                      onPressed: openMaster,
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: removeMaster,
-                    ),
-                  ],
-                ),
-        ),
-      ),
-      validator: (value) => Utils.validateTextNotEmpty(value, 'Классный руководитель должен быть выбран'),
-    );
-  }
-
-  Future<void> selectMaster() async {
-    var res = await Get.to<PersonModel>(
-      () => PeopleListPage(
-        InstitutionModel.currentInstitution,
-        selectionMode: true,
-        type: 'teacher',
-      ),
-      transition: Transition.rightToLeft,
-    );
-    if (res is PersonModel) {
-      if (res.asTeacher == null) {
-        removeMaster();
-        Utils.showErrorSnackbar(
-          'Выбранный персонаж не является преподавателем',
-        );
-        return;
-      }
-      setState(() {
-        _mastercont.text = res.fullName;
-        master = res.asTeacher;
-      });
-    }
-  }
-
-  Future<void> openMaster() async {
-    var res = await Get.to<PersonModel>(
-      () => PersonPage(master!, master!.fullName),
-      transition: Transition.rightToLeft,
-    );
-    if (res is PersonModel) {
-      if (res.asTeacher == null) {
-        removeMaster();
-        Utils.showErrorSnackbar(
-          'Выбранный персонаж больше не является преподавателем',
-        );
-        return;
-      }
-      setState(() {
-        _mastercont.text = res.fullName;
-        master = res.asTeacher;
-      });
-    }
-  }
-
-  void removeMaster() {
-    setState(() {
-      master = null;
-      _mastercont.text = '';
+  Future<DayLessontimeModel?> initLessonTime() async {
+    return widget.aclass.getDayLessontime().then((value) {
+      return value;
     });
   }
 
-  Widget childrenFormField(BuildContext context) {
-    return FormField<List<StudentModel>>(
-      initialValue: students,
-      validator: (_) {
-        return students.isEmpty ? 'Нужно выбрать учащихся' : null;
-      },
-      builder: (fieldstate) => ExpansionTile(
-        controlAffinity: ListTileControlAffinity.leading,
-        title: Text('Учащиеяся класса (${students.length})'),
-        subtitle: fieldstate.hasError
-            ? Text(fieldstate.errorText!, style: TextStyle(fontSize: 12, color: Theme.of(context).errorColor))
-            : const SizedBox.shrink(),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.add,
-            color: Theme.of(context).primaryColor,
-          ),
-          onPressed: addChild,
-        ),
-        children: [
-          ...students.map((s) => ListTile(
-                title: SelectableText(s.fullName),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.open_in_new),
-                      onPressed: () => openChild(s),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => removeChild(s),
-                    ),
-                  ],
-                ),
-              )),
-        ],
-      ),
-    );
+  bool setLessonTime(DayLessontimeModel? value) {
+    dayLessontime = value;
+    return true;
   }
 
-  Future<void> addChild() async {
-    var res = await Get.to<PersonModel>(
-      () => PeopleListPage(
-        InstitutionModel.currentInstitution,
-        selectionMode: true,
-        type: 'student',
-      ),
-      transition: Transition.rightToLeft,
-    );
-    if (res is PersonModel) {
-      if (res.asStudent == null) {
-        Utils.showErrorSnackbar(
-          'Выбранный персонаж не является учащимся',
-        );
-        return;
-      }
-      if (students.contains(res)) {
-        Utils.showErrorSnackbar(
-          'Выбранный учащийся уже присутствует в группе',
-        );
-        return;
-      }
-      setState(() {
-        students.add(res.asStudent!);
-      });
-    }
-  }
-
-  Future<void> openChild(StudentModel student) async {
-    var res = await Get.to<PersonModel>(
-      () => PersonPage(student, student.fullName),
-      transition: Transition.rightToLeft,
-    );
-    if (res is PersonModel) {
-      if (res.asStudent == null) {
-        removeChild(student);
-        Utils.showErrorSnackbar(
-          'Выбранный персонаж больше не является учащимся',
-        );
-        return;
-      }
-      setState(() {
-        var i = students.indexOf(student);
-        students.remove(student);
-        students.insert(i, res.asStudent!);
-      });
-    }
-  }
-
-  void removeChild(StudentModel student) {
-    setState(() {
-      students.remove(student);
+  Future<List<PersonModel>> initStudents() async {
+    return widget.aclass.students(forceRefresh: true).then((value) {
+      students.addAll(value);
+      return students;
     });
   }
 
-  Future<void> selectDayLessontime() async {
-    var res = await Get.to<DayLessontimeModel>(
-      () => DayLessontimeListPage(
-        InstitutionModel.currentInstitution,
-        selectionMode: true,
-      ),
-      transition: Transition.rightToLeft,
-    );
-    if (res != null) {
-      setState(() {
-        _daylessontimecont.text = res.name;
-        dayLessontime = res;
-      });
+  bool addChild(PersonModel? value) {
+    if (value == null) return false;
+    if (value.asStudent == null) {
+      Utils.showErrorSnackbar(
+        'Выбранный персонаж не является учащимся',
+      );
+      return false;
     }
+    if (students.contains(value)) {
+      Utils.showErrorSnackbar(
+        'Выбранный учащийся уже присутствует в группе',
+      );
+      return false;
+    }
+    setState(() {
+      students.add(value.asStudent!);
+    });
+    return true;
   }
 
-  void removeDayLessontime() {
+  bool setChild(PersonModel value) {
+    StudentModel sm;
+    if (!value.types.contains('student')) {
+      Utils.showErrorSnackbar(
+        'Выбранный персонаж больше не является учащимся',
+      );
+      return false;
+    }
+
+    value.asStudent != null ? sm = value.asStudent! : sm = (value as StudentModel);
+
     setState(() {
-      dayLessontime = null;
-      _daylessontimecont.text = '';
+      var i = students.indexOf(sm);
+      students.remove(sm);
+      students.insert(i, sm);
     });
+    return true;
+  }
+
+  bool removeChild(PersonModel value) {
+    setState(() {
+      students.remove(value);
+    });
+    return true;
   }
 
   Future<void> save(ClassModel aclass) async {

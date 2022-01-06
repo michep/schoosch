@@ -83,8 +83,9 @@ class ClassModel {
     return Get.find<FStore>().getClassTeachers(this);
   }
 
-  Future<List<StudentModel>> get students async {
-    if (!_studentsLoaded) {
+  Future<List<StudentModel>> students({forceRefresh = false}) async {
+    if (!_studentsLoaded || forceRefresh) {
+      _students.clear();
       _students.addAll((await Get.find<FStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
       _studentsLoaded = true;
     }

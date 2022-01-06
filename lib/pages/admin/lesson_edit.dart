@@ -29,7 +29,6 @@ class _LessonPageState extends State<LessonPage> {
 
   @override
   void initState() {
-    // _order.text = widget.lesson.order.toString();
     super.initState();
   }
 
@@ -54,7 +53,7 @@ class _LessonPageState extends State<LessonPage> {
               children: [
                 SelectableValueFormField<CurriculumModel>(
                   title: 'Учебный предмет',
-                  initFuture: widget.lesson.curriculum,
+                  initFutureFunc: initCurriculum,
                   titleFunc: (value) => value?.name ?? '',
                   listFunc: () => CurriculumListPage(
                     InstitutionModel.currentInstitution,
@@ -66,7 +65,7 @@ class _LessonPageState extends State<LessonPage> {
                 ),
                 SelectableValueFormField<VenueModel>(
                   title: 'Кабинет',
-                  initFuture: widget.lesson.venue,
+                  initFutureFunc: initVenue,
                   titleFunc: (value) => value?.name ?? '',
                   listFunc: () => VenueListPage(
                     InstitutionModel.currentInstitution,
@@ -88,12 +87,28 @@ class _LessonPageState extends State<LessonPage> {
     );
   }
 
-  void setCurriculum(CurriculumModel? value) {
-    curriculum = value;
+  Future<CurriculumModel?> initCurriculum() {
+    return widget.lesson.curriculum.then((value) {
+      curriculum = value;
+      return curriculum;
+    });
   }
 
-  void setVenue(VenueModel? value) {
+  bool setCurriculum(CurriculumModel? value) {
+    curriculum = value;
+    return true;
+  }
+
+  Future<VenueModel?> initVenue() {
+    return widget.lesson.venue.then((value) {
+      venue = value;
+      return venue;
+    });
+  }
+
+  bool setVenue(VenueModel? value) {
     venue = value;
+    return true;
   }
 
   Future<void> save(LessonModel lesson) async {

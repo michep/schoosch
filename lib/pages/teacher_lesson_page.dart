@@ -52,7 +52,7 @@ class TeacherLessonPage extends StatelessWidget {
             height: 5,
           ),
           FutureBuilder<List<StudentModel>>(
-            future: _lesson.aclass.students,
+            future: _lesson.aclass.students(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Text('');

@@ -2,46 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 typedef TitleFunc<T> = String Function(T? value);
+typedef FutureFunc<T> = Future<T?> Function();
 typedef WidgetFunc = Widget Function();
-typedef CallbackFunc<T> = void Function(T? value);
+typedef CallbackMaybeFunc<T> = bool Function(T? value);
 
 class SelectableValueFormField<T> extends StatefulWidget {
   final String title;
-  final Future<T?> initFuture;
+  final FutureFunc<T?> initFutureFunc;
   final WidgetFunc listFunc;
-  final WidgetFunc detailsFunc;
-  final TitleFunc titleFunc;
-  final FormFieldValidator<String> validatorFunc;
-  final CallbackFunc? callback;
-  final TextEditingController? controller;
+  final WidgetFunc? detailsFunc;
+  final TitleFunc<T> titleFunc;
+  final FormFieldValidator<String>? validatorFunc;
+  final CallbackMaybeFunc<T> callback;
 
   const SelectableValueFormField({
     required this.title,
-    required this.initFuture,
+    required this.initFutureFunc,
     required this.listFunc,
-    required this.detailsFunc,
     required this.titleFunc,
-    required this.validatorFunc,
-    this.callback,
-    this.controller,
+    required this.callback,
+    this.detailsFunc,
+    this.validatorFunc,
     Key? key,
   }) : super(key: key);
 
   @override
-  _SelectableValueFormFieldState createState() => _SelectableValueFormFieldState();
+  _SelectableValueFormFieldState<T> createState() => _SelectableValueFormFieldState<T>();
 }
 
 class _SelectableValueFormFieldState<T> extends State<SelectableValueFormField<T>> {
-  late TextEditingController _controller;
+  late final TextEditingController _controller = TextEditingController();
   T? _data;
 
   @override
   void initState() {
-    _controller = widget.controller ?? TextEditingController();
-    widget.initFuture.then((value) => setState(() {
-          _controller.text = widget.titleFunc(value);
-          setValue(value);
-        }));
+    widget.initFutureFunc().then((res) => setState(() => setValue(res)));
     super.initState();
   }
 
@@ -63,10 +58,12 @@ class _SelectableValueFormFieldState<T> extends State<SelectableValueFormField<T
               : Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.open_in_new),
-                      onPressed: openData,
-                    ),
+                    widget.detailsFunc != null
+                        ? IconButton(
+                            icon: const Icon(Icons.open_in_new),
+                            onPressed: openData,
+                          )
+                        : const SizedBox.shrink(),
                     IconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: removeData,
@@ -82,32 +79,30 @@ class _SelectableValueFormFieldState<T> extends State<SelectableValueFormField<T
   Future<void> selectData() async {
     var res = await Get.to<T>(widget.listFunc, transition: Transition.rightToLeft);
     if (res != null) {
-      setState(() {
-        _controller.text = widget.titleFunc(res);
-        setValue(res);
-      });
+      setState(() => setValue(res));
     }
   }
 
   Future<void> openData() async {
-    var res = await Get.to<T>(widget.detailsFunc, transition: Transition.rightToLeft);
-    if (res != null) {
-      setState(() {
-        _controller.text = widget.titleFunc(res);
-        setValue(res);
-      });
+    if (widget.detailsFunc != null) {
+      var res = await Get.to<T>(widget.detailsFunc, transition: Transition.rightToLeft);
+      if (res != null) {
+        setState(() => setValue(res));
+      }
     }
   }
 
   void removeData() {
-    setState(() {
-      _controller.text = '';
-      setValue(null);
-    });
+    setState(() => setValue(null));
   }
 
   void setValue(T? value) {
-    _data = value;
-    if (widget.callback != null) widget.callback!(value);
+    if (widget.callback(value)) {
+      _data = value;
+      _controller.text = widget.titleFunc(value);
+    } else {
+      _data = null;
+      _controller.text = '';
+    }
   }
 }

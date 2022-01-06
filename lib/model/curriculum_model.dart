@@ -40,8 +40,9 @@ class CurriculumModel {
     return _master;
   }
 
-  Future<List<StudentModel>> get students async {
-    if (!_studentsLoaded) {
+  Future<List<StudentModel>> students({bool forceRefresh = false}) async {
+    if (!_studentsLoaded || forceRefresh) {
+      _students.clear();
       _students.addAll((await Get.find<FStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
       _studentsLoaded = true;
     }

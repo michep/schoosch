@@ -20,10 +20,11 @@ class StudentScheduleSwitcherState extends State<StudentScheduleSwitcher> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<ClassModel>(
+    return FutureBuilder<ClassModel?>(
         future: widget.student.studentClass,
         builder: (context, classSnap) {
           if (!classSnap.hasData) return Utils.progressIndicator();
+          if (classSnap.data == null) return const Center(child: Text('У ученика не определен класс'));
           return PageView.custom(
             controller: _cw.pageController,
             onPageChanged: _cw.setIdx,

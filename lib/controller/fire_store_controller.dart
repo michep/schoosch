@@ -311,12 +311,13 @@ class FStore extends GetxController {
     return PersonModel.fromMap(res.docs[0].id, res.docs[0].data());
   }
 
-  Future<ClassModel> getClassForStudent(PersonModel student) async {
+  Future<ClassModel?> getClassForStudent(PersonModel student) async {
     var res = await _institutionRef.collection('class').where('student_ids', arrayContains: student.id).limit(1).get();
     if (res.docs.isEmpty) {
-      throw 'Current user is not assigned to any class';
+      return null;
+    } else {
+      return ClassModel.fromMap(res.docs[0].id, res.docs[0].data());
     }
-    return ClassModel.fromMap(res.docs[0].id, res.docs[0].data());
   }
 
   Future<Map<TeacherModel, List<String>>> getClassTeachers(ClassModel aclass) async {

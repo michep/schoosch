@@ -5,6 +5,8 @@ import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
+import 'package:schoosch/widgets/selectablevalue_field.dart';
+import 'package:schoosch/widgets/selectablevaluelist_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class CurriculumPage extends StatefulWidget {
@@ -14,10 +16,10 @@ class CurriculumPage extends StatefulWidget {
   const CurriculumPage(this.curriculum, this.title, {Key? key}) : super(key: key);
 
   @override
-  State<CurriculumPage> createState() => _VenuePageState();
+  State<CurriculumPage> createState() => _CurriculumPageState();
 }
 
-class _VenuePageState extends State<CurriculumPage> {
+class _CurriculumPageState extends State<CurriculumPage> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _alias = TextEditingController();
   final TextEditingController _mastercont = TextEditingController();
@@ -29,19 +31,6 @@ class _VenuePageState extends State<CurriculumPage> {
   void initState() {
     _name.value = TextEditingValue(text: widget.curriculum.name);
     _alias.value = TextEditingValue(text: widget.curriculum.alias ?? '');
-    widget.curriculum.students.then((value) {
-      setState(() {
-        students.addAll(value);
-      });
-    });
-    widget.curriculum.master.then((value) {
-      if (value != null) {
-        setState(() {
-          _mastercont.text = value.fullName;
-          master = value;
-        });
-      }
-    });
     super.initState();
   }
 
@@ -85,11 +74,28 @@ class _VenuePageState extends State<CurriculumPage> {
                           ),
                         ),
                       ),
-                      masterFormField(context),
+                      SelectableValueFormField<PersonModel>(
+                        title: 'Преподаватель',
+                        initFutureFunc: initMaster,
+                        titleFunc: (value) => value?.fullName ?? '',
+                        listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'teacher'),
+                        detailsFunc: () => PersonPage(master!, master!.fullName),
+                        validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Преподаватель должен быть выбран'),
+                        callback: (value) => setMaster(value),
+                      ),
                     ],
                   ),
                 ),
-                childrenFormField(context),
+                SelectableValueListFormField<PersonModel>(
+                  title: 'Группа учащихся',
+                  initListFutureFunc: initStudents,
+                  titleFunc: (value) => value?.fullName ?? '',
+                  listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'student'),
+                  detailsFunc: (value) => PersonPage(value!, value.fullName),
+                  addElementFunc: addStudent,
+                  setElementFunc: setStudent,
+                  removeElementFunc: removeStudent,
+                ),
                 ElevatedButton(
                   child: const Text('Сохранить изменения'),
                   onPressed: () => save(widget.curriculum),
@@ -102,183 +108,89 @@ class _VenuePageState extends State<CurriculumPage> {
     );
   }
 
-  Widget masterFormField(BuildContext context) {
-    return TextFormField(
-      controller: _mastercont,
-      showCursor: false,
-      keyboardType: TextInputType.none,
-      decoration: InputDecoration(
-        label: const Text(
-          'Преподаватель',
-        ),
-        suffixIcon: Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: master == null
-              ? IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: selectMaster,
-                )
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.open_in_new),
-                      onPressed: openMaster,
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: removeMaster,
-                    ),
-                  ],
-                ),
-        ),
-      ),
-      validator: (value) => Utils.validateTextNotEmpty(value, 'Преподаватель должен быть выбран'),
-    );
-  }
-
-  Future<void> selectMaster() async {
-    var res = await Get.to<PersonModel>(
-      () => PeopleListPage(
-        InstitutionModel.currentInstitution,
-        selectionMode: true,
-        type: 'teacher',
-      ),
-      transition: Transition.rightToLeft,
-    );
-    if (res is PersonModel) {
-      if (res.asTeacher == null) {
-        removeMaster();
-        Utils.showErrorSnackbar(
-          'Выбранный персонаж не является преподавателем',
-        );
-        return;
+  Future<PersonModel> initMaster() async {
+    return widget.curriculum.master.then((value) {
+      if (value != null) {
+        _mastercont.text = value.fullName;
+        master = value;
       }
-      setState(() {
-        _mastercont.text = res.fullName;
-        master = res.asTeacher;
-      });
-    }
+      return master as PersonModel;
+    });
   }
 
-  Future<void> openMaster() async {
-    var res = await Get.to<PersonModel>(
-      () => PersonPage(master!, master!.fullName),
-      transition: Transition.rightToLeft,
-    );
-    if (res is PersonModel) {
-      if (res.asTeacher == null) {
-        removeMaster();
-        Utils.showErrorSnackbar(
-          'Выбранный персонаж больше не является преподавателем',
-        );
-        return;
+  bool setMaster(PersonModel? value) {
+    if (value != null) {
+      if (value.asTeacher != null) {
+        master = value.asTeacher;
+        return true;
+      } else {
+        if (value is TeacherModel) {
+          master = (value);
+          return true;
+        } else {
+          Utils.showErrorSnackbar(
+            'Выбранный персонаж не является преподавателем',
+          );
+          return false;
+        }
       }
-      setState(() {
-        _mastercont.text = res.fullName;
-        master = res.asTeacher;
-      });
-    }
-  }
-
-  void removeMaster() {
-    setState(() {
+    } else {
       master = null;
-      _mastercont.text = '';
+      return true;
+    }
+  }
+
+  Future<List<PersonModel>> initStudents() async {
+    return widget.curriculum.students(forceRefresh: true).then((value) {
+      students.addAll(value);
+      return students;
     });
   }
 
-  Widget childrenFormField(BuildContext context) {
-    return FormField<List<StudentModel>>(
-      initialValue: students,
-      builder: (fieldstate) => ExpansionTile(
-        controlAffinity: ListTileControlAffinity.leading,
-        title: Text('Группа учащихся (${students.length})'),
-        subtitle: fieldstate.hasError
-            ? Text(fieldstate.errorText!, style: TextStyle(fontSize: 12, color: Theme.of(context).errorColor))
-            : const SizedBox.shrink(),
-        trailing: IconButton(
-          icon: Icon(
-            Icons.add,
-            color: Theme.of(context).primaryColor,
-          ),
-          onPressed: addChild,
-        ),
-        children: [
-          ...students.map((s) => ListTile(
-                title: SelectableText(s.fullName),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.open_in_new),
-                      onPressed: () => openChild(s),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => removeChild(s),
-                    ),
-                  ],
-                ),
-              )),
-        ],
-      ),
-    );
-  }
-
-  Future<void> addChild() async {
-    var res = await Get.to<PersonModel>(
-      () => PeopleListPage(
-        InstitutionModel.currentInstitution,
-        selectionMode: true,
-        type: 'student',
-      ),
-      transition: Transition.rightToLeft,
-    );
-    if (res is PersonModel) {
-      if (res.asStudent == null) {
-        Utils.showErrorSnackbar(
-          'Выбранный персонаж не является учащимся',
-        );
-        return;
-      }
-      if (students.contains(res)) {
-        Utils.showErrorSnackbar(
-          'Выбранный учащийся уже присутствует в группе',
-        );
-        return;
-      }
-      setState(() {
-        students.add(res.asStudent!);
-      });
+  bool addStudent(PersonModel? value) {
+    if (value == null) return false;
+    if (value.asStudent == null) {
+      Utils.showErrorSnackbar(
+        'Выбранный персонаж не является учащимся',
+      );
+      return false;
     }
-  }
-
-  Future<void> openChild(StudentModel student) async {
-    var res = await Get.to<PersonModel>(
-      () => PersonPage(student, student.fullName),
-      transition: Transition.rightToLeft,
-    );
-    if (res is PersonModel) {
-      if (res.asStudent == null) {
-        removeChild(student);
-        Utils.showErrorSnackbar(
-          'Выбранный персонаж больше не является учащимся',
-        );
-        return;
-      }
-      setState(() {
-        var i = students.indexOf(student);
-        students.remove(student);
-        students.insert(i, res.asStudent!);
-      });
+    if (students.contains(value)) {
+      Utils.showErrorSnackbar(
+        'Выбранный учащийся уже присутствует в группе',
+      );
+      return false;
     }
-  }
-
-  void removeChild(StudentModel student) {
     setState(() {
-      students.remove(student);
+      students.add(value.asStudent!);
     });
+    return true;
+  }
+
+  bool setStudent(PersonModel value) {
+    StudentModel sm;
+    if (!value.types.contains('student')) {
+      Utils.showErrorSnackbar(
+        'Выбранный персонаж больше не является учащимся',
+      );
+      return false;
+    }
+
+    value.asStudent != null ? sm = value.asStudent! : sm = (value as StudentModel);
+
+    setState(() {
+      var i = students.indexOf(sm);
+      students.remove(sm);
+      students.insert(i, sm);
+    });
+    return true;
+  }
+
+  bool removeStudent(PersonModel value) {
+    setState(() {
+      students.remove(value);
+    });
+    return true;
   }
 
   Future<void> save(CurriculumModel curriculum) async {

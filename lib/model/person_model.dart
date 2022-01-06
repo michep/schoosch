@@ -102,7 +102,7 @@ class PersonModel {
 }
 
 class StudentModel extends PersonModel {
-  late final ClassModel _studentClass;
+  ClassModel? _studentClass;
   ParentModel? parent;
   bool _studentClassLoaded = false;
 
@@ -117,12 +117,12 @@ class StudentModel extends PersonModel {
 
   StudentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
-  Future<ClassModel> get studentClass async {
+  Future<ClassModel?> get studentClass async {
     if (!_studentClassLoaded) {
       _studentClass = await Get.find<FStore>().getClassForStudent(this);
       _studentClassLoaded = true;
     }
-    return _studentClass;
+    return _studentClass!;
   }
 }
 
@@ -175,8 +175,9 @@ class ParentModel extends PersonModel {
         : throw 'need student_ids key in people for parent $id';
   }
 
-  Future<List<StudentModel>> get children async {
-    if (!_studentsLoaded) {
+  Future<List<StudentModel>> children({forceRefresh = false}) async {
+    if (!_studentsLoaded || forceRefresh) {
+      _students.clear();
       var store = Get.find<FStore>();
       for (var id in studentIds) {
         var p = await store.getPerson(id);
@@ -191,7 +192,7 @@ class ParentModel extends PersonModel {
   }
 
   Future<StudentModel> get currentChild async {
-    return _selectedChild ??= (await children)[0];
+    return _selectedChild ??= (await children())[0];
   }
 
   void setChild(StudentModel val) => _selectedChild = val;
