@@ -121,9 +121,12 @@ class _ClassPageState extends State<ClassPage> {
                   setElementFunc: setChild,
                   removeElementFunc: removeChild,
                 ),
-                ElevatedButton(
-                  child: const Text('Сохранить изменения'),
-                  onPressed: () => save(widget.aclass),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: ElevatedButton(
+                    child: const Text('Сохранить изменения'),
+                    onPressed: () => save(widget.aclass),
+                  ),
                 ),
               ],
             ),

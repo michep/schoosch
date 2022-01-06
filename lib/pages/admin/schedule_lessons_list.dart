@@ -109,9 +109,12 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: ElevatedButton(
-                        child: const Text('Сохранить изменения'),
-                        onPressed: () => save(widget.schedule),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: ElevatedButton(
+                          child: const Text('Сохранить изменения'),
+                          onPressed: () => save(widget.schedule),
+                        ),
                       ),
                     ),
                   ],

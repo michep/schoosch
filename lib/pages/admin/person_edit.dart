@@ -157,9 +157,12 @@ class _PersonPageState extends State<PersonPage> {
                   value: isAdmin,
                   onChanged: (value) => roleChecked('admin', value),
                 ),
-                ElevatedButton(
-                  onPressed: () => save(widget.person),
-                  child: const Text('Сохранить изменения'),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: ElevatedButton(
+                    child: const Text('Сохранить изменения'),
+                    onPressed: () => save(widget.person),
+                  ),
                 ),
               ],
             ),

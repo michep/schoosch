@@ -43,6 +43,7 @@ class _SelectableValueFormFieldState<T> extends State<SelectableValueFormField<T
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: true,
       controller: _controller,
       showCursor: false,
       keyboardType: TextInputType.none,

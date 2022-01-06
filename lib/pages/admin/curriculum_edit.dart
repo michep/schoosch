@@ -96,9 +96,12 @@ class _CurriculumPageState extends State<CurriculumPage> {
                   setElementFunc: setStudent,
                   removeElementFunc: removeStudent,
                 ),
-                ElevatedButton(
-                  child: const Text('Сохранить изменения'),
-                  onPressed: () => save(widget.curriculum),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: ElevatedButton(
+                    child: const Text('Сохранить изменения'),
+                    onPressed: () => save(widget.curriculum),
+                  ),
                 ),
               ],
             ),
