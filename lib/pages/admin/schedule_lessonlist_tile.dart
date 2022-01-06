@@ -7,9 +7,11 @@ import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/pages/admin/lesson_edit.dart';
 
 class ScheduleLessonListTile extends StatefulWidget {
+  final int _idx;
   final LessonModel _lesson;
+  final Function(LessonModel) _removeLessonFunc;
 
-  const ScheduleLessonListTile(this._lesson, {Key? key}) : super(key: key);
+  const ScheduleLessonListTile(this._idx, this._lesson, this._removeLessonFunc, {Key? key}) : super(key: key);
 
   @override
   State<ScheduleLessonListTile> createState() => _StudentLessonListTileState();
@@ -33,11 +35,25 @@ class _StudentLessonListTileState extends State<ScheduleLessonListTile> {
           var ven = list[1] as VenueModel;
           var tim = list[2] as LessontimeModel;
           return ListTile(
-            leading: const Icon(Icons.drag_handle),
+            leading: ReorderableDelayedDragStartListener(
+              index: widget._idx,
+              child: const Icon(Icons.drag_handle),
+            ),
             title: Text(cur.name),
-            subtitle: Text(cur.aliasOrName + ', ' + ven.name),
-            trailing: const Icon(Icons.chevron_right), //TODO: make REMOVE action available for lessons list
-            onTap: () => onTap(widget._lesson),
+            subtitle: Text('${cur.aliasOrName}, ${ven.name}'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.open_in_new),
+                  onPressed: () => onTap(widget._lesson),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => removeLesson(widget._lesson),
+                ),
+              ],
+            ),
           );
         });
   }
@@ -47,5 +63,9 @@ class _StudentLessonListTileState extends State<ScheduleLessonListTile> {
     if (res is LessonModel) {
       setState(() {});
     }
+  }
+
+  void removeLesson(LessonModel lesson) {
+    widget._removeLessonFunc(lesson);
   }
 }

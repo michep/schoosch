@@ -201,6 +201,19 @@ class FStore extends GetxController {
     }
   }
 
+  Future<void> deleteLesson(LessonModel lesson) async {
+    if (lesson.id != null) {
+      await _institutionRef
+          .collection('class')
+          .doc(lesson.aclass.id)
+          .collection('schedule')
+          .doc(lesson.schedule.id)
+          .collection('lesson')
+          .doc(lesson.id)
+          .delete();
+    }
+  }
+
   Future<PersonModel> getPerson(String id) async {
     var res = await _institutionRef.collection('people').doc(id).get();
     return PersonModel.fromMap(res.id, res.data()!);
@@ -331,7 +344,7 @@ class FStore extends GetxController {
     var cw = Get.find<CurrentWeek>().currentWeek; //TODO: currentWeek should be parameter
     var days = await aclass.getSchedulesWeek(cw);
     for (var day in days) {
-      var dayles = await day.lessonsForStudent(PersonModel.currentStudent!, cw);
+      var dayles = await day.lessonsForStudent(PersonModel.currentStudent!);
       for (var les in dayles) {
         var cur = await les.curriculum;
         var teach = await cur!.master;

@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
-import 'package:schoosch/widgets/selectablevalue_field.dart';
 import 'package:schoosch/widgets/selectablevaluelist_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -101,7 +100,7 @@ class _PersonPageState extends State<PersonPage> {
                         decoration: const InputDecoration(
                           label: Text('Дата рождения'),
                         ),
-                        validator: (value) => Utils.validateDateTimeNotEmpty(value, ''),
+                        validator: (value) => Utils.validateDateTimeNotEmpty(value, 'Нужно указать дату рождения'),
                         onShowPicker: (context, currentValue) async {
                           final date = await showDatePicker(
                             context: context,

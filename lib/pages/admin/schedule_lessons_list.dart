@@ -25,6 +25,7 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
   final _formKey = GlobalKey<FormState>();
 
   final List<LessonModel> _lessons = [];
+  final List<LessonModel> _lessonsRemoved = [];
   late DateTime? _from;
   late DateTime? _till;
 
@@ -89,8 +90,9 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
                   child: Scrollbar(
                     isAlwaysShown: true,
                     child: ReorderableListView(
+                      buildDefaultDragHandles: false,
                       children: [
-                        ..._lessons.map((e) => ScheduleLessonListTile(e, key: ValueKey(e))),
+                        ..._lessons.map((e) => ScheduleLessonListTile(_lessons.indexOf(e), e, removeLesson, key: ValueKey(e))),
                       ],
                       onReorder: (oldIndex, newIndex) {
                         setState(() {
@@ -132,6 +134,12 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
     }
   }
 
+  void removeLesson(LessonModel lesson) {
+    setState(() {
+      _lessons.remove(lesson);
+    });
+  }
+
   Future<void> save(DayScheduleModel schedule) async {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> map = {
@@ -142,6 +150,7 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
       var nschedule = DayScheduleModel.fromMap(widget.aclass, schedule.id, map);
       await nschedule.save();
       await saveLessons(nschedule);
+      await deleteLessons();
       Get.back<DayScheduleModel>(result: nschedule);
     }
   }
@@ -153,6 +162,12 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
       var map = _lessons[i].toMap();
       var nless = LessonModel.fromMap(widget.aclass, schedule, less.id, map);
       await nless.save();
+    }
+  }
+
+  Future<void> deleteLessons() async {
+    for (var l in _lessonsRemoved) {
+      await l.delete();
     }
   }
 

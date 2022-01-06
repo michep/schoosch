@@ -98,4 +98,8 @@ class LessonModel {
     _id ??= id;
     return this;
   }
+
+  Future<void> delete() async {
+    return Get.find<FStore>().deleteLesson(this);
+  }
 }
