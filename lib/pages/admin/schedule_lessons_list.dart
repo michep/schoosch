@@ -135,6 +135,7 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
   }
 
   void removeLesson(LessonModel lesson) {
+    _lessonsRemoved.add(lesson);
     setState(() {
       _lessons.remove(lesson);
     });
