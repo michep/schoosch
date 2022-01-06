@@ -22,34 +22,36 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
         title: Text('${widget.aclass.name}, расписание'),
       ),
       body: SafeArea(
-        child: ListView.builder(
-          itemCount: 7,
-          itemBuilder: (BuildContext context, int day) {
-            return FutureBuilder<List<StudentScheduleModel>>(
-              future: widget.aclass.getSchedulesDay(day + 1, forceRefresh: true),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return const SizedBox.shrink();
-                return ExpansionTile(
-                  controlAffinity: ListTileControlAffinity.leading,
-                  title: Text(Utils.dayName(day)),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () => newSchedule(day),
-                  ),
-                  children: [
-                    ...snapshot.data!.map(
-                      (schedule) => ListTile(
-                        title: Text(schedule.formatPeriod),
-                        trailing: const Icon(Icons.chevron_right),
-                        onTap: () => onTap(schedule),
-                      ),
+        child: Scrollbar(
+          isAlwaysShown: true,
+          child: ListView.builder(
+            itemCount: 7,
+            itemBuilder: (BuildContext context, int day) {
+              return FutureBuilder<List<StudentScheduleModel>>(
+                future: widget.aclass.getSchedulesDay(day + 1, forceRefresh: true),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return const SizedBox.shrink();
+                  return ExpansionTile(
+                    controlAffinity: ListTileControlAffinity.leading,
+                    title: Text(Utils.dayName(day)),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () => newSchedule(day),
                     ),
-                    // ElevatedButton(onPressed: () {}, child: const Text('Добавить')),
-                  ],
-                );
-              },
-            );
-          },
+                    children: [
+                      ...snapshot.data!.map(
+                        (schedule) => ListTile(
+                          title: Text(schedule.formatPeriod),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () => onTap(schedule),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );

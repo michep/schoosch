@@ -35,7 +35,7 @@ class _StudentLessonListTileState extends State<ScheduleLessonListTile> {
           var ven = list[1] as VenueModel;
           var tim = list[2] as LessontimeModel;
           return ListTile(
-            leading: ReorderableDelayedDragStartListener(
+            leading: ReorderableDragStartListener(
               index: widget._idx,
               child: const Icon(Icons.drag_handle),
             ),

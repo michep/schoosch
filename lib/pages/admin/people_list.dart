@@ -95,18 +95,21 @@ class _PeopleListPageState extends State<PeopleListPage> {
                     if (!snapshot.hasData) return Utils.progressIndicator();
                     var sorted = snapshot.data!;
                     sorted.sort((a, b) => a.fullName.compareTo(b.fullName));
-                    return ListView(
-                      children: [
-                        ...sorted.where(filter).map(
-                              (v) => ListTile(
-                                onTap: () => onTap(v),
-                                title: Text(v.fullName),
-                                leading: widget.selectionMode ? const Icon(Icons.chevron_left) : null,
-                                trailing: widget.selectionMode ? null : const Icon(Icons.chevron_right),
-                                subtitle: Text(v.types.toString()),
+                    return Scrollbar(
+                      isAlwaysShown: true,
+                      child: ListView(
+                        children: [
+                          ...sorted.where(filter).map(
+                                (v) => ListTile(
+                                  onTap: () => onTap(v),
+                                  title: Text(v.fullName),
+                                  leading: widget.selectionMode ? const Icon(Icons.chevron_left) : null,
+                                  trailing: widget.selectionMode ? null : const Icon(Icons.chevron_right),
+                                  subtitle: Text(v.types.toString()),
+                                ),
                               ),
-                            ),
-                      ],
+                        ],
+                      ),
                     );
                   }),
             ),
