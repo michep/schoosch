@@ -63,7 +63,20 @@ class LessonModel {
     return _homework;
   }
 
-  Future<List<HomeworkModel>?> homeworks(DateTime date) async {
+  //   Future<List<HomeworkModel>> homeworksOnlyForStudent(StudentModel student) async {
+  //   if (!_homeworkLoaded) {
+  //     _homework.addAll(await Get.find<FStore>().getLessonHomeworksForStudent(_schedule, (await curriculum)!, student));
+  //     _homeworkLoaded = true;
+  //   }
+  //   return _homework;
+  // }
+
+  // Future<String> homeworkAsTeacher(StudentModel? student) async {
+  //   var a = await Get.find<FStore>().getLessonHomeworkAsLesson(_schedule, (await curriculum)!, student: student);
+  //   return a[0].text;
+  // }
+
+  Future<List<HomeworkModel>> homeworks(DateTime date) async {
     if (!_homeworkLoaded) {
       _homework.addAll(await Get.find<FStore>().getLessonHomeworks(schedule, (await curriculum)!, date));
       _homeworkLoaded = true;
