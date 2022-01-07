@@ -15,4 +15,6 @@ class HomeworkModel {
     _studentId = map['student_id'] != null ? map['student_id'] as String : null;
     _teacherId = map['teacher_id'] != null ? map['teacher_id'] as String : throw 'need teacher_id key in homework  $id';
   }
+
+  String? get studentId => _studentId;
 }

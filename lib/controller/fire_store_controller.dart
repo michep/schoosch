@@ -373,6 +373,24 @@ class FStore extends GetxController {
     return ret;
   }
 
+  // Future<List<HomeworkModel>> getLessonHomeworksOnlyForStudent(
+  //     DayScheduleModel schedule, CurriculumModel curriculum, StudentModel student) async {
+  //   List<HomeworkModel> ret = [];
+  //   var cwhu = (await _institutionRef
+  //           .collection('homework')
+  //           .where('date', isLessThan: schedule.date.add(const Duration(hours: 23, minutes: 59)))
+  //           .where('curriculum_id', isEqualTo: curriculum.id)
+  //           .where('student_id', isEqualTo: student.id)
+  //           .orderBy('date', descending: true)
+  //           .limit(1)
+  //           .get())
+  //       .docs
+  //       .map((e) => HomeworkModel.fromMap(e.id, e.data()))
+  //       .toList();
+  //   ret.addAll(cwhu);
+  //   return ret;
+  // }
+
   Future<List<HomeworkModel>> getLessonHomeworks(DayScheduleModel schedule, CurriculumModel curriculum) async {
     return (await _institutionRef
             .collection('homework')
@@ -384,6 +402,19 @@ class FStore extends GetxController {
         .map((e) => HomeworkModel.fromMap(e.id, e.data()))
         .toList();
   }
+
+  // Future<List<HomeworkModel>> getLessonHomeworkAsLesson(DayScheduleModel schedule, CurriculumModel curriculum, {StudentModel? student,}) async {
+  //   return (await _institutionRef
+  //           .collection('homework')
+  //           .where('date', isGreaterThanOrEqualTo: schedule.date)
+  //           .where('date', isLessThan: schedule.date.add(const Duration(hours: 23, minutes: 59)))
+  //           .where('student_id', isEqualTo: student != null ? student.id : null)
+  //           .where('curriculum_id', isEqualTo: curriculum.id)
+  //           .get())
+  //       .docs
+  //       .map((e) => HomeworkModel.fromMap(e.id, e.data()))
+  //       .toList();
+  // }
 
   Future<List<MarkModel>> getLessonMarksForStudent(DayScheduleModel schedule, LessonModel lesson, StudentModel student) async {
     return (await _institutionRef
