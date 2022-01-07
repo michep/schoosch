@@ -11,11 +11,11 @@ import 'package:schoosch/pages/admin/schedule_lessonlist_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class ScheduleLessonsListPage extends StatefulWidget {
-  final ClassModel aclass;
-  final DayScheduleModel schedule;
-  final String title;
+  final ClassModel _aclass;
+  final DayScheduleModel _schedule;
+  final String _title;
 
-  const ScheduleLessonsListPage(this.aclass, this.schedule, this.title, {Key? key}) : super(key: key);
+  const ScheduleLessonsListPage(this._aclass, this._schedule, this._title, {Key? key}) : super(key: key);
 
   @override
   State<ScheduleLessonsListPage> createState() => _VenuePageState();
@@ -31,9 +31,9 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
 
   @override
   void initState() {
-    _from = widget.schedule.from;
-    _till = widget.schedule.till;
-    widget.schedule.allLessons(forceRefresh: true).then((value) => setState(() => _lessons.addAll(value)));
+    _from = widget._schedule.from;
+    _till = widget._schedule.till;
+    widget._schedule.allLessons(forceRefresh: true).then((value) => setState(() => _lessons.addAll(value)));
     super.initState();
   }
 
@@ -41,8 +41,8 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-        actions: [IconButton(onPressed: newLesson, icon: const Icon(Icons.add))],
+        title: Text(widget._title),
+        actions: [IconButton(onPressed: _newLesson, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
         child: Form(
@@ -92,7 +92,7 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
                     child: ReorderableListView(
                       buildDefaultDragHandles: false,
                       children: [
-                        ..._lessons.map((e) => ScheduleLessonListTile(_lessons.indexOf(e), e, removeLesson, key: ValueKey(e))),
+                        ..._lessons.map((e) => ScheduleLessonListTile(_lessons.indexOf(e), e, _removeLesson, key: ValueKey(e))),
                       ],
                       onReorder: (oldIndex, newIndex) {
                         setState(() {
@@ -113,7 +113,7 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
                         padding: const EdgeInsets.only(bottom: 8),
                         child: ElevatedButton(
                           child: const Text('Сохранить изменения'),
-                          onPressed: () => save(widget.schedule),
+                          onPressed: () => _save(widget._schedule),
                         ),
                       ),
                     ),
@@ -127,8 +127,8 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
     );
   }
 
-  Future<void> newLesson() async {
-    var nlesson = LessonModel.empty(widget.aclass, widget.schedule, _lessons.length + 1);
+  Future<void> _newLesson() async {
+    var nlesson = LessonModel.empty(widget._aclass, widget._schedule, _lessons.length + 1);
     var res = await Get.to<LessonModel>(() => LessonPage(nlesson, 'Урок'));
     if (res is LessonModel) {
       setState(() {
@@ -137,43 +137,43 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
     }
   }
 
-  void removeLesson(LessonModel lesson) {
+  void _removeLesson(LessonModel lesson) {
     _lessonsRemoved.add(lesson);
     setState(() {
       _lessons.remove(lesson);
     });
   }
 
-  Future<void> save(DayScheduleModel schedule) async {
+  Future<void> _save(DayScheduleModel schedule) async {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> map = {
         'day': schedule.day,
         'from': Timestamp.fromDate(_from!),
         'till': _till != null ? Timestamp.fromDate(_till!) : null,
       };
-      var nschedule = DayScheduleModel.fromMap(widget.aclass, schedule.id, map);
+      var nschedule = DayScheduleModel.fromMap(widget._aclass, schedule.id, map);
       await nschedule.save();
-      await saveLessons(nschedule);
-      await deleteLessons();
+      await _saveLessons(nschedule);
+      await _deleteLessons();
       Get.back<DayScheduleModel>(result: nschedule);
     }
   }
 
-  Future<void> saveLessons(DayScheduleModel schedule) async {
+  Future<void> _saveLessons(DayScheduleModel schedule) async {
     for (var i = 0; i < _lessons.length; i++) {
       var less = _lessons[i];
       less.order = i + 1;
       var map = _lessons[i].toMap();
-      var nless = LessonModel.fromMap(widget.aclass, schedule, less.id, map);
+      var nless = LessonModel.fromMap(widget._aclass, schedule, less.id, map);
       await nless.save();
     }
   }
 
-  Future<void> deleteLessons() async {
+  Future<void> _deleteLessons() async {
     for (var l in _lessonsRemoved) {
       await l.delete();
     }
   }
 
-  Future<void> delete(StudentScheduleModel schedule) async {}
+  Future<void> _delete(StudentScheduleModel schedule) async {}
 }

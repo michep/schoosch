@@ -6,9 +6,9 @@ import 'package:schoosch/pages/admin/schedule_lessons_list.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class ScheduleDaysListPage extends StatefulWidget {
-  final ClassModel aclass;
+  final ClassModel _aclass;
 
-  const ScheduleDaysListPage(this.aclass, {Key? key}) : super(key: key);
+  const ScheduleDaysListPage(this._aclass, {Key? key}) : super(key: key);
 
   @override
   State<ScheduleDaysListPage> createState() => _VenueListPageState();
@@ -19,7 +19,7 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.aclass.name}, расписание'),
+        title: Text('${widget._aclass.name}, расписание'),
       ),
       body: SafeArea(
         child: Scrollbar(
@@ -28,7 +28,7 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
             itemCount: 7,
             itemBuilder: (BuildContext context, int day) {
               return FutureBuilder<List<StudentScheduleModel>>(
-                future: widget.aclass.getSchedulesDay(day + 1, forceRefresh: true),
+                future: widget._aclass.getSchedulesDay(day + 1, forceRefresh: true),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) return const SizedBox.shrink();
                   return ExpansionTile(
@@ -36,14 +36,14 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
                     title: Text(Utils.dayName(day)),
                     trailing: IconButton(
                       icon: const Icon(Icons.add),
-                      onPressed: () => newSchedule(day),
+                      onPressed: () => _newSchedule(day),
                     ),
                     children: [
                       ...snapshot.data!.map(
                         (schedule) => ListTile(
                           title: Text(schedule.formatPeriod),
                           trailing: const Icon(Icons.chevron_right),
-                          onTap: () => onTap(schedule),
+                          onTap: () => _onTap(schedule),
                         ),
                       ),
                     ],
@@ -57,20 +57,20 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
     );
   }
 
-  Future<void> onTap(StudentScheduleModel schedule) async {
+  Future<void> _onTap(StudentScheduleModel schedule) async {
     var res = await Get.to<DayScheduleModel>(
-        () => ScheduleLessonsListPage(widget.aclass, schedule, '${schedule.aclass.name}, ${Utils.dayName(schedule.day - 1)}'),
+        () => ScheduleLessonsListPage(widget._aclass, schedule, '${schedule.aclass.name}, ${Utils.dayName(schedule.day - 1)}'),
         transition: Transition.rightToLeft);
     if (res is DayScheduleModel) {
       setState(() {});
     }
   }
 
-  Future<void> newSchedule(int day) async {
-    var nschedule = DayScheduleModel.empty(widget.aclass, day);
+  Future<void> _newSchedule(int day) async {
+    var nschedule = DayScheduleModel.empty(widget._aclass, day);
     nschedule.day = day;
     var res = await Get.to<DayScheduleModel>(
-        () => ScheduleLessonsListPage(widget.aclass, nschedule, '${nschedule.aclass.name}, ${Utils.dayName(day)}'));
+        () => ScheduleLessonsListPage(widget._aclass, nschedule, '${nschedule.aclass.name}, ${Utils.dayName(day)}'));
     if (res is DayScheduleModel) {
       setState(() {});
     }

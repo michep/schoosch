@@ -10,10 +10,10 @@ import 'package:schoosch/widgets/selectablevaluelist_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class PersonPage extends StatefulWidget {
-  final PersonModel person;
-  final String title;
+  final PersonModel _person;
+  final String _title;
 
-  const PersonPage(this.person, this.title, {Key? key}) : super(key: key);
+  const PersonPage(this._person, this._title, {Key? key}) : super(key: key);
 
   @override
   State<PersonPage> createState() => _PersonPageState();
@@ -26,23 +26,23 @@ class _PersonPageState extends State<PersonPage> {
   final TextEditingController _email = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   DateTime? _birthday;
-  bool isStudent = false;
-  bool isTeacher = false;
-  bool isParent = false;
-  bool isAdmin = false;
-  final List<StudentModel> children = [];
+  bool _isStudent = false;
+  bool _isTeacher = false;
+  bool _isParent = false;
+  bool _isAdmin = false;
+  final List<StudentModel> _children = [];
 
   @override
   void initState() {
-    _lastname.value = TextEditingValue(text: widget.person.lastname);
-    _middlename.value = TextEditingValue(text: widget.person.middlename == null ? '' : widget.person.middlename!);
-    _firstname.value = TextEditingValue(text: widget.person.firstname);
-    _email.value = TextEditingValue(text: widget.person.email);
-    _birthday = widget.person.birthday;
-    if (widget.person.types.contains('student')) isStudent = true;
-    if (widget.person.types.contains('teacher')) isTeacher = true;
-    if (widget.person.types.contains('parent')) isParent = true;
-    if (widget.person.types.contains('admin')) isAdmin = true;
+    _lastname.value = TextEditingValue(text: widget._person.lastname);
+    _middlename.value = TextEditingValue(text: widget._person.middlename == null ? '' : widget._person.middlename!);
+    _firstname.value = TextEditingValue(text: widget._person.firstname);
+    _email.value = TextEditingValue(text: widget._person.email);
+    _birthday = widget._person.birthday;
+    if (widget._person.types.contains('student')) _isStudent = true;
+    if (widget._person.types.contains('teacher')) _isTeacher = true;
+    if (widget._person.types.contains('parent')) _isParent = true;
+    if (widget._person.types.contains('admin')) _isAdmin = true;
     super.initState();
   }
 
@@ -50,9 +50,9 @@ class _PersonPageState extends State<PersonPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget._title),
         actions: [
-          IconButton(onPressed: () => delete(widget.person), icon: const Icon(Icons.delete)),
+          IconButton(onPressed: () => _delete(widget._person), icon: const Icon(Icons.delete)),
         ],
       ),
       body: SafeArea(
@@ -114,17 +114,17 @@ class _PersonPageState extends State<PersonPage> {
                     ],
                   ),
                 ),
-                isParent
+                _isParent
                     ? SelectableValueListFormField<PersonModel>(
                         title: 'Связанные учащиеся',
-                        initListFutureFunc: initChildren,
+                        initListFutureFunc: _initChildren,
                         titleFunc: (value) => value?.fullName ?? '',
                         listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'student'),
                         detailsFunc: (value) => PersonPage(value!, value.fullName),
-                        listValidatorFunc: () => children.isEmpty ? 'Нужно выбрать учащихся' : null,
-                        addElementFunc: addChild,
-                        setElementFunc: setChild,
-                        removeElementFunc: removeChild,
+                        listValidatorFunc: () => _children.isEmpty ? 'Нужно выбрать учащихся' : null,
+                        addElementFunc: _addChild,
+                        setElementFunc: _setChild,
+                        removeElementFunc: _removeChild,
                       )
                     : Padding(
                         padding: const EdgeInsets.only(bottom: 18),
@@ -139,29 +139,29 @@ class _PersonPageState extends State<PersonPage> {
                       ),
                 CheckboxListTile(
                   title: const Text('Учащийся'),
-                  value: isStudent,
-                  onChanged: (isParent || isTeacher) ? null : (value) => roleChecked('student', value),
+                  value: _isStudent,
+                  onChanged: (_isParent || _isTeacher) ? null : (value) => _roleChecked('student', value),
                 ),
                 CheckboxListTile(
                   title: const Text('Преподаватель'),
-                  value: isTeacher,
-                  onChanged: (isStudent) ? null : (value) => roleChecked('teacher', value),
+                  value: _isTeacher,
+                  onChanged: (_isStudent) ? null : (value) => _roleChecked('teacher', value),
                 ),
                 CheckboxListTile(
                   title: const Text('Родитель / Наблюдатель'),
-                  value: isParent,
-                  onChanged: (isStudent) ? null : (value) => roleChecked('parent', value),
+                  value: _isParent,
+                  onChanged: (_isStudent) ? null : (value) => _roleChecked('parent', value),
                 ),
                 CheckboxListTile(
                   title: const Text('Администратор системы'),
-                  value: isAdmin,
-                  onChanged: (value) => roleChecked('admin', value),
+                  value: _isAdmin,
+                  onChanged: (value) => _roleChecked('admin', value),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
                     child: const Text('Сохранить изменения'),
-                    onPressed: () => save(widget.person),
+                    onPressed: () => _save(widget._person),
                   ),
                 ),
               ],
@@ -172,21 +172,21 @@ class _PersonPageState extends State<PersonPage> {
     );
   }
 
-  Future<List<PersonModel>> initChildren() async {
-    if (widget.person.asParent != null) {
-      return widget.person.asParent!.children(forceRefresh: true).then((value) {
-        children.addAll(value);
-        return children;
+  Future<List<PersonModel>> _initChildren() async {
+    if (widget._person.asParent != null) {
+      return widget._person.asParent!.children(forceRefresh: true).then((value) {
+        _children.addAll(value);
+        return _children;
       });
     } else {
-      return widget.person.up!.asParent!.children(forceRefresh: true).then((value) {
-        children.addAll(value);
-        return children;
+      return widget._person.up!.asParent!.children(forceRefresh: true).then((value) {
+        _children.addAll(value);
+        return _children;
       });
     }
   }
 
-  bool addChild(PersonModel? value) {
+  bool _addChild(PersonModel? value) {
     if (value == null) return false;
     if (value.asStudent == null) {
       Utils.showErrorSnackbar(
@@ -194,19 +194,19 @@ class _PersonPageState extends State<PersonPage> {
       );
       return false;
     }
-    if (children.contains(value)) {
+    if (_children.contains(value)) {
       Utils.showErrorSnackbar(
         'Выбранный учащийся уже присутствует в группе',
       );
       return false;
     }
     setState(() {
-      children.add(value.asStudent!);
+      _children.add(value.asStudent!);
     });
     return true;
   }
 
-  bool setChild(PersonModel value) {
+  bool _setChild(PersonModel value) {
     StudentModel sm;
     if (!value.types.contains('student')) {
       Utils.showErrorSnackbar(
@@ -218,51 +218,51 @@ class _PersonPageState extends State<PersonPage> {
     value.asStudent != null ? sm = value.asStudent! : sm = (value as StudentModel);
 
     setState(() {
-      var i = children.indexOf(sm);
-      children.remove(sm);
-      children.insert(i, sm);
+      var i = _children.indexOf(sm);
+      _children.remove(sm);
+      _children.insert(i, sm);
     });
     return true;
   }
 
-  bool removeChild(PersonModel value) {
+  bool _removeChild(PersonModel value) {
     setState(() {
-      children.remove(value);
+      _children.remove(value);
     });
     return true;
   }
 
-  void roleChecked(String role, bool? value) {
+  void _roleChecked(String role, bool? value) {
     if (value != null) {
       switch (role) {
         case 'student':
-          isStudent = value;
+          _isStudent = value;
           break;
         case 'teacher':
-          isTeacher = value;
+          _isTeacher = value;
           break;
         case 'parent':
-          isParent = value;
+          _isParent = value;
           break;
         case 'admin':
-          isAdmin = value;
+          _isAdmin = value;
           break;
       }
       setState(() {});
     }
   }
 
-  Future save(PersonModel person) async {
+  Future _save(PersonModel person) async {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> map = {};
-      if (isParent) {
-        map['student_ids'] = children.map((e) => e.id!).toList();
+      if (_isParent) {
+        map['student_ids'] = _children.map((e) => e.id!).toList();
       }
       map['type'] = <String>[];
-      if (isStudent) map['type'].add('student');
-      if (isTeacher) map['type'].add('teacher');
-      if (isParent) map['type'].add('parent');
-      if (isAdmin) map['type'].add('admin');
+      if (_isStudent) map['type'].add('student');
+      if (_isTeacher) map['type'].add('teacher');
+      if (_isParent) map['type'].add('parent');
+      if (_isAdmin) map['type'].add('admin');
       map['firstname'] = _firstname.text;
       map['middlename'] = _middlename.text == '' ? null : _middlename.text;
       map['lastname'] = _lastname.text;
@@ -270,7 +270,7 @@ class _PersonPageState extends State<PersonPage> {
       map['birthday'] = _birthday != null ? Timestamp.fromDate(_birthday!) : null;
 
       var nperson = PersonModel.fromMap(person.id, map);
-      if (isParent) {
+      if (_isParent) {
         await nperson.asParent!.save();
       } else {
         await nperson.save();
@@ -279,5 +279,5 @@ class _PersonPageState extends State<PersonPage> {
     }
   }
 
-  Future delete(PersonModel person) async {}
+  Future _delete(PersonModel person) async {}
 }

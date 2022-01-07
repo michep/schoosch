@@ -12,10 +12,10 @@ import 'package:schoosch/widgets/selectablevalue_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class LessonPage extends StatefulWidget {
-  final LessonModel lesson;
-  final String title;
+  final LessonModel _lesson;
+  final String _title;
 
-  const LessonPage(this.lesson, this.title, {Key? key}) : super(key: key);
+  const LessonPage(this._lesson, this._title, {Key? key}) : super(key: key);
 
   @override
   State<LessonPage> createState() => _LessonPageState();
@@ -36,11 +36,11 @@ class _LessonPageState extends State<LessonPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget._title),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
-            onPressed: () => delete(widget.lesson),
+            onPressed: () => _delete(widget._lesson),
           ),
         ],
       ),
@@ -53,7 +53,7 @@ class _LessonPageState extends State<LessonPage> {
               children: [
                 SelectableValueFormField<CurriculumModel>(
                   title: 'Учебный предмет',
-                  initFutureFunc: initCurriculum,
+                  initFutureFunc: _initCurriculum,
                   titleFunc: (value) => value?.name ?? '',
                   listFunc: () => CurriculumListPage(
                     InstitutionModel.currentInstitution,
@@ -61,11 +61,11 @@ class _LessonPageState extends State<LessonPage> {
                   ),
                   detailsFunc: () => CurriculumPage(curriculum!, curriculum!.name),
                   validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Учебный предмет должен быть выбран'),
-                  callback: (value) => setCurriculum(value),
+                  callback: (value) => _setCurriculum(value),
                 ),
                 SelectableValueFormField<VenueModel>(
                   title: 'Кабинет',
-                  initFutureFunc: initVenue,
+                  initFutureFunc: _initVenue,
                   titleFunc: (value) => value?.name ?? '',
                   listFunc: () => VenueListPage(
                     InstitutionModel.currentInstitution,
@@ -73,13 +73,13 @@ class _LessonPageState extends State<LessonPage> {
                   ),
                   detailsFunc: () => VenuePage(venue!, venue!.name),
                   validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Кабинет должен быть выбран'),
-                  callback: (value) => setVenue(value),
+                  callback: (value) => _setVenue(value),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
                     child: const Text('Сохранить изменения'),
-                    onPressed: () => save(widget.lesson),
+                    onPressed: () => _save(widget._lesson),
                   ),
                 ),
               ],
@@ -90,31 +90,31 @@ class _LessonPageState extends State<LessonPage> {
     );
   }
 
-  Future<CurriculumModel?> initCurriculum() {
-    return widget.lesson.curriculum.then((value) {
+  Future<CurriculumModel?> _initCurriculum() {
+    return widget._lesson.curriculum.then((value) {
       curriculum = value;
       return curriculum;
     });
   }
 
-  bool setCurriculum(CurriculumModel? value) {
+  bool _setCurriculum(CurriculumModel? value) {
     curriculum = value;
     return true;
   }
 
-  Future<VenueModel?> initVenue() {
-    return widget.lesson.venue.then((value) {
+  Future<VenueModel?> _initVenue() {
+    return widget._lesson.venue.then((value) {
       venue = value;
       return venue;
     });
   }
 
-  bool setVenue(VenueModel? value) {
+  bool _setVenue(VenueModel? value) {
     venue = value;
     return true;
   }
 
-  Future<void> save(LessonModel lesson) async {
+  Future<void> _save(LessonModel lesson) async {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> map = {};
       map['order'] = lesson.order;
@@ -126,5 +126,5 @@ class _LessonPageState extends State<LessonPage> {
     }
   }
 
-  Future<void> delete(LessonModel lesson) async {}
+  Future<void> _delete(LessonModel lesson) async {}
 }

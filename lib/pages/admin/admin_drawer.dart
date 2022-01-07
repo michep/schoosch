@@ -21,27 +21,27 @@ class AdminDrawer extends StatelessWidget {
           children: [
             TextButton(
               child: const Text('Информация об учебном заведении'),
-              onPressed: openInstitutionPage,
+              onPressed: _openInstitutionPage,
             ),
             TextButton(
               child: const Text('Кабинеты и помещения'),
-              onPressed: openVenuesPage,
+              onPressed: _openVenuesPage,
             ),
             TextButton(
               child: const Text('Сотрудники, учителя и ученики'),
-              onPressed: openPeoplePage,
+              onPressed: _openPeoplePage,
             ),
             TextButton(
               child: const Text('Учебные предметы'),
-              onPressed: openCurriculumsPage,
+              onPressed: _openCurriculumsPage,
             ),
             TextButton(
               child: const Text('Учебные классы'),
-              onPressed: openClassesPage,
+              onPressed: _openClassesPage,
             ),
             TextButton(
               child: const Text('Расписание уроков на неделю'),
-              onPressed: openSchedulesPage,
+              onPressed: _openSchedulesPage,
             ),
           ],
         ),
@@ -49,32 +49,32 @@ class AdminDrawer extends StatelessWidget {
     );
   }
 
-  Future<void> openInstitutionPage() async {
+  Future<void> _openInstitutionPage() async {
     // Get.back();
     Get.to(() => InstitutionPage(InstitutionModel.currentInstitution));
   }
 
-  Future<void> openVenuesPage() async {
+  Future<void> _openVenuesPage() async {
     // Get.back();
     Get.to(() => VenueListPage(InstitutionModel.currentInstitution));
   }
 
-  Future<void> openPeoplePage() async {
+  Future<void> _openPeoplePage() async {
     // Get.back();
     Get.to(() => PeopleListPage(InstitutionModel.currentInstitution));
   }
 
-  Future<void> openCurriculumsPage() async {
+  Future<void> _openCurriculumsPage() async {
     // Get.back();
     Get.to(() => CurriculumListPage(InstitutionModel.currentInstitution));
   }
 
-  Future<void> openClassesPage() async {
+  Future<void> _openClassesPage() async {
     // Get.back();
     Get.to(() => ClassListPage(InstitutionModel.currentInstitution));
   }
 
-  Future<void> openSchedulesPage() async {
+  Future<void> _openSchedulesPage() async {
     // Get.back();
     Get.to(() => ClassListPage(InstitutionModel.currentInstitution, listMode: ClassListMode.schedules));
   }

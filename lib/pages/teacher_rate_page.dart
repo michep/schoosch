@@ -5,8 +5,8 @@ import 'package:schoosch/widgets/utils.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class RatePage extends StatefulWidget {
-  const RatePage({required this.aclass, Key? key}) : super(key: key);
-  final Future<ClassModel?> aclass;
+  const RatePage(this._aclass, {Key? key}) : super(key: key);
+  final Future<ClassModel?> _aclass;
 
   @override
   State<RatePage> createState() => _RatePageState();
@@ -28,7 +28,7 @@ class _RatePageState extends State<RatePage> {
         title: const Text('Учителя'),
       ),
       body: FutureBuilder<ClassModel?>(
-          future: widget.aclass,
+          future: widget._aclass,
           builder: (context, classsnap) {
             if (!classsnap.hasData) return Utils.progressIndicator();
             if (classsnap.data == null) return const Center(child: Text('У ученика не определен класс'));

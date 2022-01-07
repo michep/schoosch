@@ -6,9 +6,9 @@ import 'package:schoosch/widgets/class_list_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class ClassSelectionPage extends StatelessWidget {
-  final InstitutionModel institution;
+  final InstitutionModel _institution;
 
-  const ClassSelectionPage(this.institution, {Key? key}) : super(key: key);
+  const ClassSelectionPage(this._institution, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class ClassSelectionPage extends StatelessWidget {
       appBar: const MAppBar('Выбор класса'),
       body: SafeArea(
         child: FutureBuilder<List<ClassModel>>(
-          future: institution.classes,
+          future: _institution.classes,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Utils.progressIndicator();

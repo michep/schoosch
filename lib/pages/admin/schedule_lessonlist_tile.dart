@@ -46,11 +46,11 @@ class _StudentLessonListTileState extends State<ScheduleLessonListTile> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.open_in_new),
-                  onPressed: () => onTap(widget._lesson),
+                  onPressed: () => _onTap(widget._lesson),
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete),
-                  onPressed: () => removeLesson(widget._lesson),
+                  onPressed: () => _removeLesson(widget._lesson),
                 ),
               ],
             ),
@@ -58,14 +58,14 @@ class _StudentLessonListTileState extends State<ScheduleLessonListTile> {
         });
   }
 
-  Future<void> onTap(LessonModel lesson) async {
+  Future<void> _onTap(LessonModel lesson) async {
     var res = await Get.to<LessonModel>(() => LessonPage(lesson, 'Урок'), transition: Transition.rightToLeft);
     if (res is LessonModel) {
       setState(() {});
     }
   }
 
-  void removeLesson(LessonModel lesson) {
+  void _removeLesson(LessonModel lesson) {
     widget._removeLessonFunc(lesson);
   }
 }

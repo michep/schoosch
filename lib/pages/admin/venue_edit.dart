@@ -4,10 +4,10 @@ import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class VenuePage extends StatefulWidget {
-  final VenueModel venue;
-  final String title;
+  final VenueModel _venue;
+  final String _title;
 
-  const VenuePage(this.venue, this.title, {Key? key}) : super(key: key);
+  const VenuePage(this._venue, this._title, {Key? key}) : super(key: key);
 
   @override
   State<VenuePage> createState() => _VenuePageState();
@@ -19,7 +19,7 @@ class _VenuePageState extends State<VenuePage> {
 
   @override
   void initState() {
-    _name.value = TextEditingValue(text: widget.venue.name);
+    _name.value = TextEditingValue(text: widget._venue.name);
     super.initState();
   }
 
@@ -27,11 +27,11 @@ class _VenuePageState extends State<VenuePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget._title),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
-            onPressed: () => delete(widget.venue),
+            onPressed: () => _delete(widget._venue),
           ),
         ],
       ),
@@ -53,7 +53,7 @@ class _VenuePageState extends State<VenuePage> {
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
                     child: const Text('Сохранить изменения'),
-                    onPressed: () => save(widget.venue),
+                    onPressed: () => _save(widget._venue),
                   ),
                 ),
               ],
@@ -64,7 +64,7 @@ class _VenuePageState extends State<VenuePage> {
     );
   }
 
-  Future<void> save(VenueModel venue) async {
+  Future<void> _save(VenueModel venue) async {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> map = {};
       map['name'] = _name.text;
@@ -75,5 +75,5 @@ class _VenuePageState extends State<VenuePage> {
     }
   }
 
-  Future<void> delete(VenueModel venue) async {}
+  Future<void> _delete(VenueModel venue) async {}
 }

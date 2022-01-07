@@ -20,23 +20,21 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final username = TextEditingController();
-  final password = TextEditingController();
-  final auth = Get.find<FAuth>();
-  late StreamSubscription sub;
+  final _auth = Get.find<FAuth>();
+  late StreamSubscription _sub;
 
   @override
   void initState() {
-    if (auth.currentUser != null) {
-      SchedulerBinding.instance!.addPostFrameCallback((_) => _authenticated(auth.currentUser!));
+    if (_auth.currentUser != null) {
+      SchedulerBinding.instance!.addPostFrameCallback((_) => _authenticated(_auth.currentUser!));
     }
-    sub = auth.userChanges$.listen(_authenticated);
+    _sub = _auth.userChanges$.listen(_authenticated);
     super.initState();
   }
 
   @override
   void dispose() {
-    sub.cancel();
+    _sub.cancel();
     super.dispose();
   }
 

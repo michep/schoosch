@@ -14,21 +14,19 @@ class MDrawer extends StatelessWidget {
         drawerHeader(context),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: menuItems(),
+          children: _menuItems(),
         ),
       ],
     );
   }
 
-  List<Widget> menuItems() {
+  List<Widget> _menuItems() {
     List<Widget> items = [];
     if (PersonModel.currentUser!.currentType == 'student') {
       items.add(
         TextButton.icon(
           onPressed: () {
-            Get.to(() => RatePage(
-                  aclass: PersonModel.currentStudent!.studentClass,
-                ));
+            Get.to(() => RatePage(PersonModel.currentStudent!.studentClass));
           },
           icon: const Icon(Icons.insert_emoticon_rounded),
           label: const Text('Оценить учителей'),

@@ -13,10 +13,10 @@ import 'package:schoosch/widgets/selectablevaluelist_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class ClassPage extends StatefulWidget {
-  final ClassModel aclass;
-  final String title;
+  final ClassModel _aclass;
+  final String _title;
 
-  const ClassPage(this.aclass, this.title, {Key? key}) : super(key: key);
+  const ClassPage(this._aclass, this._title, {Key? key}) : super(key: key);
 
   @override
   State<ClassPage> createState() => _ClassPageState();
@@ -26,16 +26,15 @@ class _ClassPageState extends State<ClassPage> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _grade = TextEditingController();
   final TextEditingController _mastercont = TextEditingController();
-  final TextEditingController _daylessontimecont = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final List<StudentModel> students = [];
-  TeacherModel? master;
-  DayLessontimeModel? dayLessontime;
+  final List<StudentModel> _students = [];
+  TeacherModel? _master;
+  DayLessontimeModel? _dayLessontime;
 
   @override
   void initState() {
-    _name.value = TextEditingValue(text: widget.aclass.name);
-    _grade.value = TextEditingValue(text: widget.aclass.grade != 0 ? widget.aclass.grade.toString() : '');
+    _name.value = TextEditingValue(text: widget._aclass.name);
+    _grade.value = TextEditingValue(text: widget._aclass.grade != 0 ? widget._aclass.grade.toString() : '');
     super.initState();
   }
 
@@ -43,11 +42,11 @@ class _ClassPageState extends State<ClassPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget._title),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
-            onPressed: () => delete(widget.aclass),
+            onPressed: () => _delete(widget._aclass),
           ),
         ],
       ),
@@ -80,24 +79,24 @@ class _ClassPageState extends State<ClassPage> {
                             'Год обучения',
                           ),
                         ),
-                        validator: gradeValidator,
+                        validator: _gradeValidator,
                       ),
                       SelectableValueFormField<PersonModel>(
                         title: 'Преподаватель',
-                        initFutureFunc: initMaster,
+                        initFutureFunc: _initMaster,
                         titleFunc: (value) => value?.fullName ?? '',
                         listFunc: () => PeopleListPage(
                           InstitutionModel.currentInstitution,
                           selectionMode: true,
                           type: 'teacher',
                         ),
-                        detailsFunc: () => PersonPage(master!, master!.fullName),
+                        detailsFunc: () => PersonPage(_master!, _master!.fullName),
                         validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Преподаватель должен быть выбран'),
-                        callback: (value) => setMaster(value),
+                        callback: (value) => _setMaster(value),
                       ),
                       SelectableValueFormField<DayLessontimeModel>(
                         title: 'Расписание времени уроков',
-                        initFutureFunc: initLessonTime,
+                        initFutureFunc: _initLessonTime,
                         titleFunc: (value) => value?.name ?? '',
                         listFunc: () => DayLessontimeListPage(
                           InstitutionModel.currentInstitution,
@@ -105,27 +104,27 @@ class _ClassPageState extends State<ClassPage> {
                         ),
                         // detailsFunc: () => PersonPage(master!, master!.fullName),
                         validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Расписание должно быть выбрано'),
-                        callback: (value) => setLessonTime(value),
+                        callback: (value) => _setLessonTime(value),
                       ),
                     ],
                   ),
                 ),
                 SelectableValueListFormField<PersonModel>(
                   title: 'Учащиеяся класса',
-                  initListFutureFunc: initStudents,
+                  initListFutureFunc: _initStudents,
                   titleFunc: (value) => value?.fullName ?? '',
                   listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'student'),
                   detailsFunc: (value) => PersonPage(value!, value.fullName),
-                  listValidatorFunc: () => students.isEmpty ? 'Нужно выбрать учащихся' : null,
-                  addElementFunc: addChild,
-                  setElementFunc: setChild,
-                  removeElementFunc: removeChild,
+                  listValidatorFunc: () => _students.isEmpty ? 'Нужно выбрать учащихся' : null,
+                  addElementFunc: _addChild,
+                  setElementFunc: _setChild,
+                  removeElementFunc: _removeChild,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
                     child: const Text('Сохранить изменения'),
-                    onPressed: () => save(widget.aclass),
+                    onPressed: () => _save(widget._aclass),
                   ),
                 ),
               ],
@@ -136,27 +135,27 @@ class _ClassPageState extends State<ClassPage> {
     );
   }
 
-  Future<PersonModel> initMaster() async {
-    return widget.aclass.master.then((value) {
+  Future<PersonModel> _initMaster() async {
+    return widget._aclass.master.then((value) {
       if (value != null) {
         _mastercont.text = value.fullName;
-        master = value;
+        _master = value;
       }
-      return master as PersonModel;
+      return _master as PersonModel;
     });
   }
 
-  bool setMaster(PersonModel? value) {
+  bool _setMaster(PersonModel? value) {
     if (value != null) {
       if (value.asTeacher != null) {
-        master = value.asTeacher;
+        _master = value.asTeacher;
         return true;
       } else {
         if (value is TeacherModel) {
-          master = (value);
+          _master = (value);
           return true;
         } else {
-          master = null;
+          _master = null;
           Utils.showErrorSnackbar(
             'Выбранный персонаж не является преподавателем',
           );
@@ -164,12 +163,12 @@ class _ClassPageState extends State<ClassPage> {
         }
       }
     } else {
-      master = null;
+      _master = null;
       return true;
     }
   }
 
-  String? gradeValidator(String? value) {
+  String? _gradeValidator(String? value) {
     String? err;
     err = Utils.validateTextNotEmpty(value, 'Год обучения должен быть заполнен');
     if (err != null) return err;
@@ -178,25 +177,25 @@ class _ClassPageState extends State<ClassPage> {
     if (g < 1 || g > 11) return 'Год обучения должен быть между 1 и 11';
   }
 
-  Future<DayLessontimeModel?> initLessonTime() async {
-    return widget.aclass.getDayLessontime().then((value) {
+  Future<DayLessontimeModel?> _initLessonTime() async {
+    return widget._aclass.getDayLessontime().then((value) {
       return value;
     });
   }
 
-  bool setLessonTime(DayLessontimeModel? value) {
-    dayLessontime = value;
+  bool _setLessonTime(DayLessontimeModel? value) {
+    _dayLessontime = value;
     return true;
   }
 
-  Future<List<PersonModel>> initStudents() async {
-    return widget.aclass.students(forceRefresh: true).then((value) {
-      students.addAll(value);
-      return students;
+  Future<List<PersonModel>> _initStudents() async {
+    return widget._aclass.students(forceRefresh: true).then((value) {
+      _students.addAll(value);
+      return _students;
     });
   }
 
-  bool addChild(PersonModel? value) {
+  bool _addChild(PersonModel? value) {
     if (value == null) return false;
     if (value.asStudent == null) {
       Utils.showErrorSnackbar(
@@ -204,19 +203,19 @@ class _ClassPageState extends State<ClassPage> {
       );
       return false;
     }
-    if (students.contains(value)) {
+    if (_students.contains(value)) {
       Utils.showErrorSnackbar(
         'Выбранный учащийся уже присутствует в группе',
       );
       return false;
     }
     setState(() {
-      students.add(value.asStudent!);
+      _students.add(value.asStudent!);
     });
     return true;
   }
 
-  bool setChild(PersonModel value) {
+  bool _setChild(PersonModel value) {
     StudentModel sm;
     if (!value.types.contains('student')) {
       Utils.showErrorSnackbar(
@@ -228,28 +227,28 @@ class _ClassPageState extends State<ClassPage> {
     value.asStudent != null ? sm = value.asStudent! : sm = (value as StudentModel);
 
     setState(() {
-      var i = students.indexOf(sm);
-      students.remove(sm);
-      students.insert(i, sm);
+      var i = _students.indexOf(sm);
+      _students.remove(sm);
+      _students.insert(i, sm);
     });
     return true;
   }
 
-  bool removeChild(PersonModel value) {
+  bool _removeChild(PersonModel value) {
     setState(() {
-      students.remove(value);
+      _students.remove(value);
     });
     return true;
   }
 
-  Future<void> save(ClassModel aclass) async {
+  Future<void> _save(ClassModel aclass) async {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> map = {};
       map['name'] = _name.text;
       map['grade'] = int.parse(_grade.text);
-      map['master_id'] = master!.id!;
-      map['lessontime_id'] = dayLessontime!.id!;
-      map['student_ids'] = students.map((e) => e.id!).toList();
+      map['master_id'] = _master!.id!;
+      map['lessontime_id'] = _dayLessontime!.id!;
+      map['student_ids'] = _students.map((e) => e.id!).toList();
 
       var nclass = ClassModel.fromMap(aclass.id, map);
       await nclass.save();
@@ -257,5 +256,5 @@ class _ClassPageState extends State<ClassPage> {
     }
   }
 
-  Future<void> delete(ClassModel aclass) async {}
+  Future<void> _delete(ClassModel aclass) async {}
 }

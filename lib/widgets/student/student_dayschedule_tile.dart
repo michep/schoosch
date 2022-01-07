@@ -16,8 +16,6 @@ class ClassDayScheduleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var cw = Get.find<CurrentWeek>();
-
     return FutureBuilder<List<LessonModel>>(
         future: _schedule.lessonsForStudent(_student),
         builder: (context, snap) {

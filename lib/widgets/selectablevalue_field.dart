@@ -36,7 +36,7 @@ class _SelectableValueFormFieldState<T> extends State<SelectableValueFormField<T
 
   @override
   void initState() {
-    widget.initFutureFunc().then((res) => setState(() => setValue(res)));
+    widget.initFutureFunc().then((res) => setState(() => _setValue(res)));
     super.initState();
   }
 
@@ -54,7 +54,7 @@ class _SelectableValueFormFieldState<T> extends State<SelectableValueFormField<T
           child: _data == null
               ? IconButton(
                   icon: const Icon(Icons.add),
-                  onPressed: selectData,
+                  onPressed: _selectData,
                 )
               : Row(
                   mainAxisSize: MainAxisSize.min,
@@ -62,12 +62,12 @@ class _SelectableValueFormFieldState<T> extends State<SelectableValueFormField<T
                     widget.detailsFunc != null
                         ? IconButton(
                             icon: const Icon(Icons.open_in_new),
-                            onPressed: openData,
+                            onPressed: _openData,
                           )
                         : const SizedBox.shrink(),
                     IconButton(
                       icon: const Icon(Icons.delete),
-                      onPressed: removeData,
+                      onPressed: _removeData,
                     ),
                   ],
                 ),
@@ -77,27 +77,27 @@ class _SelectableValueFormFieldState<T> extends State<SelectableValueFormField<T
     );
   }
 
-  Future<void> selectData() async {
+  Future<void> _selectData() async {
     var res = await Get.to<T>(widget.listFunc, transition: Transition.rightToLeft);
     if (res != null) {
-      setState(() => setValue(res));
+      setState(() => _setValue(res));
     }
   }
 
-  Future<void> openData() async {
+  Future<void> _openData() async {
     if (widget.detailsFunc != null) {
       var res = await Get.to<T>(widget.detailsFunc, transition: Transition.rightToLeft);
       if (res != null) {
-        setState(() => setValue(res));
+        setState(() => _setValue(res));
       }
     }
   }
 
-  void removeData() {
-    setState(() => setValue(null));
+  void _removeData() {
+    setState(() => _setValue(null));
   }
 
-  void setValue(T? value) {
+  void _setValue(T? value) {
     if (widget.callback(value)) {
       _data = value;
       _controller.text = widget.titleFunc(value);

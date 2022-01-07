@@ -6,22 +6,22 @@ import 'package:schoosch/pages/admin/person_edit.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class PeopleListPage extends StatefulWidget {
-  final InstitutionModel institution;
+  final InstitutionModel _institution;
   final bool selectionMode;
   final String type;
 
-  const PeopleListPage(this.institution, {this.selectionMode = false, this.type = 'all', Key? key}) : super(key: key);
+  const PeopleListPage(this._institution, {this.selectionMode = false, this.type = 'all', Key? key}) : super(key: key);
   @override
   State<PeopleListPage> createState() => _PeopleListPageState();
 }
 
 class _PeopleListPageState extends State<PeopleListPage> {
   final TextEditingController _name = TextEditingController();
-  late String typeValue;
+  late String _typeValue;
 
   @override
   void initState() {
-    typeValue = widget.type;
+    _typeValue = widget.type;
     super.initState();
   }
 
@@ -30,14 +30,14 @@ class _PeopleListPageState extends State<PeopleListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Сотрудники, учителя и ученики'),
-        actions: [IconButton(onPressed: newPerson, icon: const Icon(Icons.add))],
+        actions: [IconButton(onPressed: _newPerson, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
         child: Column(
           children: [
             Card(
               child: ExpansionTile(
-                title: inSearch ? const Text('Поиск', style: TextStyle(fontStyle: FontStyle.italic)) : const Text('Поиск'),
+                title: _inSearch ? const Text('Поиск', style: TextStyle(fontStyle: FontStyle.italic)) : const Text('Поиск'),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
@@ -60,9 +60,9 @@ class _PeopleListPageState extends State<PeopleListPage> {
                         child: Text('Тип', style: TextStyle(color: Theme.of(context).hintColor)),
                       ),
                       DropdownButton<String>(
-                        value: typeValue,
+                        value: _typeValue,
                         onChanged: (value) => setState(() {
-                          typeValue = value ?? 'all';
+                          _typeValue = value ?? 'all';
                         }),
                         items: const [
                           DropdownMenuItem(
@@ -90,7 +90,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
             ),
             Expanded(
               child: FutureBuilder<List<PersonModel>>(
-                  future: widget.institution.people,
+                  future: widget._institution.people,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) return Utils.progressIndicator();
                     var sorted = snapshot.data!;
@@ -99,9 +99,9 @@ class _PeopleListPageState extends State<PeopleListPage> {
                       isAlwaysShown: true,
                       child: ListView(
                         children: [
-                          ...sorted.where(filter).map(
+                          ...sorted.where(_filter).map(
                                 (v) => ListTile(
-                                  onTap: () => onTap(v),
+                                  onTap: () => _onTap(v),
                                   title: Text(v.fullName),
                                   leading: widget.selectionMode ? const Icon(Icons.chevron_left) : null,
                                   trailing: widget.selectionMode ? null : const Icon(Icons.chevron_right),
@@ -119,15 +119,15 @@ class _PeopleListPageState extends State<PeopleListPage> {
     );
   }
 
-  bool filter(PersonModel person) {
-    return person.fullName.toUpperCase().contains(_name.text.toUpperCase()) && (typeValue == 'all' || person.types.contains(typeValue));
+  bool _filter(PersonModel person) {
+    return person.fullName.toUpperCase().contains(_name.text.toUpperCase()) && (_typeValue == 'all' || person.types.contains(_typeValue));
   }
 
-  bool get inSearch {
-    return _name.text.isNotEmpty || typeValue != 'all';
+  bool get _inSearch {
+    return _name.text.isNotEmpty || _typeValue != 'all';
   }
 
-  Future<void> onTap(PersonModel person) async {
+  Future<void> _onTap(PersonModel person) async {
     if (widget.selectionMode) {
       return Get.back<PersonModel>(result: person);
     } else {
@@ -138,7 +138,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
     }
   }
 
-  Future<void> newPerson() async {
+  Future<void> _newPerson() async {
     List<String> types = ['student', 'teacher', 'parent'];
     var type = await Get.bottomSheet<String>(
       Card(

@@ -23,7 +23,7 @@ class WeekSelector extends StatelessWidget {
           'Неделя: ',
           style: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
         ),
-        Obx(() => Text(formatWeek(cw.currentWeek))),
+        Obx(() => Text(_formatWeek(cw.currentWeek))),
         IconButton(
           iconSize: 36,
           icon: const Icon(Icons.navigate_before),
@@ -38,7 +38,7 @@ class WeekSelector extends StatelessWidget {
     );
   }
 
-  String formatWeek(Week week) {
+  String _formatWeek(Week week) {
     return Utils.formatPeriod(week.day(0), week.day(7).subtract(const Duration(seconds: 1)), format: 'dd MMM');
   }
 }

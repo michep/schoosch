@@ -7,10 +7,10 @@ import 'package:schoosch/pages/admin/curriculum_edit.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class CurriculumListPage extends StatefulWidget {
-  final InstitutionModel institution;
+  final InstitutionModel _institution;
   final bool selectionMode;
 
-  const CurriculumListPage(this.institution, {this.selectionMode = false, Key? key}) : super(key: key);
+  const CurriculumListPage(this._institution, {this.selectionMode = false, Key? key}) : super(key: key);
 
   @override
   State<CurriculumListPage> createState() => _CurriculumListPageState();
@@ -24,14 +24,14 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Учебные предметы'),
-        actions: widget.selectionMode ? [] : [IconButton(onPressed: newCurriculum, icon: const Icon(Icons.add))],
+        actions: widget.selectionMode ? [] : [IconButton(onPressed: _newCurriculum, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
         child: Column(
           children: [
             Card(
               child: ExpansionTile(
-                title: inSearch ? const Text('Поиск', style: TextStyle(fontStyle: FontStyle.italic)) : const Text('Поиск'),
+                title: _inSearch ? const Text('Поиск', style: TextStyle(fontStyle: FontStyle.italic)) : const Text('Поиск'),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
@@ -52,18 +52,18 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
             ),
             Expanded(
               child: FutureBuilder<List<CurriculumModel>>(
-                  future: widget.institution.curriculums,
+                  future: widget._institution.curriculums,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) return Utils.progressIndicator();
                     var sorted = snapshot.data!;
-                    sorted.sort((a, b) => a.aliasOrName.compareTo(b.aliasOrName));
+                    sorted.sort((a, b) => a.name.compareTo(b.name));
                     return Scrollbar(
                       isAlwaysShown: true,
                       child: ListView(
                         children: [
-                          ...sorted.where(filter).map(
+                          ...sorted.where(_filter).map(
                                 (v) => ListTile(
-                                  onTap: () => onTap(v),
+                                  onTap: () => _onTap(v),
                                   title: Text(v.name),
                                   subtitle: FutureBuilder<TeacherModel?>(
                                       future: v.master,
@@ -86,16 +86,16 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
     );
   }
 
-  bool filter(CurriculumModel curriculum) {
+  bool _filter(CurriculumModel curriculum) {
     return (curriculum.name.toUpperCase().contains(_name.text.toUpperCase())) ||
         (curriculum.alias != null && curriculum.alias!.toUpperCase().contains(_name.text.toUpperCase()));
   }
 
-  bool get inSearch {
+  bool get _inSearch {
     return _name.text.isNotEmpty;
   }
 
-  Future<void> onTap(CurriculumModel curriculum) async {
+  Future<void> _onTap(CurriculumModel curriculum) async {
     if (widget.selectionMode) {
       return Get.back<CurriculumModel>(result: curriculum);
     } else {
@@ -106,7 +106,7 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
     }
   }
 
-  Future<void> newCurriculum() async {
+  Future<void> _newCurriculum() async {
     var ncurr = CurriculumModel.empty();
     var res = await Get.to<CurriculumModel>(() => CurriculumPage(ncurr, 'Новый учебный предмет'));
     if (res is CurriculumModel) {

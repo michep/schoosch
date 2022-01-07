@@ -8,8 +8,8 @@ import 'package:schoosch/widgets/student/student_schedule.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class StudentScheduleSwitcher extends StatefulWidget {
-  final StudentModel student;
-  const StudentScheduleSwitcher(this.student, {Key? key}) : super(key: key);
+  final StudentModel _student;
+  const StudentScheduleSwitcher(this._student, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => StudentScheduleSwitcherState();
@@ -21,7 +21,7 @@ class StudentScheduleSwitcherState extends State<StudentScheduleSwitcher> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<ClassModel?>(
-        future: widget.student.studentClass,
+        future: widget._student.studentClass,
         builder: (context, classSnap) {
           if (!classSnap.hasData) return Utils.progressIndicator();
           if (classSnap.data == null) return const Center(child: Text('У ученика не определен класс'));
@@ -31,7 +31,7 @@ class StudentScheduleSwitcherState extends State<StudentScheduleSwitcher> {
             childrenDelegate: SliverChildBuilderDelegate(
               (context, idx) {
                 return StudentScheduleWidget(
-                  widget.student,
+                  widget._student,
                   classSnap.data!,
                   Week(year: idx ~/ 100, weekNumber: idx % 100),
                   key: ValueKey(idx),

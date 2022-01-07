@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
           children: [
             WeekSelector(key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber)),
             Expanded(
-              child: mainPage(PersonModel.currentUser!.currentType),
+              child: _mainPage(PersonModel.currentUser!.currentType),
             ),
           ],
         ),
@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget mainPage(String type) {
+  Widget _mainPage(String type) {
     if (type == 'teacher') return TeacherScheduleSwitcher(PersonModel.currentTeacher!);
     if (type == 'parent') {
       return FutureBuilder<StudentModel>(

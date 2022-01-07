@@ -139,12 +139,4 @@ class StudentLessonPage extends StatelessWidget {
       ),
     );
   }
-
-  String fullLessonInfo(BuildContext context) {
-    return DateFormat('d MMMM, EEEE', 'ru').format(_date).capitalizeFirst! +
-        ', ' +
-        _lesson.order.toString() +
-        ' урок, ' +
-        _time.format(context);
-  }
 }

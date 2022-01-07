@@ -60,7 +60,7 @@ class _SelectableValueListFormFieldState<T> extends State<SelectableValueListFor
             Icons.add,
             color: Theme.of(context).primaryColor,
           ),
-          onPressed: addData,
+          onPressed: _addData,
         ),
         children: [
           ..._dataList.map((s) => ListTile(
@@ -70,11 +70,11 @@ class _SelectableValueListFormFieldState<T> extends State<SelectableValueListFor
                   children: [
                     IconButton(
                       icon: const Icon(Icons.open_in_new),
-                      onPressed: () => openData(s),
+                      onPressed: () => _openData(s),
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete),
-                      onPressed: () => removeData(s),
+                      onPressed: () => _removeData(s),
                     ),
                   ],
                 ),
@@ -84,27 +84,27 @@ class _SelectableValueListFormFieldState<T> extends State<SelectableValueListFor
     );
   }
 
-  Future<void> addData() async {
+  Future<void> _addData() async {
     var res = await Get.to<T>(widget.listFunc, transition: Transition.rightToLeft);
     if (res != null) {
-      setState(() => addValue(res));
+      setState(() => _addValue(res));
     }
   }
 
-  Future<void> openData(T value) async {
+  Future<void> _openData(T value) async {
     var res = await Get.to<T>(() => widget.detailsFunc(value), transition: Transition.rightToLeft);
     if (res != null) {
-      setState(() => setValue(res));
+      setState(() => _setValue(res));
     }
   }
 
-  void addValue(T value) {
+  void _addValue(T value) {
     if (widget.addElementFunc(value)) {
       _dataList.add(value);
     }
   }
 
-  void setValue(T value) {
+  void _setValue(T value) {
     if (widget.setElementFunc(value)) {
       var i = _dataList.indexOf(value);
       _dataList.remove(value);
@@ -112,7 +112,7 @@ class _SelectableValueListFormFieldState<T> extends State<SelectableValueListFor
     }
   }
 
-  void removeData(T value) {
+  void _removeData(T value) {
     if (widget.removeElementFunc(value)) {
       _dataList.remove(value);
     }

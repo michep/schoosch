@@ -9,11 +9,11 @@ import 'package:schoosch/widgets/utils.dart';
 enum ClassListMode { classes, schedules }
 
 class ClassListPage extends StatefulWidget {
-  final InstitutionModel institution;
+  final InstitutionModel _institution;
   final bool selectionMode;
   final ClassListMode listMode;
 
-  const ClassListPage(this.institution, {this.selectionMode = false, this.listMode = ClassListMode.classes, Key? key}) : super(key: key);
+  const ClassListPage(this._institution, {this.selectionMode = false, this.listMode = ClassListMode.classes, Key? key}) : super(key: key);
 
   @override
   State<ClassListPage> createState() => _ClassListPageState();
@@ -27,14 +27,14 @@ class _ClassListPageState extends State<ClassListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Учебные классы'),
-        actions: widget.selectionMode ? [] : [IconButton(onPressed: newClass, icon: const Icon(Icons.add))],
+        actions: widget.selectionMode ? [] : [IconButton(onPressed: _newClass, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
         child: Column(
           children: [
             Card(
               child: ExpansionTile(
-                title: inSearch ? const Text('Поиск', style: TextStyle(fontStyle: FontStyle.italic)) : const Text('Поиск'),
+                title: _inSearch ? const Text('Поиск', style: TextStyle(fontStyle: FontStyle.italic)) : const Text('Поиск'),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
@@ -55,7 +55,7 @@ class _ClassListPageState extends State<ClassListPage> {
             ),
             Expanded(
               child: FutureBuilder<List<ClassModel>>(
-                  future: widget.institution.classes,
+                  future: widget._institution.classes,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) return Utils.progressIndicator();
                     var sorted = snapshot.data!;
@@ -64,9 +64,9 @@ class _ClassListPageState extends State<ClassListPage> {
                       isAlwaysShown: true,
                       child: ListView(
                         children: [
-                          ...sorted.where(filter).map(
+                          ...sorted.where(_filter).map(
                                 (v) => ListTile(
-                                  onTap: () => widget.listMode == ClassListMode.classes ? onTapClass(v) : onTapSchedule(v),
+                                  onTap: () => widget.listMode == ClassListMode.classes ? _onTapClass(v) : _onTapSchedule(v),
                                   title: Text(v.name),
                                   subtitle: Text(v.grade.toString()),
                                   leading: widget.selectionMode ? const Icon(Icons.chevron_left) : null,
@@ -84,15 +84,15 @@ class _ClassListPageState extends State<ClassListPage> {
     );
   }
 
-  bool filter(ClassModel aclass) {
+  bool _filter(ClassModel aclass) {
     return aclass.name.toUpperCase().contains(_name.text.toUpperCase());
   }
 
-  bool get inSearch {
+  bool get _inSearch {
     return _name.text.isNotEmpty;
   }
 
-  Future<void> onTapClass(ClassModel aclass) async {
+  Future<void> _onTapClass(ClassModel aclass) async {
     if (widget.selectionMode) {
       return Get.back<ClassModel>(result: aclass);
     } else {
@@ -103,7 +103,7 @@ class _ClassListPageState extends State<ClassListPage> {
     }
   }
 
-  Future<void> onTapSchedule(ClassModel aclass) async {
+  Future<void> _onTapSchedule(ClassModel aclass) async {
     if (widget.selectionMode) {
       return Get.back<ClassModel>(result: aclass);
     } else {
@@ -114,7 +114,7 @@ class _ClassListPageState extends State<ClassListPage> {
     }
   }
 
-  Future<void> newClass() async {
+  Future<void> _newClass() async {
     var nclass = ClassModel.empty();
     var res = await Get.to<ClassModel>(() => ClassPage(nclass, 'Новый учебный класс'));
     if (res is ClassModel) {

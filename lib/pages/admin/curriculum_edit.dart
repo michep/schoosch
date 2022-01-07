@@ -10,10 +10,10 @@ import 'package:schoosch/widgets/selectablevaluelist_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class CurriculumPage extends StatefulWidget {
-  final CurriculumModel curriculum;
-  final String title;
+  final CurriculumModel _curriculum;
+  final String _title;
 
-  const CurriculumPage(this.curriculum, this.title, {Key? key}) : super(key: key);
+  const CurriculumPage(this._curriculum, this._title, {Key? key}) : super(key: key);
 
   @override
   State<CurriculumPage> createState() => _CurriculumPageState();
@@ -24,13 +24,13 @@ class _CurriculumPageState extends State<CurriculumPage> {
   final TextEditingController _alias = TextEditingController();
   final TextEditingController _mastercont = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final List<StudentModel> students = [];
-  TeacherModel? master;
+  final List<StudentModel> _students = [];
+  TeacherModel? _master;
 
   @override
   void initState() {
-    _name.value = TextEditingValue(text: widget.curriculum.name);
-    _alias.value = TextEditingValue(text: widget.curriculum.alias ?? '');
+    _name.value = TextEditingValue(text: widget._curriculum.name);
+    _alias.value = TextEditingValue(text: widget._curriculum.alias ?? '');
     super.initState();
   }
 
@@ -38,11 +38,11 @@ class _CurriculumPageState extends State<CurriculumPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget._title),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
-            onPressed: () => delete(widget.curriculum),
+            onPressed: () => _delete(widget._curriculum),
           ),
         ],
       ),
@@ -76,31 +76,31 @@ class _CurriculumPageState extends State<CurriculumPage> {
                       ),
                       SelectableValueFormField<PersonModel>(
                         title: 'Преподаватель',
-                        initFutureFunc: initMaster,
+                        initFutureFunc: _initMaster,
                         titleFunc: (value) => value?.fullName ?? '',
                         listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'teacher'),
-                        detailsFunc: () => PersonPage(master!, master!.fullName),
+                        detailsFunc: () => PersonPage(_master!, _master!.fullName),
                         validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Преподаватель должен быть выбран'),
-                        callback: (value) => setMaster(value),
+                        callback: (value) => _setMaster(value),
                       ),
                     ],
                   ),
                 ),
                 SelectableValueListFormField<PersonModel>(
                   title: 'Группа учащихся',
-                  initListFutureFunc: initStudents,
+                  initListFutureFunc: _initStudents,
                   titleFunc: (value) => value?.fullName ?? '',
                   listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'student'),
                   detailsFunc: (value) => PersonPage(value!, value.fullName),
-                  addElementFunc: addStudent,
-                  setElementFunc: setStudent,
-                  removeElementFunc: removeStudent,
+                  addElementFunc: _addStudent,
+                  setElementFunc: _setStudent,
+                  removeElementFunc: _removeStudent,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
                     child: const Text('Сохранить изменения'),
-                    onPressed: () => save(widget.curriculum),
+                    onPressed: () => _save(widget._curriculum),
                   ),
                 ),
               ],
@@ -111,24 +111,24 @@ class _CurriculumPageState extends State<CurriculumPage> {
     );
   }
 
-  Future<PersonModel> initMaster() async {
-    return widget.curriculum.master.then((value) {
+  Future<PersonModel> _initMaster() async {
+    return widget._curriculum.master.then((value) {
       if (value != null) {
         _mastercont.text = value.fullName;
-        master = value;
+        _master = value;
       }
-      return master as PersonModel;
+      return _master as PersonModel;
     });
   }
 
-  bool setMaster(PersonModel? value) {
+  bool _setMaster(PersonModel? value) {
     if (value != null) {
       if (value.asTeacher != null) {
-        master = value.asTeacher;
+        _master = value.asTeacher;
         return true;
       } else {
         if (value is TeacherModel) {
-          master = (value);
+          _master = (value);
           return true;
         } else {
           Utils.showErrorSnackbar(
@@ -138,19 +138,19 @@ class _CurriculumPageState extends State<CurriculumPage> {
         }
       }
     } else {
-      master = null;
+      _master = null;
       return true;
     }
   }
 
-  Future<List<PersonModel>> initStudents() async {
-    return widget.curriculum.students(forceRefresh: true).then((value) {
-      students.addAll(value);
-      return students;
+  Future<List<PersonModel>> _initStudents() async {
+    return widget._curriculum.students(forceRefresh: true).then((value) {
+      _students.addAll(value);
+      return _students;
     });
   }
 
-  bool addStudent(PersonModel? value) {
+  bool _addStudent(PersonModel? value) {
     if (value == null) return false;
     if (value.asStudent == null) {
       Utils.showErrorSnackbar(
@@ -158,19 +158,19 @@ class _CurriculumPageState extends State<CurriculumPage> {
       );
       return false;
     }
-    if (students.contains(value)) {
+    if (_students.contains(value)) {
       Utils.showErrorSnackbar(
         'Выбранный учащийся уже присутствует в группе',
       );
       return false;
     }
     setState(() {
-      students.add(value.asStudent!);
+      _students.add(value.asStudent!);
     });
     return true;
   }
 
-  bool setStudent(PersonModel value) {
+  bool _setStudent(PersonModel value) {
     StudentModel sm;
     if (!value.types.contains('student')) {
       Utils.showErrorSnackbar(
@@ -182,27 +182,27 @@ class _CurriculumPageState extends State<CurriculumPage> {
     value.asStudent != null ? sm = value.asStudent! : sm = (value as StudentModel);
 
     setState(() {
-      var i = students.indexOf(sm);
-      students.remove(sm);
-      students.insert(i, sm);
+      var i = _students.indexOf(sm);
+      _students.remove(sm);
+      _students.insert(i, sm);
     });
     return true;
   }
 
-  bool removeStudent(PersonModel value) {
+  bool _removeStudent(PersonModel value) {
     setState(() {
-      students.remove(value);
+      _students.remove(value);
     });
     return true;
   }
 
-  Future<void> save(CurriculumModel curriculum) async {
+  Future<void> _save(CurriculumModel curriculum) async {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> map = {};
       map['name'] = _name.text;
       map['alias'] = _alias.text.isNotEmpty ? _alias.text : null;
-      map['master_id'] = master!.id!;
-      map['student_ids'] = students.map((e) => e.id!).toList();
+      map['master_id'] = _master!.id!;
+      map['student_ids'] = _students.map((e) => e.id!).toList();
 
       var ncurriculum = CurriculumModel.fromMap(curriculum.id, map);
       await ncurriculum.save();
@@ -210,5 +210,5 @@ class _CurriculumPageState extends State<CurriculumPage> {
     }
   }
 
-  Future<void> delete(CurriculumModel curriculum) async {}
+  Future<void> _delete(CurriculumModel curriculum) async {}
 }

@@ -4,27 +4,18 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:get/get.dart';
 
 class RateSheet extends StatefulWidget {
-  final TeacherModel teacher;
+  final TeacherModel _teacher;
 
-  const RateSheet(this.teacher, {Key? key}) : super(key: key);
+  const RateSheet(this._teacher, {Key? key}) : super(key: key);
 
   @override
   _RateSheetState createState() => _RateSheetState();
 }
 
 class _RateSheetState extends State<RateSheet> {
-  int rating = 0;
-  bool showComment = false;
-  TextEditingController comment = TextEditingController();
-
-  void rate() {
-    if ((rating > 2) || (rating < 2 && comment.text != '')) {
-      widget.teacher.createRating(PersonModel.currentUser!, rating, comment.text);
-    }
-    Get.back();
-    rating = 0;
-    comment.clear();
-  }
+  int _rating = 0;
+  bool _showComment = false;
+  final TextEditingController _comment = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +28,12 @@ class _RateSheetState extends State<RateSheet> {
               color: Colors.amber,
             ),
             onRatingUpdate: (rating) {
-              this.rating = rating.round();
+              this._rating = rating.round();
               setState(() {
                 if (rating < 3) {
-                  showComment = true;
+                  _showComment = true;
                 } else {
-                  showComment = false;
+                  _showComment = false;
                 }
               });
             },
@@ -57,9 +48,9 @@ class _RateSheetState extends State<RateSheet> {
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 30),
-            child: showComment == true
+            child: _showComment == true
                 ? TextField(
-                    controller: comment,
+                    controller: _comment,
                     decoration: const InputDecoration(labelText: 'объясните свой выбор:'),
                   )
                 : const SizedBox.shrink(),
@@ -67,9 +58,18 @@ class _RateSheetState extends State<RateSheet> {
           const SizedBox(
             height: 10,
           ),
-          ElevatedButton(onPressed: rate, child: const Text('оценить')),
+          ElevatedButton(onPressed: _rate, child: const Text('оценить')),
         ],
       ),
     );
+  }
+
+  void _rate() {
+    if ((_rating > 2) || (_rating < 2 && _comment.text != '')) {
+      widget._teacher.createRating(PersonModel.currentUser!, _rating, _comment.text);
+    }
+    _rating = 0;
+    _comment.clear();
+    Get.back();
   }
 }
