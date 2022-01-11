@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
-import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
@@ -21,18 +19,10 @@ class TeacherLessonPage extends StatelessWidget {
   final LessontimeModel _time;
   final TeacherModel _teacher;
 
-  const TeacherLessonPage(this._lesson, this._curiculum, this._venue,
-      this._time, this._date, this._teacher,
-      {Key? key})
-      : super(key: key);
+  const TeacherLessonPage(this._lesson, this._curiculum, this._venue, this._time, this._date, this._teacher, {Key? key}) : super(key: key);
 
   Future<void> activateBottomSheet(
-      BuildContext context,
-      StudentModel student,
-      TeacherModel teacher,
-      int lessonorder,
-      CurriculumModel curriculum,
-      DateTime date) async {
+      BuildContext context, StudentModel student, TeacherModel teacher, int lessonorder, CurriculumModel curriculum, DateTime date) async {
     return await showModalBottomSheet(
         context: context,
         builder: (a) {
@@ -47,7 +37,7 @@ class TeacherLessonPage extends StatelessWidget {
     DateTime date,
     StudentModel? student,
   ) async {
-    return await  showModalBottomSheet(
+    return await showModalBottomSheet(
         context: context,
         builder: (a) {
           return AddHomeworkSheet(teacher, curriculum, date, student);
@@ -102,7 +92,7 @@ class TeacherLessonPage extends StatelessWidget {
                 return const Text("нет учеников");
               }
               return Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.blue, width: 2),
                   borderRadius: BorderRadius.circular(15),
@@ -125,38 +115,25 @@ class TeacherLessonPage extends StatelessWidget {
                             e.fullName,
                           ),
                           subtitle: () {
-                            var asd = hmhm.where((element) => (element.studentId != null &&
-                                  element.studentId == e.id)).toList();
-                            return asd.isNotEmpty ?
-                            Text(asd.first.text) : Text('');
+                            var asd = hmhm.where((element) => (element.studentId != null && element.studentId == e.id)).toList();
+                            return asd.isNotEmpty ? Text(asd.first.text) : const Text('');
                           }(),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
                                 onPressed: () {
-                                  activateBottomSheet2(
-                                      context,
-                                      _teacher,
-                                      _curiculum,
-                                      _date,
-                                      e);
+                                  activateBottomSheet2(context, _teacher, _curiculum, _date, e);
                                 },
-                                icon: Icon(Icons.checklist_rounded),
+                                icon: const Icon(Icons.checklist_rounded),
                                 iconSize: 25,
                               ),
                               IconButton(
                                 onPressed: () {
-                                  activateBottomSheet(
-                                      context,
-                                      e,
-                                      _teacher,
-                                      _lesson.order,
-                                      _curiculum,
-                                      _date);
+                                  activateBottomSheet(context, e, _teacher, _lesson.order, _curiculum, _date);
                                 },
                                 iconSize: 25,
-                                icon: Icon(Icons.auto_stories_outlined),
+                                icon: const Icon(Icons.auto_stories_outlined),
                               )
                             ],
                           ),
@@ -200,41 +177,38 @@ class TeacherLessonPage extends StatelessWidget {
               // );
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('YOUR D/Z'),
-                FutureBuilder<List<HomeworkModel>>(
-                  future: hom(_date),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Text('');
-                    }
-                    if (snapshot.data!.isEmpty) {
-                      return const Text("нет домашнего задания");
-                    }
-                    var abd = snapshot.data!.where((element) => element.studentId == null).toList();
-                    return abd.isNotEmpty ? Text(abd.first.text) : Text('');
-                  },
-                ),
-              ],
-            ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('YOUR D/Z'),
+              FutureBuilder<List<HomeworkModel>>(
+                future: hom(_date),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Text('');
+                  }
+                  if (snapshot.data!.isEmpty) {
+                    return const Text("нет домашнего задания");
+                  }
+                  var abd = snapshot.data!.where((element) => element.studentId == null).toList();
+                  return abd.isNotEmpty ? Text(abd.first.text) : const Text('');
+                },
+              ),
+            ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Center(
             child: ElevatedButton.icon(
               onPressed: () {
-                activateBottomSheet2(
-                    context, _teacher, _curiculum, _date, null);
+                activateBottomSheet2(context, _teacher, _curiculum, _date, null);
               },
-              icon: Icon(Icons.calculate_outlined),
-              label: Text("add DZ"),
+              icon: const Icon(Icons.calculate_outlined),
+              label: const Text("add DZ"),
             ),
           ),
         ],

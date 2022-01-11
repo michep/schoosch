@@ -174,6 +174,4 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
       await l.delete();
     }
   }
-
-  Future<void> _delete(StudentScheduleModel schedule) async {}
 }

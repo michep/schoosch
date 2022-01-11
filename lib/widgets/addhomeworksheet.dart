@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
@@ -10,7 +9,7 @@ class AddHomeworkSheet extends StatefulWidget {
   final DateTime date;
   final StudentModel? student;
 
-  AddHomeworkSheet(
+  const AddHomeworkSheet(
     this.teacher,
     this.curriculum,
     this.date,
@@ -28,15 +27,15 @@ class _AddHomeworkSheetState extends State<AddHomeworkSheet> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('добавить дз'),
+        const Text('добавить дз'),
         Container(
-          margin: EdgeInsets.all(10),
+          margin: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.blue, width: 2),
           ),
           child: TextField(
             controller: cont,
-            decoration: InputDecoration(labelText: 'пишите сюда...'),
+            decoration: const InputDecoration(labelText: 'пишите сюда...'),
           ),
         ),
         ElevatedButton.icon(
@@ -45,8 +44,8 @@ class _AddHomeworkSheetState extends State<AddHomeworkSheet> {
             cont.clear();
             Get.back();
           },
-          icon: Icon(Icons.add_box_outlined),
-          label: Text('сохранить'),
+          icon: const Icon(Icons.add_box_outlined),
+          label: const Text('сохранить'),
         ),
       ],
     );
