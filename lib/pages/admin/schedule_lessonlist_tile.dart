@@ -32,27 +32,24 @@ class _StudentLessonListTileState extends State<ScheduleLessonListTile> {
           var cur = list[0] as CurriculumModel;
           var ven = list[1] as VenueModel;
           // var tim = list[2] as LessontimeModel;
-          return ListTile(
-            title: Padding(
-              child: Text(cur.name),
-              padding: const EdgeInsets.only(left: 18),
-            ),
-            subtitle: Padding(
-              child: Text('${cur.aliasOrName}, ${ven.name}'),
-              padding: const EdgeInsets.only(left: 18),
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.open_in_new),
-                  onPressed: () => _onTap(widget._lesson),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => _removeLesson(widget._lesson),
-                ),
-              ],
+          return Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: ListTile(
+              title: Text(cur.name, overflow: TextOverflow.ellipsis),
+              subtitle: Text('${cur.aliasOrName}, ${ven.name}', overflow: TextOverflow.ellipsis),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.open_in_new),
+                    onPressed: () => _onTap(widget._lesson),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => _removeLesson(widget._lesson),
+                  ),
+                ],
+              ),
             ),
           );
         });

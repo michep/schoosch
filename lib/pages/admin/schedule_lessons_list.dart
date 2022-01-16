@@ -174,16 +174,17 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
 
   Widget _title(int order) {
     return Padding(
-      padding: const EdgeInsets.all(0),
+      padding: order == 1 ? const EdgeInsets.only(top: 16) : const EdgeInsets.only(top: 0),
       child: Text('$order урок'),
     );
   }
 
   Widget get _noLessons {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      // padding: EdgeInsets.only(left: 0),
-      children: const [Text('нет уроков')],
+    return const Padding(
+      padding: EdgeInsets.only(left: 16),
+      child: ListTile(
+        title: Text('нет этого урока'),
+      ),
     );
   }
 
