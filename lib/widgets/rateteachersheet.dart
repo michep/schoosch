@@ -28,7 +28,7 @@ class _RateSheetState extends State<RateSheet> {
               color: Colors.amber,
             ),
             onRatingUpdate: (rating) {
-              this._rating = rating.round();
+              _rating = rating.round();
               setState(() {
                 if (rating < 3) {
                   _showComment = true;

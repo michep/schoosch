@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
-import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/pages/admin/lesson_edit.dart';
 
 class ScheduleLessonListTile extends StatefulWidget {
-  final int _idx;
   final LessonModel _lesson;
   final Function(LessonModel) _removeLessonFunc;
 
-  const ScheduleLessonListTile(this._idx, this._lesson, this._removeLessonFunc, {Key? key}) : super(key: key);
+  const ScheduleLessonListTile(this._lesson, this._removeLessonFunc, {Key? key}) : super(key: key);
 
   @override
   State<ScheduleLessonListTile> createState() => _StudentLessonListTileState();
@@ -24,7 +22,7 @@ class _StudentLessonListTileState extends State<ScheduleLessonListTile> {
         future: Future.wait([
           widget._lesson.curriculum,
           widget._lesson.venue,
-          widget._lesson.lessontime,
+          // widget._lesson.lessontime,
         ]),
         builder: (context, snap) {
           if (!snap.hasData) {
@@ -33,14 +31,16 @@ class _StudentLessonListTileState extends State<ScheduleLessonListTile> {
           var list = snap.data! as List<dynamic>;
           var cur = list[0] as CurriculumModel;
           var ven = list[1] as VenueModel;
-          var tim = list[2] as LessontimeModel;
+          // var tim = list[2] as LessontimeModel;
           return ListTile(
-            leading: ReorderableDragStartListener(
-              index: widget._idx,
-              child: const Icon(Icons.drag_handle),
+            title: Padding(
+              child: Text(cur.name),
+              padding: const EdgeInsets.only(left: 18),
             ),
-            title: Text(cur.name),
-            subtitle: Text('${cur.aliasOrName}, ${ven.name}'),
+            subtitle: Padding(
+              child: Text('${cur.aliasOrName}, ${ven.name}'),
+              padding: const EdgeInsets.only(left: 18),
+            ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

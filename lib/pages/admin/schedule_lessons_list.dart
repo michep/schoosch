@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:drag_and_drop_lists/drag_and_drop_list_interface.dart';
+import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -24,7 +28,7 @@ class ScheduleLessonsListPage extends StatefulWidget {
 class _VenuePageState extends State<ScheduleLessonsListPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final List<LessonModel> _lessons = [];
+  final Map<int, List<LessonModel>> _lessons = {};
   final List<LessonModel> _lessonsRemoved = [];
   late DateTime? _from;
   late DateTime? _till;
@@ -33,7 +37,20 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
   void initState() {
     _from = widget._schedule.from;
     _till = widget._schedule.till;
-    widget._schedule.allLessons(forceRefresh: true).then((value) => setState(() => _lessons.addAll(value)));
+    widget._schedule.allLessons(forceRefresh: true).then(
+          (lessons) => setState(
+            () {
+              for (var lesson in lessons) {
+                if (_lessons[lesson.order] == null) _lessons[lesson.order] = [];
+                _lessons[lesson.order]!.add(lesson);
+              }
+              var idMax = _lessons.keys.reduce(max);
+              for (var i = 1; i < idMax; i++) {
+                if (_lessons[i] == null) _lessons[i] = [];
+              }
+            },
+          ),
+        );
     super.initState();
   }
 
@@ -89,20 +106,15 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
                 Expanded(
                   child: Scrollbar(
                     isAlwaysShown: true,
-                    child: ReorderableListView(
-                      buildDefaultDragHandles: false,
-                      children: [
-                        ..._lessons.map((e) => ScheduleLessonListTile(_lessons.indexOf(e), e, _removeLesson, key: ValueKey(e))),
-                      ],
-                      onReorder: (oldIndex, newIndex) {
-                        setState(() {
-                          if (oldIndex < newIndex) {
-                            newIndex -= 1;
-                          }
-                          var item = _lessons.removeAt(oldIndex);
-                          _lessons.insert(newIndex, item);
-                        });
-                      },
+                    child: DragAndDropLists(
+                      axis: Axis.vertical,
+                      itemDragHandle: const DragHandle(
+                        child: Icon(Icons.drag_handle),
+                        onLeft: true,
+                      ),
+                      onItemReorder: _itemsReorder,
+                      onListReorder: (i, j) {},
+                      children: _generateListItems(),
                     ),
                   ),
                 ),
@@ -127,12 +139,74 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
     );
   }
 
+  List<DragAndDropListInterface> _generateListItems() {
+    List<DragAndDropList> res = [];
+    var keys = _lessons.keys.toList();
+    keys.sort((a, b) => a.compareTo(b));
+    for (var order in keys) {
+      List<DragAndDropItem> items = [];
+      for (var lesson in _lessons[order]!) {
+        items.add(
+          DragAndDropItem(
+            child: ScheduleLessonListTile(lesson, _removeLesson, key: ValueKey(lesson)),
+          ),
+        );
+      }
+      res.add(
+        DragAndDropList(
+          header: _title(order),
+          canDrag: false,
+          children: items,
+          contentsWhenEmpty: _noLessons,
+        ),
+      );
+    }
+    res.add(
+      DragAndDropList(
+        header: _title(res.length + 1),
+        canDrag: false,
+        children: [],
+        contentsWhenEmpty: _noLessons,
+      ),
+    );
+    return res;
+  }
+
+  Widget _title(int order) {
+    return Padding(
+      padding: const EdgeInsets.all(0),
+      child: Text('$order урок'),
+    );
+  }
+
+  Widget get _noLessons {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      // padding: EdgeInsets.only(left: 0),
+      children: const [Text('нет уроков')],
+    );
+  }
+
+  void _itemsReorder(int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {
+    setState(() {
+      var item = _lessons[oldListIndex + 1]!.removeAt(oldItemIndex);
+      if (_lessons[newListIndex + 1] == null) _lessons[newListIndex + 1] = [];
+      _lessons[newListIndex + 1]!.insert(newItemIndex, item);
+      var idx = _lessons.keys.reduce(max);
+      while (_lessons[idx] != null && _lessons[idx]!.isEmpty) {
+        _lessons.remove(idx);
+        idx--;
+      }
+    });
+  }
+
   Future<void> _newLesson() async {
     var nlesson = LessonModel.empty(widget._aclass, widget._schedule, _lessons.length + 1);
     var res = await Get.to<LessonModel>(() => LessonPage(nlesson, 'Урок'));
     if (res is LessonModel) {
       setState(() {
-        _lessons.add(res);
+        _lessons[_lessons.length + 1] = [];
+        _lessons[_lessons.length]!.add(res);
       });
     }
   }
@@ -140,7 +214,12 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
   void _removeLesson(LessonModel lesson) {
     _lessonsRemoved.add(lesson);
     setState(() {
-      _lessons.remove(lesson);
+      _lessons[lesson.order]!.remove(lesson);
+      var idx = _lessons.keys.reduce(max);
+      while (_lessons[idx] != null && _lessons[idx]!.isEmpty) {
+        _lessons.remove(idx);
+        idx--;
+      }
     });
   }
 
@@ -161,11 +240,13 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
 
   Future<void> _saveLessons(DayScheduleModel schedule) async {
     for (var i = 0; i < _lessons.length; i++) {
-      var less = _lessons[i];
-      less.order = i + 1;
-      var map = _lessons[i].toMap();
-      var nless = LessonModel.fromMap(widget._aclass, schedule, less.id, map);
-      await nless.save();
+      var lesss = _lessons[i + 1]!;
+      for (var less in lesss) {
+        less.order = i + 1;
+        var map = less.toMap();
+        var nless = LessonModel.fromMap(widget._aclass, schedule, less.id, map);
+        await nless.save();
+      }
     }
   }
 
