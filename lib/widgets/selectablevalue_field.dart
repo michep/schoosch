@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 typedef TitleFunc<T> = String Function(T? value);
 typedef FutureFunc<T> = Future<T?> Function();
+typedef ListFutureFunc<T> = Future<List<T>> Function();
 typedef WidgetFunc = Widget Function();
 typedef CallbackMaybeFunc<T> = bool Function(T? value);
 

@@ -14,6 +14,11 @@ class CurriculumModel {
 
   String? get id => _id;
 
+  @override
+  String toString() {
+    return name;
+  }
+
   CurriculumModel.empty()
       : this.fromMap(null, <String, dynamic>{
           'name': '',

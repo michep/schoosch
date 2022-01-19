@@ -81,6 +81,11 @@ class PersonModel {
   @override
   int get hashCode => hashValues(id, '');
 
+  @override
+  String toString() {
+    return fullName;
+  }
+
   String get fullName => middlename != null ? '$lastname $firstname $middlename' : '$lastname $firstname';
   String get abbreviatedName => middlename != null ? '$lastname ${firstname[0]}. ${middlename![0]}.' : '$lastname ${firstname[0]}.';
 
@@ -153,7 +158,8 @@ class TeacherModel extends PersonModel {
     return _schedule[week] ??= await Get.find<FStore>().getTeacherWeekSchedule(this, week);
   }
 
-  Future<void> createMark(PersonModel student, int mark, int lessonorder, CurriculumModel curriculum, String marktype,  DateTime date, {String comment = ""}) async {
+  Future<void> createMark(PersonModel student, int mark, int lessonorder, CurriculumModel curriculum, String marktype, DateTime date,
+      {String comment = ""}) async {
     return Get.find<FStore>().saveMark(this, student, curriculum, date, mark, lessonorder, marktype, comment);
   }
 

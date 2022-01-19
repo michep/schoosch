@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:schoosch/widgets/selectablevalue_field.dart';
 
 typedef WidgetValueFunc<T> = Widget Function(T? value);
-typedef ListFutureFunc<T> = Future<List<T>> Function();
 typedef CallbackFunc<T> = bool Function(T value);
 typedef ListFormFieldValidator = String? Function();
 

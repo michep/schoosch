@@ -8,7 +8,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/daylessontime_list.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
-import 'package:schoosch/widgets/selectablevalue_field.dart';
+import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/selectablevaluelist_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -81,9 +81,10 @@ class _ClassPageState extends State<ClassPage> {
                         ),
                         validator: _gradeValidator,
                       ),
-                      SelectableValueFormField<PersonModel>(
+                      SelectableValueDropdownFormField<PersonModel>(
                         title: 'Преподаватель',
                         initFutureFunc: _initMaster,
+                        initOptionsFutureFunc: _initMasterOptions,
                         titleFunc: (value) => value?.fullName ?? '',
                         listFunc: () => PeopleListPage(
                           InstitutionModel.currentInstitution,
@@ -94,9 +95,10 @@ class _ClassPageState extends State<ClassPage> {
                         validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Преподаватель должен быть выбран'),
                         callback: (value) => _setMaster(value),
                       ),
-                      SelectableValueFormField<DayLessontimeModel>(
+                      SelectableValueDropdownFormField<DayLessontimeModel>(
                         title: 'Расписание времени уроков',
                         initFutureFunc: _initLessonTime,
+                        initOptionsFutureFunc: _initLessonTimeOptions,
                         titleFunc: (value) => value?.name ?? '',
                         listFunc: () => DayLessontimeListPage(
                           InstitutionModel.currentInstitution,
@@ -145,6 +147,11 @@ class _ClassPageState extends State<ClassPage> {
     });
   }
 
+  Future<List<PersonModel>> _initMasterOptions() async {
+    var ppl = await InstitutionModel.currentInstitution.people;
+    return ppl.where((element) => element.asTeacher != null).toList();
+  }
+
   bool _setMaster(PersonModel? value) {
     if (value != null) {
       if (value.asTeacher != null) {
@@ -178,9 +185,11 @@ class _ClassPageState extends State<ClassPage> {
   }
 
   Future<DayLessontimeModel?> _initLessonTime() async {
-    return widget._aclass.getDayLessontime().then((value) {
-      return value;
-    });
+    return widget._aclass.getDayLessontime();
+  }
+
+  Future<List<DayLessontimeModel>> _initLessonTimeOptions() async {
+    return InstitutionModel.currentInstitution.daylessontimes;
   }
 
   bool _setLessonTime(DayLessontimeModel? value) {

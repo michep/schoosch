@@ -10,6 +10,11 @@ class DayLessontimeModel {
 
   String? get id => _id;
 
+  @override
+  String toString() {
+    return name;
+  }
+
   DayLessontimeModel.fromMap(this._id, Map<String, Object?> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in daylessontime $_id';
   }

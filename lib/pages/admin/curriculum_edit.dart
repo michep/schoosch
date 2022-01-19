@@ -5,7 +5,7 @@ import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
-import 'package:schoosch/widgets/selectablevalue_field.dart';
+import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/selectablevaluelist_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -74,9 +74,10 @@ class _CurriculumPageState extends State<CurriculumPage> {
                           ),
                         ),
                       ),
-                      SelectableValueFormField<PersonModel>(
+                      SelectableValueDropdownFormField<PersonModel>(
                         title: 'Преподаватель',
                         initFutureFunc: _initMaster,
+                        initOptionsFutureFunc: _initMasterOptions,
                         titleFunc: (value) => value?.fullName ?? '',
                         listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'teacher'),
                         detailsFunc: () => PersonPage(_master!, _master!.fullName),
@@ -119,6 +120,11 @@ class _CurriculumPageState extends State<CurriculumPage> {
       }
       return _master as PersonModel;
     });
+  }
+
+  Future<List<PersonModel>> _initMasterOptions() async {
+    var ppl = await InstitutionModel.currentInstitution.people;
+    return ppl.where((element) => element.asTeacher != null).toList();
   }
 
   bool _setMaster(PersonModel? value) {

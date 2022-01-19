@@ -7,6 +7,11 @@ class VenueModel {
 
   String? get id => _id;
 
+  @override
+  String toString() {
+    return name;
+  }
+
   VenueModel.empty()
       : this.fromMap(null, <String, dynamic>{
           'name': '',

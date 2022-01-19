@@ -1,0 +1,166 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:schoosch/widgets/selectablevalue_field.dart';
+
+typedef TitleFunc<T> = String Function(T? value);
+typedef FutureFunc<T> = Future<T?> Function();
+typedef WidgetFunc = Widget Function();
+typedef CallbackMaybeFunc<T> = bool Function(T? value);
+
+class SelectableValueDropdownFormField<T extends Object> extends StatefulWidget {
+  final String title;
+  final FutureFunc<T?> initFutureFunc;
+  final ListFutureFunc<T> initOptionsFutureFunc;
+  final WidgetFunc listFunc;
+  final WidgetFunc? detailsFunc;
+  final TitleFunc<T> titleFunc;
+  final FormFieldValidator<String>? validatorFunc;
+  final CallbackMaybeFunc<T> callback;
+
+  const SelectableValueDropdownFormField({
+    required this.title,
+    required this.initFutureFunc,
+    required this.initOptionsFutureFunc,
+    required this.listFunc,
+    required this.titleFunc,
+    required this.callback,
+    this.detailsFunc,
+    this.validatorFunc,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  _SelectableValueDropdownFormFieldState<T> createState() => _SelectableValueDropdownFormFieldState<T>();
+}
+
+class _SelectableValueDropdownFormFieldState<T extends Object> extends State<SelectableValueDropdownFormField<T>> {
+  final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+  final List<T> _options = [];
+  T? _data;
+
+  @override
+  void initState() {
+    widget.initFutureFunc().then((res) => _setValue(res));
+    widget.initOptionsFutureFunc().then((options) => setState(() {
+          _options.addAll(options);
+        }));
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RawAutocomplete<T>(
+      onSelected: (option) => _setValue(option),
+      textEditingController: _controller,
+      focusNode: _focusNode,
+      fieldViewBuilder: fieldViewBuilder,
+      optionsViewBuilder: optionsViewBuilder,
+      optionsBuilder: optionsBuilder,
+    );
+  }
+
+  Widget fieldViewBuilder(context, textEditingController, focusNode, onFieldSubmitted) {
+    return TextFormField(
+      readOnly: _data != null,
+      showCursor: _data == null,
+      keyboardType: _data != null ? TextInputType.none : TextInputType.text,
+      controller: textEditingController,
+      focusNode: focusNode,
+      decoration: InputDecoration(
+        label: Text(widget.title),
+        suffixIcon: Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: _data == null
+              ? IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: _selectData,
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    widget.detailsFunc != null
+                        ? IconButton(
+                            icon: const Icon(Icons.open_in_new),
+                            onPressed: _openData,
+                          )
+                        : const SizedBox.shrink(),
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: _removeData,
+                    ),
+                  ],
+                ),
+        ),
+      ),
+      validator: widget.validatorFunc,
+    );
+  }
+
+  Widget optionsViewBuilder(BuildContext context, AutocompleteOnSelected<T> onSelected, Iterable<T> options) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Material(
+        elevation: 4.0,
+        child: SizedBox(
+          height: 200.0,
+          child: ListView.builder(
+            padding: const EdgeInsets.all(8.0),
+            itemCount: options.length,
+            itemBuilder: (BuildContext context, int index) {
+              final T option = options.elementAt(index);
+              return GestureDetector(
+                onTap: () {
+                  onSelected(option);
+                },
+                child: ListTile(
+                  title: Text(option.toString()),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  FutureOr<Iterable<T>> optionsBuilder(TextEditingValue textEditingValue) {
+    return _options.where((option) {
+      return option.toString().toLowerCase().contains(textEditingValue.text.toLowerCase());
+    });
+  }
+
+  Future<void> _selectData() async {
+    var res = await Get.to<T>(widget.listFunc, transition: Transition.rightToLeft);
+    if (res != null) {
+      _setValue(res);
+    }
+  }
+
+  Future<void> _openData() async {
+    if (widget.detailsFunc != null) {
+      var res = await Get.to<T>(widget.detailsFunc, transition: Transition.rightToLeft);
+      if (res != null) {
+        _setValue(res);
+      }
+    }
+  }
+
+  void _removeData() {
+    _setValue(null);
+  }
+
+  void _setValue(T? value) {
+    setState(() {
+      if (widget.callback(value)) {
+        _data = value;
+        _controller.text = widget.titleFunc(value);
+      } else {
+        _data = null;
+        _controller.text = '';
+      }
+    });
+  }
+}

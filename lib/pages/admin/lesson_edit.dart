@@ -8,7 +8,7 @@ import 'package:schoosch/pages/admin/curriculum_edit.dart';
 import 'package:schoosch/pages/admin/curriculum_list.dart';
 import 'package:schoosch/pages/admin/venue_edit.dart';
 import 'package:schoosch/pages/admin/venue_list.dart';
-import 'package:schoosch/widgets/selectablevalue_field.dart';
+import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class LessonPage extends StatefulWidget {
@@ -51,9 +51,10 @@ class _LessonPageState extends State<LessonPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ListView(
               children: [
-                SelectableValueFormField<CurriculumModel>(
+                SelectableValueDropdownFormField<CurriculumModel>(
                   title: 'Учебный предмет',
                   initFutureFunc: _initCurriculum,
+                  initOptionsFutureFunc: _initCurriculumOptions,
                   titleFunc: (value) => value?.name ?? '',
                   listFunc: () => CurriculumListPage(
                     InstitutionModel.currentInstitution,
@@ -63,9 +64,10 @@ class _LessonPageState extends State<LessonPage> {
                   validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Учебный предмет должен быть выбран'),
                   callback: (value) => _setCurriculum(value),
                 ),
-                SelectableValueFormField<VenueModel>(
+                SelectableValueDropdownFormField<VenueModel>(
                   title: 'Кабинет',
                   initFutureFunc: _initVenue,
+                  initOptionsFutureFunc: _initVenueOptions,
                   titleFunc: (value) => value?.name ?? '',
                   listFunc: () => VenueListPage(
                     InstitutionModel.currentInstitution,
@@ -97,6 +99,10 @@ class _LessonPageState extends State<LessonPage> {
     });
   }
 
+  Future<List<CurriculumModel>> _initCurriculumOptions() {
+    return InstitutionModel.currentInstitution.curriculums;
+  }
+
   bool _setCurriculum(CurriculumModel? value) {
     curriculum = value;
     return true;
@@ -107,6 +113,10 @@ class _LessonPageState extends State<LessonPage> {
       venue = value;
       return venue;
     });
+  }
+
+  Future<List<VenueModel>> _initVenueOptions() {
+    return InstitutionModel.currentInstitution.venues;
   }
 
   bool _setVenue(VenueModel? value) {
