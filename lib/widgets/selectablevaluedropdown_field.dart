@@ -38,7 +38,10 @@ class SelectableValueDropdownFormField<T extends Object> extends StatefulWidget 
 class _SelectableValueDropdownFormFieldState<T extends Object> extends State<SelectableValueDropdownFormField<T>> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  final ScrollController _scroll = ScrollController();
   final List<T> _options = [];
+  final _key1 = GlobalKey();
+  double _width = 0;
   T? _data;
 
   @override
@@ -48,6 +51,9 @@ class _SelectableValueDropdownFormFieldState<T extends Object> extends State<Sel
           _options.addAll(options);
         }));
     super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _width = _key1.currentContext!.size!.width;
+    });
   }
 
   @override
@@ -64,6 +70,7 @@ class _SelectableValueDropdownFormFieldState<T extends Object> extends State<Sel
 
   Widget fieldViewBuilder(context, textEditingController, focusNode, onFieldSubmitted) {
     return TextFormField(
+      key: _key1,
       readOnly: _data != null,
       showCursor: _data == null,
       keyboardType: _data != null ? TextInputType.none : TextInputType.text,
@@ -104,22 +111,27 @@ class _SelectableValueDropdownFormFieldState<T extends Object> extends State<Sel
       alignment: Alignment.topLeft,
       child: Material(
         elevation: 4.0,
-        child: SizedBox(
-          height: 200.0,
-          child: ListView.builder(
-            padding: const EdgeInsets.all(8.0),
-            itemCount: options.length,
-            itemBuilder: (BuildContext context, int index) {
-              final T option = options.elementAt(index);
-              return GestureDetector(
-                onTap: () {
-                  onSelected(option);
-                },
-                child: ListTile(
-                  title: Text(option.toString()),
-                ),
-              );
-            },
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: 200, maxWidth: _width),
+          child: Scrollbar(
+            controller: _scroll,
+            isAlwaysShown: true,
+            child: ListView.builder(
+              controller: _scroll,
+              padding: const EdgeInsets.all(8.0),
+              itemCount: options.length,
+              itemBuilder: (BuildContext context, int index) {
+                final T option = options.elementAt(index);
+                return GestureDetector(
+                  onTap: () {
+                    onSelected(option);
+                  },
+                  child: ListTile(
+                    title: Text(option.toString()),
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
