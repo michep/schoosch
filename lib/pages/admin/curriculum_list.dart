@@ -24,7 +24,7 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Учебные предметы'),
-        actions: widget.selectionMode ? [] : [IconButton(onPressed: _newCurriculum, icon: const Icon(Icons.add))],
+        actions: [IconButton(onPressed: _newCurriculum, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
         child: Column(

@@ -23,7 +23,7 @@ class _VenueListPageState extends State<VenueListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Кабинеты и помещения'),
-        actions: widget.selectionMode ? [] : [IconButton(onPressed: _newVenue, icon: const Icon(Icons.add))],
+        actions: [IconButton(onPressed: _newVenue, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
         child: Column(

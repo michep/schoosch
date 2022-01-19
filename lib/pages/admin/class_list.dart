@@ -27,7 +27,7 @@ class _ClassListPageState extends State<ClassListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Учебные классы'),
-        actions: widget.selectionMode ? [] : [IconButton(onPressed: _newClass, icon: const Icon(Icons.add))],
+        actions: [IconButton(onPressed: _newClass, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
         child: Column(
