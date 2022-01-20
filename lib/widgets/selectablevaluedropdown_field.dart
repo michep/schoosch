@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/widgets/selectablevalue_field.dart';
 
@@ -59,16 +60,17 @@ class _SelectableValueDropdownFormFieldState<T extends Object> extends State<Sel
   @override
   Widget build(BuildContext context) {
     return RawAutocomplete<T>(
-      onSelected: (option) => _setValue(option),
       textEditingController: _controller,
       focusNode: _focusNode,
-      fieldViewBuilder: fieldViewBuilder,
       optionsViewBuilder: optionsViewBuilder,
+      fieldViewBuilder: fieldViewBuilder,
       optionsBuilder: optionsBuilder,
+      onSelected: (option) => _setValue(option),
     );
   }
 
-  Widget fieldViewBuilder(context, textEditingController, focusNode, onFieldSubmitted) {
+  Widget fieldViewBuilder(
+      BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
     return TextFormField(
       key: _key1,
       readOnly: _data != null,
@@ -76,6 +78,7 @@ class _SelectableValueDropdownFormFieldState<T extends Object> extends State<Sel
       keyboardType: _data != null ? TextInputType.none : TextInputType.text,
       controller: textEditingController,
       focusNode: focusNode,
+      onFieldSubmitted: (value) => onFieldSubmitted(),
       decoration: InputDecoration(
         label: Text(widget.title),
         suffixIcon: Padding(
@@ -122,12 +125,24 @@ class _SelectableValueDropdownFormFieldState<T extends Object> extends State<Sel
               itemCount: options.length,
               itemBuilder: (BuildContext context, int index) {
                 final T option = options.elementAt(index);
-                return GestureDetector(
+                return InkWell(
                   onTap: () {
                     onSelected(option);
                   },
-                  child: ListTile(
-                    title: Text(option.toString()),
+                  child: Builder(
+                    builder: (BuildContext context) {
+                      final bool highlight = AutocompleteHighlightedOption.of(context) == index;
+                      if (highlight) {
+                        SchedulerBinding.instance!.addPostFrameCallback((Duration timeStamp) {
+                          Scrollable.ensureVisible(context, alignment: 0.5);
+                        });
+                      }
+                      return Container(
+                        color: highlight ? Theme.of(context).focusColor : null,
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(option.toString()),
+                      );
+                    },
                   ),
                 );
               },
