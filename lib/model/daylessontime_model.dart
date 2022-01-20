@@ -3,7 +3,7 @@ import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 
 class DayLessontimeModel {
-  String? _id;
+  final String? _id;
   late String name;
   final List<LessontimeModel> _lessontimes = [];
   bool _lessontimesLoaded = false;

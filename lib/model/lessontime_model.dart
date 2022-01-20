@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LessontimeModel {
-  String? _id;
+  final String? _id;
   late final int order;
   late final TimeOfDay from;
   late final TimeOfDay till;

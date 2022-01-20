@@ -182,6 +182,7 @@ class _ClassPageState extends State<ClassPage> {
     int? g = int.tryParse(value!);
     if (g == null) return 'Год обучения должен быть числом';
     if (g < 1 || g > 11) return 'Год обучения должен быть между 1 и 11';
+    return null;
   }
 
   Future<DayLessontimeModel?> _initLessonTime() async {

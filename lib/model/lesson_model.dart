@@ -43,12 +43,14 @@ class LessonModel {
     if (_curriculumId.isNotEmpty) {
       return _curriculum ??= await Get.find<FStore>().getCurriculum(_curriculumId);
     }
+    return null;
   }
 
   Future<VenueModel?> get venue async {
     if (_venueId.isNotEmpty) {
       return _venue ??= await Get.find<FStore>().getVenue(_venueId);
     }
+    return null;
   }
 
   Future<LessontimeModel> get lessontime async {

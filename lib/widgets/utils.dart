@@ -14,7 +14,7 @@ class Utils {
   }
 
   static String? validateDateTimeNotEmpty(DateTime? value, String error) {
-    if (value == null) return error;
+    return (value == null) ? error : null;
   }
 
   static Future<void> showErrorSnackbar(String text) async {

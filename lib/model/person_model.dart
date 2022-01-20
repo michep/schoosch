@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
-
 import 'package:schoosch/model/dayschedule_model.dart';
-
-import 'class_model.dart';
 
 class PersonModel {
   late String? _id;
