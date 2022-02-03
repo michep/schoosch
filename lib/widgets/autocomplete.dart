@@ -62,11 +62,6 @@ typedef AutocompleteOptionToString<T extends Object> = String Function(T option)
 
 typedef InitialValueFuture<T> = Future<T?> Function();
 
-// TODO(justinmc): Mention AutocompleteCupertino when it is implemented.
-/// {@template flutter.widgets.RawAutocomplete.RawAutocomplete}
-/// A widget for helping the user make a selection by entering some text and
-/// choosing from among a list of options.
-///
 /// The user's text input is received in a field built with the
 /// [fieldViewBuilder] parameter. The options to be displayed are determined
 /// using [optionsBuilder] and rendered with [optionsViewBuilder].
@@ -120,13 +115,13 @@ class RawAutocomplete<T extends Object> extends StatefulWidget {
     this.textEditingController,
     this.initialValue,
     this.initialValueFuture,
-  })  : assert(displayStringForOption != null),
+  })  : // assert(displayStringForOption != null),
         assert(
           fieldViewBuilder != null || (key != null && focusNode != null && textEditingController != null),
           'Pass in a fieldViewBuilder, or otherwise create a separate field and pass in the FocusNode, TextEditingController, and a key. Use the key with RawAutocomplete.onFieldSubmitted.',
         ),
-        assert(optionsBuilder != null),
-        assert(optionsViewBuilder != null),
+        // assert(optionsBuilder != null),
+        // assert(optionsViewBuilder != null),
         assert((focusNode == null) == (textEditingController == null)),
         // assert(
         //   !(textEditingController != null && initialValue != null),

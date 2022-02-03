@@ -131,7 +131,7 @@ class _SelectableValueDropdownFormFieldState<T extends Object> extends State<Sel
                   },
                   child: Builder(
                     builder: (BuildContext context) {
-                      final bool highlight = AutocompleteHighlightedOption.of(context) == index;
+                      final bool highlight = autocomlete.AutocompleteHighlightedOption.of(context) == index;
                       if (highlight) {
                         SchedulerBinding.instance!.addPostFrameCallback((Duration timeStamp) {
                           Scrollable.ensureVisible(context, alignment: 0.5);
