@@ -60,6 +60,8 @@ typedef AutocompleteFieldViewBuilder = Widget Function(
 ///   * [RawAutocomplete.displayStringForOption], which is of this type.
 typedef AutocompleteOptionToString<T extends Object> = String Function(T option);
 
+typedef InitialValueFuture<T> = Future<T?> Function();
+
 // TODO(justinmc): Mention AutocompleteCupertino when it is implemented.
 /// {@template flutter.widgets.RawAutocomplete.RawAutocomplete}
 /// A widget for helping the user make a selection by entering some text and
@@ -117,6 +119,7 @@ class RawAutocomplete<T extends Object> extends StatefulWidget {
     this.onSelected,
     this.textEditingController,
     this.initialValue,
+    this.initialValueFuture,
   })  : assert(displayStringForOption != null),
         assert(
           fieldViewBuilder != null || (key != null && focusNode != null && textEditingController != null),
@@ -125,10 +128,10 @@ class RawAutocomplete<T extends Object> extends StatefulWidget {
         assert(optionsBuilder != null),
         assert(optionsViewBuilder != null),
         assert((focusNode == null) == (textEditingController == null)),
-        assert(
-          !(textEditingController != null && initialValue != null),
-          'textEditingController and initialValue cannot be simultaneously defined.',
-        ),
+        // assert(
+        //   !(textEditingController != null && initialValue != null),
+        //   'textEditingController and initialValue cannot be simultaneously defined.',
+        // ),
         super(key: key);
 
   /// {@template flutter.widgets.RawAutocomplete.fieldViewBuilder}
@@ -224,6 +227,8 @@ class RawAutocomplete<T extends Object> extends StatefulWidget {
   ///
   /// This parameter is ignored if [textEditingController] is defined.
   final TextEditingValue? initialValue;
+
+  final InitialValueFuture<T>? initialValueFuture;
 
   /// Calls [AutocompleteFieldViewBuilder]'s onFieldSubmitted callback for the
   /// RawAutocomplete widget indicated by the given [GlobalKey].
@@ -423,6 +428,7 @@ class _RawAutocompleteState<T extends Object> extends State<RawAutocomplete<T>> 
     SchedulerBinding.instance!.addPostFrameCallback((Duration _) {
       _updateOverlay();
     });
+    widget.initialValueFuture?.call().then((value) => _select(value!));
   }
 
   @override

@@ -124,8 +124,13 @@ class StudentLessonPage extends StatelessWidget {
                             snapshot.data![i].mark.toString(),
                             style: const TextStyle(fontSize: 20),
                           ),
-                          decoration:
-                              BoxDecoration(border: Border.all(color: Colors.red, width: 1.5), borderRadius: BorderRadius.circular(4)),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.red,
+                              width: 1.5,
+                            ),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
                         ),
                         title: Text(snapshot.data![i].comment),
                       ),

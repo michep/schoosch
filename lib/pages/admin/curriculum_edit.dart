@@ -81,7 +81,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
                         titleFunc: (value) => value?.fullName ?? '',
                         listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'teacher'),
                         detailsFunc: () => PersonPage(_master!, _master!.fullName),
-                        validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Преподаватель должен быть выбран'),
+                        validatorFunc: (value) => Utils.validateTextAndvAlueNotEmpty<TeacherModel>(value, _master, 'Преподаватель должен быть выбран'),
                         callback: (value) => _setMaster(value),
                       ),
                     ],

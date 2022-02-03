@@ -1,9 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/widgets/selectablevalue_field.dart';
+import 'package:schoosch/widgets/autocomplete.dart' as autocomlete;
 
 typedef TitleFunc<T> = String Function(T? value);
 typedef FutureFunc<T> = Future<T?> Function();
@@ -59,18 +59,18 @@ class _SelectableValueDropdownFormFieldState<T extends Object> extends State<Sel
 
   @override
   Widget build(BuildContext context) {
-    return RawAutocomplete<T>(
+    return autocomlete.RawAutocomplete<T>(
       textEditingController: _controller,
       focusNode: _focusNode,
       optionsViewBuilder: optionsViewBuilder,
       fieldViewBuilder: fieldViewBuilder,
       optionsBuilder: optionsBuilder,
       onSelected: (option) => _setValue(option),
+      initialValueFuture: widget.initFutureFunc,
     );
   }
 
-  Widget fieldViewBuilder(
-      BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+  Widget fieldViewBuilder(BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
     return TextFormField(
       key: _key1,
       readOnly: _data != null,

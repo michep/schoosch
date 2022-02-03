@@ -13,6 +13,10 @@ class Utils {
     return (value == null || value.isEmpty) ? error : null;
   }
 
+  static String? validateTextAndvAlueNotEmpty<T>(String? textValue, T? value, String error) {
+    return (textValue == null || textValue.isEmpty || value == null) ? error : null;
+  }
+
   static String? validateDateTimeNotEmpty(DateTime? value, String error) {
     return (value == null) ? error : null;
   }
