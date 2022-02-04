@@ -44,6 +44,8 @@ dependencies:
   google_sign_in: ^5.2.1
   flutter_rating_bar: ^4.0.0
   datetime_picker_formfield: ^2.0.0
+  qr_code_scanner: ^0.6.1
+  dropdown_search: ^2.0.1
 
 dev_dependencies:
   flutter_test:

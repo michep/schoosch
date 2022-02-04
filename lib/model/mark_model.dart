@@ -35,4 +35,8 @@ class MarkModel {
   Future<PersonModel> get student async {
     return Get.find<FStore>().getPerson(_studentId);
   }
+
+  String get id {
+    return _id;
+  }
 }

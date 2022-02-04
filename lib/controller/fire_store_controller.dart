@@ -65,7 +65,12 @@ class FStore extends GetxController {
 
   Future<List<LessontimeModel>> getLessontime(String id) async {
     List<LessontimeModel> res = [];
-    var _lessontimes = await _institutionRef.collection('lessontime').doc(id).collection('time').orderBy('order').get();
+    var _lessontimes = await _institutionRef
+        .collection('lessontime')
+        .doc(id)
+        .collection('time')
+        .orderBy('order')
+        .get();
     for (var _lessontime in _lessontimes.docs) {
       res.add(LessontimeModel.fromMap(_lessontime.id, _lessontime.data()));
     }
@@ -100,7 +105,10 @@ class FStore extends GetxController {
 
   Future<String> saveClass(ClassModel aclass) async {
     if (aclass.id != null) {
-      await _institutionRef.collection('class').doc(aclass.id).set(aclass.toMap());
+      await _institutionRef
+          .collection('class')
+          .doc(aclass.id)
+          .set(aclass.toMap());
       return aclass.id!;
     } else {
       var v = await _institutionRef.collection('class').add(aclass.toMap());
@@ -108,8 +116,14 @@ class FStore extends GetxController {
     }
   }
 
-  Future<List<StudentScheduleModel>> getClassWeekSchedule(ClassModel aclass, Week currentWeek) async {
-    return (await _institutionRef.collection('class').doc(aclass.id).collection('schedule').orderBy('day').get())
+  Future<List<StudentScheduleModel>> getClassWeekSchedule(
+      ClassModel aclass, Week currentWeek) async {
+    return (await _institutionRef
+            .collection('class')
+            .doc(aclass.id)
+            .collection('schedule')
+            .orderBy('day')
+            .get())
         .docs
         .map(
           (schedule) => StudentScheduleModel.fromMap(
@@ -118,12 +132,20 @@ class FStore extends GetxController {
             schedule.data(),
           ),
         )
-        .where((s) => s.from!.isBefore(currentWeek.day(5)) && (s.till == null || s.till!.isAfter(currentWeek.day(4))))
+        .where((s) =>
+            s.from!.isBefore(currentWeek.day(5)) &&
+            (s.till == null || s.till!.isAfter(currentWeek.day(4))))
         .toList();
   }
 
-  Future<List<StudentScheduleModel>> getClassDaySchedule(ClassModel aclass, int day) async {
-    return (await _institutionRef.collection('class').doc(aclass.id).collection('schedule').orderBy('from').get())
+  Future<List<StudentScheduleModel>> getClassDaySchedule(
+      ClassModel aclass, int day) async {
+    return (await _institutionRef
+            .collection('class')
+            .doc(aclass.id)
+            .collection('schedule')
+            .orderBy('from')
+            .get())
         .docs
         .map(
           (schedule) => StudentScheduleModel.fromMap(
@@ -138,15 +160,25 @@ class FStore extends GetxController {
 
   Future<String> saveDaySchedule(DayScheduleModel schedule) async {
     if (schedule.id != null) {
-      await _institutionRef.collection('class').doc(schedule.aclass.id).collection('schedule').doc(schedule.id).set(schedule.toMap());
+      await _institutionRef
+          .collection('class')
+          .doc(schedule.aclass.id)
+          .collection('schedule')
+          .doc(schedule.id)
+          .set(schedule.toMap());
       return schedule.id!;
     } else {
-      var v = await _institutionRef.collection('class').doc(schedule.aclass.id).collection('schedule').add(schedule.toMap());
+      var v = await _institutionRef
+          .collection('class')
+          .doc(schedule.aclass.id)
+          .collection('schedule')
+          .add(schedule.toMap());
       return v.id;
     }
   }
 
-  Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule) async {
+  Future<List<LessonModel>> getScheduleLessons(
+      ClassModel aclass, DayScheduleModel schedule) async {
     return (await _institutionRef
             .collection('class')
             .doc(aclass.id)
@@ -165,7 +197,8 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<LessonModel>> getScheduleLessonsForStudent(ClassModel aclass, StudentScheduleModel schedule, StudentModel student) async {
+  Future<List<LessonModel>> getScheduleLessonsForStudent(ClassModel aclass,
+      StudentScheduleModel schedule, StudentModel student) async {
     List<LessonModel> res = [];
     var less = await getScheduleLessons(aclass, schedule);
 
@@ -242,7 +275,10 @@ class FStore extends GetxController {
 
   Future<String> savePerson(PersonModel person) async {
     if (person.id != null) {
-      await _institutionRef.collection('people').doc(person.id).set(person.toMap());
+      await _institutionRef
+          .collection('people')
+          .doc(person.id)
+          .set(person.toMap());
       return person.id!;
     } else {
       var v = await _institutionRef.collection('people').add(person.toMap());
@@ -269,10 +305,15 @@ class FStore extends GetxController {
 
   Future<String> saveCurriculum(CurriculumModel curriculum) async {
     if (curriculum.id != null) {
-      await _institutionRef.collection('curriculum').doc(curriculum.id).set(curriculum.toMap());
+      await _institutionRef
+          .collection('curriculum')
+          .doc(curriculum.id)
+          .set(curriculum.toMap());
       return curriculum.id!;
     } else {
-      var v = await _institutionRef.collection('curriculum').add(curriculum.toMap());
+      var v = await _institutionRef
+          .collection('curriculum')
+          .add(curriculum.toMap());
       return v.id;
     }
   }
@@ -289,9 +330,32 @@ class FStore extends GetxController {
         .toList();
   }
 
+  Future<List<int>> getAllFloors() async {
+    List<int> res = [];
+    var lilst = (await _institutionRef.collection('venue').get())
+        .docs
+        .map(
+          (e) => VenueModel.fromMap(
+            e.id,
+            e.data(),
+          ),
+        )
+        .toList();
+    for (var i in lilst) {
+      if (!res.contains(i.floor) && i.floor != 0) {
+        res.add(i.floor);
+      }
+    }
+    res.sort();
+    return res;
+  }
+
   Future<String> saveVenue(VenueModel venue) async {
     if (venue.id != null) {
-      await _institutionRef.collection('venue').doc(venue.id).set(venue.toMap());
+      await _institutionRef
+          .collection('venue')
+          .doc(venue.id)
+          .set(venue.toMap());
       return venue.id!;
     } else {
       var v = await _institutionRef.collection('venue').add(venue.toMap());
@@ -305,7 +369,11 @@ class FStore extends GetxController {
   }
 
   Future<InstitutionModel> _geInstitutionIdByUserEmail(String email) async {
-    var res = await _store.collectionGroup('people').where('email', isEqualTo: email).limit(1).get();
+    var res = await _store
+        .collectionGroup('people')
+        .where('email', isEqualTo: email)
+        .limit(1)
+        .get();
     if (res.docs.isEmpty) {
       throw 'User with provided email was not found in any Institution';
     }
@@ -317,7 +385,11 @@ class FStore extends GetxController {
   }
 
   Future<PersonModel> _getUserByEmail(String email) async {
-    var res = await _institutionRef.collection('people').where('email', isEqualTo: email).limit(1).get();
+    var res = await _institutionRef
+        .collection('people')
+        .where('email', isEqualTo: email)
+        .limit(1)
+        .get();
     if (res.docs.isEmpty) {
       throw 'User with provided email was not found in current Institution';
     }
@@ -325,7 +397,11 @@ class FStore extends GetxController {
   }
 
   Future<ClassModel?> getClassForStudent(PersonModel student) async {
-    var res = await _institutionRef.collection('class').where('student_ids', arrayContains: student.id).limit(1).get();
+    var res = await _institutionRef
+        .collection('class')
+        .where('student_ids', arrayContains: student.id)
+        .limit(1)
+        .get();
     if (res.docs.isEmpty) {
       return null;
     } else {
@@ -333,7 +409,8 @@ class FStore extends GetxController {
     }
   }
 
-  Future<Map<TeacherModel, List<String>>> getClassTeachers(ClassModel aclass) async {
+  Future<Map<TeacherModel, List<String>>> getClassTeachers(
+      ClassModel aclass) async {
     var teachers = <TeacherModel, List<String>>{};
     var mast = await aclass.master;
     if (mast != null) {
@@ -341,7 +418,8 @@ class FStore extends GetxController {
         'Классный руководитель',
       ];
     }
-    var cw = Get.find<CurrentWeek>().currentWeek; //TODO: currentWeek should be parameter
+    var cw = Get.find<CurrentWeek>()
+        .currentWeek; //TODO: currentWeek should be parameter
     var days = await aclass.getSchedulesWeek(cw);
     for (var day in days) {
       var dayles = await day.lessonsForStudent(PersonModel.currentStudent!);
@@ -361,7 +439,8 @@ class FStore extends GetxController {
     return teachers;
   }
 
-  Future<void> saveTeacherRating(TeacherModel teacher, PersonModel user, DateTime date, int rating, String comment) async {
+  Future<void> saveTeacherRating(TeacherModel teacher, PersonModel user,
+      DateTime date, int rating, String comment) async {
     Map<String, dynamic> data = {};
     data['ratedate'] = Timestamp.fromDate(date);
     data['rater_id'] = user.id;
@@ -371,7 +450,15 @@ class FStore extends GetxController {
     await _institutionRef.collection('teachersrates').add(data);
   }
 
-  Future saveMark(TeacherModel user, PersonModel student, CurriculumModel curriculum, DateTime date, int mark, int lessonOrder, String markType, String comment) async {
+  Future saveMark(
+      TeacherModel user,
+      PersonModel student,
+      CurriculumModel curriculum,
+      DateTime date,
+      int mark,
+      int lessonOrder,
+      String markType,
+      String comment) async {
     Map<String, dynamic> data = {};
     data['comment'] = comment;
     data['curriculum_id'] = curriculum.id;
@@ -384,7 +471,9 @@ class FStore extends GetxController {
     return _institutionRef.collection('mark').add(data);
   }
 
-  Future saveHomework(String homeworkText, CurriculumModel curriculum, TeacherModel teacher, DateTime date, {StudentModel? student}) async {
+  Future saveHomework(String homeworkText, CurriculumModel curriculum,
+      TeacherModel teacher, DateTime date,
+      {StudentModel? student}) async {
     Map<String, dynamic> data = {};
     data['text'] = homeworkText;
     data['student_id'] = student?.id;
@@ -396,50 +485,58 @@ class FStore extends GetxController {
 
   Future<double> getAverageTeacherRating(TeacherModel teacher) async {
     double sum = 0;
-    var ratings = await _institutionRef.collection('teachersrates').where('teacher_id', isEqualTo: teacher.id).get();
+    var ratings = await _institutionRef
+        .collection('teachersrates')
+        .where('teacher_id', isEqualTo: teacher.id)
+        .get();
     for (var i in ratings.docs) {
       sum += i.get('rating');
     }
     return sum / ratings.docs.length;
   }
 
-  Future<List<HomeworkModel>> getLessonHomeworksForStudent(
-      DayScheduleModel schedule, CurriculumModel curriculum, StudentModel student, DateTime date) async {
-    List<HomeworkModel> ret = [];
-    var chw = (await _institutionRef
-            .collection('homework')
-            // .where('date', isGreaterThanOrEqualTo: schedule.date)
-            .where('date', isLessThan: date)
-            .where('curriculum_id', isEqualTo: curriculum.id)
-            .where('student_id', isNull: true)
-            .orderBy('date', descending: true)
-            .limit(1)
-            .get())
-        .docs
-        .map((e) => HomeworkModel.fromMap(e.id, e.data()))
-        .toList();
-    var cwhu = (await _institutionRef
-            .collection('homework')
-            .where('date', isLessThan: date)
-            .where('curriculum_id', isEqualTo: curriculum.id)
-            .where('student_id', isEqualTo: student.id)
-            .orderBy('date', descending: true)
-            .limit(1)
-            .get())
-        .docs
-        .map((e) => HomeworkModel.fromMap(e.id, e.data()))
-        .toList();
-
-    ret.addAll(chw);
-    ret.addAll(cwhu);
-    return ret;
+  Future<HomeworkModel?> getLessonHomeworkForStudent(DayScheduleModel schedule,
+      CurriculumModel curriculum, StudentModel student, DateTime date) async {
+    var res = await _institutionRef
+        .collection('homework')
+        .where('date',
+            isGreaterThanOrEqualTo:
+                date) //.subtract(const Duration(hours: 23, minutes: 59))
+        .where('date',
+            isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
+        .where('curriculum_id', isEqualTo: curriculum.id)
+        .where('student_id', isEqualTo: student.id)
+        .orderBy('date', descending: true)
+        .limit(1)
+        .get();
+    return res.docs.isNotEmpty
+        ? HomeworkModel.fromMap(res.docs[0].id, res.docs[0].data())
+        : null;
   }
 
-  Future<List<HomeworkModel>> getLessonHomeworks(DayScheduleModel schedule, CurriculumModel curriculum, DateTime date) async {
+  Future<HomeworkModel?> getLessonHomeworkForClass(DayScheduleModel schedule,
+      CurriculumModel curriculum, DateTime date) async {
+    var res = await _institutionRef
+        .collection('homework')
+        // .where('date', isGreaterThanOrEqualTo: schedule.date)
+        .where('date', isLessThan: date)
+        .where('curriculum_id', isEqualTo: curriculum.id)
+        .where('student_id', isNull: true)
+        .orderBy('date', descending: true)
+        .limit(1)
+        .get();
+    return res.docs.isNotEmpty
+        ? HomeworkModel.fromMap(res.docs[0].id, res.docs[0].data())
+        : null;
+  }
+
+  Future<List<HomeworkModel>> getLessonHomeworks(DayScheduleModel schedule,
+      CurriculumModel curriculum, DateTime date) async {
     return (await _institutionRef
             .collection('homework')
             .where('date', isGreaterThanOrEqualTo: date)
-            .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
+            .where('date',
+                isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
             .where('curriculum_id', isEqualTo: curriculum.id)
             .get())
         .docs
@@ -447,11 +544,13 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<MarkModel>> getLessonMarksForStudent(DayScheduleModel schedule, LessonModel lesson, StudentModel student, DateTime date) async {
+  Future<List<MarkModel>> getLessonMarksForStudent(DayScheduleModel schedule,
+      LessonModel lesson, StudentModel student, DateTime date) async {
     return (await _institutionRef
             .collection('mark')
             .where('date', isGreaterThanOrEqualTo: date)
-            .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
+            .where('date',
+                isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
             .where('curriculum_id', isEqualTo: (await lesson.curriculum)!.id)
             .where('lesson_order', isEqualTo: lesson.order)
             .where('student_id', isEqualTo: student.id)
@@ -461,14 +560,29 @@ class FStore extends GetxController {
         .toList();
   }
 
-  Future<List<TeacherScheduleModel>> getTeacherWeekSchedule(TeacherModel teacher, Week week) async {
-    var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: teacher.id).get();
+  Future<void> updateMark(String docId, int newMark) async {
+    return await _institutionRef
+        .collection('mark')
+        .doc(docId)
+        .update({'mark': newMark});
+  }
+
+  Future<List<TeacherScheduleModel>> getTeacherWeekSchedule(
+      TeacherModel teacher, Week week) async {
+    var curriculums = await _institutionRef
+        .collection('curriculum')
+        .where('master_id', isEqualTo: teacher.id)
+        .get();
     List<String> curriculumIds = [];
     for (var curr in curriculums.docs) {
       curriculumIds.add(curr.id);
     }
-    var lessons = await _store.collectionGroup('lesson').where('curriculum_id', whereIn: curriculumIds).get();
-    Map<String, List<QueryDocumentSnapshot<Map<String, dynamic>>>> schedulesMap = {};
+    var lessons = await _store
+        .collectionGroup('lesson')
+        .where('curriculum_id', whereIn: curriculumIds)
+        .get();
+    Map<String, List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+        schedulesMap = {};
     for (var lesson in lessons.docs) {
       var schedule = lesson.reference.parent.parent!;
       if (schedulesMap[schedule.path] == null) schedulesMap[schedule.path] = [];
@@ -478,23 +592,27 @@ class FStore extends GetxController {
     for (var schedulePath in schedulesMap.keys) {
       var schedule = await _store.doc(schedulePath).get();
       var fr = schedule.get('from') != null
-          ? DateTime.fromMillisecondsSinceEpoch((schedule.get('from') as Timestamp).millisecondsSinceEpoch)
+          ? DateTime.fromMillisecondsSinceEpoch(
+              (schedule.get('from') as Timestamp).millisecondsSinceEpoch)
           : DateTime(2000);
       var ti = schedule.get('till') != null
-          ? DateTime.fromMillisecondsSinceEpoch((schedule.get('till') as Timestamp).millisecondsSinceEpoch)
+          ? DateTime.fromMillisecondsSinceEpoch(
+              (schedule.get('till') as Timestamp).millisecondsSinceEpoch)
           : DateTime(3000);
       if (fr.isBefore(week.day(5)) && ti.isAfter(week.day(4))) {
         var day = schedule.get('day');
         var aclass = await schedule.reference.parent.parent!.get();
         var classmodel = ClassModel.fromMap(aclass.id, aclass.data()!);
         if (days[day] == null) {
-          var schedulemodel = TeacherScheduleModel.fromMap(classmodel, schedule.id, schedule.data()!);
+          var schedulemodel = TeacherScheduleModel.fromMap(
+              classmodel, schedule.id, schedule.data()!);
           days[day] = schedulemodel;
         }
         var schedulemodel = days[day]!;
         List<LessonModel> lessonsList = [];
         for (var lesson in schedulesMap[schedulePath]!) {
-          var lessonmodel = LessonModel.fromMap(classmodel, schedulemodel, lesson.id, lesson.data());
+          var lessonmodel = LessonModel.fromMap(
+              classmodel, schedulemodel, lesson.id, lesson.data());
           lessonsList.add(lessonmodel);
         }
         schedulemodel.addLessons(lessonsList);

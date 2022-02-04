@@ -160,6 +160,10 @@ class TeacherModel extends PersonModel {
   Future<void> createHomework(String homeworkText, CurriculumModel curriculum, DateTime date, {StudentModel? student}) async {
     return Get.find<FStore>().saveHomework(homeworkText, curriculum, this, date, student: student);
   }
+
+  Future<void> updateMark(int newMark, String docId) async {
+    return Get.find<FStore>().updateMark(docId, newMark);
+  }
 }
 
 class ParentModel extends PersonModel {

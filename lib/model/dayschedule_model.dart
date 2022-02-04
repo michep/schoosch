@@ -91,4 +91,8 @@ class TeacherScheduleModel extends DayScheduleModel {
   Future<List<LessonModel>> lessonsForTeacher(TeacherModel teacher, Week week) async {
     return _teacherLessons;
   }
+
+  Future<List<LessonModel>> getLessons() async {
+    return _teacherLessons;
+  }
 }

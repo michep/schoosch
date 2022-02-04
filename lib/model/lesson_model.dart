@@ -16,10 +16,8 @@ class LessonModel {
   late int order;
   late final String _curriculumId;
   late final String _venueId;
-  final List<HomeworkModel> _homework = [];
-  bool _homeworkLoaded = false;
-  final List<MarkModel> _marks = [];
-  bool _marksLoaded = false;
+  final Map<String, HomeworkModel?> _homeworks = {};
+  final Map<String, List<MarkModel>> _marks = {};
   CurriculumModel? _curriculum;
   VenueModel? _venue;
   LessontimeModel? _lessontime;
@@ -55,42 +53,45 @@ class LessonModel {
     return _lessontime ??= await aclass.getLessontime(order);
   }
 
-  Future<List<HomeworkModel>> homeworksForStudent(StudentModel student, DateTime date) async {
-    if (!_homeworkLoaded) {
-      _homework.addAll(await Get.find<FStore>().getLessonHomeworksForStudent(schedule, (await curriculum)!, student, date));
-      _homeworkLoaded = true;
+  Future<HomeworkModel?> homeworkForStudent(StudentModel student, DateTime date) async {
+    if(_homeworks[student.id] == null) {
+      _homeworks[student.id!] = await Get.find<FStore>().getLessonHomeworkForStudent(schedule, (await curriculum)!, student, date);
     }
-    return _homework;
+    return _homeworks[student.id!];
   }
 
-  //   Future<List<HomeworkModel>> homeworksOnlyForStudent(StudentModel student) async {
-  //   if (!_homeworkLoaded) {
-  //     _homework.addAll(await Get.find<FStore>().getLessonHomeworksForStudent(_schedule, (await curriculum)!, student));
-  //     _homeworkLoaded = true;
+  Future<HomeworkModel?> homeworkForClass(DateTime date) async {
+    if(_homeworks['class'] == null) {
+      _homeworks['class'] = await Get.find<FStore>().getLessonHomeworkForClass(schedule, (await curriculum)!, date);
+    }
+    return _homeworks['class'];
+  }
+
+  Future<List<HomeworkModel>> homeworkForStudentAndClass(StudentModel student, DateTime date) async {
+    if(_homeworks[student.id] == null) {
+      _homeworks[student.id!] = await Get.find<FStore>().getLessonHomeworkForStudent(schedule, (await curriculum)!, student, date);
+      _homeworks['class'] = await Get.find<FStore>().getLessonHomeworkForClass(schedule, (await curriculum)!, date);
+    }
+    return [_homeworks[student.id!]!, _homeworks['class']!];
+  }
+
+  // Future<List<HomeworkModel?>> homeworks(DateTime date) async {
+  //   if (!_homeworksLoaded) {
+  //     var hws = await Get.find<FStore>().getLessonHomeworks(schedule, (await curriculum)!, date);
+  //     for(var hw in hws) {
+  //       hw.studentId != null ? _homeworks[hw.studentId!] = hw : _homeworks['class'] = hw;
+  //     }
+  //     _homeworksLoaded = true;
   //   }
-  //   return _homework;
+  //   return _homeworks.values.toList();
   // }
-
-  // Future<String> homeworkAsTeacher(StudentModel? student) async {
-  //   var a = await Get.find<FStore>().getLessonHomeworkAsLesson(_schedule, (await curriculum)!, student: student);
-  //   return a[0].text;
-  // }
-
-  Future<List<HomeworkModel>> homeworks(DateTime date) async {
-    if (!_homeworkLoaded) {
-      _homework.addAll(await Get.find<FStore>().getLessonHomeworks(schedule, (await curriculum)!, date));
-      _homeworkLoaded = true;
-    }
-    return _homework;
-  }
 
   Future<List<MarkModel>> marksForStudent(StudentModel student, DateTime date) async {
-    if (!_marksLoaded) {
-      _marks.addAll(await Get.find<FStore>().getLessonMarksForStudent(schedule, this, student, date));
-      _marksLoaded = true;
+    if (_marks[student.id] == null) {
+      _marks[student.id!] = await Get.find<FStore>().getLessonMarksForStudent(schedule, this, student, date);
     }
 
-    return _marks;
+    return _marks[student.id!]!;
   }
 
   Future<String> marksForStudentAsString(StudentModel student, DateTime date) async {
