@@ -10,9 +10,7 @@ import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
-// import 'package:schoosch/pages/map/teachers_serachable_list.dart';
 import 'package:schoosch/widgets/utils.dart';
-// import './blueprint_data.dart';
 
 class RoomSearch extends StatefulWidget {
   late List<VenueModel> blueprints;
@@ -218,7 +216,11 @@ class _RoomSearchState extends State<RoomSearch> {
                     return const Text('no scahedule');
                   }
                   return FutureBuilder<List<LessonModel>>(
-                      future: snapshota.data!.where((element) => element.day == DateTime.now().weekday).toList()[0].getLessons(),
+                      future: snapshota.data!
+                          .where((element) =>
+                              element.day == DateTime.now().weekday)
+                          .toList()[0]
+                          .getLessons(),
                       builder: (context, snapshotb) {
                         if (!snapshotb.hasData) {
                           return Utils.progressIndicator();
