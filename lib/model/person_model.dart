@@ -194,7 +194,7 @@ class ParentModel extends PersonModel {
       var store = Get.find<FStore>();
       for (var id in studentIds) {
         var p = await store.getPerson(id);
-        if (p.currentType == 'student') {
+        if (p.types.contains('student')) {
           p.asStudent!.parent = this;
           _students.add(p.asStudent!);
         }
