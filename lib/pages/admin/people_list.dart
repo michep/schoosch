@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
@@ -27,9 +28,10 @@ class _PeopleListPageState extends State<PeopleListPage> {
 
   @override
   Widget build(BuildContext context) {
+    var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Сотрудники, учителя и ученики'),
+        title: Text(loc.labelPeopleListLitle),
         actions: [IconButton(onPressed: _newPerson, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
@@ -37,14 +39,14 @@ class _PeopleListPageState extends State<PeopleListPage> {
           children: [
             Card(
               child: ExpansionTile(
-                title: _inSearch ? const Text('Поиск', style: TextStyle(fontStyle: FontStyle.italic)) : const Text('Поиск'),
+                title: _inSearch ? Text(loc.labelSearch, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.labelSearch),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
                     onChanged: (_) => setState(() {}),
                     controller: _name,
                     decoration: InputDecoration(
-                      label: const Text('Имя'),
+                      label: Text(loc.labelPersonName),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () => setState(() {
@@ -57,28 +59,28 @@ class _PeopleListPageState extends State<PeopleListPage> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(right: 16),
-                        child: Text('Тип', style: TextStyle(color: Theme.of(context).hintColor)),
+                        child: Text(loc.labelPersonType, style: TextStyle(color: Theme.of(context).hintColor)),
                       ),
                       DropdownButton<String>(
                         value: _typeValue,
                         onChanged: (value) => setState(() {
                           _typeValue = value ?? 'all';
                         }),
-                        items: const [
+                        items: [
                           DropdownMenuItem(
-                            child: Text('Все типы'),
+                            child: Text(loc.labelPersonTypeAll),
                             value: 'all',
                           ),
                           DropdownMenuItem(
-                            child: Text('Учащийся'),
+                            child: Text(loc.labelPersonTypeStudent),
                             value: 'student',
                           ),
                           DropdownMenuItem(
-                            child: Text('Преподаватель'),
+                            child: Text(loc.labelPersonTypeTeacher),
                             value: 'teacher',
                           ),
                           DropdownMenuItem(
-                            child: Text('Родитель \\ Наблюдатель'),
+                            child: Text(loc.labelPersonTypeParent),
                             value: 'parent',
                           ),
                         ],
@@ -168,7 +170,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
         default:
           return;
       }
-      var res = await Get.to<PersonModel>(() => PersonPage(nperson, 'Новый $type'));
+      var res = await Get.to<PersonModel>(() => PersonPage(nperson, S.of(context).labelNewPerson(type)));
       if (res is PersonModel) {
         setState(() {});
       }

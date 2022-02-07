@@ -7,6 +7,7 @@ import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
@@ -56,6 +57,7 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
 
   @override
   Widget build(BuildContext context) {
+    var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget._title),
@@ -70,7 +72,7 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
               children: [
                 DateTimeField(
                   initialValue: _from,
-                  format: DateFormat('dd MMM yyyy', 'ru'),
+                  format: DateFormat('dd MMM yyyy'),
                   onChanged: (DateTime? date) => _from = date,
                   decoration: const InputDecoration(
                     label: Text('Начало действия расписания'),
@@ -87,7 +89,7 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
                   },
                 ),
                 DateTimeField(
-                  format: DateFormat('dd MMM yyyy', 'ru'),
+                  format: DateFormat('dd MMM yyyy'),
                   initialValue: _till,
                   onChanged: (DateTime? date) => _till = date,
                   decoration: const InputDecoration(
@@ -124,7 +126,7 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: ElevatedButton(
-                          child: const Text('Сохранить изменения'),
+                          child: Text(loc.labelSaveChanges),
                           onPressed: () => _save(widget._schedule),
                         ),
                       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -19,7 +20,7 @@ class _DayLessontimeListPageState extends State<DayLessontimeListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Раписания времени уроков'),
+        title: Text(S.of(context).labelDayScheduleListTitle),
         actions: widget.selectionMode ? [] : [IconButton(onPressed: _newDayLessontime, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(

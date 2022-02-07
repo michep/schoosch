@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -36,6 +37,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
 
   @override
   Widget build(BuildContext context) {
+    var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget._title),
@@ -59,36 +61,32 @@ class _CurriculumPageState extends State<CurriculumPage> {
                     children: [
                       TextFormField(
                         controller: _name,
-                        decoration: const InputDecoration(
-                          label: Text(
-                            'Название учебного предмета',
-                          ),
+                        decoration: InputDecoration(
+                          label: Text(loc.labelCurriculumName),
                         ),
-                        validator: (value) => Utils.validateTextNotEmpty(value, 'Название должно быть заполнено'),
+                        validator: (value) => Utils.validateTextNotEmpty(value, loc.errorNameEmpty),
                       ),
                       TextFormField(
                         controller: _alias,
-                        decoration: const InputDecoration(
-                          label: Text(
-                            'Альтернативное название',
-                          ),
+                        decoration: InputDecoration(
+                          label: Text(loc.labelCurriculumAlternateName),
                         ),
                       ),
                       SelectableValueDropdownFormField<PersonModel>(
-                        title: 'Преподаватель',
+                        title: loc.labelCurriculumTeacher,
                         initFutureFunc: _initMaster,
                         initOptionsFutureFunc: _initMasterOptions,
                         titleFunc: (value) => value?.fullName ?? '',
                         listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'teacher'),
                         detailsFunc: () => PersonPage(_master!, _master!.fullName),
-                        validatorFunc: (value) => Utils.validateTextAndvAlueNotEmpty<TeacherModel>(value, _master, 'Преподаватель должен быть выбран'),
+                        validatorFunc: (value) => Utils.validateTextAndvAlueNotEmpty<TeacherModel>(value, _master, loc.errorTeacherEmpty),
                         callback: (value) => _setMaster(value),
                       ),
                     ],
                   ),
                 ),
                 SelectableValueListFormField<PersonModel>(
-                  title: 'Группа учащихся',
+                  title: loc.labelCurriculumStudents,
                   initListFutureFunc: _initStudents,
                   titleFunc: (value) => value?.fullName ?? '',
                   listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'student'),
@@ -100,7 +98,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
-                    child: const Text('Сохранить изменения'),
+                    child: Text(loc.labelSaveChanges),
                     onPressed: () => _save(widget._curriculum),
                   ),
                 ),
@@ -137,9 +135,8 @@ class _CurriculumPageState extends State<CurriculumPage> {
           _master = (value);
           return true;
         } else {
-          Utils.showErrorSnackbar(
-            'Выбранный персонаж не является преподавателем',
-          );
+          _master = null;
+          Utils.showErrorSnackbar(S.of(context).errorPersonIsNotATeacher);
           return false;
         }
       }
@@ -157,17 +154,14 @@ class _CurriculumPageState extends State<CurriculumPage> {
   }
 
   bool _addStudent(PersonModel? value) {
+    var loc = S.of(context);
     if (value == null) return false;
     if (value.asStudent == null) {
-      Utils.showErrorSnackbar(
-        'Выбранный персонаж не является учащимся',
-      );
+      Utils.showErrorSnackbar(loc.errorPersonIsNotAStudent);
       return false;
     }
     if (_students.contains(value)) {
-      Utils.showErrorSnackbar(
-        'Выбранный учащийся уже присутствует в группе',
-      );
+      Utils.showErrorSnackbar(loc.errorStudentAlreadyPresent);
       return false;
     }
     setState(() {
@@ -179,9 +173,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
   bool _setStudent(PersonModel value) {
     StudentModel sm;
     if (!value.types.contains('student')) {
-      Utils.showErrorSnackbar(
-        'Выбранный персонаж больше не является учащимся',
-      );
+      Utils.showErrorSnackbar(S.of(context).errorPersonIsNotAStudent);
       return false;
     }
 

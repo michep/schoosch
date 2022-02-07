@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/institution_model.dart';
@@ -40,6 +41,7 @@ class _ClassPageState extends State<ClassPage> {
 
   @override
   Widget build(BuildContext context) {
+    var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget._title),
@@ -63,26 +65,22 @@ class _ClassPageState extends State<ClassPage> {
                     children: [
                       TextFormField(
                         controller: _name,
-                        decoration: const InputDecoration(
-                          label: Text(
-                            'Название учебного класса',
-                          ),
+                        decoration: InputDecoration(
+                          label: Text(loc.labelClassName),
                         ),
-                        validator: (value) => Utils.validateTextNotEmpty(value, 'Название должно быть заполнено'),
+                        validator: (value) => Utils.validateTextNotEmpty(value, loc.errorNameEmpty),
                       ),
                       TextFormField(
                         controller: _grade,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          label: Text(
-                            'Год обучения',
-                          ),
+                        decoration: InputDecoration(
+                          label: Text(loc.labelClassGrade),
                         ),
                         validator: _gradeValidator,
                       ),
                       SelectableValueDropdownFormField<PersonModel>(
-                        title: 'Преподаватель',
+                        title: loc.labelClassMaster,
                         initFutureFunc: _initMaster,
                         initOptionsFutureFunc: _initMasterOptions,
                         titleFunc: (value) => value?.fullName ?? '',
@@ -92,11 +90,11 @@ class _ClassPageState extends State<ClassPage> {
                           type: 'teacher',
                         ),
                         detailsFunc: () => PersonPage(_master!, _master!.fullName),
-                        validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Преподаватель должен быть выбран'),
+                        validatorFunc: (value) => Utils.validateTextNotEmpty(value, loc.errorTeacherEmpty),
                         callback: (value) => _setMaster(value),
                       ),
                       SelectableValueDropdownFormField<DayLessontimeModel>(
-                        title: 'Расписание времени уроков',
+                        title: loc.labelClassSchedule,
                         initFutureFunc: _initLessonTime,
                         initOptionsFutureFunc: _initLessonTimeOptions,
                         titleFunc: (value) => value?.name ?? '',
@@ -104,20 +102,19 @@ class _ClassPageState extends State<ClassPage> {
                           InstitutionModel.currentInstitution,
                           selectionMode: true,
                         ),
-                        // detailsFunc: () => PersonPage(master!, master!.fullName),
-                        validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Расписание должно быть выбрано'),
+                        validatorFunc: (value) => Utils.validateTextNotEmpty(value, loc.errorClassScheduleEmpty),
                         callback: (value) => _setLessonTime(value),
                       ),
                     ],
                   ),
                 ),
                 SelectableValueListFormField<PersonModel>(
-                  title: 'Учащиеяся класса',
+                  title: loc.labelClassStudents,
                   initListFutureFunc: _initStudents,
                   titleFunc: (value) => value?.fullName ?? '',
                   listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'student'),
                   detailsFunc: (value) => PersonPage(value!, value.fullName),
-                  listValidatorFunc: () => _students.isEmpty ? 'Нужно выбрать учащихся' : null,
+                  listValidatorFunc: () => _students.isEmpty ? loc.errorClassStudentsEmpty : null,
                   addElementFunc: _addChild,
                   setElementFunc: _setChild,
                   removeElementFunc: _removeChild,
@@ -125,7 +122,7 @@ class _ClassPageState extends State<ClassPage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
-                    child: const Text('Сохранить изменения'),
+                    child: Text(loc.labelSaveChanges),
                     onPressed: () => _save(widget._aclass),
                   ),
                 ),
@@ -163,9 +160,7 @@ class _ClassPageState extends State<ClassPage> {
           return true;
         } else {
           _master = null;
-          Utils.showErrorSnackbar(
-            'Выбранный персонаж не является преподавателем',
-          );
+          Utils.showErrorSnackbar(S.of(context).errorPersonIsNotATeacher);
           return false;
         }
       }
@@ -177,11 +172,12 @@ class _ClassPageState extends State<ClassPage> {
 
   String? _gradeValidator(String? value) {
     String? err;
-    err = Utils.validateTextNotEmpty(value, 'Год обучения должен быть заполнен');
+    var loc = S.of(context);
+    err = Utils.validateTextNotEmpty(value, loc.errorClassGradeEmpty);
     if (err != null) return err;
     int? g = int.tryParse(value!);
-    if (g == null) return 'Год обучения должен быть числом';
-    if (g < 1 || g > 11) return 'Год обучения должен быть между 1 и 11';
+    if (g == null) return loc.errorClassGradeNotANumber;
+    if (g < 1 || g > 11) return loc.errorClassGradeNotInRange;
     return null;
   }
 
@@ -206,17 +202,14 @@ class _ClassPageState extends State<ClassPage> {
   }
 
   bool _addChild(PersonModel? value) {
+    var loc = S.of(context);
     if (value == null) return false;
     if (value.asStudent == null) {
-      Utils.showErrorSnackbar(
-        'Выбранный персонаж не является учащимся',
-      );
+      Utils.showErrorSnackbar(loc.errorPersonIsNotAStudent);
       return false;
     }
     if (_students.contains(value)) {
-      Utils.showErrorSnackbar(
-        'Выбранный учащийся уже присутствует в группе',
-      );
+      Utils.showErrorSnackbar(loc.errorStudentAlreadyPresent);
       return false;
     }
     setState(() {
@@ -227,10 +220,9 @@ class _ClassPageState extends State<ClassPage> {
 
   bool _setChild(PersonModel value) {
     StudentModel sm;
+    var loc = S.of(context);
     if (!value.types.contains('student')) {
-      Utils.showErrorSnackbar(
-        'Выбранный персонаж больше не является учащимся',
-      );
+      Utils.showErrorSnackbar(loc.errorPersonIsNotAStudent);
       return false;
     }
 

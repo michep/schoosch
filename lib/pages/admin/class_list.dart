@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/pages/admin/class_edit.dart';
@@ -24,9 +25,10 @@ class _ClassListPageState extends State<ClassListPage> {
 
   @override
   Widget build(BuildContext context) {
+    var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Учебные классы'),
+        title: Text(loc.labelClassListTitle),
         actions: [IconButton(onPressed: _newClass, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
@@ -34,14 +36,14 @@ class _ClassListPageState extends State<ClassListPage> {
           children: [
             Card(
               child: ExpansionTile(
-                title: _inSearch ? const Text('Поиск', style: TextStyle(fontStyle: FontStyle.italic)) : const Text('Поиск'),
+                title: _inSearch ? Text(loc.labelSearch, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.labelSearch),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
                     onChanged: (_) => setState(() {}),
                     controller: _name,
                     decoration: InputDecoration(
-                      label: const Text('Название'),
+                      label: Text(loc.labelName),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () => setState(() {
@@ -116,7 +118,7 @@ class _ClassListPageState extends State<ClassListPage> {
 
   Future<void> _newClass() async {
     var nclass = ClassModel.empty();
-    var res = await Get.to<ClassModel>(() => ClassPage(nclass, 'Новый учебный класс'));
+    var res = await Get.to<ClassModel>(() => ClassPage(nclass, S.of(context).labelNewClass));
     if (res is ClassModel) {
       setState(() {});
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -21,9 +22,10 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
 
   @override
   Widget build(BuildContext context) {
+    var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Учебные предметы'),
+        title: Text(loc.labelCurriculumListTitle),
         actions: [IconButton(onPressed: _newCurriculum, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
@@ -31,14 +33,14 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
           children: [
             Card(
               child: ExpansionTile(
-                title: _inSearch ? const Text('Поиск', style: TextStyle(fontStyle: FontStyle.italic)) : const Text('Поиск'),
+                title: _inSearch ? Text(loc.labelSearch, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.labelSearch),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
                     onChanged: (_) => setState(() {}),
                     controller: _name,
                     decoration: InputDecoration(
-                      label: const Text('Название'),
+                      label: Text(loc.labelName),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () => setState(() {
@@ -108,7 +110,7 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
 
   Future<void> _newCurriculum() async {
     var ncurr = CurriculumModel.empty();
-    var res = await Get.to<CurriculumModel>(() => CurriculumPage(ncurr, 'Новый учебный предмет'));
+    var res = await Get.to<CurriculumModel>(() => CurriculumPage(ncurr, S.of(context).labelNewCurriculum));
     if (res is CurriculumModel) {
       setState(() {});
     }

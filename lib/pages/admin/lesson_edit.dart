@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
@@ -22,7 +23,6 @@ class LessonPage extends StatefulWidget {
 }
 
 class _LessonPageState extends State<LessonPage> {
-  // final TextEditingController _order = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   CurriculumModel? curriculum;
   VenueModel? venue;
@@ -34,6 +34,7 @@ class _LessonPageState extends State<LessonPage> {
 
   @override
   Widget build(BuildContext context) {
+    var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget._title),
@@ -52,7 +53,7 @@ class _LessonPageState extends State<LessonPage> {
             child: ListView(
               children: [
                 SelectableValueDropdownFormField<CurriculumModel>(
-                  title: 'Учебный предмет',
+                  title: loc.labelCurriculumName,
                   initFutureFunc: _initCurriculum,
                   initOptionsFutureFunc: _initCurriculumOptions,
                   titleFunc: (value) => value?.name ?? '',
@@ -61,11 +62,11 @@ class _LessonPageState extends State<LessonPage> {
                     selectionMode: true,
                   ),
                   detailsFunc: () => CurriculumPage(curriculum!, curriculum!.name),
-                  validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Учебный предмет должен быть выбран'),
+                  validatorFunc: (value) => Utils.validateTextNotEmpty(value, loc.errorCurriculumEmpty),
                   callback: (value) => _setCurriculum(value),
                 ),
                 SelectableValueDropdownFormField<VenueModel>(
-                  title: 'Кабинет',
+                  title: loc.labelVenueName,
                   initFutureFunc: _initVenue,
                   initOptionsFutureFunc: _initVenueOptions,
                   titleFunc: (value) => value?.name ?? '',
@@ -74,13 +75,13 @@ class _LessonPageState extends State<LessonPage> {
                     selectionMode: true,
                   ),
                   detailsFunc: () => VenuePage(venue!, venue!.name),
-                  validatorFunc: (value) => Utils.validateTextNotEmpty(value, 'Кабинет должен быть выбран'),
+                  validatorFunc: (value) => Utils.validateTextNotEmpty(value, loc.errorVenueEmpty),
                   callback: (value) => _setVenue(value),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
-                    child: const Text('Сохранить изменения'),
+                    child: Text(loc.labelSaveChanges),
                     onPressed: () => _save(widget._lesson),
                   ),
                 ),

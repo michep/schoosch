@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
@@ -10,8 +11,8 @@ class InstitutionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MAppBar(
-        'Schoosch / Скуш',
+      appBar: MAppBar(
+        S.of(context).appBarTitle,
         showProfile: true,
       ),
       body: SafeArea(

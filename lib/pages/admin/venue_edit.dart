@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -25,6 +26,7 @@ class _VenuePageState extends State<VenuePage> {
 
   @override
   Widget build(BuildContext context) {
+    var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget._title),
@@ -52,7 +54,7 @@ class _VenuePageState extends State<VenuePage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
-                    child: const Text('Сохранить изменения'),
+                    child: Text(loc.labelSaveChanges),
                     onPressed: () => _save(widget._venue),
                   ),
                 ),

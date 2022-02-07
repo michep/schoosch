@@ -3,6 +3,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
@@ -48,6 +49,7 @@ class _PersonPageState extends State<PersonPage> {
 
   @override
   Widget build(BuildContext context) {
+    var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget._title),
@@ -68,39 +70,39 @@ class _PersonPageState extends State<PersonPage> {
                     children: [
                       TextFormField(
                         controller: _lastname,
-                        decoration: const InputDecoration(
-                          label: Text('Фамилия'),
+                        decoration: InputDecoration(
+                          label: Text(loc.labelPersonLastName),
                         ),
-                        validator: (value) => Utils.validateTextNotEmpty(value, 'Фамилия должна быть заполнена'),
+                        validator: (value) => Utils.validateTextNotEmpty(value, loc.errorPersonLastNameEmpty),
                       ),
                       TextFormField(
                         controller: _firstname,
-                        decoration: const InputDecoration(
-                          label: Text('Имя'),
+                        decoration: InputDecoration(
+                          label: Text(loc.labelPersonFirstName),
                         ),
-                        validator: (value) => Utils.validateTextNotEmpty(value, 'Имя должно быть заполнено'),
+                        validator: (value) => Utils.validateTextNotEmpty(value, loc.errorPersonFirstNameEmpty),
                       ),
                       TextFormField(
                         controller: _middlename,
-                        decoration: const InputDecoration(
-                          label: Text('Отчество'),
+                        decoration: InputDecoration(
+                          label: Text(loc.labelPersonMiddleName),
                         ),
                       ),
                       TextFormField(
                         controller: _email,
-                        decoration: const InputDecoration(
-                          label: Text('Email'),
+                        decoration: InputDecoration(
+                          label: Text(loc.labelPersonEmail),
                         ),
-                        validator: (value) => Utils.validateTextNotEmpty(value, 'Email адрес должен быть заполнен'),
+                        validator: (value) => Utils.validateTextNotEmpty(value, loc.errorPersonEmailEmpty),
                       ),
                       DateTimeField(
                         initialValue: _birthday,
-                        format: DateFormat('dd MMM yyyy', 'ru'),
+                        format: DateFormat('dd MMM yyyy'),
                         onChanged: (DateTime? date) => _birthday = date,
-                        decoration: const InputDecoration(
-                          label: Text('Дата рождения'),
+                        decoration: InputDecoration(
+                          label: Text(loc.labelPersonBirthday),
                         ),
-                        validator: (value) => Utils.validateDateTimeNotEmpty(value, 'Нужно указать дату рождения'),
+                        validator: (value) => Utils.validateDateTimeNotEmpty(value, loc.errorPersonBirthdayEmpty),
                         onShowPicker: (context, currentValue) async {
                           final date = await showDatePicker(
                             context: context,
@@ -116,12 +118,12 @@ class _PersonPageState extends State<PersonPage> {
                 ),
                 _isParent
                     ? SelectableValueListFormField<PersonModel>(
-                        title: 'Связанные учащиеся',
+                        title: loc.labelPersonRelatedStudents,
                         initListFutureFunc: _initChildren,
                         titleFunc: (value) => value?.fullName ?? '',
                         listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'student'),
                         detailsFunc: (value) => PersonPage(value!, value.fullName),
-                        listValidatorFunc: () => _children.isEmpty ? 'Нужно выбрать учащихся' : null,
+                        listValidatorFunc: () => _children.isEmpty ? loc.errorPersonParentStudentsEmpty : null,
                         addElementFunc: _addChild,
                         setElementFunc: _setChild,
                         removeElementFunc: _removeChild,
@@ -132,35 +134,35 @@ class _PersonPageState extends State<PersonPage> {
                           onTap: null,
                           iconColor: Theme.of(context).disabledColor,
                           title: Text(
-                            'Связанные учащиеся',
+                            loc.labelPersonRelatedStudents,
                             style: TextStyle(color: Theme.of(context).disabledColor),
                           ),
                         ),
                       ),
                 CheckboxListTile(
-                  title: const Text('Учащийся'),
+                  title: Text(loc.labelPersonTypeStudent),
                   value: _isStudent,
                   onChanged: (_isParent || _isTeacher) ? null : (value) => _roleChecked('student', value),
                 ),
                 CheckboxListTile(
-                  title: const Text('Преподаватель'),
+                  title: Text(loc.labelPersonTypeTeacher),
                   value: _isTeacher,
                   onChanged: (_isStudent) ? null : (value) => _roleChecked('teacher', value),
                 ),
                 CheckboxListTile(
-                  title: const Text('Родитель / Наблюдатель'),
+                  title: Text(loc.labelPersonTypeParent),
                   value: _isParent,
                   onChanged: (_isStudent) ? null : (value) => _roleChecked('parent', value),
                 ),
                 CheckboxListTile(
-                  title: const Text('Администратор системы'),
+                  title: Text(loc.labelPersonTypeAdmin),
                   value: _isAdmin,
                   onChanged: (value) => _roleChecked('admin', value),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
-                    child: const Text('Сохранить изменения'),
+                    child: Text(loc.labelSaveChanges),
                     onPressed: () => _save(widget._person),
                   ),
                 ),
@@ -187,17 +189,14 @@ class _PersonPageState extends State<PersonPage> {
   }
 
   bool _addChild(PersonModel? value) {
+    var loc = S.of(context);
     if (value == null) return false;
     if (value.asStudent == null) {
-      Utils.showErrorSnackbar(
-        'Выбранный персонаж не является учащимся',
-      );
+      Utils.showErrorSnackbar(loc.errorPersonIsNotAStudent);
       return false;
     }
     if (_children.contains(value)) {
-      Utils.showErrorSnackbar(
-        'Выбранный учащийся уже присутствует в группе',
-      );
+      Utils.showErrorSnackbar(loc.errorStudentAlreadyPresent);
       return false;
     }
     setState(() {
@@ -209,9 +208,7 @@ class _PersonPageState extends State<PersonPage> {
   bool _setChild(PersonModel value) {
     StudentModel sm;
     if (!value.types.contains('student')) {
-      Utils.showErrorSnackbar(
-        'Выбранный персонаж больше не является учащимся',
-      );
+      Utils.showErrorSnackbar(S.of(context).errorPersonIsNotAStudent);
       return false;
     }
 

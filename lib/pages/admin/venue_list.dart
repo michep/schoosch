@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/pages/admin/venue_edit.dart';
@@ -20,9 +21,10 @@ class _VenueListPageState extends State<VenueListPage> {
 
   @override
   Widget build(BuildContext context) {
+    var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Кабинеты и помещения'),
+        title: Text(loc.labelVenueListTitle),
         actions: [IconButton(onPressed: _newVenue, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
@@ -30,14 +32,14 @@ class _VenueListPageState extends State<VenueListPage> {
           children: [
             Card(
               child: ExpansionTile(
-                title: _inSearch ? const Text('Поиск', style: TextStyle(fontStyle: FontStyle.italic)) : const Text('Поиск'),
+                title: _inSearch ? Text(loc.labelSearch, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.labelSearch),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
                     onChanged: (_) => setState(() {}),
                     controller: _name,
                     decoration: InputDecoration(
-                      label: const Text('Название'),
+                      label: Text(loc.labelName),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () => setState(() {
@@ -100,7 +102,7 @@ class _VenueListPageState extends State<VenueListPage> {
 
   Future<void> _newVenue() async {
     var nvenue = VenueModel.empty();
-    var res = await Get.to<VenueModel>(() => VenuePage(nvenue, 'Новый кабинет'));
+    var res = await Get.to<VenueModel>(() => VenuePage(nvenue, S.of(context).labelNewVenue));
     if (res is VenueModel) {
       setState(() {});
     }

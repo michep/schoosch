@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/pages/admin/schedule_lessons_list.dart';
@@ -19,7 +20,7 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget._aclass.name}, расписание'),
+        title: Text(S.of(context).labelClassScheduleTitle(widget._aclass.name)),
       ),
       body: SafeArea(
         child: Scrollbar(
@@ -69,8 +70,7 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
   Future<void> _newSchedule(int day) async {
     var nschedule = DayScheduleModel.empty(widget._aclass, day);
     nschedule.day = day;
-    var res = await Get.to<DayScheduleModel>(
-        () => ScheduleLessonsListPage(widget._aclass, nschedule, '${nschedule.aclass.name}, ${Utils.dayName(day)}'));
+    var res = await Get.to<DayScheduleModel>(() => ScheduleLessonsListPage(widget._aclass, nschedule, '${nschedule.aclass.name}, ${Utils.dayName(day)}'));
     if (res is DayScheduleModel) {
       setState(() {});
     }

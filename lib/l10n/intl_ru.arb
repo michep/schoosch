@@ -1,0 +1,77 @@
+{
+    "appTiile": "Скууш - школьный дневник",
+    "appBarTitle": "Скууш",
+
+    "labelSaveChanges": "Сохранить изменения",
+    "labelSearch": "Поиск",
+    "labelName": "Название",
+
+    "admDrawerEditInstitution": "Информация об учебном заведении",
+    "admDrawerListVenue": "Кабинеты и помещения",
+    "admDrawerListPeople": "Сотрудники, учителя и ученики",
+    "admDrawerListCurriculum": "Учебные предметы",
+    "admDrawerListClass": "Учебные классы",
+    "admDrawerListSchedule": "Расписание уроков на неделю",
+
+    "labelClassName": "Название учебного класса",
+    "labelClassGrade": "Год обучения",
+    "labelClassMaster": "Классный руководитель",
+    "labelClassSchedule": "Расписание времени уроков",
+    "labelClassStudents": "Учащиеяся класса",
+    "labelClassListTitle": "Учебные классы",
+    "labelNewClass": "Новый учебный класс",
+
+    "labelCurriculumName": "Учебный предмет",
+    "labelCurriculumAlternateName": "Альтернативное название",
+    "labelCurriculumTeacher": "Преподаватель",
+    "labelCurriculumStudents": "Группа учащихся",
+    "labelCurriculumListTitle": "Учебные предметы",
+    "labelNewCurriculum": "Новый учебный предмет",
+
+    "labelDayScheduleListTitle": "Раписания времени уроков",
+
+    "labelClassScheduleTitle": "{classname}, расписание",
+
+    "labelVenueName": "Кабинет",
+    "labelVenueListTitle": "Кабинеты и помещения",
+    "labelNewVenue": "Новый кабинет",
+
+    "labelLessonTitle": "Урок",
+
+    "labelPersonName": "Имя",
+    "labelPersonFirstName": "Имя",
+    "labelPersonMiddleName": "Отчетсво",
+    "labelPersonLastName": "Фамилия",
+    "labelPersonEmail": "Email",
+    "labelPersonBirthday": "Дата рождения",
+    "labelPersonType": "Тип",
+    "labelPersonTypeAll": "Все типы",
+    "labelPersonTypeStudent": "Учащийся",
+    "labelPersonTypeTeacher": "Преподаватель",
+    "labelPersonTypeParent": "Родитель \\ Наблюдатель",
+    "labelPersonTypeAdmin": "Администратор",
+    "labelPersonRelatedStudents": "Связанные учащиеся",
+    "labelPeopleListLitle": "Сотрудники, учителя и ученики",
+    "labelNewPerson": "Новый {type}",
+
+    "errorCurriculumEmpty": "Учебный предмет должен быть выбран",
+
+    "errorVenueEmpty": "Кабинет должен быть выбран",
+    
+    "errorClassScheduleEmpty": "Расписание должно быть выбрано",
+    "errorClassStudentsEmpty": "Нужно выбрать учащихся",
+    "errorClassGradeEmpty": "Год обучения должен быть заполнен",
+    "errorClassGradeNotANumber": "Год обучения должен быть числом",
+    "errorClassGradeNotInRange": "Год обучения должен быть между 1 и 11",
+
+    "errorNameEmpty": "Название должно быть заполнено",
+    "errorTeacherEmpty": "Преподаватель должен быть выбран",
+    "errorStudentAlreadyPresent": "Выбранный учащийся уже присутствует в группе",
+    "errorPersonIsNotATeacher": "Выбранный персонаж не является преподавателем",
+    "errorPersonIsNotAStudent": "Выбранный персонаж не является учащимся",
+    "errorPersonFirstNameEmpty": "Имя должно быть заполнено",
+    "errorPersonLastNameEmpty": "Фамилия должна быть заполнена",
+    "errorPersonEmailEmpty": "Email адрес должен быть заполнен",
+    "errorPersonBirthdayEmpty": "Нужно указать дату рождения",
+    "errorPersonParentStudentsEmpty": "Нужно выбрать учащихся"
+}

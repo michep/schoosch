@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/pages/admin/class_list.dart';
 import 'package:schoosch/pages/admin/curriculum_list.dart';
@@ -13,6 +14,7 @@ class AdminDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var loc = S.of(context);
     return ListView(
       children: [
         drawerHeader(context),
@@ -20,27 +22,27 @@ class AdminDrawer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextButton(
-              child: const Text('Информация об учебном заведении'),
+              child: Text(loc.admDrawerEditInstitution),
               onPressed: _openInstitutionPage,
             ),
             TextButton(
-              child: const Text('Кабинеты и помещения'),
+              child: Text(loc.admDrawerListVenue),
               onPressed: _openVenuesPage,
             ),
             TextButton(
-              child: const Text('Сотрудники, учителя и ученики'),
+              child: Text(loc.admDrawerListPeople),
               onPressed: _openPeoplePage,
             ),
             TextButton(
-              child: const Text('Учебные предметы'),
+              child: Text(loc.admDrawerListCurriculum),
               onPressed: _openCurriculumsPage,
             ),
             TextButton(
-              child: const Text('Учебные классы'),
+              child: Text(loc.admDrawerListClass),
               onPressed: _openClassesPage,
             ),
             TextButton(
-              child: const Text('Расписание уроков на неделю'),
+              child: Text(loc.admDrawerListSchedule),
               onPressed: _openSchedulesPage,
             ),
           ],

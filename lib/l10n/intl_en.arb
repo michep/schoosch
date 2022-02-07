@@ -1,0 +1,77 @@
+{
+    "appTiile": "Schoosch is school schedule app",
+    "appBarTitle": "Schoosch",
+
+    "labelSaveChanges": "Save changes",
+    "labelSearch": "Search",
+    "labelName": "Name",
+
+    "admDrawerEditInstitution": "Edit Institution",
+    "admDrawerListVenue": "Venues Info",
+    "admDrawerListPeople": "Students, Teachers and Other People Info",
+    "admDrawerListCurriculum": "Curriculums Info",
+    "admDrawerListClass": "Student Classes Info",
+    "admDrawerListSchedule": "Student Classes Schedules Info",
+
+    "labelClassName": "Name",
+    "labelClassGrade": "Grade",
+    "labelClassMaster": "Teacher",
+    "labelClassSchedule": "Schedule",
+    "labelClassStudents": "Students",
+    "labelClassListTitle": "Classes",
+    "labelNewClass": "New Class",
+
+    "labelCurriculumName": "Учебный предмет",
+    "labelCurriculumAlternateName": "Альтернативное название",
+    "labelCurriculumTeacher": "Преподаватель",
+    "labelCurriculumStudents": "Группа учащихся",
+    "labelCurriculumListTitle": "Учебные предметы",
+    "labelNewCurriculum": "Новый учебный предмет",
+
+    "labelDayScheduleListTitle": "Раписания времени уроков",
+
+    "labelClassScheduleTitle": "{classname}, расписание",
+
+    "labelVenueName": "Кабинет",
+    "labelVenueListTitle": "Кабинеты и помещения",
+    "labelNewVenue": "Новый кабинет",
+
+    "labelLessonTitle": "Урок",
+
+    "labelPersonName": "Name",
+    "labelPersonFirstName": "Имя",
+    "labelPersonMiddleName": "Отчетсво",
+    "labelPersonLastName": "Фамилия",
+    "labelPersonEmail": "Email",
+    "labelPersonBirthday": "Дата рождения",
+    "labelPersonType": "Type",
+    "labelPersonTypeAll": "Все типы",
+    "labelPersonTypeStudent": "Учащийся",
+    "labelPersonTypeTeacher": "Преподаватель",
+    "labelPersonTypeParent": "Родитель \\ Наблюдатель",
+    "labelPersonTypeAdmin": "Администратор",
+    "labelPersonRelatedStudents": "Связанные учащиеся",
+    "labelPeopleListLitle": "Сотрудники, учителя и ученики",
+    "labelNewPerson": "Новый {type}",
+
+    "errorCurriculumEmpty": "Учебный предмет должен быть выбран",
+
+    "errorVenueEmpty": "Кабинет должен быть выбран",
+
+    "errorClassScheduleEmpty": "Расписание должно быть выбрано",
+    "errorClassStudentsEmpty": "Нужно выбрать учащихся",
+    "errorClassGradeEmpty": "Год обучения должен быть заполнен",
+    "errorClassGradeNotANumber": "Год обучения должен быть числом",
+    "errorClassGradeNotInRange": "Год обучения должен быть между 1 и 11",
+
+    "errorNameEmpty": "Название должно быть заполнено",    
+    "errorTeacherEmpty": "Преподаватель должен быть выбран",
+    "errorStudentAlreadyPresent": "Выбранный учащийся уже присутствует в группе",
+    "errorPersonIsNotATeacher": "Выбранный персонаж не является преподавателем",
+    "errorPersonIsNotAStudent": "Выбранный персонаж не является учащимся",
+    "errorPersonFirstNameEmpty": "Имя должно быть заполнено",
+    "errorPersonLastNameEmpty": "Фамилия должна быть заполнена",
+    "errorPersonEmailEmpty": "Email адрес должен быть заполнен",
+    "errorPersonBirthdayEmpty": "Нужно указать дату рождения",
+    "errorPersonParentStudentsEmpty": "Нужно выбрать учащихся"
+}
