@@ -27,6 +27,7 @@ dependencies:
   drag_and_drop_lists: ^0.3.2+2
   qr_code_scanner: ^0.6.1
   dropdown_search: ^2.0.1
+  flutter_native_splash: ^2.0.1+1
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +43,12 @@ flutter_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/icon/icon.png"
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: "assets/icon/icon.png"
+  android: true
+  ios: true
 
 flutter_intl:
   enabled: true
