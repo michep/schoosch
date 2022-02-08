@@ -22,11 +22,11 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var fauth = FAuth();
   var fstore = FStore();
-  var bcont = Blueprint_Controller();
+  var bcont = BlueprintController();
   Get.put<FAuth>(fauth);
   Get.put<FStore>(fstore);
   Get.put(CurrentWeek(Week.current()));
-  Get.put<Blueprint_Controller>(bcont);
+  Get.put<BlueprintController>(bcont);
   if (fauth.currentUser != null) {
     await fstore.init(fauth.currentUser!.email!);
     await bcont.init();

@@ -13,12 +13,12 @@ import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class RoomSearch extends StatefulWidget {
-  late List<VenueModel> blueprints;
-  Map<TeacherModel, List<String>> teachersMap;
-  ClassModel? aclass;
+  late final List<VenueModel> blueprints;
+  final Map<TeacherModel, List<String>> teachersMap;
+  final ClassModel? aclass;
 
   RoomSearch(this.aclass, this.teachersMap, {Key? key}) : super(key: key) {
-    blueprints = Get.find<Blueprint_Controller>().bluePrints;
+    blueprints = Get.find<BlueprintController>().bluePrints;
   }
 
   @override
@@ -39,10 +39,8 @@ class _RoomSearchState extends State<RoomSearch> {
       child: Container(
         margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.black, width: 1.3),
-            color: Colors.blue.withOpacity(0.7)),
+        decoration:
+            BoxDecoration(borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.black, width: 1.3), color: Colors.blue.withOpacity(0.7)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -54,17 +52,13 @@ class _RoomSearchState extends State<RoomSearch> {
                   Icons.room_outlined,
                   size: 35,
                 ),
-                items: widget.blueprints
-                    .where((element) =>
-                        element.type == 'room' && element.name != 'unknown')
-                    .map((e) => e.name)
-                    .toList(),
+                items: widget.blueprints.where((element) => element.type == 'room' && element.name != 'unknown').map((e) => e.name).toList(),
                 onChanged: (a) {
                   if (a == null) {
-                    Get.find<Blueprint_Controller>().cancelFinding();
+                    Get.find<BlueprintController>().cancelFinding();
                     roomcont.text = '';
                   } else {
-                    Get.find<Blueprint_Controller>().findARoom(a);
+                    Get.find<BlueprintController>().findARoom(a);
                   }
                 },
                 showSearchBox: true,
@@ -83,7 +77,7 @@ class _RoomSearchState extends State<RoomSearch> {
                   height: 50,
                   decoration: BoxDecoration(
                     color: Colors.blue.withOpacity(0.8),
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(12),
                       topRight: Radius.circular(12),
                     ),
@@ -139,8 +133,7 @@ class _RoomSearchState extends State<RoomSearch> {
                     decoration: !isSelected
                         ? null
                         : BoxDecoration(
-                            border: Border.all(
-                                color: Theme.of(context).primaryColor),
+                            border: Border.all(color: Theme.of(context).primaryColor),
                             borderRadius: BorderRadius.circular(5),
                             color: Colors.white,
                           ),
@@ -167,7 +160,7 @@ class _RoomSearchState extends State<RoomSearch> {
                   height: 50,
                   decoration: BoxDecoration(
                     color: Colors.blue.withOpacity(0.8),
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(12),
                       topRight: Radius.circular(12),
                     ),
@@ -206,8 +199,7 @@ class _RoomSearchState extends State<RoomSearch> {
           title: Text('${teacher.firstname} ${teacher.middlename}'),
           content: SingleChildScrollView(
             child: FutureBuilder<List<TeacherScheduleModel>>(
-                future: Get.find<FStore>()
-                    .getTeacherWeekSchedule(teacher, Week.current()),
+                future: Get.find<FStore>().getTeacherWeekSchedule(teacher, Week.current()),
                 builder: (context, snapshota) {
                   if (!snapshota.hasData) {
                     return Utils.progressIndicator();
@@ -216,11 +208,7 @@ class _RoomSearchState extends State<RoomSearch> {
                     return const Text('no scahedule');
                   }
                   return FutureBuilder<List<LessonModel>>(
-                      future: snapshota.data!
-                          .where((element) =>
-                              element.day == DateTime.now().weekday)
-                          .toList()[0]
-                          .getLessons(),
+                      future: snapshota.data!.where((element) => element.day == DateTime.now().weekday).toList()[0].getLessons(),
                       builder: (context, snapshotb) {
                         if (!snapshotb.hasData) {
                           return Utils.progressIndicator();
@@ -238,8 +226,7 @@ class _RoomSearchState extends State<RoomSearch> {
                                           if (!snapshotc.hasData) {
                                             return const Text('');
                                           }
-                                          return Text(
-                                              snapshotc.data!.aliasOrName);
+                                          return Text(snapshotc.data!.aliasOrName);
                                         })))
                                 .toList());
                       });

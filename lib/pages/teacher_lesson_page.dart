@@ -9,7 +9,6 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/teacher_student_tile.dart';
-import '../widgets/addstudentmarksheet.dart';
 import '../widgets/addhomeworksheet.dart';
 
 class TeacherLessonPage extends StatelessWidget {
@@ -121,22 +120,20 @@ class TeacherLessonPage extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('YOUR D/Z'),
-                FutureBuilder<HomeworkModel?>(
-                  future: _lesson.homeworkForClass(_date),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Text("нет домашнего задания");
-                    }
-                    return Text(snapshot.data!.text);
-                  },
-                ),
-              ],
-            ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('YOUR D/Z'),
+              FutureBuilder<HomeworkModel?>(
+                future: _lesson.homeworkForClass(_date),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Text("нет домашнего задания");
+                  }
+                  return Text(snapshot.data!.text);
+                },
+              ),
+            ],
           ),
           const SizedBox(
             height: 10,
@@ -144,8 +141,7 @@ class TeacherLessonPage extends StatelessWidget {
           Center(
             child: ElevatedButton.icon(
               onPressed: () {
-                createClassHomework(
-                    context, _teacher, _curiculum, _date, null);
+                createClassHomework(context, _teacher, _curiculum, _date, null);
               },
               icon: const Icon(Icons.calculate_outlined),
               label: const Text("add DZ"),

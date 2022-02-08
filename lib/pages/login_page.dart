@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _authenticated(User? user) async {
     var store = Get.find<FStore>();
-    var bcont = Get.find<Blueprint_Controller>();
+    var bcont = Get.find<BlueprintController>();
     if (user == null) {
       store.resetCurrentUser();
     }

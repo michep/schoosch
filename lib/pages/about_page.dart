@@ -9,7 +9,7 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
-  List<bool> _isOpen = [false, false, false, false];
+  final List<bool> _isOpen = [false, false, false, false];
 
   @override
   Widget build(BuildContext context) {
@@ -34,34 +34,34 @@ class _AboutPageState extends State<AboutPage> {
             children: [
               ExpansionPanel(
                 headerBuilder: (context, isOpen) {
-                  return Text("Основные функции");
+                  return const Text("Основные функции");
                 },
-                body: Text(
+                body: const Text(
                   "Ученик:\n имеет возможность посмотреть расписание, увидеть свои задания на дом и оценки, а так же отзываться об учителях своей школы.\nУчитель:\n имеет возможность ставить оценки, назначать дз всему классу или отдельному человеку, имеет доступ к расписанию.\nРодитель:\n может проверять оценки своего ребенка и его пропуски.",
                 ),
                 isExpanded: _isOpen[0],
               ),
               ExpansionPanel(
                 headerBuilder: (context, isOpen) {
-                  return Text("Кто такой админ");
+                  return const Text("Кто такой админ");
                 },
-                body: Text(
+                body: const Text(
                   "Админ - это статус, позволяющий учителю или родителю изменять данные о классе, расписании или всей школе. Имеет набор дополнительных функций, позволяющих взаимодействовать с базой данных.",
                 ),
                 isExpanded: _isOpen[1],
               ),
               ExpansionPanel(
                 headerBuilder: (context, isOpen) {
-                  return Text("hello 3");
+                  return const Text("hello 3");
                 },
-                body: Text("now Open 3333"),
+                body: const Text("now Open 3333"),
                 isExpanded: _isOpen[2],
               ),
               ExpansionPanel(
                 headerBuilder: (context, isOpen) {
-                  return Text("hello 4");
+                  return const Text("hello 4");
                 },
-                body: Text("now Open 4444"),
+                body: const Text("now Open 4444"),
                 isExpanded: _isOpen[3],
               ),
             ],

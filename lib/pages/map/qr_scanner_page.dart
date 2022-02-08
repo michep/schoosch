@@ -44,18 +44,23 @@ class _ScanPageState extends State<ScanPage> {
           buildQrView(context),
           Positioned(
             child: GestureDetector(
-              onTap: barcode != null ? () {
-                Get.find<Blueprint_Controller>().findARoom(barcode!.code!);
-                // TODO: MAKE A FUNCTION TO FIND A ROOM
-                Get.back();
-              } : () {},
+              onTap: barcode != null
+                  ? () {
+                      Get.find<BlueprintController>().findARoom(barcode!.code!);
+                      // TODO: MAKE A FUNCTION TO FIND A ROOM
+                      Get.back();
+                    }
+                  : () {},
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: Colors.white24.withOpacity(0.8),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Text(barcode != null ? "${barcode!.code}" : "scan a qr...", maxLines: 2,),
+                child: Text(
+                  barcode != null ? "${barcode!.code}" : "scan a qr...",
+                  maxLines: 2,
+                ),
               ),
             ),
             bottom: 20,

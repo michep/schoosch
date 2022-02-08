@@ -7,51 +7,46 @@ import 'package:schoosch/pages/map/floor_selection.dart';
 import 'package:schoosch/pages/map/room_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/widgets/utils.dart';
 
 class SchoolMapPage extends StatefulWidget {
-  ClassModel? aclass;
-  SchoolMapPage(
-    this.aclass, {
-    Key? key,
-  }) : super(key: key);
+  final ClassModel? aclass;
+  const SchoolMapPage(this.aclass, {Key? key}) : super(key: key);
 
   @override
   State<SchoolMapPage> createState() => _SchoolMapPageState();
 }
 
 class _SchoolMapPageState extends State<SchoolMapPage> {
-  final Blueprint_Controller bpc = Get.find<Blueprint_Controller>();
+  final BlueprintController bpc = Get.find<BlueprintController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Get.find<FStore>().currentInstitution!.name, overflow: TextOverflow.ellipsis,),
+        title: Text(
+          Get.find<FStore>().currentInstitution!.name,
+          overflow: TextOverflow.ellipsis,
+        ),
         actions: [
           IconButton(
             onPressed: () {
-              Get.find<Blueprint_Controller>().side$.value =
-                  !Get.find<Blueprint_Controller>().side$.value;
+              Get.find<BlueprintController>().side$.value = !Get.find<BlueprintController>().side$.value;
             },
             icon: Obx(() {
-              return Icon(Get.find<Blueprint_Controller>().side$.value
-                  ? Icons.align_horizontal_left_rounded
-                  : Icons.align_horizontal_right_rounded);
+              return Icon(Get.find<BlueprintController>().side$.value ? Icons.align_horizontal_left_rounded : Icons.align_horizontal_right_rounded);
             }),
           )
         ],
       ),
       body: Stack(
         children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width,
             child: InteractiveViewer(
               maxScale: 2,
               minScale: 0.5,
               constrained: false,
-              boundaryMargin: const EdgeInsets.only(
-                  left: 800, right: 800, top: 800, bottom: 800),
+              boundaryMargin: const EdgeInsets.only(left: 800, right: 800, top: 800, bottom: 800),
               child: Container(
                 // color: Colors.amber.withOpacity(0.1),
                 alignment: Alignment.center,
@@ -85,16 +80,14 @@ class _SchoolMapPageState extends State<SchoolMapPage> {
                       margin: const EdgeInsets.all(10),
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.black, width: 1.3),
-                          color: Colors.blue.withOpacity(0.7)),
+                          borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.black, width: 1.3), color: Colors.blue.withOpacity(0.7)),
                       child: Container(),
                     ),
                   );
                 }
                 return RoomSearch(widget.aclass, snapshot.data!);
               }),
-          FloorSelection(),
+          const FloorSelection(),
         ],
       ),
     );
@@ -111,10 +104,7 @@ class _SchoolMapPageState extends State<SchoolMapPage> {
   }
 
   void cancelHitTest(LongPressEndDetails details) {
-    if (bpc.bluePrints$
-        .firstWhere((element) => element.name == bpc.chosenRoom$.value)
-        .path
-        .contains(details.localPosition)) {
+    if (bpc.bluePrints$.firstWhere((element) => element.name == bpc.chosenRoom$.value).path.contains(details.localPosition)) {
       bpc.cancelFinding();
     }
   }

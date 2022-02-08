@@ -3,7 +3,7 @@ import 'package:schoosch/model/venue_model.dart';
 import 'package:get/get.dart';
 // import './blueprint_data.dart';
 
-class Blueprint_Controller extends GetxController {
+class BlueprintController extends GetxController {
   String? _chosenroom;
   late Rx<String?> chosenRoom$;
   late RxInt chosenFloor$;
@@ -11,7 +11,7 @@ class Blueprint_Controller extends GetxController {
   List<VenueModel> _allBluePrints = [];
   List<VenueModel> _currentBluePrints = [];
 
-  Blueprint_Controller() {
+  BlueprintController() {
     chosenRoom$ = _chosenroom.obs;
     chosenFloor$ = 1.obs;
     side$ = true.obs;
@@ -27,7 +27,7 @@ class Blueprint_Controller extends GetxController {
 
   void findARoom(String name) {
     var found = _allBluePrints.firstWhereOrNull((element) => (element.name == name));
-    if(found != null) {
+    if (found != null) {
       chosenFloor$.value = found.floor;
       chosenRoom$.value = found.name;
     }
