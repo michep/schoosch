@@ -20,114 +20,104 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(classname) => "${classname}, расписание";
+  static String m0(classname) => "${classname} schedule";
 
-  static String m1(type) => "Новый ${type}";
+  static String m1(type) => "New ${type}";
+
+  static String m2(order) => "${order} lesson";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "admDrawerEditInstitution":
-            MessageLookupByLibrary.simpleMessage("Edit Institution"),
-        "admDrawerListClass":
-            MessageLookupByLibrary.simpleMessage("Student Classes Info"),
-        "admDrawerListCurriculum":
-            MessageLookupByLibrary.simpleMessage("Curriculums Info"),
-        "admDrawerListPeople": MessageLookupByLibrary.simpleMessage(
-            "Students, Teachers and Other People Info"),
-        "admDrawerListSchedule": MessageLookupByLibrary.simpleMessage(
-            "Student Classes Schedules Info"),
-        "admDrawerListVenue":
-            MessageLookupByLibrary.simpleMessage("Venues Info"),
         "appBarTitle": MessageLookupByLibrary.simpleMessage("Schoosch"),
         "appTiile": MessageLookupByLibrary.simpleMessage(
             "Schoosch is school schedule app"),
-        "errorClassGradeEmpty": MessageLookupByLibrary.simpleMessage(
-            "Год обучения должен быть заполнен"),
-        "errorClassGradeNotANumber": MessageLookupByLibrary.simpleMessage(
-            "Год обучения должен быть числом"),
+        "classGrade": MessageLookupByLibrary.simpleMessage("Grade"),
+        "classList": MessageLookupByLibrary.simpleMessage("Classes"),
+        "classMaster": MessageLookupByLibrary.simpleMessage("Teacher"),
+        "className": MessageLookupByLibrary.simpleMessage("Name"),
+        "classSchedule": MessageLookupByLibrary.simpleMessage("Schedule"),
+        "classScheduleName": m0,
+        "classStudents": MessageLookupByLibrary.simpleMessage("Students"),
+        "curriculumAlternateName":
+            MessageLookupByLibrary.simpleMessage("Alias"),
+        "curriculumList": MessageLookupByLibrary.simpleMessage("Curriculums"),
+        "curriculumName": MessageLookupByLibrary.simpleMessage("Curriculum"),
+        "curriculumStudents": MessageLookupByLibrary.simpleMessage("Students"),
+        "curriculumTeacher": MessageLookupByLibrary.simpleMessage("Teacher"),
+        "dayScheduleList":
+            MessageLookupByLibrary.simpleMessage("Lessons Schedule"),
+        "editInstitution":
+            MessageLookupByLibrary.simpleMessage("Edit Institution"),
+        "errorClassGradeEmpty":
+            MessageLookupByLibrary.simpleMessage("Grade should be provided"),
+        "errorClassGradeNotANumber":
+            MessageLookupByLibrary.simpleMessage("Grade should be a number"),
         "errorClassGradeNotInRange": MessageLookupByLibrary.simpleMessage(
-            "Год обучения должен быть между 1 и 11"),
-        "errorClassScheduleEmpty": MessageLookupByLibrary.simpleMessage(
-            "Расписание должно быть выбрано"),
+            "Grade should be between 1 and 11"),
+        "errorClassScheduleEmpty":
+            MessageLookupByLibrary.simpleMessage("Schedule should be selected"),
         "errorClassStudentsEmpty":
-            MessageLookupByLibrary.simpleMessage("Нужно выбрать учащихся"),
+            MessageLookupByLibrary.simpleMessage("Students should be selected"),
         "errorCurriculumEmpty": MessageLookupByLibrary.simpleMessage(
-            "Учебный предмет должен быть выбран"),
-        "errorNameEmpty": MessageLookupByLibrary.simpleMessage(
-            "Название должно быть заполнено"),
+            "Curriculum should be selected"),
+        "errorNameEmpty":
+            MessageLookupByLibrary.simpleMessage("Name should be provided"),
         "errorPersonBirthdayEmpty":
-            MessageLookupByLibrary.simpleMessage("Нужно указать дату рождения"),
-        "errorPersonEmailEmpty": MessageLookupByLibrary.simpleMessage(
-            "Email адрес должен быть заполнен"),
-        "errorPersonFirstNameEmpty":
-            MessageLookupByLibrary.simpleMessage("Имя должно быть заполнено"),
+            MessageLookupByLibrary.simpleMessage("Birthdat should be provided"),
+        "errorPersonEmailEmpty":
+            MessageLookupByLibrary.simpleMessage("Email should be provided"),
+        "errorPersonFirstNameEmpty": MessageLookupByLibrary.simpleMessage(
+            "First Name should be provided"),
         "errorPersonIsNotAStudent": MessageLookupByLibrary.simpleMessage(
-            "Выбранный персонаж не является учащимся"),
+            "Selected Person is not a Student"),
         "errorPersonIsNotATeacher": MessageLookupByLibrary.simpleMessage(
-            "Выбранный персонаж не является преподавателем"),
+            "Selected Person is not a Teacher"),
         "errorPersonLastNameEmpty": MessageLookupByLibrary.simpleMessage(
-            "Фамилия должна быть заполнена"),
+            "Last Name should be provided"),
         "errorPersonParentStudentsEmpty":
-            MessageLookupByLibrary.simpleMessage("Нужно выбрать учащихся"),
+            MessageLookupByLibrary.simpleMessage("Students should be selected"),
+        "errorScheduleFromDateEmpty": MessageLookupByLibrary.simpleMessage(
+            "Start Date should be provided"),
         "errorStudentAlreadyPresent": MessageLookupByLibrary.simpleMessage(
-            "Выбранный учащийся уже присутствует в группе"),
-        "errorTeacherEmpty": MessageLookupByLibrary.simpleMessage(
-            "Преподаватель должен быть выбран"),
+            "Selected Student is already in the list"),
+        "errorTeacherEmpty":
+            MessageLookupByLibrary.simpleMessage("Teacher should be selected"),
         "errorVenueEmpty":
-            MessageLookupByLibrary.simpleMessage("Кабинет должен быть выбран"),
-        "labelClassGrade": MessageLookupByLibrary.simpleMessage("Grade"),
-        "labelClassListTitle": MessageLookupByLibrary.simpleMessage("Classes"),
-        "labelClassMaster": MessageLookupByLibrary.simpleMessage("Teacher"),
-        "labelClassName": MessageLookupByLibrary.simpleMessage("Name"),
-        "labelClassSchedule": MessageLookupByLibrary.simpleMessage("Schedule"),
-        "labelClassScheduleTitle": m0,
-        "labelClassStudents": MessageLookupByLibrary.simpleMessage("Students"),
-        "labelCurriculumAlternateName":
-            MessageLookupByLibrary.simpleMessage("Альтернативное название"),
-        "labelCurriculumListTitle":
-            MessageLookupByLibrary.simpleMessage("Учебные предметы"),
-        "labelCurriculumName":
-            MessageLookupByLibrary.simpleMessage("Учебный предмет"),
-        "labelCurriculumStudents":
-            MessageLookupByLibrary.simpleMessage("Группа учащихся"),
-        "labelCurriculumTeacher":
-            MessageLookupByLibrary.simpleMessage("Преподаватель"),
-        "labelDayScheduleListTitle":
-            MessageLookupByLibrary.simpleMessage("Раписания времени уроков"),
-        "labelLessonTitle": MessageLookupByLibrary.simpleMessage("Урок"),
-        "labelName": MessageLookupByLibrary.simpleMessage("Name"),
-        "labelNewClass": MessageLookupByLibrary.simpleMessage("New Class"),
-        "labelNewCurriculum":
-            MessageLookupByLibrary.simpleMessage("Новый учебный предмет"),
-        "labelNewPerson": m1,
-        "labelNewVenue": MessageLookupByLibrary.simpleMessage("Новый кабинет"),
-        "labelPeopleListLitle": MessageLookupByLibrary.simpleMessage(
-            "Сотрудники, учителя и ученики"),
-        "labelPersonBirthday":
-            MessageLookupByLibrary.simpleMessage("Дата рождения"),
-        "labelPersonEmail": MessageLookupByLibrary.simpleMessage("Email"),
-        "labelPersonFirstName": MessageLookupByLibrary.simpleMessage("Имя"),
-        "labelPersonLastName": MessageLookupByLibrary.simpleMessage("Фамилия"),
-        "labelPersonMiddleName":
-            MessageLookupByLibrary.simpleMessage("Отчетсво"),
-        "labelPersonName": MessageLookupByLibrary.simpleMessage("Name"),
-        "labelPersonRelatedStudents":
-            MessageLookupByLibrary.simpleMessage("Связанные учащиеся"),
-        "labelPersonType": MessageLookupByLibrary.simpleMessage("Type"),
-        "labelPersonTypeAdmin":
-            MessageLookupByLibrary.simpleMessage("Администратор"),
-        "labelPersonTypeAll": MessageLookupByLibrary.simpleMessage("Все типы"),
-        "labelPersonTypeParent":
-            MessageLookupByLibrary.simpleMessage("Родитель \\ Наблюдатель"),
-        "labelPersonTypeStudent":
-            MessageLookupByLibrary.simpleMessage("Учащийся"),
-        "labelPersonTypeTeacher":
-            MessageLookupByLibrary.simpleMessage("Преподаватель"),
-        "labelSaveChanges":
-            MessageLookupByLibrary.simpleMessage("Save changes"),
-        "labelSearch": MessageLookupByLibrary.simpleMessage("Search"),
-        "labelVenueListTitle":
-            MessageLookupByLibrary.simpleMessage("Кабинеты и помещения"),
-        "labelVenueName": MessageLookupByLibrary.simpleMessage("Кабинет")
+            MessageLookupByLibrary.simpleMessage("Venue should be selected"),
+        "lesson": MessageLookupByLibrary.simpleMessage("Lesson"),
+        "lessonName": MessageLookupByLibrary.simpleMessage("Lesson"),
+        "name": MessageLookupByLibrary.simpleMessage("Name"),
+        "newClass": MessageLookupByLibrary.simpleMessage("New Class"),
+        "newCurriculum": MessageLookupByLibrary.simpleMessage("New Curriculum"),
+        "newPerson": m1,
+        "newVenue": MessageLookupByLibrary.simpleMessage("New Vanue"),
+        "peopleList":
+            MessageLookupByLibrary.simpleMessage("Student, Teachers and other"),
+        "personBirthday": MessageLookupByLibrary.simpleMessage("Birthday"),
+        "personEmail": MessageLookupByLibrary.simpleMessage("Email"),
+        "personFirstName": MessageLookupByLibrary.simpleMessage("First Name"),
+        "personLastName": MessageLookupByLibrary.simpleMessage("Last Name"),
+        "personMiddleName": MessageLookupByLibrary.simpleMessage("Middle Name"),
+        "personName": MessageLookupByLibrary.simpleMessage("Name"),
+        "personRelatedStudents":
+            MessageLookupByLibrary.simpleMessage("Related Students"),
+        "personType": MessageLookupByLibrary.simpleMessage("Type"),
+        "personTypeAdmin": MessageLookupByLibrary.simpleMessage("Admin"),
+        "personTypeAll": MessageLookupByLibrary.simpleMessage("All"),
+        "personTypeParent":
+            MessageLookupByLibrary.simpleMessage("Parent / Observer"),
+        "personTypeStudent": MessageLookupByLibrary.simpleMessage("Student"),
+        "personTypeTeacher": MessageLookupByLibrary.simpleMessage("Teacher"),
+        "saveChanges": MessageLookupByLibrary.simpleMessage("Save changes"),
+        "scheduleFromDate":
+            MessageLookupByLibrary.simpleMessage("Schedule start date"),
+        "scheduleLessonOrder": m2,
+        "scheduleNoLesson": MessageLookupByLibrary.simpleMessage("no lesson"),
+        "scheduleTillDate": MessageLookupByLibrary.simpleMessage("End date"),
+        "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "venueList": MessageLookupByLibrary.simpleMessage("Venues"),
+        "venueName": MessageLookupByLibrary.simpleMessage("Venue"),
+        "weekSchedule": MessageLookupByLibrary.simpleMessage(
+            "Student Classes Schedules Info")
       };
 }

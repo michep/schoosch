@@ -28,7 +28,7 @@ class _ClassListPageState extends State<ClassListPage> {
     var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(loc.labelClassListTitle),
+        title: Text(loc.classList),
         actions: [IconButton(onPressed: _newClass, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
@@ -36,14 +36,14 @@ class _ClassListPageState extends State<ClassListPage> {
           children: [
             Card(
               child: ExpansionTile(
-                title: _inSearch ? Text(loc.labelSearch, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.labelSearch),
+                title: _inSearch ? Text(loc.search, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.search),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
                     onChanged: (_) => setState(() {}),
                     controller: _name,
                     decoration: InputDecoration(
-                      label: Text(loc.labelName),
+                      label: Text(loc.name),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () => setState(() {
@@ -118,7 +118,7 @@ class _ClassListPageState extends State<ClassListPage> {
 
   Future<void> _newClass() async {
     var nclass = ClassModel.empty();
-    var res = await Get.to<ClassModel>(() => ClassPage(nclass, S.of(context).labelNewClass));
+    var res = await Get.to<ClassModel>(() => ClassPage(nclass, S.of(context).newClass));
     if (res is ClassModel) {
       setState(() {});
     }

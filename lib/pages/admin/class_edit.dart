@@ -66,7 +66,7 @@ class _ClassPageState extends State<ClassPage> {
                       TextFormField(
                         controller: _name,
                         decoration: InputDecoration(
-                          label: Text(loc.labelClassName),
+                          label: Text(loc.className),
                         ),
                         validator: (value) => Utils.validateTextNotEmpty(value, loc.errorNameEmpty),
                       ),
@@ -75,12 +75,12 @@ class _ClassPageState extends State<ClassPage> {
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
-                          label: Text(loc.labelClassGrade),
+                          label: Text(loc.classGrade),
                         ),
                         validator: _gradeValidator,
                       ),
                       SelectableValueDropdownFormField<PersonModel>(
-                        title: loc.labelClassMaster,
+                        title: loc.classMaster,
                         initFutureFunc: _initMaster,
                         initOptionsFutureFunc: _initMasterOptions,
                         titleFunc: (value) => value?.fullName ?? '',
@@ -94,7 +94,7 @@ class _ClassPageState extends State<ClassPage> {
                         callback: (value) => _setMaster(value),
                       ),
                       SelectableValueDropdownFormField<DayLessontimeModel>(
-                        title: loc.labelClassSchedule,
+                        title: loc.classSchedule,
                         initFutureFunc: _initLessonTime,
                         initOptionsFutureFunc: _initLessonTimeOptions,
                         titleFunc: (value) => value?.name ?? '',
@@ -109,7 +109,7 @@ class _ClassPageState extends State<ClassPage> {
                   ),
                 ),
                 SelectableValueListFormField<PersonModel>(
-                  title: loc.labelClassStudents,
+                  title: loc.classStudents,
                   initListFutureFunc: _initStudents,
                   titleFunc: (value) => value?.fullName ?? '',
                   listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'student'),
@@ -122,7 +122,7 @@ class _ClassPageState extends State<ClassPage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
-                    child: Text(loc.labelSaveChanges),
+                    child: Text(loc.saveChanges),
                     onPressed: () => _save(widget._aclass),
                   ),
                 ),

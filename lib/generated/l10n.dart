@@ -71,600 +71,620 @@ class S {
   }
 
   /// `Save changes`
-  String get labelSaveChanges {
+  String get saveChanges {
     return Intl.message(
       'Save changes',
-      name: 'labelSaveChanges',
+      name: 'saveChanges',
       desc: '',
       args: [],
     );
   }
 
   /// `Search`
-  String get labelSearch {
+  String get search {
     return Intl.message(
       'Search',
-      name: 'labelSearch',
+      name: 'search',
       desc: '',
       args: [],
     );
   }
 
   /// `Name`
-  String get labelName {
+  String get name {
     return Intl.message(
       'Name',
-      name: 'labelName',
+      name: 'name',
       desc: '',
       args: [],
     );
   }
 
   /// `Edit Institution`
-  String get admDrawerEditInstitution {
+  String get editInstitution {
     return Intl.message(
       'Edit Institution',
-      name: 'admDrawerEditInstitution',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Venues Info`
-  String get admDrawerListVenue {
-    return Intl.message(
-      'Venues Info',
-      name: 'admDrawerListVenue',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Students, Teachers and Other People Info`
-  String get admDrawerListPeople {
-    return Intl.message(
-      'Students, Teachers and Other People Info',
-      name: 'admDrawerListPeople',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Curriculums Info`
-  String get admDrawerListCurriculum {
-    return Intl.message(
-      'Curriculums Info',
-      name: 'admDrawerListCurriculum',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Student Classes Info`
-  String get admDrawerListClass {
-    return Intl.message(
-      'Student Classes Info',
-      name: 'admDrawerListClass',
+      name: 'editInstitution',
       desc: '',
       args: [],
     );
   }
 
   /// `Student Classes Schedules Info`
-  String get admDrawerListSchedule {
+  String get weekSchedule {
     return Intl.message(
       'Student Classes Schedules Info',
-      name: 'admDrawerListSchedule',
+      name: 'weekSchedule',
       desc: '',
       args: [],
     );
   }
 
   /// `Name`
-  String get labelClassName {
+  String get className {
     return Intl.message(
       'Name',
-      name: 'labelClassName',
+      name: 'className',
       desc: '',
       args: [],
     );
   }
 
   /// `Grade`
-  String get labelClassGrade {
+  String get classGrade {
     return Intl.message(
       'Grade',
-      name: 'labelClassGrade',
+      name: 'classGrade',
       desc: '',
       args: [],
     );
   }
 
   /// `Teacher`
-  String get labelClassMaster {
+  String get classMaster {
     return Intl.message(
       'Teacher',
-      name: 'labelClassMaster',
+      name: 'classMaster',
       desc: '',
       args: [],
     );
   }
 
   /// `Schedule`
-  String get labelClassSchedule {
+  String get classSchedule {
     return Intl.message(
       'Schedule',
-      name: 'labelClassSchedule',
+      name: 'classSchedule',
       desc: '',
       args: [],
     );
   }
 
   /// `Students`
-  String get labelClassStudents {
+  String get classStudents {
     return Intl.message(
       'Students',
-      name: 'labelClassStudents',
+      name: 'classStudents',
       desc: '',
       args: [],
     );
   }
 
   /// `Classes`
-  String get labelClassListTitle {
+  String get classList {
     return Intl.message(
       'Classes',
-      name: 'labelClassListTitle',
+      name: 'classList',
       desc: '',
       args: [],
     );
   }
 
   /// `New Class`
-  String get labelNewClass {
+  String get newClass {
     return Intl.message(
       'New Class',
-      name: 'labelNewClass',
+      name: 'newClass',
       desc: '',
       args: [],
     );
   }
 
-  /// `Учебный предмет`
-  String get labelCurriculumName {
+  /// `Curriculum`
+  String get curriculumName {
     return Intl.message(
-      'Учебный предмет',
-      name: 'labelCurriculumName',
+      'Curriculum',
+      name: 'curriculumName',
       desc: '',
       args: [],
     );
   }
 
-  /// `Альтернативное название`
-  String get labelCurriculumAlternateName {
+  /// `Alias`
+  String get curriculumAlternateName {
     return Intl.message(
-      'Альтернативное название',
-      name: 'labelCurriculumAlternateName',
+      'Alias',
+      name: 'curriculumAlternateName',
       desc: '',
       args: [],
     );
   }
 
-  /// `Преподаватель`
-  String get labelCurriculumTeacher {
+  /// `Teacher`
+  String get curriculumTeacher {
     return Intl.message(
-      'Преподаватель',
-      name: 'labelCurriculumTeacher',
+      'Teacher',
+      name: 'curriculumTeacher',
       desc: '',
       args: [],
     );
   }
 
-  /// `Группа учащихся`
-  String get labelCurriculumStudents {
+  /// `Students`
+  String get curriculumStudents {
     return Intl.message(
-      'Группа учащихся',
-      name: 'labelCurriculumStudents',
+      'Students',
+      name: 'curriculumStudents',
       desc: '',
       args: [],
     );
   }
 
-  /// `Учебные предметы`
-  String get labelCurriculumListTitle {
+  /// `Curriculums`
+  String get curriculumList {
     return Intl.message(
-      'Учебные предметы',
-      name: 'labelCurriculumListTitle',
+      'Curriculums',
+      name: 'curriculumList',
       desc: '',
       args: [],
     );
   }
 
-  /// `Новый учебный предмет`
-  String get labelNewCurriculum {
+  /// `New Curriculum`
+  String get newCurriculum {
     return Intl.message(
-      'Новый учебный предмет',
-      name: 'labelNewCurriculum',
+      'New Curriculum',
+      name: 'newCurriculum',
       desc: '',
       args: [],
     );
   }
 
-  /// `Раписания времени уроков`
-  String get labelDayScheduleListTitle {
+  /// `Lessons Schedule`
+  String get dayScheduleList {
     return Intl.message(
-      'Раписания времени уроков',
-      name: 'labelDayScheduleListTitle',
+      'Lessons Schedule',
+      name: 'dayScheduleList',
       desc: '',
       args: [],
     );
   }
 
-  /// `{classname}, расписание`
-  String labelClassScheduleTitle(Object classname) {
+  /// `{classname} schedule`
+  String classScheduleName(Object classname) {
     return Intl.message(
-      '$classname, расписание',
-      name: 'labelClassScheduleTitle',
+      '$classname schedule',
+      name: 'classScheduleName',
       desc: '',
       args: [classname],
     );
   }
 
-  /// `Кабинет`
-  String get labelVenueName {
+  /// `Venue`
+  String get venueName {
     return Intl.message(
-      'Кабинет',
-      name: 'labelVenueName',
+      'Venue',
+      name: 'venueName',
       desc: '',
       args: [],
     );
   }
 
-  /// `Кабинеты и помещения`
-  String get labelVenueListTitle {
+  /// `Venues`
+  String get venueList {
     return Intl.message(
-      'Кабинеты и помещения',
-      name: 'labelVenueListTitle',
+      'Venues',
+      name: 'venueList',
       desc: '',
       args: [],
     );
   }
 
-  /// `Новый кабинет`
-  String get labelNewVenue {
+  /// `New Vanue`
+  String get newVenue {
     return Intl.message(
-      'Новый кабинет',
-      name: 'labelNewVenue',
+      'New Vanue',
+      name: 'newVenue',
       desc: '',
       args: [],
     );
   }
 
-  /// `Урок`
-  String get labelLessonTitle {
+  /// `Lesson`
+  String get lessonName {
     return Intl.message(
-      'Урок',
-      name: 'labelLessonTitle',
+      'Lesson',
+      name: 'lessonName',
       desc: '',
       args: [],
     );
   }
 
   /// `Name`
-  String get labelPersonName {
+  String get personName {
     return Intl.message(
       'Name',
-      name: 'labelPersonName',
+      name: 'personName',
       desc: '',
       args: [],
     );
   }
 
-  /// `Имя`
-  String get labelPersonFirstName {
+  /// `First Name`
+  String get personFirstName {
     return Intl.message(
-      'Имя',
-      name: 'labelPersonFirstName',
+      'First Name',
+      name: 'personFirstName',
       desc: '',
       args: [],
     );
   }
 
-  /// `Отчетсво`
-  String get labelPersonMiddleName {
+  /// `Middle Name`
+  String get personMiddleName {
     return Intl.message(
-      'Отчетсво',
-      name: 'labelPersonMiddleName',
+      'Middle Name',
+      name: 'personMiddleName',
       desc: '',
       args: [],
     );
   }
 
-  /// `Фамилия`
-  String get labelPersonLastName {
+  /// `Last Name`
+  String get personLastName {
     return Intl.message(
-      'Фамилия',
-      name: 'labelPersonLastName',
+      'Last Name',
+      name: 'personLastName',
       desc: '',
       args: [],
     );
   }
 
   /// `Email`
-  String get labelPersonEmail {
+  String get personEmail {
     return Intl.message(
       'Email',
-      name: 'labelPersonEmail',
+      name: 'personEmail',
       desc: '',
       args: [],
     );
   }
 
-  /// `Дата рождения`
-  String get labelPersonBirthday {
+  /// `Birthday`
+  String get personBirthday {
     return Intl.message(
-      'Дата рождения',
-      name: 'labelPersonBirthday',
+      'Birthday',
+      name: 'personBirthday',
       desc: '',
       args: [],
     );
   }
 
   /// `Type`
-  String get labelPersonType {
+  String get personType {
     return Intl.message(
       'Type',
-      name: 'labelPersonType',
+      name: 'personType',
       desc: '',
       args: [],
     );
   }
 
-  /// `Все типы`
-  String get labelPersonTypeAll {
+  /// `All`
+  String get personTypeAll {
     return Intl.message(
-      'Все типы',
-      name: 'labelPersonTypeAll',
+      'All',
+      name: 'personTypeAll',
       desc: '',
       args: [],
     );
   }
 
-  /// `Учащийся`
-  String get labelPersonTypeStudent {
+  /// `Student`
+  String get personTypeStudent {
     return Intl.message(
-      'Учащийся',
-      name: 'labelPersonTypeStudent',
+      'Student',
+      name: 'personTypeStudent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Преподаватель`
-  String get labelPersonTypeTeacher {
+  /// `Teacher`
+  String get personTypeTeacher {
     return Intl.message(
-      'Преподаватель',
-      name: 'labelPersonTypeTeacher',
+      'Teacher',
+      name: 'personTypeTeacher',
       desc: '',
       args: [],
     );
   }
 
-  /// `Родитель \ Наблюдатель`
-  String get labelPersonTypeParent {
+  /// `Parent / Observer`
+  String get personTypeParent {
     return Intl.message(
-      'Родитель \\ Наблюдатель',
-      name: 'labelPersonTypeParent',
+      'Parent / Observer',
+      name: 'personTypeParent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Администратор`
-  String get labelPersonTypeAdmin {
+  /// `Admin`
+  String get personTypeAdmin {
     return Intl.message(
-      'Администратор',
-      name: 'labelPersonTypeAdmin',
+      'Admin',
+      name: 'personTypeAdmin',
       desc: '',
       args: [],
     );
   }
 
-  /// `Связанные учащиеся`
-  String get labelPersonRelatedStudents {
+  /// `Related Students`
+  String get personRelatedStudents {
     return Intl.message(
-      'Связанные учащиеся',
-      name: 'labelPersonRelatedStudents',
+      'Related Students',
+      name: 'personRelatedStudents',
       desc: '',
       args: [],
     );
   }
 
-  /// `Сотрудники, учителя и ученики`
-  String get labelPeopleListLitle {
+  /// `Student, Teachers and other`
+  String get peopleList {
     return Intl.message(
-      'Сотрудники, учителя и ученики',
-      name: 'labelPeopleListLitle',
+      'Student, Teachers and other',
+      name: 'peopleList',
       desc: '',
       args: [],
     );
   }
 
-  /// `Новый {type}`
-  String labelNewPerson(Object type) {
+  /// `New {type}`
+  String newPerson(Object type) {
     return Intl.message(
-      'Новый $type',
-      name: 'labelNewPerson',
+      'New $type',
+      name: 'newPerson',
       desc: '',
       args: [type],
     );
   }
 
-  /// `Учебный предмет должен быть выбран`
+  /// `Schedule start date`
+  String get scheduleFromDate {
+    return Intl.message(
+      'Schedule start date',
+      name: 'scheduleFromDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `End date`
+  String get scheduleTillDate {
+    return Intl.message(
+      'End date',
+      name: 'scheduleTillDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{order} lesson`
+  String scheduleLessonOrder(Object order) {
+    return Intl.message(
+      '$order lesson',
+      name: 'scheduleLessonOrder',
+      desc: '',
+      args: [order],
+    );
+  }
+
+  /// `no lesson`
+  String get scheduleNoLesson {
+    return Intl.message(
+      'no lesson',
+      name: 'scheduleNoLesson',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lesson`
+  String get lesson {
+    return Intl.message(
+      'Lesson',
+      name: 'lesson',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Curriculum should be selected`
   String get errorCurriculumEmpty {
     return Intl.message(
-      'Учебный предмет должен быть выбран',
+      'Curriculum should be selected',
       name: 'errorCurriculumEmpty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Кабинет должен быть выбран`
+  /// `Venue should be selected`
   String get errorVenueEmpty {
     return Intl.message(
-      'Кабинет должен быть выбран',
+      'Venue should be selected',
       name: 'errorVenueEmpty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Расписание должно быть выбрано`
+  /// `Schedule should be selected`
   String get errorClassScheduleEmpty {
     return Intl.message(
-      'Расписание должно быть выбрано',
+      'Schedule should be selected',
       name: 'errorClassScheduleEmpty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Нужно выбрать учащихся`
+  /// `Students should be selected`
   String get errorClassStudentsEmpty {
     return Intl.message(
-      'Нужно выбрать учащихся',
+      'Students should be selected',
       name: 'errorClassStudentsEmpty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Год обучения должен быть заполнен`
+  /// `Grade should be provided`
   String get errorClassGradeEmpty {
     return Intl.message(
-      'Год обучения должен быть заполнен',
+      'Grade should be provided',
       name: 'errorClassGradeEmpty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Год обучения должен быть числом`
+  /// `Grade should be a number`
   String get errorClassGradeNotANumber {
     return Intl.message(
-      'Год обучения должен быть числом',
+      'Grade should be a number',
       name: 'errorClassGradeNotANumber',
       desc: '',
       args: [],
     );
   }
 
-  /// `Год обучения должен быть между 1 и 11`
+  /// `Grade should be between 1 and 11`
   String get errorClassGradeNotInRange {
     return Intl.message(
-      'Год обучения должен быть между 1 и 11',
+      'Grade should be between 1 and 11',
       name: 'errorClassGradeNotInRange',
       desc: '',
       args: [],
     );
   }
 
-  /// `Название должно быть заполнено`
+  /// `Name should be provided`
   String get errorNameEmpty {
     return Intl.message(
-      'Название должно быть заполнено',
+      'Name should be provided',
       name: 'errorNameEmpty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Преподаватель должен быть выбран`
+  /// `Teacher should be selected`
   String get errorTeacherEmpty {
     return Intl.message(
-      'Преподаватель должен быть выбран',
+      'Teacher should be selected',
       name: 'errorTeacherEmpty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Выбранный учащийся уже присутствует в группе`
+  /// `Selected Student is already in the list`
   String get errorStudentAlreadyPresent {
     return Intl.message(
-      'Выбранный учащийся уже присутствует в группе',
+      'Selected Student is already in the list',
       name: 'errorStudentAlreadyPresent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Выбранный персонаж не является преподавателем`
+  /// `Selected Person is not a Teacher`
   String get errorPersonIsNotATeacher {
     return Intl.message(
-      'Выбранный персонаж не является преподавателем',
+      'Selected Person is not a Teacher',
       name: 'errorPersonIsNotATeacher',
       desc: '',
       args: [],
     );
   }
 
-  /// `Выбранный персонаж не является учащимся`
+  /// `Selected Person is not a Student`
   String get errorPersonIsNotAStudent {
     return Intl.message(
-      'Выбранный персонаж не является учащимся',
+      'Selected Person is not a Student',
       name: 'errorPersonIsNotAStudent',
       desc: '',
       args: [],
     );
   }
 
-  /// `Имя должно быть заполнено`
+  /// `First Name should be provided`
   String get errorPersonFirstNameEmpty {
     return Intl.message(
-      'Имя должно быть заполнено',
+      'First Name should be provided',
       name: 'errorPersonFirstNameEmpty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Фамилия должна быть заполнена`
+  /// `Last Name should be provided`
   String get errorPersonLastNameEmpty {
     return Intl.message(
-      'Фамилия должна быть заполнена',
+      'Last Name should be provided',
       name: 'errorPersonLastNameEmpty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Email адрес должен быть заполнен`
+  /// `Email should be provided`
   String get errorPersonEmailEmpty {
     return Intl.message(
-      'Email адрес должен быть заполнен',
+      'Email should be provided',
       name: 'errorPersonEmailEmpty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Нужно указать дату рождения`
+  /// `Birthdat should be provided`
   String get errorPersonBirthdayEmpty {
     return Intl.message(
-      'Нужно указать дату рождения',
+      'Birthdat should be provided',
       name: 'errorPersonBirthdayEmpty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Нужно выбрать учащихся`
+  /// `Students should be selected`
   String get errorPersonParentStudentsEmpty {
     return Intl.message(
-      'Нужно выбрать учащихся',
+      'Students should be selected',
       name: 'errorPersonParentStudentsEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start Date should be provided`
+  String get errorScheduleFromDateEmpty {
+    return Intl.message(
+      'Start Date should be provided',
+      name: 'errorScheduleFromDateEmpty',
       desc: '',
       args: [],
     );

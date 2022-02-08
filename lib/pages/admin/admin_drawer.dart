@@ -22,27 +22,27 @@ class AdminDrawer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextButton(
-              child: Text(loc.admDrawerEditInstitution),
+              child: Text(loc.editInstitution),
               onPressed: _openInstitutionPage,
             ),
             TextButton(
-              child: Text(loc.admDrawerListVenue),
+              child: Text(loc.venueList),
               onPressed: _openVenuesPage,
             ),
             TextButton(
-              child: Text(loc.admDrawerListPeople),
+              child: Text(loc.peopleList),
               onPressed: _openPeoplePage,
             ),
             TextButton(
-              child: Text(loc.admDrawerListCurriculum),
+              child: Text(loc.curriculumList),
               onPressed: _openCurriculumsPage,
             ),
             TextButton(
-              child: Text(loc.admDrawerListClass),
+              child: Text(loc.classList),
               onPressed: _openClassesPage,
             ),
             TextButton(
-              child: Text(loc.admDrawerListSchedule),
+              child: Text(loc.dayScheduleList),
               onPressed: _openSchedulesPage,
             ),
           ],

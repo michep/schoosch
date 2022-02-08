@@ -74,10 +74,10 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
                   initialValue: _from,
                   format: DateFormat('dd MMM yyyy'),
                   onChanged: (DateTime? date) => _from = date,
-                  decoration: const InputDecoration(
-                    label: Text('Начало действия расписания'),
+                  decoration: InputDecoration(
+                    label: Text(loc.scheduleFromDate),
                   ),
-                  validator: (value) => Utils.validateDateTimeNotEmpty(value, 'Дата начала действия должна быть выбрана'),
+                  validator: (value) => Utils.validateDateTimeNotEmpty(value, loc.errorScheduleFromDateEmpty),
                   onShowPicker: (context, currentValue) async {
                     final date = await showDatePicker(
                       context: context,
@@ -92,8 +92,8 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
                   format: DateFormat('dd MMM yyyy'),
                   initialValue: _till,
                   onChanged: (DateTime? date) => _till = date,
-                  decoration: const InputDecoration(
-                    label: Text('Окончание действия'),
+                  decoration: InputDecoration(
+                    label: Text(loc.scheduleTillDate),
                   ),
                   onShowPicker: (context, currentValue) async {
                     final date = await showDatePicker(
@@ -126,7 +126,7 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: ElevatedButton(
-                          child: Text(loc.labelSaveChanges),
+                          child: Text(loc.saveChanges),
                           onPressed: () => _save(widget._schedule),
                         ),
                       ),
@@ -177,15 +177,15 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
   Widget _title(int order) {
     return Padding(
       padding: order == 1 ? const EdgeInsets.only(top: 16) : const EdgeInsets.only(top: 0),
-      child: Text('$order урок'),
+      child: Text(S.of(context).scheduleLessonOrder(order)),
     );
   }
 
   Widget get _noLessons {
-    return const Padding(
-      padding: EdgeInsets.only(left: 16),
+    return Padding(
+      padding: const EdgeInsets.only(left: 16),
       child: ListTile(
-        title: Text('нет этого урока'),
+        title: Text(S.of(context).scheduleNoLesson),
       ),
     );
   }
@@ -205,7 +205,7 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
 
   Future<void> _newLesson() async {
     var nlesson = LessonModel.empty(widget._aclass, widget._schedule, _lessons.length + 1);
-    var res = await Get.to<LessonModel>(() => LessonPage(nlesson, 'Урок'));
+    var res = await Get.to<LessonModel>(() => LessonPage(nlesson, S.of(context).lesson));
     if (res is LessonModel) {
       setState(() {
         _lessons[_lessons.length + 1] = [];

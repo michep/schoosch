@@ -62,18 +62,18 @@ class _CurriculumPageState extends State<CurriculumPage> {
                       TextFormField(
                         controller: _name,
                         decoration: InputDecoration(
-                          label: Text(loc.labelCurriculumName),
+                          label: Text(loc.curriculumName),
                         ),
                         validator: (value) => Utils.validateTextNotEmpty(value, loc.errorNameEmpty),
                       ),
                       TextFormField(
                         controller: _alias,
                         decoration: InputDecoration(
-                          label: Text(loc.labelCurriculumAlternateName),
+                          label: Text(loc.curriculumAlternateName),
                         ),
                       ),
                       SelectableValueDropdownFormField<PersonModel>(
-                        title: loc.labelCurriculumTeacher,
+                        title: loc.curriculumTeacher,
                         initFutureFunc: _initMaster,
                         initOptionsFutureFunc: _initMasterOptions,
                         titleFunc: (value) => value?.fullName ?? '',
@@ -86,7 +86,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
                   ),
                 ),
                 SelectableValueListFormField<PersonModel>(
-                  title: loc.labelCurriculumStudents,
+                  title: loc.curriculumStudents,
                   initListFutureFunc: _initStudents,
                   titleFunc: (value) => value?.fullName ?? '',
                   listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'student'),
@@ -98,7 +98,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
-                    child: Text(loc.labelSaveChanges),
+                    child: Text(loc.saveChanges),
                     onPressed: () => _save(widget._curriculum),
                   ),
                 ),

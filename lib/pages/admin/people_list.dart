@@ -31,7 +31,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
     var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(loc.labelPeopleListLitle),
+        title: Text(loc.peopleList),
         actions: [IconButton(onPressed: _newPerson, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
@@ -39,14 +39,14 @@ class _PeopleListPageState extends State<PeopleListPage> {
           children: [
             Card(
               child: ExpansionTile(
-                title: _inSearch ? Text(loc.labelSearch, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.labelSearch),
+                title: _inSearch ? Text(loc.search, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.search),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
                     onChanged: (_) => setState(() {}),
                     controller: _name,
                     decoration: InputDecoration(
-                      label: Text(loc.labelPersonName),
+                      label: Text(loc.personName),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () => setState(() {
@@ -59,7 +59,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(right: 16),
-                        child: Text(loc.labelPersonType, style: TextStyle(color: Theme.of(context).hintColor)),
+                        child: Text(loc.personType, style: TextStyle(color: Theme.of(context).hintColor)),
                       ),
                       DropdownButton<String>(
                         value: _typeValue,
@@ -68,19 +68,19 @@ class _PeopleListPageState extends State<PeopleListPage> {
                         }),
                         items: [
                           DropdownMenuItem(
-                            child: Text(loc.labelPersonTypeAll),
+                            child: Text(loc.personTypeAll),
                             value: 'all',
                           ),
                           DropdownMenuItem(
-                            child: Text(loc.labelPersonTypeStudent),
+                            child: Text(loc.personTypeStudent),
                             value: 'student',
                           ),
                           DropdownMenuItem(
-                            child: Text(loc.labelPersonTypeTeacher),
+                            child: Text(loc.personTypeTeacher),
                             value: 'teacher',
                           ),
                           DropdownMenuItem(
-                            child: Text(loc.labelPersonTypeParent),
+                            child: Text(loc.personTypeParent),
                             value: 'parent',
                           ),
                         ],
@@ -170,7 +170,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
         default:
           return;
       }
-      var res = await Get.to<PersonModel>(() => PersonPage(nperson, S.of(context).labelNewPerson(type)));
+      var res = await Get.to<PersonModel>(() => PersonPage(nperson, S.of(context).newPerson(type)));
       if (res is PersonModel) {
         setState(() {});
       }

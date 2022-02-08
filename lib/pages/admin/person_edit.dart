@@ -69,29 +69,29 @@ class _PersonPageState extends State<PersonPage> {
                   child: Column(
                     children: [
                       TextFormField(
-                        controller: _lastname,
-                        decoration: InputDecoration(
-                          label: Text(loc.labelPersonLastName),
-                        ),
-                        validator: (value) => Utils.validateTextNotEmpty(value, loc.errorPersonLastNameEmpty),
-                      ),
-                      TextFormField(
                         controller: _firstname,
                         decoration: InputDecoration(
-                          label: Text(loc.labelPersonFirstName),
+                          label: Text(loc.personFirstName),
                         ),
                         validator: (value) => Utils.validateTextNotEmpty(value, loc.errorPersonFirstNameEmpty),
                       ),
                       TextFormField(
                         controller: _middlename,
                         decoration: InputDecoration(
-                          label: Text(loc.labelPersonMiddleName),
+                          label: Text(loc.personMiddleName),
                         ),
+                      ),
+                      TextFormField(
+                        controller: _lastname,
+                        decoration: InputDecoration(
+                          label: Text(loc.personLastName),
+                        ),
+                        validator: (value) => Utils.validateTextNotEmpty(value, loc.errorPersonLastNameEmpty),
                       ),
                       TextFormField(
                         controller: _email,
                         decoration: InputDecoration(
-                          label: Text(loc.labelPersonEmail),
+                          label: Text(loc.personEmail),
                         ),
                         validator: (value) => Utils.validateTextNotEmpty(value, loc.errorPersonEmailEmpty),
                       ),
@@ -100,7 +100,7 @@ class _PersonPageState extends State<PersonPage> {
                         format: DateFormat('dd MMM yyyy'),
                         onChanged: (DateTime? date) => _birthday = date,
                         decoration: InputDecoration(
-                          label: Text(loc.labelPersonBirthday),
+                          label: Text(loc.personBirthday),
                         ),
                         validator: (value) => Utils.validateDateTimeNotEmpty(value, loc.errorPersonBirthdayEmpty),
                         onShowPicker: (context, currentValue) async {
@@ -118,7 +118,7 @@ class _PersonPageState extends State<PersonPage> {
                 ),
                 _isParent
                     ? SelectableValueListFormField<PersonModel>(
-                        title: loc.labelPersonRelatedStudents,
+                        title: loc.personRelatedStudents,
                         initListFutureFunc: _initChildren,
                         titleFunc: (value) => value?.fullName ?? '',
                         listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'student'),
@@ -134,35 +134,35 @@ class _PersonPageState extends State<PersonPage> {
                           onTap: null,
                           iconColor: Theme.of(context).disabledColor,
                           title: Text(
-                            loc.labelPersonRelatedStudents,
+                            loc.personRelatedStudents,
                             style: TextStyle(color: Theme.of(context).disabledColor),
                           ),
                         ),
                       ),
                 CheckboxListTile(
-                  title: Text(loc.labelPersonTypeStudent),
+                  title: Text(loc.personTypeStudent),
                   value: _isStudent,
                   onChanged: (_isParent || _isTeacher) ? null : (value) => _roleChecked('student', value),
                 ),
                 CheckboxListTile(
-                  title: Text(loc.labelPersonTypeTeacher),
+                  title: Text(loc.personTypeTeacher),
                   value: _isTeacher,
                   onChanged: (_isStudent) ? null : (value) => _roleChecked('teacher', value),
                 ),
                 CheckboxListTile(
-                  title: Text(loc.labelPersonTypeParent),
+                  title: Text(loc.personTypeParent),
                   value: _isParent,
                   onChanged: (_isStudent) ? null : (value) => _roleChecked('parent', value),
                 ),
                 CheckboxListTile(
-                  title: Text(loc.labelPersonTypeAdmin),
+                  title: Text(loc.personTypeAdmin),
                   value: _isAdmin,
                   onChanged: (value) => _roleChecked('admin', value),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
-                    child: Text(loc.labelSaveChanges),
+                    child: Text(loc.saveChanges),
                     onPressed: () => _save(widget._person),
                   ),
                 ),

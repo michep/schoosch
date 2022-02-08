@@ -25,7 +25,7 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
     var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(loc.labelCurriculumListTitle),
+        title: Text(loc.curriculumList),
         actions: [IconButton(onPressed: _newCurriculum, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
@@ -33,14 +33,14 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
           children: [
             Card(
               child: ExpansionTile(
-                title: _inSearch ? Text(loc.labelSearch, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.labelSearch),
+                title: _inSearch ? Text(loc.search, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.search),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
                     onChanged: (_) => setState(() {}),
                     controller: _name,
                     decoration: InputDecoration(
-                      label: Text(loc.labelName),
+                      label: Text(loc.name),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () => setState(() {
@@ -110,7 +110,7 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
 
   Future<void> _newCurriculum() async {
     var ncurr = CurriculumModel.empty();
-    var res = await Get.to<CurriculumModel>(() => CurriculumPage(ncurr, S.of(context).labelNewCurriculum));
+    var res = await Get.to<CurriculumModel>(() => CurriculumPage(ncurr, S.of(context).newCurriculum));
     if (res is CurriculumModel) {
       setState(() {});
     }

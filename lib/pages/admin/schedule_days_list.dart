@@ -20,7 +20,7 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).labelClassScheduleTitle(widget._aclass.name)),
+        title: Text(S.of(context).classScheduleName(widget._aclass.name)),
       ),
       body: SafeArea(
         child: Scrollbar(

@@ -46,15 +46,15 @@ class _VenuePageState extends State<VenuePage> {
               children: [
                 TextFormField(
                   controller: _name,
-                  decoration: const InputDecoration(
-                    label: Text('Название кабинета или помещения'),
+                  decoration: InputDecoration(
+                    label: Text(loc.venueName),
                   ),
-                  validator: (value) => Utils.validateTextNotEmpty(value, 'Название должно быть заполнено'),
+                  validator: (value) => Utils.validateTextNotEmpty(value, loc.errorNameEmpty),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
-                    child: Text(loc.labelSaveChanges),
+                    child: Text(loc.saveChanges),
                     onPressed: () => _save(widget._venue),
                   ),
                 ),

@@ -57,7 +57,7 @@ class _StudentLessonListTileState extends State<ScheduleLessonListTile> {
   }
 
   Future<void> _onTap(LessonModel lesson) async {
-    var res = await Get.to<LessonModel>(() => LessonPage(lesson, S.of(context).labelLessonTitle), transition: Transition.rightToLeft);
+    var res = await Get.to<LessonModel>(() => LessonPage(lesson, S.of(context).lessonName), transition: Transition.rightToLeft);
     if (res is LessonModel) {
       setState(() {});
     }

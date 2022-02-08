@@ -24,7 +24,7 @@ class _VenueListPageState extends State<VenueListPage> {
     var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(loc.labelVenueListTitle),
+        title: Text(loc.venueList),
         actions: [IconButton(onPressed: _newVenue, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
@@ -32,14 +32,14 @@ class _VenueListPageState extends State<VenueListPage> {
           children: [
             Card(
               child: ExpansionTile(
-                title: _inSearch ? Text(loc.labelSearch, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.labelSearch),
+                title: _inSearch ? Text(loc.search, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.search),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
                     onChanged: (_) => setState(() {}),
                     controller: _name,
                     decoration: InputDecoration(
-                      label: Text(loc.labelName),
+                      label: Text(loc.name),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.clear),
                         onPressed: () => setState(() {
@@ -102,7 +102,7 @@ class _VenueListPageState extends State<VenueListPage> {
 
   Future<void> _newVenue() async {
     var nvenue = VenueModel.empty();
-    var res = await Get.to<VenueModel>(() => VenuePage(nvenue, S.of(context).labelNewVenue));
+    var res = await Get.to<VenueModel>(() => VenuePage(nvenue, S.of(context).newVenue));
     if (res is VenueModel) {
       setState(() {});
     }

@@ -53,7 +53,7 @@ class _LessonPageState extends State<LessonPage> {
             child: ListView(
               children: [
                 SelectableValueDropdownFormField<CurriculumModel>(
-                  title: loc.labelCurriculumName,
+                  title: loc.curriculumName,
                   initFutureFunc: _initCurriculum,
                   initOptionsFutureFunc: _initCurriculumOptions,
                   titleFunc: (value) => value?.name ?? '',
@@ -66,7 +66,7 @@ class _LessonPageState extends State<LessonPage> {
                   callback: (value) => _setCurriculum(value),
                 ),
                 SelectableValueDropdownFormField<VenueModel>(
-                  title: loc.labelVenueName,
+                  title: loc.venueName,
                   initFutureFunc: _initVenue,
                   initOptionsFutureFunc: _initVenueOptions,
                   titleFunc: (value) => value?.name ?? '',
@@ -81,7 +81,7 @@ class _LessonPageState extends State<LessonPage> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
-                    child: Text(loc.labelSaveChanges),
+                    child: Text(loc.saveChanges),
                     onPressed: () => _save(widget._lesson),
                   ),
                 ),

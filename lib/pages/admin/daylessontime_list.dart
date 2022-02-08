@@ -20,7 +20,7 @@ class _DayLessontimeListPageState extends State<DayLessontimeListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(S.of(context).labelDayScheduleListTitle),
+        title: Text(S.of(context).dayScheduleList),
         actions: widget.selectionMode ? [] : [IconButton(onPressed: _newDayLessontime, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
