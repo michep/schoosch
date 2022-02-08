@@ -8,6 +8,7 @@ import 'package:schoosch/pages/admin/institution.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/venue_list.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
+import 'package:schoosch/pages/about_page.dart';
 
 class AdminDrawer extends StatelessWidget {
   const AdminDrawer({Key? key}) : super(key: key);
@@ -45,6 +46,10 @@ class AdminDrawer extends StatelessWidget {
               child: Text(loc.dayScheduleList),
               onPressed: _openSchedulesPage,
             ),
+            TextButton(
+              child: const Text('о приложении'),
+              onPressed: _openAboutPage,
+            ),
           ],
         ),
       ],
@@ -79,5 +84,10 @@ class AdminDrawer extends StatelessWidget {
   Future<void> _openSchedulesPage() async {
     // Get.back();
     Get.to(() => ClassListPage(InstitutionModel.currentInstitution, listMode: ClassListMode.schedules));
+  }
+
+  Future<void> _openAboutPage() async {
+    // Get.back();
+    Get.to(() => const AboutPage());
   }
 }

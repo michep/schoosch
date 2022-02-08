@@ -55,7 +55,7 @@ class StudentLessonPage extends StatelessWidget {
             height: 5,
           ),
           FutureBuilder<List<HomeworkModel>?>(
-              future: _lesson.homeworksForStudent(_student, _date),
+              future: _lesson.homeworkForStudentAndClass(_student, _date), //TODO: разделить на перс и общ задания
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Text('');

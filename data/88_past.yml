@@ -80,17 +80,90 @@ institution:
                 till: '20:00'
 
       venue:
+        - name: ''
+          floor: 1
+          coords: 
+
+          offset:
+
+        - name: ''
+          floor: 2
+          coords: 
+
+          offset:
+
+        - name: ''
+          floor: 5
+          coords: 
+
+          offset:
+
         - name: 'Спортзал'
+          floor: 5
+          coords:
+            
+          offset: 
+            
         - name: '202'
+          floor: 2
+          coords:
+            
+          offset: 
+            
         - name: '204'
+          floor: 2
+          coords:
+            
+          offset: 
+            
         - name: '203'
+          floor: 2
+          coords:
+            
+          offset: 
+            
         - name: '205'
+          floor: 2
+          coords:
+            
+          offset: 
+            
         - name: '207'
+          floor: 2
+          coords:
+            
+          offset: 
+            
         - name: '208'
+          floor: 2
+          coords:
+            
+          offset: 
+            
         - name: '211'
+          floor: 2
+          coords:
+            
+          offset: 
+            
         - name: '505'
+          floor: 5
+          coords:
+            
+          offset: 
+            
         - name: '511'
+          floor: 5
+          coords:
+            
+          offset: 
+            
         - name: 'unknown'
+          floor: 6
+          coords: 
+            
+          offset: 
+            
 
       people:
         - firstname: 'Егор'

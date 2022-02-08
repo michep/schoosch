@@ -25,6 +25,8 @@ dependencies:
   flutter_rating_bar: ^4.0.0
   datetime_picker_formfield: ^2.0.0
   drag_and_drop_lists: ^0.3.2+2
+  qr_code_scanner: ^0.6.1
+  dropdown_search: ^2.0.1
 
 dev_dependencies:
   flutter_test:

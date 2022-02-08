@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
+import 'package:schoosch/controller/blueprint_controller.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
@@ -21,12 +22,14 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var fauth = FAuth();
   var fstore = FStore();
+  var bcont = Blueprint_Controller();
   Get.put<FAuth>(fauth);
   Get.put<FStore>(fstore);
   Get.put(CurrentWeek(Week.current()));
-
+  Get.put<Blueprint_Controller>(bcont);
   if (fauth.currentUser != null) {
     await fstore.init(fauth.currentUser!.email!);
+    await bcont.init();
   }
 
   runApp(const MyApp());
