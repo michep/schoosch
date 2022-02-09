@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null && store.currentUser == null) {
       await store.init(user.email!);
       await bcont.init();
-      PersonModel.currentUser!.currentType == 'admin' ? Get.offAll(() => const AdminPage()) : Get.offAll(() => const HomePage());
+      PersonModel.currentUser!.currentType == PersonType.admin ? Get.offAll(() => const AdminPage()) : Get.offAll(() => const HomePage());
     }
   }
 }

@@ -122,7 +122,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
   }
 
   bool _filter(PersonModel person) {
-    return person.fullName.toUpperCase().contains(_name.text.toUpperCase()) && (_typeValue == 'all' || person.types.contains(_typeValue));
+    return person.fullName.toUpperCase().contains(_name.text.toUpperCase()) && (_typeValue == 'all' || person.types.containsString(_typeValue));
   }
 
   bool get _inSearch {
@@ -141,15 +141,15 @@ class _PeopleListPageState extends State<PeopleListPage> {
   }
 
   Future<void> _newPerson() async {
-    List<String> types = ['student', 'teacher', 'parent'];
-    var type = await Get.bottomSheet<String>(
+    List<PersonType> types = [PersonType.student, PersonType.teacher, PersonType.parent];
+    var type = await Get.bottomSheet<PersonType>(
       Card(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ...types.map((e) => ElevatedButton(
                   onPressed: () => _selectType(e),
-                  child: Text(e),
+                  child: Text(e.name),
                 )),
           ],
         ),
@@ -158,13 +158,13 @@ class _PeopleListPageState extends State<PeopleListPage> {
     PersonModel nperson;
     if (type != null) {
       switch (type) {
-        case 'teacher':
+        case PersonType.teacher:
           nperson = TeacherModel.empty();
           break;
-        case 'parent':
+        case PersonType.parent:
           nperson = ParentModel.empty();
           break;
-        case 'student':
+        case PersonType.student:
           nperson = StudentModel.empty();
           break;
         default:
@@ -177,7 +177,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
     }
   }
 
-  void _selectType(String type) {
+  void _selectType(PersonType type) {
     Get.back(result: type);
   }
 }

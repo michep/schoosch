@@ -36,7 +36,7 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _chateChildW(PersonModel user) {
-    return user.currentType == 'parent'
+    return user.currentType == PersonType.parent
         ? FutureBuilder(
             future: Future.wait([user.asParent!.currentChild, user.asParent!.children()]),
             builder: (context, snapshot) {
@@ -94,7 +94,7 @@ class ProfilePage extends StatelessWidget {
 
   Widget _changeTypeW(PersonModel user) {
     return Row(children: [
-      Text(user.currentType),
+      Text(user.currentType.name),
       user.types.length > 1
           ? ElevatedButton(
               child: const Text('сменить тип'),
@@ -112,7 +112,7 @@ class ProfilePage extends StatelessWidget {
           children: [
             ...user.types.map((e) => ElevatedButton(
                   onPressed: () => _changeType(user, e),
-                  child: Text(e),
+                  child: Text(e.name),
                 )),
           ],
         ),
@@ -120,10 +120,10 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  void _changeType(PersonModel user, String type) {
+  void _changeType(PersonModel user, PersonType type) {
     if (user.currentType != type) {
       user.setType(type);
-      type == 'admin' ? Get.offAll(() => const AdminPage()) : Get.offAll(() => const HomePage());
+      type == PersonType.admin ? Get.offAll(() => const AdminPage()) : Get.offAll(() => const HomePage());
     }
     Get.back();
   }

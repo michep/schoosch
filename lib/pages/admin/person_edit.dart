@@ -40,10 +40,10 @@ class _PersonPageState extends State<PersonPage> {
     _firstname.value = TextEditingValue(text: widget._person.firstname);
     _email.value = TextEditingValue(text: widget._person.email);
     _birthday = widget._person.birthday;
-    if (widget._person.types.contains('student')) _isStudent = true;
-    if (widget._person.types.contains('teacher')) _isTeacher = true;
-    if (widget._person.types.contains('parent')) _isParent = true;
-    if (widget._person.types.contains('admin')) _isAdmin = true;
+    if (widget._person.types.contains(PersonType.student)) _isStudent = true;
+    if (widget._person.types.contains(PersonType.teacher)) _isTeacher = true;
+    if (widget._person.types.contains(PersonType.parent)) _isParent = true;
+    if (widget._person.types.contains(PersonType.admin)) _isAdmin = true;
     super.initState();
   }
 
@@ -207,7 +207,7 @@ class _PersonPageState extends State<PersonPage> {
 
   bool _setChild(PersonModel value) {
     StudentModel sm;
-    if (!value.types.contains('student')) {
+    if (!value.types.contains(PersonType.student)) {
       Utils.showErrorSnackbar(S.of(context).errorPersonIsNotAStudent);
       return false;
     }

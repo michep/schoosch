@@ -475,6 +475,9 @@ class FStore extends GetxController {
 
   Future<List<TeacherScheduleModel>> getTeacherWeekSchedule(TeacherModel teacher, Week week) async {
     var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: teacher.id).get();
+
+    if (curriculums.docs.isEmpty) return [];
+
     List<String> curriculumIds = [];
     for (var curr in curriculums.docs) {
       curriculumIds.add(curr.id);

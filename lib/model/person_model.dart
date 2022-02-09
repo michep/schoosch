@@ -8,15 +8,72 @@ import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 
+enum PersonType {
+  none,
+  student,
+  parent,
+  teacher,
+  admin,
+}
+
+extension PersonTypeExt on PersonType {
+  static const _admin = 'admin';
+  static const _teacher = 'teacher';
+  static const _parent = 'parent';
+  static const _student = 'student';
+
+  static PersonType _parse(String value) {
+    switch (value) {
+      case _admin:
+        return PersonType.admin;
+      case _teacher:
+        return PersonType.teacher;
+      case _parent:
+        return PersonType.parent;
+      case _student:
+        return PersonType.student;
+      default:
+        return PersonType.none;
+    }
+  }
+
+  String get _nameString {
+    switch (this) {
+      case PersonType.admin:
+        return _admin;
+      case PersonType.teacher:
+        return _teacher;
+      case PersonType.parent:
+        return _parent;
+      case PersonType.student:
+        return _student;
+      case PersonType.none:
+        throw 'none as PersontType';
+    }
+  }
+}
+
+extension PersonTypeList on List<PersonType> {
+  bool containsString(String value) {
+    return contains(PersonTypeExt._parse(value));
+  }
+
+  List<String> toStringList() {
+    List<String> res = [];
+    forEach((e) => res.add(e._nameString));
+    return res.toList();
+  }
+}
+
 class PersonModel {
   late String? _id;
   late final String firstname;
   late final String? middlename;
   late final String lastname;
   late final String email;
-  late List<String> types = [];
+  late List<PersonType> types = [];
   late final DateTime? birthday;
-  late String _currentType;
+  late PersonType _currentType;
   ParentModel? _asParent;
   StudentModel? _asStudent;
   TeacherModel? _asTeacher;
@@ -30,23 +87,23 @@ class PersonModel {
     lastname = map['lastname'] != null ? map['lastname'] as String : throw 'need lastname key in people $id';
     birthday = map['birthday'] != null ? DateTime.fromMillisecondsSinceEpoch((map['birthday'] as Timestamp).millisecondsSinceEpoch) : null;
     email = map['email'] != null ? map['email'] as String : throw 'need email key in people $id';
-    map['type'] != null ? types.addAll((map['type'] as List<dynamic>).map((e) => e as String)) : throw 'need type key in people $id';
+    map['type'] != null ? types.addAll((map['type'] as List<dynamic>).map((e) => PersonTypeExt._parse(e))) : throw 'need type key in people $id';
     if (_recursive) {
       for (var t in types) {
         switch (t) {
-          case 'parent':
+          case PersonType.parent:
             _asParent = ParentModel.fromMap(id, map)..up = this;
             _currentType = t;
             break;
-          case 'student':
+          case PersonType.student:
             _asStudent = StudentModel.fromMap(id, map)..up = this;
             _currentType = t;
             break;
-          case 'teacher':
+          case PersonType.teacher:
             _asTeacher = TeacherModel.fromMap(id, map)..up = this;
             _currentType = t;
             break;
-          case 'admin':
+          case PersonType.admin:
             _currentType = t;
             break;
           default:
@@ -65,8 +122,8 @@ class PersonModel {
   TeacherModel? get asTeacher => _asTeacher;
   ParentModel? get asParent => _asParent;
 
-  String get currentType => _currentType;
-  void setType(String val) => _currentType = val;
+  PersonType get currentType => _currentType;
+  void setType(PersonType val) => _currentType = val;
 
   @override
   operator ==(other) {
@@ -94,7 +151,7 @@ class PersonModel {
     res['lastname'] = lastname;
     res['birthday'] = birthday != null ? Timestamp.fromDate(birthday!) : null;
     res['email'] = email;
-    res['type'] = types;
+    res['type'] = types.toStringList();
     return res;
   }
 
@@ -116,7 +173,7 @@ class StudentModel extends PersonModel {
           'middlename': '',
           'lastname': '',
           'email': '',
-          'type': <String>['student'],
+          'type': <String>[PersonType.student._nameString],
         });
 
   StudentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
@@ -139,7 +196,7 @@ class TeacherModel extends PersonModel {
           'middlename': '',
           'lastname': '',
           'email': '',
-          'type': <String>['teacher'],
+          'type': <String>[PersonType.teacher._nameString],
         });
 
   TeacherModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
@@ -182,7 +239,7 @@ class ParentModel extends PersonModel {
           'middlename': '',
           'lastname': '',
           'email': '',
-          'type': <String>['parent'],
+          'type': <String>[PersonType.parent._nameString],
           'student_ids': <String>[],
         });
 
@@ -198,7 +255,7 @@ class ParentModel extends PersonModel {
       var store = Get.find<FStore>();
       for (var id in studentIds) {
         var p = await store.getPerson(id);
-        if (p.types.contains('student')) {
+        if (p.types.contains(PersonType.student)) {
           p.asStudent!.parent = this;
           _students.add(p.asStudent!);
         }

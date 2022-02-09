@@ -172,7 +172,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
 
   bool _setStudent(PersonModel value) {
     StudentModel sm;
-    if (!value.types.contains('student')) {
+    if (!value.types.contains(PersonType.student)) {
       Utils.showErrorSnackbar(S.of(context).errorPersonIsNotAStudent);
       return false;
     }
