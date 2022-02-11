@@ -2,13 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/widgets/selectablevalue_field.dart';
 import 'package:schoosch/widgets/autocomplete.dart' as autocomlete;
 
 typedef TitleFunc<T> = String Function(T? value);
 typedef FutureFunc<T> = Future<T?> Function();
 typedef WidgetFunc = Widget Function();
 typedef CallbackMaybeFunc<T> = bool Function(T? value);
+typedef ListFutureFunc<T> = Future<List<T>> Function();
 
 class SelectableValueDropdownFormField<T extends Object> extends StatefulWidget {
   final String title;

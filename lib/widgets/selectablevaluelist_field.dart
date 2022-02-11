@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/widgets/selectablevalue_field.dart';
+import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 
 typedef WidgetValueFunc<T> = Widget Function(T? value);
 typedef CallbackFunc<T> = bool Function(T value);
@@ -51,9 +51,8 @@ class _SelectableValueListFormFieldState<T> extends State<SelectableValueListFor
       builder: (fieldstate) => ExpansionTile(
         controlAffinity: ListTileControlAffinity.leading,
         title: Text('${widget.title} (${_dataList.length})'),
-        subtitle: fieldstate.hasError
-            ? Text(fieldstate.errorText!, style: TextStyle(fontSize: 12, color: Theme.of(context).errorColor))
-            : const SizedBox.shrink(),
+        subtitle:
+            fieldstate.hasError ? Text(fieldstate.errorText!, style: TextStyle(fontSize: 12, color: Theme.of(context).errorColor)) : const SizedBox.shrink(),
         trailing: IconButton(
           icon: Icon(
             Icons.add,
