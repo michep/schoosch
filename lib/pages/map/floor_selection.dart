@@ -12,8 +12,10 @@ class FloorSelection extends StatelessWidget {
     return Obx(() {
       return Positioned(
         bottom: 0,
-        right: Get.find<BlueprintController>().side$.value ? 0 : MediaQuery.of(context).size.width * 0.8,
-        width: MediaQuery.of(context).size.width * 0.2,
+        right: Get.find<BlueprintController>().side$.value ? 0 : null,
+        left: !Get.find<BlueprintController>().side$.value ? 0 : null,
+        // width: MediaQuery.of(context).size.width * 0.2,
+        width: 97,
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(

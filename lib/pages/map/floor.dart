@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:schoosch/model/dummy_nodes_data.dart';
+import 'package:schoosch/model/node_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 
 class Floor extends StatefulWidget {
   final List<VenueModel> blueprints;
   final String? chosenRoom;
+  final List<NodeModel?>? nodepath;
 
-  const Floor(this.blueprints, this.chosenRoom, {Key? key}) : super(key: key);
+  const Floor(this.blueprints, this.chosenRoom, this.nodepath, {Key? key}) : super(key: key);
 
   @override
   _FloorState createState() => _FloorState();
@@ -16,7 +19,7 @@ class _FloorState extends State<Floor> {
   Widget build(BuildContext context) {
     return CustomPaint(
       size: getSize(widget.blueprints, context),
-      painter: LinePainter(widget.blueprints, widget.chosenRoom),
+      painter: LinePainter(widget.blueprints, widget.chosenRoom, nodepath: widget.nodepath),
     );
   }
 
@@ -51,16 +54,30 @@ class _FloorState extends State<Floor> {
 class LinePainter extends CustomPainter {
   List<VenueModel> blueprints;
   String? chosen;
+  List<NodeModel?>? nodepath;
 
   LinePainter(
     this.blueprints,
-    this.chosen,
-  );
+    this.chosen, 
+    {required this.nodepath,});
 
   @override
   void paint(Canvas canvas, Size size) {
     for (var b in blueprints) {
       b.paint(canvas, chosen == b.name ? Colors.blue : Colors.black);
+    }
+    if (nodepath![0] != NodeModel(floor: 0, position: const Offset(0, 0))) {
+      var p = Path();
+      var paint = Paint()
+      ..strokeJoin = StrokeJoin.round
+      ..color = Colors.red
+      ..strokeWidth = 7
+      ..style = PaintingStyle.stroke;
+      p.moveTo(nodepath![0]!.position.dx, nodepath![0]!.position.dy);
+      for (int i = 1; i < nodepath!.length; i++) {
+        p.lineTo(nodepath![i]!.position.dx, nodepath![i]!.position.dy);
+      }
+      canvas.drawPath(p, paint);
     }
     // canvas.translate(1000, 1000);
   }
