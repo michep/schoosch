@@ -58,25 +58,33 @@ class LinePainter extends CustomPainter {
 
   LinePainter(
     this.blueprints,
-    this.chosen, 
-    {required this.nodepath,});
+    this.chosen, {
+    required this.nodepath,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     for (var b in blueprints) {
       b.paint(canvas, chosen == b.name ? Colors.blue : Colors.black);
     }
-    if (nodepath![0] != NodeModel(floor: 0, position: const Offset(0, 0))) {
+
+    // if (nodepath![0] != NodeModel(floor: 0, position: const Offset(0, 0))) {
+    if (nodepath!.isNotEmpty) {
+      // var floornodepath = nodepath!.where((element) => element!.floor == blueprints[0].floor).toList();
       var p = Path();
       var paint = Paint()
-      ..strokeJoin = StrokeJoin.round
-      ..color = Colors.red
-      ..strokeWidth = 7
-      ..style = PaintingStyle.stroke;
+        ..strokeJoin = StrokeJoin.round
+        ..color = Colors.red
+        ..strokeWidth = 7
+        ..style = PaintingStyle.stroke;
       p.moveTo(nodepath![0]!.position.dx, nodepath![0]!.position.dy);
       for (int i = 1; i < nodepath!.length; i++) {
         p.lineTo(nodepath![i]!.position.dx, nodepath![i]!.position.dy);
       }
+      // p.moveTo(floornodepath[0]!.position.dx, floornodepath[0]!.position.dy);
+      // for (int i = 1; i < nodepath!.length; i++) {
+      //   p.lineTo(floornodepath[i]!.position.dx, floornodepath[i]!.position.dy);
+      // }
       canvas.drawPath(p, paint);
     }
     // canvas.translate(1000, 1000);
