@@ -35,9 +35,9 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _mainPage(String type) {
-    if (type == 'teacher') return TeacherScheduleSwitcher(PersonModel.currentTeacher!);
-    if (type == 'parent') {
+  Widget _mainPage(PersonType type) {
+    if (type == PersonType.teacher) return TeacherScheduleSwitcher(PersonModel.currentTeacher!);
+    if (type == PersonType.parent) {
       return FutureBuilder<StudentModel>(
           future: PersonModel.currentParent!.currentChild,
           builder: (context, snapshot) {
@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
             return StudentScheduleSwitcher(snapshot.data!);
           });
     }
-    if (type == 'student') return StudentScheduleSwitcher(PersonModel.currentStudent!);
+    if (type == PersonType.student) return StudentScheduleSwitcher(PersonModel.currentStudent!);
     return const Center(child: Text('unknown person type'));
   }
 }

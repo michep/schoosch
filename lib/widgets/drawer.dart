@@ -25,7 +25,7 @@ class MDrawer extends StatelessWidget {
 
   List<Widget> _menuItems() {
     List<Widget> items = [];
-    if (PersonModel.currentUser!.currentType == 'student') {
+    if (PersonModel.currentUser!.currentType == PersonType.student) {
       items.add(
         TextButton.icon(
           onPressed: () {
@@ -43,7 +43,7 @@ class MDrawer extends StatelessWidget {
         icon: const Icon(Icons.map_rounded),
         label: const Text('План школы'),
       ));
-    } else if (PersonModel.currentUser!.currentType == 'teacher') {}
+    } else if (PersonModel.currentUser!.currentType == PersonType.teacher) {}
 
     items.add(
       TextButton.icon(

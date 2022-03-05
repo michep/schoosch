@@ -221,7 +221,7 @@ class _ClassPageState extends State<ClassPage> {
   bool _setChild(PersonModel value) {
     StudentModel sm;
     var loc = S.of(context);
-    if (!value.types.contains('student')) {
+    if (!value.types.contains(PersonType.student)) {
       Utils.showErrorSnackbar(loc.errorPersonIsNotAStudent);
       return false;
     }

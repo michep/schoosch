@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: PersonModel.currentUser != null
-          ? PersonModel.currentUser!.currentType == 'admin'
+          ? PersonModel.currentUser!.currentType == PersonType.admin
               ? const AdminPage()
               : const HomePage()
           : const LoginPage(),
