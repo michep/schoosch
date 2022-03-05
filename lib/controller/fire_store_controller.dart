@@ -12,6 +12,7 @@ import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
+import 'package:schoosch/model/node_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/venue_model.dart';
@@ -280,6 +281,32 @@ class FStore extends GetxController {
           ),
         )
         .toList();
+  }
+
+  Future<List<NodeModel>> getAllNodes() async {
+    return (await _institutionRef.collection('node').get())
+        .docs
+        .map(
+          (n) => NodeModel.fromMap(
+            n.id,
+            n.data(),
+          ),
+        )
+        .toList();
+  }
+
+  Future<Map<String, List<String>>> getAllNodeConnections() async {
+    Map<String, List<String>> res = {};
+    var docs = (await _institutionRef.collection('connection').get()).docs;
+    for(var doc in docs) {
+      var nid = doc['node_id'] as String;
+      res[nid] = [];
+      List<dynamic> ll = doc['connection_ids'];
+      for(var l in ll) {
+        res[nid]!.add(l as String);
+      }
+    }
+    return res;
   }
 
   Future<List<int>> getAllFloors() async {

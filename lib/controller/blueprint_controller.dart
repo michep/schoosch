@@ -1,5 +1,6 @@
+import 'package:directed_graph/directed_graph.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:schoosch/model/dummy_nodes_data.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/node_model.dart';
 import 'package:schoosch/model/venue_model.dart';
@@ -14,10 +15,13 @@ class BlueprintController extends GetxController {
   late RxInt chosenFloor$;
   late RxBool side$;
   late Rx<CurrentMode> mode$;
-  late RxList<NodeModel> nodesPath$;
+  // late RxList<NodeModel> nodesPath$;
+  late final BidirectedGraph<NodeModel> bg;
   List<VenueModel> _allBluePrints = [];
+  List<NodeModel> _allNodes = [];
   List<VenueModel> _currentBluePrints = [];
   List<NodeModel> _curpath = [];
+  Map<String, List<String>> _connections = {};
   final List<NodeModel> _curpathonfloor = [];
   // late RxList<NodeModel> nodesList$;
 
@@ -27,14 +31,16 @@ class BlueprintController extends GetxController {
     chosenFloor$ = 1.obs;
     side$ = true.obs;
     mode$ = CurrentMode.Watching.obs;
-    nodesPath$ = [NodeModel(floor: 0, position: const Offset(0, 0))].obs;
+    // nodesPath$ = <NodeModel>[].obs;
     // nodesList$ = _curpathonfloor.obs;
   }
 
   Future<void> init() async {
     _allBluePrints = await InstitutionModel.currentInstitution.venues;
-    // _curpathonfloor.addAll([NodeModel(floor: 0, position: const Offset(0, 0))]);
-    // _curpath.addAll([NodeModel(floor: 0, position: const Offset(0, 0))]);
+    _allNodes = await Get.find<FStore>().getAllNodes();
+    _connections = await Get.find<FStore>().getAllNodeConnections();
+    // bg = getGraph(_allNodes, _connections);
+    bg = getGraph();
   }
 
   RxList<VenueModel> get bluePrints$ => _currentBluePrints.obs;
@@ -58,16 +64,13 @@ class BlueprintController extends GetxController {
       chosenroomfrom$.value = found.name;
       mode$.value = CurrentMode.Pathing;
     }
-    // nodesPath$.value = testPath(chosenroomfrom$.value!, chosenRoom$.value!);
-    _curpath = testPath(chosenroomfrom$.value!, chosenRoom$.value!);
+    _curpath = bestPath(chosenroomfrom$.value!, chosenRoom$.value!);
     chosenFloor$.refresh();
   }
 
   void cancelFinding() {
     chosenRoom$.value = null;
     mode$.value = CurrentMode.Watching;
-    // nodesPath$.value = [NodeModel(floor: 0, position: const Offset(0, 0))];
-    // _curpath = [NodeModel(floor: 0, position: const Offset(0, 0))];
     _curpath.clear();
     _curpathonfloor.clear();
   }
@@ -75,8 +78,6 @@ class BlueprintController extends GetxController {
   void cancelPath() {
     chosenroomfrom$.value = null;
     mode$.value = CurrentMode.Searching;
-    // nodesPath$.value = [NodeModel(floor: 0, position: const Offset(0, 0))];
-    // _curpath = [NodeModel(floor: 0, position: const Offset(0, 0))];
     _curpath.clear();
     _curpathonfloor.clear();
   }
@@ -84,22 +85,40 @@ class BlueprintController extends GetxController {
   void makeFloor(int floor) {
     _currentBluePrints = _allBluePrints.where((element) => element.floor == floor).toList();
     if (_curpath.isNotEmpty) {
-      // _curpathonfloor = _curpath.where((element) => element.floor == floor).toList();
       _curpathonfloor.clear();
       _curpathonfloor.addAll(_curpath.where((element) => element.floor == floor).toList());
     } else {
       _curpathonfloor.clear();
     }
-    // if (nodesPath$ != [NodeModel(floor: 0, position: const Offset(0, 0))]) {
-    //   _curpathonfloor = nodesPath$.where((element) => element.floor == floor).toList();
-    // } else {
-    //   _curpathonfloor = [NodeModel(floor: 0, position: const Offset(0, 0))];
-    // }
   }
 
-  // void changeMode(CurrentMode newmode) {
-  //   mode$.value = newmode;
-  // }
+  // BidirectedGraph getGraph(List<NodeModel> nodes, Map<String, List<String>> connects) {
+  BidirectedGraph<NodeModel> getGraph() {
+    Map<NodeModel, Set<NodeModel>> res = {};
+    for (String i in _connections.keys) {
+      var n = findNode(i);
+      res[n] = {};
+      var ll = _connections[i]!;
+      for (String l in ll) {
+        var m = findNode(l);
+        res[n]!.add(m);
+      }
+    }
+    return BidirectedGraph<NodeModel>(res);
+  }
+
+  NodeModel findNode(String id) {
+    return _allNodes.firstWhere((element) => element.id == id);
+  }
+
+  List<NodeModel> bestPath(String start, String finish) {
+    return bg
+        .shortestPath(
+          _allNodes.firstWhere((element) => element.name == start),
+          _allNodes.firstWhere((element) => element.name == finish),
+        )
+        .toList();
+  }
 }
 
 enum CurrentMode { Watching, Searching, Pathing }
