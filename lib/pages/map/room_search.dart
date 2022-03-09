@@ -137,6 +137,7 @@ class _RoomSearchState extends State<RoomSearch> {
                   ? Expanded(
                       child: DropdownSearch<String>(
                         mode: Mode.BOTTOM_SHEET,
+                        hint: 'откуда...',
                         showSelectedItems: true,
                         dropDownButton: const Icon(
                           Icons.edit_location_alt_outlined,
@@ -149,11 +150,10 @@ class _RoomSearchState extends State<RoomSearch> {
                             roomtocont.text = '';
                           } else {
                             Get.find<BlueprintController>().findAPath(a);
-                            print(a);
                           }
                         },
                         showSearchBox: true,
-                        showClearButton: true,
+                        showClearButton: false,
                         // selectedItem: cont.text,
                         searchFieldProps: TextFieldProps(
                           controller: roomtocont,
@@ -199,6 +199,7 @@ class _RoomSearchState extends State<RoomSearch> {
               Expanded(
                 child: DropdownSearch<String>(
                   mode: Mode.BOTTOM_SHEET,
+                  hint: 'куда...', 
                   showSelectedItems: true,
                   dropDownButton: const Icon(
                     Icons.room_outlined,
@@ -214,7 +215,7 @@ class _RoomSearchState extends State<RoomSearch> {
                     }
                   },
                   showSearchBox: true,
-                  showClearButton: true,
+                  showClearButton: false,
                   // selectedItem: cont.text,
                   searchFieldProps: TextFieldProps(
                     controller: roomcont,
