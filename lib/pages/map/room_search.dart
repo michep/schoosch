@@ -41,8 +41,9 @@ class _RoomSearchState extends State<RoomSearch> {
         // height: MediaQuery.of(context).size.height * 0.12,
         height: 97,
         width:
-            Get.find<BlueprintController>().mode$.value == CurrentMode.Watching ? MediaQuery.of(context).size.width * 0.66 : MediaQuery.of(context).size.width,
-        child: Container(
+            Get.find<BlueprintController>().mode$.value == CurrentMode.watching ? MediaQuery.of(context).size.width * 0.66 : MediaQuery.of(context).size.width,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 1200),
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(6),
           decoration:
@@ -133,11 +134,11 @@ class _RoomSearchState extends State<RoomSearch> {
               const SizedBox(
                 width: 20,
               ),
-              Get.find<BlueprintController>().mode$.value != CurrentMode.Watching
+              Get.find<BlueprintController>().mode$.value != CurrentMode.watching
                   ? Expanded(
                       child: DropdownSearch<String>(
                         mode: Mode.BOTTOM_SHEET,
-                        hint: 'откуда...',
+                        // hint: 'откуда...',
                         showSelectedItems: true,
                         dropDownButton: const Icon(
                           Icons.edit_location_alt_outlined,
@@ -199,7 +200,7 @@ class _RoomSearchState extends State<RoomSearch> {
               Expanded(
                 child: DropdownSearch<String>(
                   mode: Mode.BOTTOM_SHEET,
-                  hint: 'куда...', 
+                  // hint: 'куда...', 
                   showSelectedItems: true,
                   dropDownButton: const Icon(
                     Icons.room_outlined,

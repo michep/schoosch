@@ -11,7 +11,6 @@ import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/firebase_options.dart';
 import 'package:schoosch/generated/l10n.dart';
-import 'package:schoosch/model/dummy_nodes_data.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';

@@ -47,7 +47,7 @@ class _ScanPageState extends State<ScanPage> {
               onTap: barcode != null
                   ? () {
                       var cntrl = Get.find<BlueprintController>();
-                      cntrl.mode$.value == CurrentMode.Watching ? cntrl.findARoom(barcode!.code!) : cntrl.findAPath(barcode!.code!);
+                      cntrl.mode$.value == CurrentMode.watching ? cntrl.findARoom(barcode!.code!) : cntrl.findAPath(barcode!.code!);
                       Get.back();
                     }
                   : () {},

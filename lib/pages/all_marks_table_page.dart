@@ -1,0 +1,106 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/curriculum_model.dart';
+import 'package:schoosch/model/mark_model.dart';
+import 'package:intl/intl.dart';
+
+class StudentsTablePage extends StatelessWidget {
+  const StudentsTablePage({Key? key}) : super(key: key);
+
+  List<Widget> _buildMarkCells(List<MarkModel> listmark) {
+    return List.generate(
+      listmark.length,
+      (index) => Container(
+        alignment: Alignment.center,
+        width: 120.0,
+        height: 60.0,
+        color: Colors.white,
+        margin: const EdgeInsets.all(4.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(DateFormat.Md().format(listmark[index].date)),
+            Text(listmark[index].mark.toString()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildSubjectCells(List<CurriculumModel> listcur) {
+    return List.generate(
+      listcur.length,
+      (index) => Container(
+        alignment: Alignment.center,
+        width: 150.0,
+        height: 60.0,
+        color: Colors.white,
+        margin: const EdgeInsets.all(4.0),
+        child: Text(listcur[index].aliasOrName),
+      ),
+    );
+  }
+
+  List<Widget> _buildRows(List<CurriculumModel> listcur) {
+    return List.generate(
+      listcur.length,
+      (index) => FutureBuilder<List<MarkModel>>(
+        future: Get.find<FStore>().getCurriculumMarks(listcur[index]),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Text('nothing');
+          }
+          if (snapshot.data!.isEmpty) {
+            return Container(
+              alignment: Alignment.center,
+              width: 120.0,
+              height: 60.0,
+              color: Colors.white,
+              margin: const EdgeInsets.all(4.0),
+              child: const Text('NO MARKS'),
+            );
+          }
+          return Row(children: _buildMarkCells(snapshot.data!));
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('все оценки'),
+      ),
+      body: SingleChildScrollView(
+        child: FutureBuilder<List<CurriculumModel>>(
+          future: Get.find<FStore>().getStudentCurriculums(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Text('NO DATA');
+            }
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _buildSubjectCells(snapshot.data!),
+                ),
+                Flexible(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _buildRows(snapshot.data!),
+                    ),
+                  ),
+                )
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}

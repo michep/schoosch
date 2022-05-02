@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:schoosch/model/dummy_nodes_data.dart';
+// import 'package:schoosch/model/dummy_nodes_data.dart';
 import 'package:schoosch/model/node_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 

@@ -1,5 +1,4 @@
 import 'package:directed_graph/directed_graph.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/node_model.dart';
@@ -30,7 +29,7 @@ class BlueprintController extends GetxController {
     chosenroomfrom$ = _roomgofrom.obs;
     chosenFloor$ = 1.obs;
     side$ = true.obs;
-    mode$ = CurrentMode.Watching.obs;
+    mode$ = CurrentMode.watching.obs;
     // nodesPath$ = <NodeModel>[].obs;
     // nodesList$ = _curpathonfloor.obs;
   }
@@ -54,7 +53,7 @@ class BlueprintController extends GetxController {
     if (found != null) {
       chosenFloor$.value = found.floor;
       chosenRoom$.value = found.name;
-      mode$.value = CurrentMode.Searching;
+      mode$.value = CurrentMode.searching;
     }
   }
 
@@ -62,7 +61,7 @@ class BlueprintController extends GetxController {
     var found = _allBluePrints.firstWhereOrNull((element) => (element.name == name));
     if (found != null) {
       chosenroomfrom$.value = found.name;
-      mode$.value = CurrentMode.Pathing;
+      mode$.value = CurrentMode.pathing;
     }
     _curpath = bestPath(chosenroomfrom$.value!, chosenRoom$.value!);
     chosenFloor$.refresh();
@@ -70,14 +69,14 @@ class BlueprintController extends GetxController {
 
   void cancelFinding() {
     chosenRoom$.value = null;
-    mode$.value = CurrentMode.Watching;
+    mode$.value = CurrentMode.watching;
     _curpath.clear();
     _curpathonfloor.clear();
   }
 
   void cancelPath() {
     chosenroomfrom$.value = null;
-    mode$.value = CurrentMode.Searching;
+    mode$.value = CurrentMode.searching;
     _curpath.clear();
     _curpathonfloor.clear();
   }
@@ -121,4 +120,4 @@ class BlueprintController extends GetxController {
   }
 }
 
-enum CurrentMode { Watching, Searching, Pathing }
+enum CurrentMode { watching, searching, pathing }
