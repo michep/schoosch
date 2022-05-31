@@ -43,13 +43,13 @@ class FloorSelection extends StatelessWidget {
                     },
                     elevation: 2.0,
                     fillColor: Colors.white,
+                    padding: const EdgeInsets.all(15.0),
+                    shape: const CircleBorder(),
                     child: const Icon(
                       Icons.qr_code_2,
                       color: Colors.black,
                       size: 30,
                     ),
-                    padding: const EdgeInsets.all(15.0),
-                    shape: const CircleBorder(),
                   ),
                   const SizedBox(
                     height: 10,
@@ -73,12 +73,12 @@ class FloorSelection extends StatelessWidget {
             },
             elevation: Get.find<BlueprintController>().chosenFloor$.value == flors[i] ? 0 : 2.0,
             fillColor: Get.find<BlueprintController>().chosenFloor$.value == flors[i] ? Colors.grey[300] : Colors.white,
+            padding: const EdgeInsets.only(top: 15, bottom: 25, right: 15, left: 15),
+            shape: const CircleBorder(),
             child: Text(
               "${flors[i]}",
               style: const TextStyle(fontSize: 30),
             ),
-            padding: const EdgeInsets.only(top: 15, bottom: 25, right: 15, left: 15),
-            shape: const CircleBorder(),
           );
         }),
       );

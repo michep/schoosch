@@ -72,7 +72,7 @@ class TeacherLessonPage extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          Text(_lesson.order.toString() + ' урок'),
+          Text('${_lesson.order} урок'),
           const SizedBox(
             height: 5,
           ),

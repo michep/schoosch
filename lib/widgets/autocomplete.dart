@@ -420,7 +420,7 @@ class _RawAutocompleteState<T extends Object> extends State<RawAutocomplete<T>> 
       AutocompletePreviousOptionIntent: _previousOptionAction,
       AutocompleteNextOptionIntent: _nextOptionAction,
     };
-    SchedulerBinding.instance!.addPostFrameCallback((Duration _) {
+    SchedulerBinding.instance.addPostFrameCallback((Duration _) {
       _updateOverlay();
     });
     widget.initialValueFuture?.call().then((value) => _select(value!));
@@ -434,7 +434,7 @@ class _RawAutocompleteState<T extends Object> extends State<RawAutocomplete<T>> 
       widget.textEditingController,
     );
     _updateFocusNode(oldWidget.focusNode, widget.focusNode);
-    SchedulerBinding.instance!.addPostFrameCallback((Duration _) {
+    SchedulerBinding.instance.addPostFrameCallback((Duration _) {
       _updateOverlay();
     });
   }

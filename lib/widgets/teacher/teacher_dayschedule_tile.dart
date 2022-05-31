@@ -29,7 +29,7 @@ class TeacherDayScheduleTile extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             children: [
-              ...snap.data!.map((_les) => TeacherLessonListTile(_les, _date)),
+              ...snap.data!.map((les) => TeacherLessonListTile(les, _date)),
             ],
           );
         });

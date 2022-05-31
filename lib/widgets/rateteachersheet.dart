@@ -9,10 +9,10 @@ class RateSheet extends StatefulWidget {
   const RateSheet(this._teacher, {Key? key}) : super(key: key);
 
   @override
-  _RateSheetState createState() => _RateSheetState();
+  RateSheetState createState() => RateSheetState();
 }
 
-class _RateSheetState extends State<RateSheet> {
+class RateSheetState extends State<RateSheet> {
   int _rating = 0;
   bool _showComment = false;
   final TextEditingController _comment = TextEditingController();

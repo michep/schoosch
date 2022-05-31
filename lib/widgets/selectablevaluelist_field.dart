@@ -31,10 +31,10 @@ class SelectableValueListFormField<T> extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SelectableValueListFormFieldState<T> createState() => _SelectableValueListFormFieldState<T>();
+  SelectableValueListFormFieldState<T> createState() => SelectableValueListFormFieldState<T>();
 }
 
-class _SelectableValueListFormFieldState<T> extends State<SelectableValueListFormField<T>> {
+class SelectableValueListFormFieldState<T> extends State<SelectableValueListFormField<T>> {
   final List<T> _dataList = [];
 
   @override

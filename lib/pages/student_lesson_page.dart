@@ -42,7 +42,7 @@ class StudentLessonPage extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          Text(_lesson.order.toString() + ' урок'),
+          Text('${_lesson.order} урок'),
           const SizedBox(
             height: 5,
           ),
@@ -65,11 +65,11 @@ class StudentLessonPage extends StatelessWidget {
                     elevation: 3,
                     child: Center(
                       child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 15),
                         child: const Text(
                           'нет домашнего задания на этот день!',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        margin: const EdgeInsets.symmetric(vertical: 15),
                       ),
                     ),
                   );
@@ -106,8 +106,8 @@ class StudentLessonPage extends StatelessWidget {
               if (snapshot.data!.isEmpty) {
                 return Center(
                   child: Container(
-                    child: const Text('нет оценок в этот день'),
                     margin: const EdgeInsets.symmetric(vertical: 10),
+                    child: const Text('нет оценок в этот день'),
                   ),
                 );
               }
@@ -120,16 +120,16 @@ class StudentLessonPage extends StatelessWidget {
                       child: ListTile(
                         leading: Container(
                           padding: const EdgeInsets.all(6),
-                          child: Text(
-                            snapshot.data![i].mark.toString(),
-                            style: const TextStyle(fontSize: 20),
-                          ),
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: Colors.red,
                               width: 1.5,
                             ),
                             borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            snapshot.data![i].mark.toString(),
+                            style: const TextStyle(fontSize: 20),
                           ),
                         ),
                         title: Text(snapshot.data![i].comment),

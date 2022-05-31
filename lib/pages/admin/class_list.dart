@@ -63,7 +63,7 @@ class _ClassListPageState extends State<ClassListPage> {
                     var sorted = snapshot.data!;
                     sorted.sort((a, b) => a.name.compareTo(b.name));
                     return Scrollbar(
-                      isAlwaysShown: true,
+                      thumbVisibility: true,
                       child: ListView(
                         children: [
                           ...sorted.where(_filter).map(

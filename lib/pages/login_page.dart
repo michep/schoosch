@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     if (_auth.currentUser != null) {
-      SchedulerBinding.instance!.addPostFrameCallback((_) => _authenticated(_auth.currentUser!));
+      SchedulerBinding.instance.addPostFrameCallback((_) => _authenticated(_auth.currentUser!));
     }
     _sub = _auth.userChanges$.listen(_authenticated);
     super.initState();

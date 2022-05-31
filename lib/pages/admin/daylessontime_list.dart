@@ -31,7 +31,7 @@ class _DayLessontimeListPageState extends State<DayLessontimeListPage> {
               var sorted = snapshot.data!;
               sorted.sort((a, b) => a.name.compareTo(b.name));
               return Scrollbar(
-                isAlwaysShown: true,
+                thumbVisibility: true,
                 child: ListView(
                   children: [
                     ...sorted.map(

@@ -65,9 +65,9 @@ class FStore extends GetxController {
 
   Future<List<LessontimeModel>> getLessontime(String id) async {
     List<LessontimeModel> res = [];
-    var _lessontimes = await _institutionRef.collection('lessontime').doc(id).collection('time').orderBy('order').get();
-    for (var _lessontime in _lessontimes.docs) {
-      res.add(LessontimeModel.fromMap(_lessontime.id, _lessontime.data()));
+    var lessontimes = await _institutionRef.collection('lessontime').doc(id).collection('time').orderBy('order').get();
+    for (var lessontime in lessontimes.docs) {
+      res.add(LessontimeModel.fromMap(lessontime.id, lessontime.data()));
     }
     return res;
   }
@@ -79,8 +79,8 @@ class FStore extends GetxController {
 
   Future<List<DayLessontimeModel>> getAllDayLessontime() async {
     List<DayLessontimeModel> res = [];
-    var _timenames = await _institutionRef.collection('lessontime').get();
-    for (var val in _timenames.docs) {
+    var timenames = await _institutionRef.collection('lessontime').get();
+    for (var val in timenames.docs) {
       res.add(DayLessontimeModel.fromMap(val.id, val.data()));
     }
     return res;
@@ -90,9 +90,9 @@ class FStore extends GetxController {
     return (await _institutionRef.collection('class').orderBy('grade').get())
         .docs
         .map(
-          (_class) => ClassModel.fromMap(
-            _class.id,
-            _class.data(),
+          (aclass) => ClassModel.fromMap(
+            aclass.id,
+            aclass.data(),
           ),
         )
         .toList();

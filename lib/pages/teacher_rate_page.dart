@@ -51,14 +51,12 @@ class _RatePageState extends State<RatePage> {
                                           elevation: 4,
                                           child: ListTile(
                                             leading: const Icon(Icons.person),
-                                            title: Text(teacher.firstname + ' ' + teacher.lastname),
+                                            title: Text('${teacher.firstname} ${teacher.lastname}'),
                                             subtitle: Text(lessons.join(', ')),
                                             trailing: FutureBuilder<double>(
                                                 future: teacher.averageRating,
                                                 builder: (context, snapshot) {
-                                                  return snapshot.hasData
-                                                      ? Text(snapshot.data!.toStringAsFixed(2))
-                                                      : const Text('нет оценок');
+                                                  return snapshot.hasData ? Text(snapshot.data!.toStringAsFixed(2)) : const Text('нет оценок');
                                                 }),
                                             onTap: () {
                                               activateBottomSheet(context, teacher).then((_) => setState(() {}));

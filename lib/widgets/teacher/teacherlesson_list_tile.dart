@@ -38,7 +38,7 @@ class _TeacherLessonListTileState extends State<TeacherLessonListTile> {
             leading: Text(widget._lesson.order.toString()),
             title: Text(cur.aliasOrName),
             trailing: Text(widget._lesson.aclass.name),
-            subtitle: Text(tim.format(context) + ', ' + ven.name),
+            subtitle: Text('${tim.format(context)}, ${ven.name}'),
             onTap: () => _onTap(widget._lesson, cur, ven, tim),
           );
         });

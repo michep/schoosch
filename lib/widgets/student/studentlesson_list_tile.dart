@@ -42,17 +42,17 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
             title: Text(cur.aliasOrName),
             trailing: mar != ""
                 ? Container(
-                    child: Text(mar),
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       border: Border.all(color: Colors.red, width: 1.5),
                     ),
+                    child: Text(mar),
                   )
                 : Container(
                     width: 0,
                   ),
-            subtitle: Text(tim.format(context) + ', ' + ven.name),
+            subtitle: Text('${tim.format(context)}, ${ven.name}'),
             onTap: () => _onTap(widget._lesson, cur, ven, tim),
           );
         });

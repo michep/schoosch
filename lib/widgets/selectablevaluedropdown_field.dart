@@ -33,10 +33,10 @@ class SelectableValueDropdownFormField<T extends Object> extends StatefulWidget 
   }) : super(key: key);
 
   @override
-  _SelectableValueDropdownFormFieldState<T> createState() => _SelectableValueDropdownFormFieldState<T>();
+  SelectableValueDropdownFormFieldState<T> createState() => SelectableValueDropdownFormFieldState<T>();
 }
 
-class _SelectableValueDropdownFormFieldState<T extends Object> extends State<SelectableValueDropdownFormField<T>> {
+class SelectableValueDropdownFormFieldState<T extends Object> extends State<SelectableValueDropdownFormField<T>> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   final ScrollController _scroll = ScrollController();
@@ -52,7 +52,7 @@ class _SelectableValueDropdownFormFieldState<T extends Object> extends State<Sel
           _options.addAll(options);
         }));
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _width = _key1.currentContext!.size!.width;
     });
   }
@@ -118,7 +118,7 @@ class _SelectableValueDropdownFormFieldState<T extends Object> extends State<Sel
           constraints: BoxConstraints(maxHeight: 200, maxWidth: _width),
           child: Scrollbar(
             controller: _scroll,
-            isAlwaysShown: true,
+            thumbVisibility: true,
             child: ListView.builder(
               controller: _scroll,
               padding: const EdgeInsets.all(8.0),
@@ -133,7 +133,7 @@ class _SelectableValueDropdownFormFieldState<T extends Object> extends State<Sel
                     builder: (BuildContext context) {
                       final bool highlight = autocomlete.AutocompleteHighlightedOption.of(context) == index;
                       if (highlight) {
-                        SchedulerBinding.instance!.addPostFrameCallback((Duration timeStamp) {
+                        SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
                           Scrollable.ensureVisible(context, alignment: 0.5);
                         });
                       }

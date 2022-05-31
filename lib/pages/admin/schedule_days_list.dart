@@ -24,7 +24,7 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
       ),
       body: SafeArea(
         child: Scrollbar(
-          isAlwaysShown: true,
+          thumbVisibility: true,
           child: ListView.builder(
             itemCount: 7,
             itemBuilder: (BuildContext context, int day) {

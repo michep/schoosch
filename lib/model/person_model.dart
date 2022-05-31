@@ -81,14 +81,14 @@ class PersonModel {
 
   String? get id => _id;
 
-  PersonModel.fromMap(this._id, Map<String, dynamic> map, [bool _recursive = true]) {
+  PersonModel.fromMap(this._id, Map<String, dynamic> map, [bool recursive = true]) {
     firstname = map['firstname'] != null ? map['firstname'] as String : throw 'need firstname key in people $id';
     middlename = map['middlename'] != null ? map['middlename'] as String : null;
     lastname = map['lastname'] != null ? map['lastname'] as String : throw 'need lastname key in people $id';
     birthday = map['birthday'] != null ? DateTime.fromMillisecondsSinceEpoch((map['birthday'] as Timestamp).millisecondsSinceEpoch) : null;
     email = map['email'] != null ? map['email'] as String : throw 'need email key in people $id';
     map['type'] != null ? types.addAll((map['type'] as List<dynamic>).map((e) => PersonTypeExt._parse(e))) : throw 'need type key in people $id';
-    if (_recursive) {
+    if (recursive) {
       for (var t in types) {
         switch (t) {
           case PersonType.parent:

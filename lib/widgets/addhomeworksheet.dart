@@ -18,10 +18,10 @@ class AddHomeworkSheet extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AddHomeworkSheetState createState() => _AddHomeworkSheetState();
+  AddHomeworkSheetState createState() => AddHomeworkSheetState();
 }
 
-class _AddHomeworkSheetState extends State<AddHomeworkSheet> {
+class AddHomeworkSheetState extends State<AddHomeworkSheet> {
   TextEditingController cont = TextEditingController();
   @override
   Widget build(BuildContext context) {

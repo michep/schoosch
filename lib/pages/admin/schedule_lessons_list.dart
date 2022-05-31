@@ -107,12 +107,12 @@ class _VenuePageState extends State<ScheduleLessonsListPage> {
                 ),
                 Expanded(
                   child: Scrollbar(
-                    isAlwaysShown: true,
+                    thumbVisibility: true,
                     child: DragAndDropLists(
                       axis: Axis.vertical,
                       itemDragHandle: const DragHandle(
-                        child: Icon(Icons.drag_handle),
                         onLeft: true,
+                        child: Icon(Icons.drag_handle),
                       ),
                       onItemReorder: _itemsReorder,
                       onListReorder: (i, j) {},

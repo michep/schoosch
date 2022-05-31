@@ -46,11 +46,52 @@ class _RoomSearchState extends State<RoomSearch> {
           children: [
             Expanded(
               child: DropdownSearch<String>(
-                mode: Mode.BOTTOM_SHEET,
-                showSelectedItems: true,
-                dropDownButton: const Icon(
-                  Icons.room_outlined,
-                  size: 35,
+                popupProps: PopupProps.bottomSheet(
+                  bottomSheetProps: const BottomSheetProps(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12),
+                      ),
+                    ),
+                  ),
+                  showSelectedItems: true,
+                  showSearchBox: true,
+                  searchFieldProps: TextFieldProps(
+                    controller: roomcont,
+                    decoration: const InputDecoration(
+                      // border: OutlineInputBorder(borderSide: BorderSide.none),
+                      border: UnderlineInputBorder(),
+                      contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
+                      labelText: "поиск...",
+                    ),
+                  ),
+                  title: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withOpacity(0.8),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12),
+                      ),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'КАБИНЕТЫ',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                dropdownButtonProps: const DropdownButtonProps(
+                  icon: Icon(
+                    Icons.room_outlined,
+                    size: 35,
+                  ),
                 ),
                 items: widget.blueprints.where((element) => element.type == 'room' && element.name != 'unknown').map((e) => e.name).toList(),
                 onChanged: (a) {
@@ -61,44 +102,8 @@ class _RoomSearchState extends State<RoomSearch> {
                     Get.find<BlueprintController>().findARoom(a);
                   }
                 },
-                showSearchBox: true,
-                showClearButton: true,
+                clearButtonProps: const ClearButtonProps(isVisible: true),
                 // selectedItem: cont.text,
-                searchFieldProps: TextFieldProps(
-                  controller: roomcont,
-                  decoration: const InputDecoration(
-                    // border: OutlineInputBorder(borderSide: BorderSide.none),
-                    border: UnderlineInputBorder(),
-                    contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
-                    labelText: "поиск...",
-                  ),
-                ),
-                popupTitle: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.8),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12),
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'КАБИНЕТЫ',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                popupShape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
-                  ),
-                ),
               ),
             ),
             const SizedBox(
@@ -106,12 +111,70 @@ class _RoomSearchState extends State<RoomSearch> {
             ),
             Expanded(
               child: DropdownSearch<TeacherModel>(
-                mode: Mode.BOTTOM_SHEET,
-                dropDownButton: const Icon(
-                  Icons.person_outline,
-                  size: 35,
+                popupProps: PopupProps.bottomSheet(
+                  bottomSheetProps: const BottomSheetProps(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12),
+                      ),
+                    ),
+                  ),
+                  showSearchBox: true,
+                  searchFieldProps: TextFieldProps(
+                    controller: teachercont,
+                    decoration: const InputDecoration(
+                      // border: OutlineInputBorder(borderSide: BorderSide.none),
+                      border: UnderlineInputBorder(),
+                      contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
+                      labelText: "поиск...",
+                    ),
+                  ),
+                  title: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withOpacity(0.8),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12),
+                      ),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'УЧИТЕЛЯ',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  itemBuilder: (context, item, isSelected) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      decoration: !isSelected
+                          ? null
+                          : BoxDecoration(
+                              border: Border.all(color: Theme.of(context).primaryColor),
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.white,
+                            ),
+                      child: ListTile(
+                        selected: isSelected,
+                        title: Text('${item.firstname} ${item.middlename}'),
+                        subtitle: Text(widget.teachersMap[item]!.join(', ')),
+                      ),
+                    );
+                  },
                 ),
-                itemAsString: (item) => '${item!.firstname} ${item.middlename}',
+                dropdownButtonProps: const DropdownButtonProps(
+                  icon: Icon(
+                    Icons.person_outline,
+                    size: 35,
+                  ),
+                ),
+                itemAsString: (item) => '${item.firstname} ${item.middlename}',
                 items: widget.teachersMap.keys.toList(),
                 dropdownBuilder: (context, item) {
                   if (item == null) {
@@ -127,61 +190,10 @@ class _RoomSearchState extends State<RoomSearch> {
                     showMyDialog(a);
                   }
                 },
-                popupItemBuilder: (context, item, isSelected) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: !isSelected
-                        ? null
-                        : BoxDecoration(
-                            border: Border.all(color: Theme.of(context).primaryColor),
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.white,
-                          ),
-                    child: ListTile(
-                      selected: isSelected,
-                      title: Text('${item.firstname} ${item.middlename}'),
-                      subtitle: Text(widget.teachersMap[item]!.join(', ')),
-                    ),
-                  );
-                },
-                showSearchBox: true,
-                showClearButton: true,
+                clearButtonProps: const ClearButtonProps(
+                  isVisible: true,
+                ),
                 // selectedItem: cont.text,
-                searchFieldProps: TextFieldProps(
-                  controller: teachercont,
-                  decoration: const InputDecoration(
-                    // border: OutlineInputBorder(borderSide: BorderSide.none),
-                    border: UnderlineInputBorder(),
-                    contentPadding: EdgeInsets.fromLTRB(12, 12, 8, 0),
-                    labelText: "поиск...",
-                  ),
-                ),
-                popupTitle: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.8),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12),
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'УЧИТЕЛЯ',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                popupShape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
-                  ),
-                ),
               ),
             ),
           ],

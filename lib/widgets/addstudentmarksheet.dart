@@ -11,16 +11,13 @@ class AddMarkSheet extends StatefulWidget {
   final DateTime date;
   final bool renewing;
   final String docId;
-  const AddMarkSheet(this.student, this.teacher, this.lessonorder,
-      this.curriculum, this.date, this.renewing,
-      {Key? key, this.docId = ''})
-      : super(key: key);
+  const AddMarkSheet(this.student, this.teacher, this.lessonorder, this.curriculum, this.date, this.renewing, {Key? key, this.docId = ''}) : super(key: key);
 
   @override
-  _AddMarkSheetState createState() => _AddMarkSheetState();
+  AddMarkSheetState createState() => AddMarkSheetState();
 }
 
-class _AddMarkSheetState extends State<AddMarkSheet> {
+class AddMarkSheetState extends State<AddMarkSheet> {
   int mark = 1;
   TextEditingController cont = TextEditingController();
 
@@ -39,12 +36,10 @@ class _AddMarkSheetState extends State<AddMarkSheet> {
                   mark = 1;
                 });
               },
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 1 ? Colors.amber : Colors.black)),
               child: const Text(
                 "1",
               ),
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                      mark == 1 ? Colors.amber : Colors.black)),
             ),
             ElevatedButton(
               onPressed: () {
@@ -52,10 +47,8 @@ class _AddMarkSheetState extends State<AddMarkSheet> {
                   mark = 2;
                 });
               },
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 1 ? Colors.amber : Colors.black)),
               child: const Text("2"),
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                      mark == 1 ? Colors.amber : Colors.black)),
             ),
             ElevatedButton(
               onPressed: () {
@@ -63,10 +56,8 @@ class _AddMarkSheetState extends State<AddMarkSheet> {
                   mark = 3;
                 });
               },
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 1 ? Colors.amber : Colors.black)),
               child: const Text("3"),
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                      mark == 1 ? Colors.amber : Colors.black)),
             ),
             ElevatedButton(
               onPressed: () {
@@ -74,10 +65,8 @@ class _AddMarkSheetState extends State<AddMarkSheet> {
                   mark = 4;
                 });
               },
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 1 ? Colors.amber : Colors.black)),
               child: const Text("4"),
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                      mark == 1 ? Colors.amber : Colors.black)),
             ),
             ElevatedButton(
               onPressed: () {
@@ -85,10 +74,8 @@ class _AddMarkSheetState extends State<AddMarkSheet> {
                   mark = 5;
                 });
               },
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 1 ? Colors.amber : Colors.black)),
               child: const Text("5"),
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                      mark == 1 ? Colors.amber : Colors.black)),
             ),
           ],
         ),
@@ -113,14 +100,7 @@ class _AddMarkSheetState extends State<AddMarkSheet> {
         ElevatedButton(
           onPressed: () {
             !widget.renewing
-                ? widget.teacher.createMark(
-                    widget.student,
-                    mark,
-                    widget.lessonorder,
-                    widget.curriculum,
-                    'regular',
-                    widget.date,
-                    comment: cont.text)
+                ? widget.teacher.createMark(widget.student, mark, widget.lessonorder, widget.curriculum, 'regular', widget.date, comment: cont.text)
                 : widget.teacher.updateMark(mark, widget.docId);
             mark = 1;
             cont.clear();

@@ -68,20 +68,20 @@ class _PeopleListPageState extends State<PeopleListPage> {
                         }),
                         items: [
                           DropdownMenuItem(
-                            child: Text(loc.personTypeAll),
                             value: 'all',
+                            child: Text(loc.personTypeAll),
                           ),
                           DropdownMenuItem(
-                            child: Text(loc.personTypeStudent),
                             value: 'student',
+                            child: Text(loc.personTypeStudent),
                           ),
                           DropdownMenuItem(
-                            child: Text(loc.personTypeTeacher),
                             value: 'teacher',
+                            child: Text(loc.personTypeTeacher),
                           ),
                           DropdownMenuItem(
-                            child: Text(loc.personTypeParent),
                             value: 'parent',
+                            child: Text(loc.personTypeParent),
                           ),
                         ],
                       ),
@@ -98,7 +98,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
                     var sorted = snapshot.data!;
                     sorted.sort((a, b) => a.fullName.compareTo(b.fullName));
                     return Scrollbar(
-                      isAlwaysShown: true,
+                      thumbVisibility: true,
                       child: ListView(
                         children: [
                           ...sorted.where(_filter).map(

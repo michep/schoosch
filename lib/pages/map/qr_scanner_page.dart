@@ -9,10 +9,10 @@ class ScanPage extends StatefulWidget {
   const ScanPage({Key? key}) : super(key: key);
 
   @override
-  _ScanPageState createState() => _ScanPageState();
+  ScanPageState createState() => ScanPageState();
 }
 
-class _ScanPageState extends State<ScanPage> {
+class ScanPageState extends State<ScanPage> {
   final qrKey = GlobalKey(debugLabel: "QR");
   QRViewController? controller;
   Barcode? barcode;
@@ -43,6 +43,7 @@ class _ScanPageState extends State<ScanPage> {
         children: [
           buildQrView(context),
           Positioned(
+            bottom: 20,
             child: GestureDetector(
               onTap: barcode != null
                   ? () {
@@ -63,7 +64,6 @@ class _ScanPageState extends State<ScanPage> {
                 ),
               ),
             ),
-            bottom: 20,
           ),
         ],
       ),

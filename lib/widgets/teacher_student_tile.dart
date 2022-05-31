@@ -102,11 +102,11 @@ class TeacherStudentTile extends StatelessWidget {
         });
   }
 
-  Widget markTile(MarkModel _mark, BuildContext context) {
+  Widget markTile(MarkModel mark, BuildContext context) {
     return ListTile(
-      trailing: Text(_mark.mark.toString()),
-      title: Text(_mark.comment),
-      onTap: () => updateMark(context, _mark.id),
+      trailing: Text(mark.mark.toString()),
+      title: Text(mark.comment),
+      onTap: () => updateMark(context, mark.id),
     );
   }
 }

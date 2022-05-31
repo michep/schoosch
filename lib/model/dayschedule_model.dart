@@ -29,9 +29,8 @@ class DayScheduleModel {
   DayScheduleModel.fromMap(this._class, this._id, Map<String, dynamic> map) {
     day = map['day'] != null ? map['day'] as int : throw 'need day key in schedule $_id';
     if (day < 1 || day > 7) throw 'incorrect day in schedule $id';
-    from = map['from'] != null
-        ? DateTime.fromMillisecondsSinceEpoch((map['from'] as Timestamp).millisecondsSinceEpoch)
-        : throw 'need from key in schedule $_id';
+    from =
+        map['from'] != null ? DateTime.fromMillisecondsSinceEpoch((map['from'] as Timestamp).millisecondsSinceEpoch) : throw 'need from key in schedule $_id';
     till = map['till'] != null ? DateTime.fromMillisecondsSinceEpoch((map['till'] as Timestamp).millisecondsSinceEpoch) : null;
   }
 
@@ -67,7 +66,7 @@ class StudentScheduleModel extends DayScheduleModel {
   final List<LessonModel> _studentLessons = [];
   bool _studentLessonsLoaded = false;
 
-  StudentScheduleModel.fromMap(ClassModel _class, String id, Map<String, Object?> map) : super.fromMap(_class, id, map);
+  StudentScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map);
 
   Future<List<LessonModel>> lessonsForStudent(StudentModel student) async {
     if (!_studentLessonsLoaded) {
@@ -81,7 +80,7 @@ class StudentScheduleModel extends DayScheduleModel {
 class TeacherScheduleModel extends DayScheduleModel {
   late final List<LessonModel> _teacherLessons = [];
 
-  TeacherScheduleModel.fromMap(ClassModel _class, String id, Map<String, Object?> map) : super.fromMap(_class, id, map);
+  TeacherScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map);
 
   void addLessons(List<LessonModel> lessons) {
     _teacherLessons.addAll(lessons);

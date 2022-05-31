@@ -8,10 +8,10 @@ class Floor extends StatefulWidget {
   const Floor(this.blueprints, this.chosenRoom, {Key? key}) : super(key: key);
 
   @override
-  _FloorState createState() => _FloorState();
+  FloorState createState() => FloorState();
 }
 
-class _FloorState extends State<Floor> {
+class FloorState extends State<Floor> {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
