@@ -12,6 +12,7 @@ import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
+import 'package:schoosch/model/node_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/venue_model.dart';
@@ -282,6 +283,32 @@ class FStore extends GetxController {
         .toList();
   }
 
+  Future<List<NodeModel>> getAllNodes() async {
+    return (await _institutionRef.collection('node').get())
+        .docs
+        .map(
+          (n) => NodeModel.fromMap(
+            n.id,
+            n.data(),
+          ),
+        )
+        .toList();
+  }
+
+  Future<Map<String, List<String>>> getAllNodeConnections() async {
+    Map<String, List<String>> res = {};
+    var docs = (await _institutionRef.collection('connection').get()).docs;
+    for (var doc in docs) {
+      var nid = doc['node_id'] as String;
+      res[nid] = [];
+      List<dynamic> ll = doc['connection_ids'];
+      for (var l in ll) {
+        res[nid]!.add(l as String);
+      }
+    }
+    return res;
+  }
+
   Future<List<int>> getAllFloors() async {
     List<int> res = [];
     var lilst = (await _institutionRef.collection('venue').get())
@@ -513,6 +540,81 @@ class FStore extends GetxController {
     }
     var res = days.values.toList();
     res.sort((a, b) => a.day.compareTo(b.day));
+    return res;
+  }
+
+  Future<List<CurriculumModel>> getStudentCurriculums() async {
+    List<CurriculumModel> res = [];
+    var curs = await getAllCurriculums();
+    for (var cur in curs) {
+      if (cur.isAvailableForStudent(currentUser!.id!)) {
+        res.add(cur);
+      }
+    }
+    return res;
+  }
+
+  Future<List<MarkModel>> getCurriculumMarks(CurriculumModel cur) async {
+    var marks = await _institutionRef.collection('mark')
+      .where('curriculum_id', isEqualTo: cur.id)
+      .where('student_id', isEqualTo: currentUser!.id)
+      .get();
+    return marks.docs
+        .map(
+          (e) => MarkModel.fromMap(
+            e.id,
+            e.data(),
+          ),
+        )
+        .toList();
+  }
+
+  Future<List<CurriculumModel>> getTeacherCurriculums() async {
+    var curriculums = await _institutionRef.collection('curriculum')
+      .where('master_id', isEqualTo: currentUser!.id)
+      .get();
+    return curriculums.docs
+        .map(
+          (e) => CurriculumModel.fromMap(
+            e.id,
+            e.data(),
+          ),
+        )
+        .toList();
+  }
+
+  // Future<List<StudentModel>> getCurriculumStudents(CurriculumModel cur) {
+  //   currentUser!.asTeacher.
+  // }
+
+  Future<List<MarkModel>> getStudentsMarks(StudentModel student, CurriculumModel cur) async {
+    var marks = await _institutionRef.collection('mark')
+      .where('student_id', isEqualTo: student.id)
+      .where('teacher_id', isEqualTo: currentUser!.id)
+      .where('curriculum_id', isEqualTo: cur.id)
+      .get();
+    return marks.docs
+        .map(
+          (e) => MarkModel.fromMap(
+            e.id,
+            e.data(),
+          ),
+        )
+        .toList();
+  }
+
+  Future<List<ClassModel>> getCurriculumClasses(CurriculumModel curriculum) async {
+    List<ClassModel> res = [];
+    var r = await _store.collectionGroup('lesson')
+      .where('curriculum_id', isEqualTo: curriculum.id)
+      .get();
+    for (var les in r.docs) {
+      var c = await les.reference.parent.parent!.parent.parent!.get();
+      var cl = ClassModel.fromMap(c.id, c.data()!);
+      if (!res.contains(cl)) {
+        res.add(cl);
+      }
+    }
     return res;
   }
 }

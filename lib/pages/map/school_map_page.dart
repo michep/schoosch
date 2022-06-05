@@ -60,6 +60,8 @@ class _SchoolMapPageState extends State<SchoolMapPage> {
                       child: Floor(
                         bpc.bluePrints$,
                         bpc.chosenRoom$.value,
+                        // bpc.nodesPath$,
+                        bpc.nodesList$,
                         key: ValueKey(bpc.chosenFloor$.value),
                       ),
                     );

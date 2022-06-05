@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
@@ -38,6 +39,22 @@ class ClassModel {
     _dayLessontimeId = map['lessontime_id'] != null ? map['lessontime_id'] as String : throw 'need lessontime_id key in class $_id';
     _masterId = map['master_id'] != null ? map['master_id'] as String : throw 'need master_id key in class $_id';
     map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
+  }
+
+  @override
+  operator ==(other) {
+    if (other is ClassModel) {
+      return id == other.id;
+    }
+    return this == other;
+  }
+
+  @override
+  int get hashCode => hashValues(id, '');
+
+  @override
+  String toString() {
+    return name;
   }
 
   Future<TeacherModel?> get master async {

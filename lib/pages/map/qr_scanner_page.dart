@@ -47,8 +47,8 @@ class ScanPageState extends State<ScanPage> {
             child: GestureDetector(
               onTap: barcode != null
                   ? () {
-                      Get.find<BlueprintController>().findARoom(barcode!.code!);
-                      // TODO: MAKE A FUNCTION TO FIND A ROOM
+                      var cntrl = Get.find<BlueprintController>();
+                      cntrl.mode$.value == CurrentMode.watching ? cntrl.findARoom(barcode!.code!) : cntrl.findAPath(barcode!.code!);
                       Get.back();
                     }
                   : () {},

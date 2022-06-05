@@ -104,7 +104,7 @@ class AddMarkSheetState extends State<AddMarkSheet> {
                 : widget.teacher.updateMark(mark, widget.docId);
             mark = 1;
             cont.clear();
-            Get.back();
+            Get.back<bool>(result: true);
           },
           child: const Text("поставить"),
         )

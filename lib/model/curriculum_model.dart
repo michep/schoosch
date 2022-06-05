@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class CurriculumModel {
@@ -9,7 +10,9 @@ class CurriculumModel {
   late final String _masterId;
   final List<String> _studentIds = [];
   final List<StudentModel> _students = [];
+  final List<ClassModel> _classes = [];
   bool _studentsLoaded = false;
+  bool _classesLoaded = false;
   TeacherModel? _master;
 
   String? get id => _id;
@@ -52,6 +55,25 @@ class CurriculumModel {
       _studentsLoaded = true;
     }
     return _students;
+  }
+
+  Future<List<ClassModel>> classes({bool forceRefresh = false}) async {
+    if (!_classesLoaded || forceRefresh) {
+      _classes.clear();
+      _classes.addAll((await Get.find<FStore>().getCurriculumClasses(this)));
+      _classesLoaded = true;
+    }
+    return _classes;
+  }
+
+  Future<List<StudentModel>> allStudents() async {
+    List<StudentModel> res = [];
+    res.addAll(await students());
+    var cl = await classes();
+    for(var c in cl) {
+      res.addAll(await c.students());
+    }
+    return res;
   }
 
   bool isAvailableForStudent(String studentId) => _studentIds.isEmpty || _studentIds.contains(studentId);

@@ -28,6 +28,7 @@ dependencies:
   qr_code_scanner: ^1.0.0
   dropdown_search: ^5.0.1
   flutter_native_splash: ^2.0.1+1
+  directed_graph: ^0.3.6
 
 dev_dependencies:
   flutter_test:
@@ -42,11 +43,13 @@ flutter:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icon/icon.png"
+  image_path: "assets/icon/лого1.png"
+  adaptive_icon_background: "#1C0751"
+  remove_alpha_ios: true
 
 flutter_native_splash:
-  color: "#FFFFFF"
-  image: "assets/icon/icon.png"
+  color: "#1C0751"
+  image: "assets/icon/лого1.png"
   android: true
   ios: true
 

@@ -7,7 +7,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/addhomeworksheet.dart';
 import 'package:schoosch/widgets/addstudentmarksheet.dart';
 
-class TeacherStudentTile extends StatelessWidget {
+class TeacherStudentTile extends StatefulWidget {
   final StudentModel student;
   final TeacherModel teacher;
   final CurriculumModel curriculum;
@@ -17,16 +17,24 @@ class TeacherStudentTile extends StatelessWidget {
   const TeacherStudentTile(this.date, this.lesson, this.curriculum, this.teacher, this.student, {Key? key}) : super(key: key);
 
   @override
+  State<TeacherStudentTile> createState() => _TeacherStudentTileState();
+}
+
+class _TeacherStudentTileState extends State<TeacherStudentTile> {
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List>(
-      future: Future.wait([lesson.homeworkForStudent(student, date), lesson.marksForStudent(student, date)]),
+      future: Future.wait([
+        widget.lesson.homeworkForStudent(widget.student, widget.date),
+        widget.lesson.marksForStudent(widget.student, widget.date, forceUpdate: true),
+      ]),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const Text('sheeesh');
         var homework = snapshot.data![0] as HomeworkModel?;
         var marks = snapshot.data![1] as List<MarkModel>?;
         return ExpansionTile(
           title: Text(
-            student.fullName,
+            widget.student.fullName,
           ),
           subtitle: homework != null ? Text(homework.text) : const Text(''),
           trailing: Row(
@@ -38,7 +46,7 @@ class TeacherStudentTile extends StatelessWidget {
                 iconSize: 25,
               ),
               IconButton(
-                onPressed: () => createMark(context, lesson.order, curriculum, date),
+                onPressed: () => createMark(context, widget.lesson.order, widget.curriculum, widget.date),
                 iconSize: 25,
                 icon: const Icon(Icons.auto_stories_outlined),
               )
@@ -61,8 +69,8 @@ class TeacherStudentTile extends StatelessWidget {
         context: context,
         builder: (a) {
           return AddMarkSheet(
-            student,
-            teacher,
+            widget.student,
+            widget.teacher,
             lessonorder,
             curriculum,
             date,
@@ -78,28 +86,31 @@ class TeacherStudentTile extends StatelessWidget {
         context: context,
         builder: (a) {
           return AddHomeworkSheet(
-            teacher,
-            curriculum,
-            date,
-            student,
+            widget.teacher,
+            widget.curriculum,
+            widget.date,
+            widget.student,
           );
         });
   }
 
   Future<void> updateMark(BuildContext context, String docId) async {
-    return await showModalBottomSheet(
+    var isupdated = await showModalBottomSheet<bool>(
         context: context,
         builder: (a) {
           return AddMarkSheet(
-            student,
-            teacher,
-            lesson.order,
-            curriculum,
-            date,
+            widget.student,
+            widget.teacher,
+            widget.lesson.order,
+            widget.curriculum,
+            widget.date,
             true,
             docId: docId,
           );
         });
+    if (isupdated != null) {
+      setState(() {});
+    }
   }
 
   Widget markTile(MarkModel mark, BuildContext context) {

@@ -7,6 +7,7 @@ import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
+import 'package:schoosch/model/mark_model.dart';
 
 enum PersonType {
   none,
@@ -184,6 +185,10 @@ class StudentModel extends PersonModel {
       _studentClassLoaded = true;
     }
     return _studentClass!;
+  }
+
+  Future<List<MarkModel>> curriculumMarks(CurriculumModel cur) async {
+    return Get.find<FStore>().getStudentsMarks(this, cur);
   }
 }
 

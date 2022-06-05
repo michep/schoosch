@@ -1,3 +1,4 @@
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/class_model.dart';
@@ -88,8 +89,8 @@ class LessonModel {
   //   return _homeworks.values.toList();
   // }
 
-  Future<List<MarkModel>> marksForStudent(StudentModel student, DateTime date) async {
-    if (_marks[student.id] == null) {
+  Future<List<MarkModel>> marksForStudent(StudentModel student, DateTime date, {bool forceUpdate = false}) async {
+    if (_marks[student.id] == null || forceUpdate) {
       _marks[student.id!] = await Get.find<FStore>().getLessonMarksForStudent(schedule, this, student, date);
     }
 
