@@ -54,8 +54,8 @@ class StudentLessonPage extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          FutureBuilder<List<HomeworkModel>?>(
-              future: _lesson.homeworkForStudentAndClass(_student, _date), //TODO: разделить на перс и общ задания
+          FutureBuilder<Map<String, HomeworkModel>?>(
+              future: _lesson.homeworkForStudentAndClass(_student, _date),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Text('');
@@ -74,11 +74,50 @@ class StudentLessonPage extends StatelessWidget {
                     ),
                   );
                 }
-                return ListView.builder(
+                var stud = snapshot.data!['student'];
+                var clas = snapshot.data!['class'];
+                // return ListView.builder(
+                //   shrinkWrap: true,
+                //   itemCount: snapshot.data!.length,
+                //   itemBuilder: (BuildContext context, int i) {
+                //     return Card(
+                //       elevation: 3,
+                //       child: Container(
+                //         margin: const EdgeInsets.all(8),
+                //         child: Column(
+                //           crossAxisAlignment: CrossAxisAlignment.start,
+                //           children: [
+                //             const Text(
+                //               "Д/З",
+                //               style: TextStyle(fontWeight: FontWeight.bold),
+                //             ),
+                //             Text(snapshot.data![i].text),
+                //           ],
+                //         ),
+                //       ),
+                //     );
+                //   },
+                // );
+                return ListView(
                   shrinkWrap: true,
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (BuildContext context, int i) {
-                    return Card(
+                  children: [
+                    if(stud != null) Card(
+                      elevation: 3,
+                      child: Container(
+                        margin: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Личное Д/З",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(stud.text),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if(clas != null) Card(
                       elevation: 3,
                       child: Container(
                         margin: const EdgeInsets.all(8),
@@ -89,12 +128,12 @@ class StudentLessonPage extends StatelessWidget {
                               "Д/З",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            Text(snapshot.data![i].text),
+                            Text(clas.text),
                           ],
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 );
               }),
           FutureBuilder<List<MarkModel>?>(

@@ -70,12 +70,16 @@ class LessonModel {
     return _homeworks['class'];
   }
 
-  Future<List<HomeworkModel>> homeworkForStudentAndClass(StudentModel student, DateTime date) async {
+  Future<Map<String, HomeworkModel>> homeworkForStudentAndClass(StudentModel student, DateTime date) async {
     if(_homeworks[student.id] == null) {
       _homeworks[student.id!] = await Get.find<FStore>().getLessonHomeworkForStudent(schedule, (await curriculum)!, student, date);
       _homeworks['class'] = await Get.find<FStore>().getLessonHomeworkForClass(schedule, (await curriculum)!, date);
     }
-    return [_homeworks[student.id!]!, _homeworks['class']!];
+    // return [_homeworks[student.id!]!, _homeworks['class']!];
+    return {
+      'student': _homeworks[student.id!]!,
+      'class': _homeworks['class']!,
+    };
   }
 
   // Future<List<HomeworkModel?>> homeworks(DateTime date) async {

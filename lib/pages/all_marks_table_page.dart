@@ -25,7 +25,26 @@ class StudentsTablePage extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ) + [Container(
+      alignment: Alignment.center,
+        width: 120.0,
+        height: 60.0,
+        color: Colors.white,
+        margin: const EdgeInsets.all(4.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('средний'),
+            Text(getSummaryMark(listmark)),
+          ],
+        ),
+    )];
+  }
+
+  String getSummaryMark(List<MarkModel> listmark) {
+    int sum = 0;
+    listmark.map((e) => sum += e.mark);
+    return (sum / listmark.length).toStringAsFixed(1);
   }
 
   List<Widget> _buildSubjectCells(List<CurriculumModel> listcur) {
