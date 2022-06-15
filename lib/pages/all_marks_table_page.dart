@@ -10,40 +10,51 @@ class StudentsTablePage extends StatelessWidget {
 
   List<Widget> _buildMarkCells(List<MarkModel> listmark) {
     return List.generate(
-      listmark.length,
-      (index) => Container(
-        alignment: Alignment.center,
-        width: 120.0,
-        height: 60.0,
-        color: Colors.white,
-        margin: const EdgeInsets.all(4.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(DateFormat.Md().format(listmark[index].date)),
-            Text(listmark[index].mark.toString()),
-          ],
-        ),
-      ),
-    ) + [Container(
-      alignment: Alignment.center,
-        width: 120.0,
-        height: 60.0,
-        color: Colors.white,
-        margin: const EdgeInsets.all(4.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('средний'),
-            Text(getSummaryMark(listmark)),
-          ],
-        ),
-    )];
+          listmark.length,
+          (index) => Container(
+            alignment: Alignment.center,
+            width: 120.0,
+            height: 60.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.black54,
+            ),
+            margin: const EdgeInsets.all(4.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(DateFormat.Md().format(listmark[index].date)),
+                Text(listmark[index].mark.toString()),
+              ],
+            ),
+          ),
+        ) +
+        [
+          Container(
+            alignment: Alignment.center,
+            width: 120.0,
+            height: 60.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.black54,
+            ),
+            margin: const EdgeInsets.all(4.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('средний'),
+                Text(getSummaryMark(listmark)),
+              ],
+            ),
+          )
+        ];
   }
 
   String getSummaryMark(List<MarkModel> listmark) {
     int sum = 0;
-    listmark.map((e) => sum += e.mark);
+    for (MarkModel mark in listmark) {
+      sum += mark.mark;
+    }
     return (sum / listmark.length).toStringAsFixed(1);
   }
 
@@ -54,7 +65,15 @@ class StudentsTablePage extends StatelessWidget {
         alignment: Alignment.center,
         width: 150.0,
         height: 60.0,
-        color: Colors.white,
+        // color: Colors.white,
+        decoration: const BoxDecoration(
+          border: Border.symmetric(
+            horizontal: BorderSide(
+              color: Colors.black,
+              width: 1.5,
+            ),
+          ),
+        ),
         margin: const EdgeInsets.all(4.0),
         child: Text(listcur[index].aliasOrName),
       ),
@@ -75,9 +94,12 @@ class StudentsTablePage extends StatelessWidget {
               alignment: Alignment.center,
               width: 120.0,
               height: 60.0,
-              color: Colors.white,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.black54,
+              ),
               margin: const EdgeInsets.all(4.0),
-              child: const Text('NO MARKS'),
+              child: const Text('нет оценок.'),
             );
           }
           return Row(children: _buildMarkCells(snapshot.data!));

@@ -46,8 +46,11 @@ class _RoomSearchState extends State<RoomSearch> {
           duration: const Duration(milliseconds: 1200),
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(6),
-          decoration:
-              BoxDecoration(borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.black, width: 1.3), color: Colors.blue.withOpacity(0.7)),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.black, width: 1.3),
+            color: Colors.black.withOpacity(0.7),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [

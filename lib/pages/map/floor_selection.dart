@@ -23,7 +23,7 @@ class FloorSelection extends StatelessWidget {
               width: 1.3,
             ),
             borderRadius: BorderRadius.circular(12),
-            color: Colors.blue.withOpacity(0.7),
+            color: Colors.black.withOpacity(0.7),
           ),
           margin: const EdgeInsets.only(bottom: 100, left: 10, right: 10, top: 10),
           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -44,19 +44,19 @@ class FloorSelection extends StatelessWidget {
                       Get.to(const ScanPage());
                     },
                     elevation: 2.0,
-                    fillColor: Colors.white,
+                    fillColor: Theme.of(context).colorScheme.primary,
                     padding: const EdgeInsets.all(15.0),
                     shape: const CircleBorder(),
                     child: const Icon(
                       Icons.qr_code_2,
-                      color: Colors.black,
+                      color: Colors.white,
                       size: 30,
                     ),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  ...floorBtnsList(flors.data!),
+                  ...floorBtnsList(flors.data!, context),
                 ]);
               }),
         ),
@@ -64,7 +64,7 @@ class FloorSelection extends StatelessWidget {
     });
   }
 
-  List<Widget> floorBtnsList(List<int> flors) {
+  List<Widget> floorBtnsList(List<int> flors, BuildContext context) {
     List<Widget> res = [];
     for (var i = 0; i < flors.length; i++) {
       res.add(
@@ -74,12 +74,12 @@ class FloorSelection extends StatelessWidget {
               Get.find<BlueprintController>().chosenFloor$.value = flors[i];
             },
             elevation: Get.find<BlueprintController>().chosenFloor$.value == flors[i] ? 0 : 2.0,
-            fillColor: Get.find<BlueprintController>().chosenFloor$.value == flors[i] ? Colors.grey[300] : Colors.white,
+            fillColor: Get.find<BlueprintController>().chosenFloor$.value == flors[i] ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.primary,
             padding: const EdgeInsets.only(top: 15, bottom: 25, right: 15, left: 15),
             shape: const CircleBorder(),
             child: Text(
               "${flors[i]}",
-              style: const TextStyle(fontSize: 30),
+              style: TextStyle(fontSize: 30, color: Get.find<BlueprintController>().chosenFloor$.value == flors[i] ? Colors.black : Theme.of(context).colorScheme.onSecondaryContainer),
             ),
           );
         }),
