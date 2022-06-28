@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
           children: [
             WeekSelector(key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber)),
             Expanded(
-              child: _mainPage(PersonModel.currentUser!.currentType),
+              child: _mainPageSelector(PersonModel.currentUser!),
             ),
           ],
         ),
@@ -35,9 +35,9 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _mainPage(PersonType type) {
-    if (type == PersonType.teacher) return TeacherScheduleSwitcher(PersonModel.currentTeacher!);
-    if (type == PersonType.parent) {
+  Widget _mainPageSelector(PersonModel user) {
+    if (user.currentType == PersonType.teacher) return TeacherScheduleSwitcher(PersonModel.currentTeacher!);
+    if (user.currentType == PersonType.parent) {
       return FutureBuilder<StudentModel>(
           future: PersonModel.currentParent!.currentChild,
           builder: (context, snapshot) {
@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
             return StudentScheduleSwitcher(snapshot.data!);
           });
     }
-    if (type == PersonType.student) return StudentScheduleSwitcher(PersonModel.currentStudent!);
+    if (user.currentType == PersonType.student) return StudentScheduleSwitcher(PersonModel.currentStudent!);
     return const Center(child: Text('unknown person type'));
   }
 }

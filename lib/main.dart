@@ -12,6 +12,7 @@ import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/firebase_options.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
+import 'package:schoosch/pages/class_selection_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
@@ -64,7 +65,7 @@ class MyApp extends StatelessWidget {
         tooltipsMatchBackground: true,
         swapColors: false,
         darkIsTrueBlack: false,
-        useSubThemes: true,
+        // useSubThemes: true,
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
         // To use playground font, add GoogleFonts package and uncomment:
         // fontFamily: GoogleFonts.notoSans().fontFamily,
@@ -75,7 +76,7 @@ class MyApp extends StatelessWidget {
           bottomNavigationBarElevation: 0,
           bottomNavigationBarOpacity: 0.95,
           navigationBarOpacity: 0.95,
-          navigationBarMutedUnselectedText: true,
+          navigationBarMutedUnselectedLabel: true,
           navigationBarMutedUnselectedIcon: true,
           inputDecoratorIsFilled: true,
           inputDecoratorBorderType: FlexInputBorderType.outline,
@@ -83,12 +84,16 @@ class MyApp extends StatelessWidget {
           blendOnColors: true,
         ),
       ),
-      home: PersonModel.currentUser != null
-          ? PersonModel.currentUser!.currentType == PersonType.admin
-              ? const AdminPage()
-              : const HomePage()
-          : const LoginPage(),
+      home: _homePageSelector(),
     );
+  }
+
+  Widget _homePageSelector() {
+    if (PersonModel.currentUser == null) return const LoginPage();
+    if (PersonModel.currentUser!.currentType == PersonType.admin) return const AdminPage();
+    if (PersonModel.currentUser!.currentType == PersonType.observer) return ObserverClassSelectionPage(PersonModel.currentUser!.asObserver!);
+
+    return const HomePage();
   }
 }
 

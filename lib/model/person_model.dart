@@ -14,6 +14,7 @@ enum PersonType {
   student,
   parent,
   teacher,
+  observer,
   admin,
 }
 
@@ -22,6 +23,7 @@ extension PersonTypeExt on PersonType {
   static const _teacher = 'teacher';
   static const _parent = 'parent';
   static const _student = 'student';
+  static const _observer = 'observer';
 
   static PersonType _parse(String value) {
     switch (value) {
@@ -33,6 +35,8 @@ extension PersonTypeExt on PersonType {
         return PersonType.parent;
       case _student:
         return PersonType.student;
+      case _observer:
+        return PersonType.observer;
       default:
         return PersonType.none;
     }
@@ -48,6 +52,8 @@ extension PersonTypeExt on PersonType {
         return _parent;
       case PersonType.student:
         return _student;
+      case PersonType.observer:
+        return _observer;
       case PersonType.none:
         throw 'none as PersontType';
     }
@@ -78,6 +84,7 @@ class PersonModel {
   ParentModel? _asParent;
   StudentModel? _asStudent;
   TeacherModel? _asTeacher;
+  ObserverModel? _asObserver;
   PersonModel? up;
 
   String? get id => _id;
@@ -104,6 +111,10 @@ class PersonModel {
             _asTeacher = TeacherModel.fromMap(id, map)..up = this;
             _currentType = t;
             break;
+          case PersonType.observer:
+            _asObserver = ObserverModel.fromMap(id, map)..up = this;
+            _currentType = t;
+            break;
           case PersonType.admin:
             _currentType = t;
             break;
@@ -118,10 +129,12 @@ class PersonModel {
   static StudentModel? get currentStudent => currentUser?._asStudent;
   static TeacherModel? get currentTeacher => currentUser?._asTeacher;
   static ParentModel? get currentParent => currentUser?._asParent;
+  static ObserverModel? get currentObserver => currentUser?._asObserver;
 
   StudentModel? get asStudent => _asStudent;
   TeacherModel? get asTeacher => _asTeacher;
   ParentModel? get asParent => _asParent;
+  ObserverModel? get asObserver => _asObserver;
 
   PersonType get currentType => _currentType;
   void setType(PersonType val) => _currentType = val;
@@ -280,6 +293,47 @@ class ParentModel extends PersonModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> res = super.toMap();
     res['student_ids'] = studentIds;
+    return res;
+  }
+}
+
+class ObserverModel extends PersonModel {
+  final List<String> classIds = [];
+  final List<ClassModel> _classes = [];
+  bool _classesLoaded = false;
+
+  ObserverModel.empty()
+      : super.fromMap(null, <String, dynamic>{
+          'firstname': '',
+          'middlename': '',
+          'lastname': '',
+          'email': '',
+          'type': <String>[PersonType.observer._nameString],
+        });
+
+  ObserverModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
+    map['class_ids'] != null
+        ? classIds.addAll((map['class_ids'] as List<dynamic>).map((e) => e as String))
+        : throw 'need class_ids key in people for observer $id';
+  }
+
+  Future<List<ClassModel>> classes({forceRefresh = false}) async {
+    if (!_classesLoaded || forceRefresh) {
+      _classes.clear();
+      var store = Get.find<FStore>();
+      for (var id in classIds) {
+        var cl = await store.getClass(id);
+        _classes.add(cl);
+        _classesLoaded = true;
+      }
+    }
+    return _classes;
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> res = super.toMap();
+    res['class_ids'] = classIds;
     return res;
   }
 }

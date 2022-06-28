@@ -89,6 +89,11 @@ class FStore extends GetxController {
     return res;
   }
 
+  Future<ClassModel> getClass(String id) async {
+    var res = await _institutionRef.collection('class').doc(id).get();
+    return ClassModel.fromMap(res.id, res.data()!);
+  }
+
   Future<List<ClassModel>> getAllClasses() async {
     return (await _institutionRef.collection('class').orderBy('grade').get())
         .docs
