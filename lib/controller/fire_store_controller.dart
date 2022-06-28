@@ -87,6 +87,11 @@ class FStore extends GetxController {
     return res;
   }
 
+  Future<ClassModel> getClass(String id) async {
+    var res = await _institutionRef.collection('class').doc(id).get();
+    return ClassModel.fromMap(res.id, res.data()!);
+  }
+
   Future<List<ClassModel>> getAllClasses() async {
     return (await _institutionRef.collection('class').orderBy('grade').get())
         .docs
@@ -555,10 +560,7 @@ class FStore extends GetxController {
   }
 
   Future<List<MarkModel>> getCurriculumMarks(CurriculumModel cur) async {
-    var marks = await _institutionRef.collection('mark')
-      .where('curriculum_id', isEqualTo: cur.id)
-      .where('student_id', isEqualTo: currentUser!.id)
-      .get();
+    var marks = await _institutionRef.collection('mark').where('curriculum_id', isEqualTo: cur.id).where('student_id', isEqualTo: currentUser!.id).get();
     return marks.docs
         .map(
           (e) => MarkModel.fromMap(
@@ -570,9 +572,7 @@ class FStore extends GetxController {
   }
 
   Future<List<CurriculumModel>> getTeacherCurriculums() async {
-    var curriculums = await _institutionRef.collection('curriculum')
-      .where('master_id', isEqualTo: currentUser!.id)
-      .get();
+    var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: currentUser!.id).get();
     return curriculums.docs
         .map(
           (e) => CurriculumModel.fromMap(
@@ -588,11 +588,12 @@ class FStore extends GetxController {
   // }
 
   Future<List<MarkModel>> getStudentsMarks(StudentModel student, CurriculumModel cur) async {
-    var marks = await _institutionRef.collection('mark')
-      .where('student_id', isEqualTo: student.id)
-      .where('teacher_id', isEqualTo: currentUser!.id)
-      .where('curriculum_id', isEqualTo: cur.id)
-      .get();
+    var marks = await _institutionRef
+        .collection('mark')
+        .where('student_id', isEqualTo: student.id)
+        .where('teacher_id', isEqualTo: currentUser!.id)
+        .where('curriculum_id', isEqualTo: cur.id)
+        .get();
     return marks.docs
         .map(
           (e) => MarkModel.fromMap(
@@ -605,9 +606,7 @@ class FStore extends GetxController {
 
   Future<List<ClassModel>> getCurriculumClasses(CurriculumModel curriculum) async {
     List<ClassModel> res = [];
-    var r = await _store.collectionGroup('lesson')
-      .where('curriculum_id', isEqualTo: curriculum.id)
-      .get();
+    var r = await _store.collectionGroup('lesson').where('curriculum_id', isEqualTo: curriculum.id).get();
     for (var les in r.docs) {
       var c = await les.reference.parent.parent!.parent.parent!.get();
       var cl = ClassModel.fromMap(c.id, c.data()!);

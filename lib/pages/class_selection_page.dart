@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:schoosch/model/class_model.dart';
-import 'package:schoosch/model/institution_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/class_list_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class ClassSelectionPage extends StatelessWidget {
-  final InstitutionModel _institution;
+class ObserverClassSelectionPage extends StatelessWidget {
+  final ObserverModel _observer;
 
-  const ClassSelectionPage(this._institution, {Key? key}) : super(key: key);
+  const ObserverClassSelectionPage(this._observer, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MAppBar('Выбор класса'),
+      appBar: const MAppBar(
+        'Выбор класса',
+        showProfile: true,
+      ),
       body: SafeArea(
         child: FutureBuilder<List<ClassModel>>(
-          future: _institution.classes,
+          future: _observer.classes(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Utils.progressIndicator();
