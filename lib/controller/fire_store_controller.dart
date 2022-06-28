@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
+import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/institution_model.dart';
@@ -432,8 +434,93 @@ class FStore extends GetxController {
     data['teacher_id'] = teacher.id;
     data['curriculum_id'] = curriculum.id;
     data['date'] = date;
+    // data['checked_users'] = [];
     return _institutionRef.collection('homework').add(data);
   }
+
+  Future updateHomeworkChecked(HomeworkModel homework) async {
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions');
+    var b = await a.where('completed_by', isEqualTo: currentUser!.id).get();
+    if (b.docs.isEmpty) {
+      return await a.add({
+        'completed_by': currentUser!.id,
+        'confirmed_by': null,
+        'completed_time': DateTime.now(),
+        'confirmed_time': DateTime.now(),
+        'status': 1,
+      });
+    } else {
+      if ((await a.doc(b.docs[0].id).get()).data()!['status'] == 1) {
+        return await a.doc(b.docs[0].id).update({
+          'status': 0,
+        });
+      } else if ((await a.doc(b.docs[0].id).get()).data()!['status'] == 0) {
+        return await a.doc(b.docs[0].id).update({
+          'status': 1,
+        });
+      }
+    }
+    // var b = (await a.get()).data()!['checked_users'];
+    // bool delete = b.contains(currentUser!.id);
+    // if(delete) b.remove(currentUser!.id);
+    // return await _institutionRef.collection('homework').doc(homework.id).update({
+    //   'checked_users': !delete ? [
+    //     ...(b),
+    //     currentUser!.id,
+    //   ] : [
+    //     ...(b),
+    //   ]
+    // });
+  }
+
+  Future<void> confirmHomework(HomeworkModel homework) async {
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions');
+    var b = await a.where('completed_by', isEqualTo: currentUser!.id).limit(1).get();
+    if (b.docs.isNotEmpty) {
+      if ((await a.doc(b.docs[0].id).get()).data()!['status'] == 1) {
+        return await a.doc(b.docs[0].id).update({
+          'status': 2,
+        });
+      }
+    }
+  }
+
+  // Future<void> updateHomeworkUncheck(HomeworkModel homework) {
+  //   var a = _institutionRef.collection('homework').doc(homework.id);
+  //   var b = (await a.get()).data()!['checked_users'];
+  //   return await _institutionRef.collection('homework').doc(homework.id).update({
+  //     'checked_users': [
+  //       ...(b),
+  //       currentUser!.id,
+  //     ]
+  //   });
+  // }
+
+  Future<CompletionFlagModel?> getHomeworkCompletion(HomeworkModel homework) async {
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions');
+    var b = await a.where('completed_by', isEqualTo: currentUser!.id).get();
+    if (b.docs.isEmpty) {
+      return null;
+    } else {
+      return CompletionFlagModel.fromMap(b.docs[0].id, b.docs[0].data());
+    }
+  }
+
+  Future<List<CompletionFlagModel>> getAllHomeworkCompletions(HomeworkModel homework) async {
+    var a = await _institutionRef.collection('homework').doc(homework.id).collection('completions').get();
+    return a.docs
+        .map(
+          (e) => CompletionFlagModel.fromMap(
+            e.id,
+            e.data(),
+          ),
+        )
+        .toList();
+  }
+
+  // Future<void> updateHomeworkCompletion(HomeworkModel homework) async {
+  //   var a = await _institutionRef.collection('homework').doc(homework.id).collection('completions')
+  // }
 
   Future<double> getAverageTeacherRating(TeacherModel teacher) async {
     double sum = 0;
@@ -555,10 +642,7 @@ class FStore extends GetxController {
   }
 
   Future<List<MarkModel>> getCurriculumMarks(CurriculumModel cur) async {
-    var marks = await _institutionRef.collection('mark')
-      .where('curriculum_id', isEqualTo: cur.id)
-      .where('student_id', isEqualTo: currentUser!.id)
-      .get();
+    var marks = await _institutionRef.collection('mark').where('curriculum_id', isEqualTo: cur.id).where('student_id', isEqualTo: currentUser!.id).get();
     return marks.docs
         .map(
           (e) => MarkModel.fromMap(
@@ -570,9 +654,7 @@ class FStore extends GetxController {
   }
 
   Future<List<CurriculumModel>> getTeacherCurriculums() async {
-    var curriculums = await _institutionRef.collection('curriculum')
-      .where('master_id', isEqualTo: currentUser!.id)
-      .get();
+    var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: currentUser!.id).get();
     return curriculums.docs
         .map(
           (e) => CurriculumModel.fromMap(
@@ -588,11 +670,12 @@ class FStore extends GetxController {
   // }
 
   Future<List<MarkModel>> getStudentsMarks(StudentModel student, CurriculumModel cur) async {
-    var marks = await _institutionRef.collection('mark')
-      .where('student_id', isEqualTo: student.id)
-      .where('teacher_id', isEqualTo: currentUser!.id)
-      .where('curriculum_id', isEqualTo: cur.id)
-      .get();
+    var marks = await _institutionRef
+        .collection('mark')
+        .where('student_id', isEqualTo: student.id)
+        .where('teacher_id', isEqualTo: currentUser!.id)
+        .where('curriculum_id', isEqualTo: cur.id)
+        .get();
     return marks.docs
         .map(
           (e) => MarkModel.fromMap(
@@ -605,9 +688,7 @@ class FStore extends GetxController {
 
   Future<List<ClassModel>> getCurriculumClasses(CurriculumModel curriculum) async {
     List<ClassModel> res = [];
-    var r = await _store.collectionGroup('lesson')
-      .where('curriculum_id', isEqualTo: curriculum.id)
-      .get();
+    var r = await _store.collectionGroup('lesson').where('curriculum_id', isEqualTo: curriculum.id).get();
     for (var les in r.docs) {
       var c = await les.reference.parent.parent!.parent.parent!.get();
       var cl = ClassModel.fromMap(c.id, c.data()!);

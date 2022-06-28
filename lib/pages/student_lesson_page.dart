@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
@@ -10,7 +12,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
-class StudentLessonPage extends StatelessWidget {
+class StudentLessonPage extends StatefulWidget {
   final StudentModel _student;
   final DateTime _date;
   final LessonModel _lesson;
@@ -20,6 +22,11 @@ class StudentLessonPage extends StatelessWidget {
 
   const StudentLessonPage(this._student, this._lesson, this._curiculum, this._venue, this._time, this._date, {Key? key}) : super(key: key);
 
+  @override
+  State<StudentLessonPage> createState() => _StudentLessonPageState();
+}
+
+class _StudentLessonPageState extends State<StudentLessonPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,35 +39,35 @@ class StudentLessonPage extends StatelessWidget {
             height: 10,
           ),
           Text(
-            _curiculum.aliasOrName,
+            widget._curiculum.aliasOrName,
             style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           const SizedBox(
             height: 10,
           ),
-          Text(DateFormat('d MMMM, EEEE', 'ru').format(_date).capitalizeFirst!),
+          Text(DateFormat('d MMMM, EEEE', 'ru').format(widget._date).capitalizeFirst!),
           const SizedBox(
             height: 5,
           ),
-          Text('${_lesson.order} урок'),
+          Text('${widget._lesson.order} урок'),
           const SizedBox(
             height: 5,
           ),
-          Text(_time.format(context)),
+          Text(widget._time.format(context)),
           const SizedBox(
             height: 5,
           ),
-          Text(_venue.name),
+          Text(widget._venue.name),
           const SizedBox(
             height: 5,
           ),
-          FutureBuilder<Map<String, HomeworkModel>?>(
-              future: _lesson.homeworkForStudentAndClass(_student, _date),
+          FutureBuilder<Map<String, HomeworkModel?>?>(
+              future: widget._lesson.homeworkForStudentAndClass(widget._student, widget._date, forceRefresh: false),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Text('');
                 }
-                if (snapshot.data!.isEmpty) {
+                if (snapshot.data!['student'] == null && snapshot.data!['class'] == null) {
                   return Card(
                     elevation: 3,
                     child: Center(
@@ -68,7 +75,7 @@ class StudentLessonPage extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(vertical: 15),
                         child: const Text(
                           'нет домашнего задания на этот день!',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          // style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -76,68 +83,16 @@ class StudentLessonPage extends StatelessWidget {
                 }
                 var stud = snapshot.data!['student'];
                 var clas = snapshot.data!['class'];
-                // return ListView.builder(
-                //   shrinkWrap: true,
-                //   itemCount: snapshot.data!.length,
-                //   itemBuilder: (BuildContext context, int i) {
-                //     return Card(
-                //       elevation: 3,
-                //       child: Container(
-                //         margin: const EdgeInsets.all(8),
-                //         child: Column(
-                //           crossAxisAlignment: CrossAxisAlignment.start,
-                //           children: [
-                //             const Text(
-                //               "Д/З",
-                //               style: TextStyle(fontWeight: FontWeight.bold),
-                //             ),
-                //             Text(snapshot.data![i].text),
-                //           ],
-                //         ),
-                //       ),
-                //     );
-                //   },
-                // );
                 return ListView(
                   shrinkWrap: true,
                   children: [
-                    if(stud != null) Card(
-                      elevation: 3,
-                      child: Container(
-                        margin: const EdgeInsets.all(8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Личное Д/З",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(stud.text),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if(clas != null) Card(
-                      elevation: 3,
-                      child: Container(
-                        margin: const EdgeInsets.all(8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Д/З",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(clas.text),
-                          ],
-                        ),
-                      ),
-                    ),
+                    if (stud != null) HomeworkCard(homework: stud),
+                    if (clas != null) HomeworkCard(homework: clas),
                   ],
                 );
               }),
           FutureBuilder<List<MarkModel>?>(
-            future: _lesson.marksForStudent(_student, _date),
+            future: widget._lesson.marksForStudent(widget._student, widget._date),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Text('');
@@ -181,6 +136,87 @@ class StudentLessonPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  // Widget homeworkCard({required HomeworkModel homework}) {
+  //   bool checked = homework.usersChecked.contains(Get.find<FStore>().currentUser!.id);
+  //   return Card(
+  //     elevation: 3,
+  //     child: Container(
+  //       margin: const EdgeInsets.all(8),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           const Text(
+  //             "Д/З",
+  //             style: TextStyle(fontWeight: FontWeight.bold),
+  //           ),
+  //           ListTile(
+  //             title: Text(homework.text),
+  //             trailing: null,
+  //             onTap: () async {
+  //               homework.updateHomeworkCheck().whenComplete(() {
+  //                 setState(() {});
+  //               });
+  //             },
+  //             textColor: checked ? Colors.green : Colors.white,
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+}
+
+class HomeworkCard extends StatefulWidget {
+  final HomeworkModel homework;
+  const HomeworkCard({Key? key, required this.homework}) : super(key: key);
+
+  @override
+  State<HomeworkCard> createState() => _HomeworkCardState();
+}
+
+class _HomeworkCardState extends State<HomeworkCard> {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<CompletionFlagModel?>(
+      future: widget.homework.getCompletion(),
+      builder: (context, snapshot) {
+        bool isChecked = false;
+        if(snapshot.hasData) {
+          if(snapshot.data!.status == Status.completed || snapshot.data!.status == Status.confirmed) {
+            isChecked = true;
+          }
+        }
+        return Card(
+          elevation: 3,
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Д/З",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                ListTile(
+                  title: Text(widget.homework.text),
+                  trailing: null,
+                  onTap: () async {
+                    await widget.homework.updateHomeworkCheck();
+                    setState(() {
+                      
+                      // checked = !checked;
+                    });
+                  },
+                  textColor: isChecked ? Colors.green : Colors.white,
+                ),
+              ],
+            ),
+          ),
+        );
+      }
     );
   }
 }
