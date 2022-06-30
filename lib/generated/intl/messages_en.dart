@@ -74,6 +74,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Selected Person is not a Teacher"),
         "errorPersonLastNameEmpty": MessageLookupByLibrary.simpleMessage(
             "Last Name should be provided"),
+        "errorPersonParentClassesEmpty":
+            MessageLookupByLibrary.simpleMessage("Classes should be selected"),
         "errorPersonParentStudentsEmpty":
             MessageLookupByLibrary.simpleMessage("Students should be selected"),
         "errorScheduleFromDateEmpty": MessageLookupByLibrary.simpleMessage(
@@ -99,13 +101,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "personLastName": MessageLookupByLibrary.simpleMessage("Last Name"),
         "personMiddleName": MessageLookupByLibrary.simpleMessage("Middle Name"),
         "personName": MessageLookupByLibrary.simpleMessage("Name"),
+        "personRelatedClasses":
+            MessageLookupByLibrary.simpleMessage("Related classes"),
         "personRelatedStudents":
             MessageLookupByLibrary.simpleMessage("Related Students"),
         "personType": MessageLookupByLibrary.simpleMessage("Type"),
         "personTypeAdmin": MessageLookupByLibrary.simpleMessage("Admin"),
         "personTypeAll": MessageLookupByLibrary.simpleMessage("All"),
-        "personTypeParent":
-            MessageLookupByLibrary.simpleMessage("Parent / Observer"),
+        "personTypeObserver": MessageLookupByLibrary.simpleMessage("Observer"),
+        "personTypeParent": MessageLookupByLibrary.simpleMessage("Parent"),
         "personTypeStudent": MessageLookupByLibrary.simpleMessage("Student"),
         "personTypeTeacher": MessageLookupByLibrary.simpleMessage("Teacher"),
         "saveChanges": MessageLookupByLibrary.simpleMessage("Save changes"),

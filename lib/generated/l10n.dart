@@ -410,11 +410,21 @@ class S {
     );
   }
 
-  /// `Parent / Observer`
+  /// `Parent`
   String get personTypeParent {
     return Intl.message(
-      'Parent / Observer',
+      'Parent',
       name: 'personTypeParent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Observer`
+  String get personTypeObserver {
+    return Intl.message(
+      'Observer',
+      name: 'personTypeObserver',
       desc: '',
       args: [],
     );
@@ -435,6 +445,16 @@ class S {
     return Intl.message(
       'Related Students',
       name: 'personRelatedStudents',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Related classes`
+  String get personRelatedClasses {
+    return Intl.message(
+      'Related classes',
+      name: 'personRelatedClasses',
       desc: '',
       args: [],
     );
@@ -675,6 +695,16 @@ class S {
     return Intl.message(
       'Students should be selected',
       name: 'errorPersonParentStudentsEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Classes should be selected`
+  String get errorPersonParentClassesEmpty {
+    return Intl.message(
+      'Classes should be selected',
+      name: 'errorPersonParentClassesEmpty',
       desc: '',
       args: [],
     );

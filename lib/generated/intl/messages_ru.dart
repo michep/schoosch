@@ -82,6 +82,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Выбранный персонаж не является преподавателем"),
         "errorPersonLastNameEmpty": MessageLookupByLibrary.simpleMessage(
             "Фамилия должна быть заполнена"),
+        "errorPersonParentClassesEmpty":
+            MessageLookupByLibrary.simpleMessage("Нужно выбрать классы"),
         "errorPersonParentStudentsEmpty":
             MessageLookupByLibrary.simpleMessage("Нужно выбрать учащихся"),
         "errorScheduleFromDateEmpty": MessageLookupByLibrary.simpleMessage(
@@ -108,14 +110,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "personLastName": MessageLookupByLibrary.simpleMessage("Фамилия"),
         "personMiddleName": MessageLookupByLibrary.simpleMessage("Отчетсво"),
         "personName": MessageLookupByLibrary.simpleMessage("Имя"),
+        "personRelatedClasses":
+            MessageLookupByLibrary.simpleMessage("Связанные классы"),
         "personRelatedStudents":
             MessageLookupByLibrary.simpleMessage("Связанные учащиеся"),
         "personType": MessageLookupByLibrary.simpleMessage("Тип"),
         "personTypeAdmin":
             MessageLookupByLibrary.simpleMessage("Администратор"),
         "personTypeAll": MessageLookupByLibrary.simpleMessage("Все типы"),
-        "personTypeParent":
-            MessageLookupByLibrary.simpleMessage("Родитель \\ Наблюдатель"),
+        "personTypeObserver":
+            MessageLookupByLibrary.simpleMessage("Наблюдатель"),
+        "personTypeParent": MessageLookupByLibrary.simpleMessage("Родитель"),
         "personTypeStudent": MessageLookupByLibrary.simpleMessage("Учащийся"),
         "personTypeTeacher":
             MessageLookupByLibrary.simpleMessage("Преподаватель"),
