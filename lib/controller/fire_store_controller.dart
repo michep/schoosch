@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
@@ -646,6 +645,17 @@ class FStore extends GetxController {
     return res;
   }
 
+  Future<List<CurriculumModel>> getClassCurriculums(ClassModel clas) async {
+    List<CurriculumModel> res = [];
+    var curs = await getAllCurriculums();
+    for(var cur in curs) {
+      if((await cur.classes()).contains(clas)) {
+        res.add(cur);
+      }
+    }
+    return res;
+  }
+
   Future<List<MarkModel>> getCurriculumMarks(CurriculumModel cur) async {
     var marks = await _institutionRef.collection('mark').where('curriculum_id', isEqualTo: cur.id).where('student_id', isEqualTo: currentUser!.id).get();
     return marks.docs
@@ -659,7 +669,9 @@ class FStore extends GetxController {
   }
 
   Future<List<CurriculumModel>> getTeacherCurriculums() async {
-    var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: currentUser!.id).get();
+    var curriculums = await _institutionRef.collection('curriculum')
+      .where('master_id', isEqualTo: currentUser!.id)
+      .get();
     return curriculums.docs
         .map(
           (e) => CurriculumModel.fromMap(

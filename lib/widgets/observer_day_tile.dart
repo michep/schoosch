@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
-import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/widgets/student/studentlesson_list_tile.dart';
+import 'package:schoosch/model/lesson_model.dart';
 
-class ClassDayScheduleTile extends StatelessWidget {
-  final StudentScheduleModel _schedule;
-  final StudentModel _student;
+class ObserverDayTile extends StatelessWidget {
+  final DayScheduleModel _schedule;
   final DateTime _date;
-
-  const ClassDayScheduleTile(this._schedule, this._student, this._date, {Key? key}) : super(key: key);
+  const ObserverDayTile(this._schedule, this._date, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<LessonModel>>(
-      future: _schedule.lessonsForStudent(_student),
+      future: _schedule.allLessons(),
       builder: (context, snap) {
         if (!snap.hasData) {
           return const SizedBox.shrink();
@@ -27,7 +23,13 @@ class ClassDayScheduleTile extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           children: [
-            ...snap.data!.map((les) => StudentLessonListTile(_student, les, _date)),
+            ...snap.data!.map(
+              (les) => ListTile(
+                title: Text(
+                  les.id!,
+                ),
+              ),
+            ),
           ],
         );
       },

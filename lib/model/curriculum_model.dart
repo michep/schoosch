@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/class_model.dart';
@@ -92,4 +93,15 @@ class CurriculumModel {
     _id ??= id;
     return this;
   }
+
+  @override
+  operator ==(other) {
+    if (other is PersonModel) {
+      return id == other.id;
+    }
+    return this == other;
+  }
+
+  @override
+  int get hashCode => hashValues(id, '');
 }

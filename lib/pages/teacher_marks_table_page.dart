@@ -15,7 +15,7 @@ class TeacherTablePage extends StatelessWidget {
         alignment: Alignment.center,
         width: 120.0,
         height: 60.0,
-        color: Colors.white,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.black54),
         margin: const EdgeInsets.all(4.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -35,7 +35,14 @@ class TeacherTablePage extends StatelessWidget {
         alignment: Alignment.center,
         width: 150.0,
         height: 60.0,
-        color: Colors.white,
+        decoration: const BoxDecoration(
+          border: Border.symmetric(
+            horizontal: BorderSide(
+              color: Colors.black,
+              width: 1.5,
+            ),
+          ),
+        ),
         margin: const EdgeInsets.all(4.0),
         child: Text(liststud[index].lastname),
       ),
@@ -56,7 +63,10 @@ class TeacherTablePage extends StatelessWidget {
                 alignment: Alignment.center,
                 width: 120.0,
                 height: 60.0,
-                color: Colors.white,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.black54,
+                ),
                 margin: const EdgeInsets.all(4.0),
                 child: const Text('NO MARKS'),
               );

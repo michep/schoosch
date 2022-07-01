@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -21,6 +22,8 @@ class ClassModel {
   TeacherModel? _master;
   final Map<Week, List<StudentScheduleModel>> _weekSchedules = {};
   final Map<int, List<StudentScheduleModel>> _daySchedules = {};
+  final List<CurriculumModel> _listCurriculums = [];
+  final Set<CurriculumModel> allCurriculums = {};
 
   String? get id => _id;
 
@@ -107,6 +110,27 @@ class ClassModel {
       _studentsLoaded = true;
     }
     return _students;
+  }
+
+  Future<Set<CurriculumModel>> getUniqueCurriculums({bool forceRefresh = false}) async {
+    if(allCurriculums.isEmpty || forceRefresh) {
+      var weekschedules = await getSchedulesWeek(Week.current());
+      for(var sched in weekschedules) {
+        var les = await sched.allLessons();
+        for(var l in les) {
+          var cur = await l.curriculum;
+          allCurriculums.add(cur!);
+        }
+      }
+    }
+    return allCurriculums;
+  }
+
+  Future<List<CurriculumModel>> getCurriculums({bool forceRefresh = false}) async {
+    if(_listCurriculums.isEmpty || forceRefresh) {
+      _listCurriculums.addAll(await Get.find<FStore>().getClassCurriculums(this)); 
+    }
+    return _listCurriculums;
   }
 
   Map<String, dynamic> toMap() {

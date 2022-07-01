@@ -1,0 +1,77 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:isoweek/isoweek.dart';
+import 'package:schoosch/controller/week_controller.dart';
+import 'package:schoosch/model/class_model.dart';
+import 'package:schoosch/model/dayschedule_model.dart';
+import 'package:schoosch/widgets/observer_day_tile.dart';
+// import 'package:schoosch/widgets/student/student_dayschedule_tile.dart';
+import 'package:schoosch/widgets/utils.dart';
+import 'package:schoosch/widgets/week_selector.dart';
+
+class ObserverSchedule extends StatefulWidget {
+  final ClassModel _class;
+  const ObserverSchedule(this._class, {Key? key}) : super(key: key);
+
+  @override
+  State<ObserverSchedule> createState() => _ObserverScheduleState();
+}
+
+class _ObserverScheduleState extends State<ObserverSchedule> {
+  final _cw = Get.find<CurrentWeek>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            WeekSelector(key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber)),
+            Expanded(
+              child: observerScheduleWidget(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget observerScheduleWidget() {
+    return PageView.custom(
+      controller: _cw.pageController,
+      onPageChanged: _cw.setIdx,
+      childrenDelegate: SliverChildBuilderDelegate(
+        (context, idx) {
+          return scheduleItself(idx);
+        },
+      ),
+    );
+  }
+
+  Widget scheduleItself(int index) => FutureBuilder<List<StudentScheduleModel>>(
+            future: widget._class.getSchedulesWeek(
+              Week(year: index ~/ 100, weekNumber: index % 100),
+            ),
+            builder: (context, schedules) {
+              if (!schedules.hasData) {
+                return Utils.progressIndicator();
+              }
+              if (schedules.data!.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'нет расписания на эту неделю',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                );
+              }
+              return ListView(
+                children: [
+                  ...schedules.data!.map(
+                    (schedule) => ObserverDayTile(schedule, Week(year: index ~/ 100, weekNumber: index % 100).day(schedule.day - 1)),
+                  ),
+                ],
+              );
+            },
+          );
+}
