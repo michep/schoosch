@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:schoosch/generated/l10n.dart';
+import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/pages/admin/class_edit.dart';
+import 'package:schoosch/pages/admin/class_list.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/widgets/selectablevaluelist_field.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -30,8 +33,10 @@ class _PersonPageState extends State<PersonPage> {
   bool _isStudent = false;
   bool _isTeacher = false;
   bool _isParent = false;
+  bool _isObserver = false;
   bool _isAdmin = false;
   final List<StudentModel> _children = [];
+  final List<ClassModel> _classes = [];
 
   @override
   void initState() {
@@ -43,6 +48,7 @@ class _PersonPageState extends State<PersonPage> {
     if (widget._person.types.contains(PersonType.student)) _isStudent = true;
     if (widget._person.types.contains(PersonType.teacher)) _isTeacher = true;
     if (widget._person.types.contains(PersonType.parent)) _isParent = true;
+    if (widget._person.types.contains(PersonType.observer)) _isObserver = true;
     if (widget._person.types.contains(PersonType.admin)) _isAdmin = true;
     super.initState();
   }
@@ -139,10 +145,33 @@ class _PersonPageState extends State<PersonPage> {
                           ),
                         ),
                       ),
+                _isObserver
+                    ? SelectableValueListFormField<ClassModel>(
+                        title: loc.personRelatedClasses,
+                        initListFutureFunc: _initClasses,
+                        titleFunc: (value) => value?.name ?? '',
+                        listFunc: () => ClassListPage(InstitutionModel.currentInstitution, selectionMode: true),
+                        detailsFunc: (value) => ClassPage(value!, value.name),
+                        listValidatorFunc: () => _classes.isEmpty ? loc.errorPersonParentClassesEmpty : null,
+                        addElementFunc: _addClass,
+                        setElementFunc: _setClass,
+                        removeElementFunc: _removeClass,
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(bottom: 18),
+                        child: ListTile(
+                          onTap: null,
+                          iconColor: Theme.of(context).disabledColor,
+                          title: Text(
+                            loc.personRelatedStudents,
+                            style: TextStyle(color: Theme.of(context).disabledColor),
+                          ),
+                        ),
+                      ),
                 CheckboxListTile(
                   title: Text(loc.personTypeStudent),
                   value: _isStudent,
-                  onChanged: (_isParent || _isTeacher) ? null : (value) => _roleChecked('student', value),
+                  onChanged: (_isParent || _isTeacher || _isObserver) ? null : (value) => _roleChecked('student', value),
                 ),
                 CheckboxListTile(
                   title: Text(loc.personTypeTeacher),
@@ -153,6 +182,11 @@ class _PersonPageState extends State<PersonPage> {
                   title: Text(loc.personTypeParent),
                   value: _isParent,
                   onChanged: (_isStudent) ? null : (value) => _roleChecked('parent', value),
+                ),
+                CheckboxListTile(
+                  title: Text(loc.personTypeObserver),
+                  value: _isObserver,
+                  onChanged: (_isStudent) ? null : (value) => _roleChecked('observer', value),
                 ),
                 CheckboxListTile(
                   title: Text(loc.personTypeAdmin),
@@ -175,17 +209,19 @@ class _PersonPageState extends State<PersonPage> {
   }
 
   Future<List<PersonModel>> _initChildren() async {
+    _children.clear();
     if (widget._person.asParent != null) {
       return widget._person.asParent!.children(forceRefresh: true).then((value) {
         _children.addAll(value);
         return _children;
       });
-    } else {
+    } else if (widget._person.up != null && widget._person.up!.asParent != null) {
       return widget._person.up!.asParent!.children(forceRefresh: true).then((value) {
         _children.addAll(value);
         return _children;
       });
     }
+    return _children;
   }
 
   bool _addChild(PersonModel? value) {
@@ -229,6 +265,46 @@ class _PersonPageState extends State<PersonPage> {
     return true;
   }
 
+  Future<List<ClassModel>> _initClasses() async {
+    _classes.clear();
+    if (widget._person.asObserver != null) {
+      return widget._person.asObserver!.classes(forceRefresh: true).then((value) {
+        _classes.addAll(value);
+        return _classes;
+      });
+    }
+    return _classes;
+  }
+
+  bool _addClass(ClassModel? value) {
+    var loc = S.of(context);
+    if (value == null) return false;
+    if (_classes.contains(value)) {
+      Utils.showErrorSnackbar(loc.errorStudentAlreadyPresent);
+      return false;
+    }
+    setState(() {
+      _classes.add(value);
+    });
+    return true;
+  }
+
+  bool _setClass(ClassModel value) {
+    setState(() {
+      var i = _classes.indexOf(value);
+      _classes.remove(value);
+      _classes.insert(i, value);
+    });
+    return true;
+  }
+
+  bool _removeClass(ClassModel value) {
+    setState(() {
+      _classes.remove(value);
+    });
+    return true;
+  }
+
   void _roleChecked(String role, bool? value) {
     if (value != null) {
       switch (role) {
@@ -240,6 +316,9 @@ class _PersonPageState extends State<PersonPage> {
           break;
         case 'parent':
           _isParent = value;
+          break;
+        case 'observer':
+          _isObserver = value;
           break;
         case 'admin':
           _isAdmin = value;
@@ -255,10 +334,14 @@ class _PersonPageState extends State<PersonPage> {
       if (_isParent) {
         map['student_ids'] = _children.map((e) => e.id!).toList();
       }
+      if (_isObserver) {
+        map['class_ids'] = _classes.map((e) => e.id!).toList();
+      }
       map['type'] = <String>[];
       if (_isStudent) map['type'].add('student');
       if (_isTeacher) map['type'].add('teacher');
       if (_isParent) map['type'].add('parent');
+      if (_isObserver) map['type'].add('observer');
       if (_isAdmin) map['type'].add('admin');
       map['firstname'] = _firstname.text;
       map['middlename'] = _middlename.text == '' ? null : _middlename.text;
@@ -267,11 +350,7 @@ class _PersonPageState extends State<PersonPage> {
       map['birthday'] = _birthday != null ? Timestamp.fromDate(_birthday!) : null;
 
       var nperson = PersonModel.fromMap(person.id, map);
-      if (_isParent) {
-        await nperson.asParent!.save();
-      } else {
-        await nperson.save();
-      }
+      await nperson.save();
       Get.back<PersonModel>(result: nperson);
     }
   }

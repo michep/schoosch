@@ -45,9 +45,11 @@
     "personTypeAll": "All",
     "personTypeStudent": "Student",
     "personTypeTeacher": "Teacher",
-    "personTypeParent": "Parent / Observer",
+    "personTypeParent": "Parent",
+    "personTypeObserver": "Observer",
     "personTypeAdmin": "Admin",
     "personRelatedStudents": "Related Students",
+    "personRelatedClasses": "Related classes",
     "peopleList": "Student, Teachers and other",
     "newPerson": "New {type}",
 
@@ -78,6 +80,7 @@
     "errorPersonEmailEmpty": "Email should be provided",
     "errorPersonBirthdayEmpty": "Birthdat should be provided",
     "errorPersonParentStudentsEmpty": "Students should be selected",
+    "errorPersonParentClassesEmpty": "Classes should be selected",
 
     "errorScheduleFromDateEmpty": "Start Date should be provided"
 }

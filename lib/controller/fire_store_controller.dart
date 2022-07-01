@@ -241,11 +241,14 @@ class FStore extends GetxController {
   }
 
   Future<String> savePerson(PersonModel person) async {
+    var data = person.toMap();
+    if (person.asParent != null) data.addAll(person.asParent!.toMap());
+    if (person.asObserver != null) data.addAll(person.asObserver!.toMap());
     if (person.id != null) {
-      await _institutionRef.collection('people').doc(person.id).set(person.toMap());
+      await _institutionRef.collection('people').doc(person.id).set(data);
       return person.id!;
     } else {
-      var v = await _institutionRef.collection('people').add(person.toMap());
+      var v = await _institutionRef.collection('people').add(data);
       return v.id;
     }
   }

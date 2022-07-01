@@ -45,9 +45,11 @@
     "personTypeAll": "Все типы",
     "personTypeStudent": "Учащийся",
     "personTypeTeacher": "Преподаватель",
-    "personTypeParent": "Родитель \\ Наблюдатель",
+    "personTypeParent": "Родитель",
+    "personTypeObserver": "Наблюдатель",
     "personTypeAdmin": "Администратор",
     "personRelatedStudents": "Связанные учащиеся",
+    "personRelatedClasses": "Связанные классы",
     "peopleList": "Сотрудники, учителя и ученики",
     "newPerson": "Новый {type}",
 
@@ -78,6 +80,7 @@
     "errorPersonEmailEmpty": "Email адрес должен быть заполнен",
     "errorPersonBirthdayEmpty": "Нужно указать дату рождения",
     "errorPersonParentStudentsEmpty": "Нужно выбрать учащихся",
+    "errorPersonParentClassesEmpty": "Нужно выбрать классы",
 
     "errorScheduleFromDateEmpty": "Дата начала действия должна быть выбрана"
 }
