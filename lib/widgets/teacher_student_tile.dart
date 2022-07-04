@@ -36,7 +36,6 @@ class _TeacherStudentTileState extends State<TeacherStudentTile> {
           title: Text(
             widget.student.fullName,
           ),
-          subtitle: homework != null ? Text(homework.text) : const Text(''),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -58,7 +57,12 @@ class _TeacherStudentTileState extends State<TeacherStudentTile> {
           //           () => updateMark(context, mark.id),
           //         ))
           //     .toList(): [const Text('нет оценок')],
-          children: marks!.isNotEmpty ? marks.map((mark) => markTile(mark, context)).toList() : [const Text('нет оценок')],
+          children: [
+            homework != null ? ListTile(
+              title: Text(homework.text),
+            ) : const Text('нет домашнего задания'),
+            if (marks!.isNotEmpty) ...marks.map((mark) => markTile(mark, context)).toList() else const Text('нет оценок'),
+          ],
         );
       },
     );
@@ -66,32 +70,34 @@ class _TeacherStudentTileState extends State<TeacherStudentTile> {
 
   Future<void> createMark(BuildContext context, int lessonorder, CurriculumModel curriculum, DateTime date) async {
     return await showModalBottomSheet(
-        context: context,
-        builder: (a) {
-          return AddMarkSheet(
-            widget.student,
-            widget.teacher,
-            lessonorder,
-            curriculum,
-            date,
-            false,
-          );
-        });
+      context: context,
+      builder: (a) {
+        return AddMarkSheet(
+          widget.student,
+          widget.teacher,
+          lessonorder,
+          curriculum,
+          date,
+          false,
+        );
+      },
+    );
   }
 
   Future<void> createHomework(
     BuildContext context,
   ) async {
     return await showModalBottomSheet(
-        context: context,
-        builder: (a) {
-          return AddHomeworkSheet(
-            widget.teacher,
-            widget.curriculum,
-            widget.date,
-            widget.student,
-          );
-        });
+      context: context,
+      builder: (a) {
+        return AddHomeworkSheet(
+          widget.teacher,
+          widget.curriculum,
+          widget.date,
+          widget.student,
+        );
+      },
+    );
   }
 
   Future<void> updateMark(BuildContext context, String docId) async {

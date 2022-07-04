@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
@@ -95,10 +96,10 @@ class TeacherLessonPage extends StatelessWidget {
               }
               return Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue, width: 2),
-                  borderRadius: BorderRadius.circular(15),
-                ),
+                // decoration: BoxDecoration(
+                //   border: Border.all(color: Colors.blue, width: 2),
+                //   borderRadius: BorderRadius.circular(15),
+                // ),
                 child: ExpansionTile(
                   title: Text(
                     "УЧЕНИКИ",
@@ -123,14 +124,28 @@ class TeacherLessonPage extends StatelessWidget {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('YOUR D/Z'),
+              const Text('заданное ДЗ:'),
               FutureBuilder<HomeworkModel?>(
                 future: _lesson.homeworkForClass(_date),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const Text("нет домашнего задания");
                   }
-                  return Text(snapshot.data!.text);
+                  return FutureBuilder<List<CompletionFlagModel?>>(
+                    future: snapshot.data!.getAllCompletions(),
+                    builder: (context, completionsnapshot) {
+                      return ExpansionTile(
+                        title: Text(snapshot.data!.text),
+                        children: [
+                          ...completionsnapshot.data!.map(
+                            (e) => Text(
+                              e!.completedById!,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
               ),
             ],

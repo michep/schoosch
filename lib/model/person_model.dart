@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/class_model.dart';
+import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
+import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 
 enum PersonType {
@@ -243,6 +245,10 @@ class TeacherModel extends PersonModel {
   Future<void> updateMark(int newMark, String docId) async {
     return Get.find<FStore>().updateMark(docId, newMark);
   }
+
+  Future<void> confirmCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
+    return await Get.find<FStore>().confirmCompletion(hw, completion);
+  }
 }
 
 class ParentModel extends PersonModel {
@@ -328,6 +334,18 @@ class ObserverModel extends PersonModel {
       }
     }
     return _classes;
+  }
+
+  Future<void> confirmHomework(HomeworkModel hw) async {
+    return await Get.find<FStore>().confirmHomework(hw);
+  }
+
+  Future<void> confirmCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
+    return await Get.find<FStore>().confirmCompletion(hw, completion);
+  }
+
+  Future<void> unconfirmCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
+    return await Get.find<FStore>().unconfirmCompletion(hw, completion);
   }
 
   @override

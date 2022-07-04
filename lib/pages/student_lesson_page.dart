@@ -183,9 +183,12 @@ class _HomeworkCardState extends State<HomeworkCard> {
       future: widget.homework.getCompletion(),
       builder: (context, snapshot) {
         bool isChecked = false;
-        if(snapshot.hasData) {
-          if(snapshot.data!.status == Status.completed || snapshot.data!.status == Status.confirmed) {
+        bool isConfirmed = false;
+        if (snapshot.hasData) {
+          if (snapshot.data!.status == Status.completed) {
             isChecked = true;
+          } else if (snapshot.data!.status == Status.confirmed) {
+            isConfirmed = true;
           }
         }
         return Card(
@@ -201,21 +204,22 @@ class _HomeworkCardState extends State<HomeworkCard> {
                 ),
                 ListTile(
                   title: Text(widget.homework.text),
-                  trailing: null,
+                  trailing: isConfirmed ? const Icon(Icons.check) : null,
                   onTap: () async {
                     await widget.homework.updateHomeworkCheck();
-                    setState(() {
-                      
-                      // checked = !checked;
-                    });
+                    setState(() {});
                   },
-                  textColor: isChecked ? Colors.green : Colors.white,
+                  tileColor: isChecked
+                      ? const Color.fromARGB(153, 76, 175, 79)
+                      : isConfirmed
+                          ? Colors.green
+                          : null,
                 ),
               ],
             ),
           ),
         );
-      }
+      },
     );
   }
 }

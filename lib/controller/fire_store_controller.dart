@@ -464,6 +464,7 @@ class FStore extends GetxController {
       } else if ((await a.doc(b.docs[0].id).get()).data()!['status'] == 0) {
         return await a.doc(b.docs[0].id).update({
           'status': 1,
+          'completed_time': DateTime.now(),
         });
       }
     }
@@ -492,6 +493,22 @@ class FStore extends GetxController {
     }
   }
 
+  Future<void> confirmCompletion(HomeworkModel homework, CompletionFlagModel completion) async {
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions').doc(completion.id);
+    return a.update({
+      'status': 2,
+      'confirmed_by': currentUser!.id!,
+      'confirmed_time': DateTime.now(),
+    });
+  }
+
+  Future<void> unconfirmCompletion(HomeworkModel homework, CompletionFlagModel completion) async {
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions').doc(completion.id);
+    return a.update({
+      'status': 1,
+    });
+  }
+
   // Future<void> updateHomeworkUncheck(HomeworkModel homework) {
   //   var a = _institutionRef.collection('homework').doc(homework.id);
   //   var b = (await a.get()).data()!['checked_users'];
@@ -515,14 +532,19 @@ class FStore extends GetxController {
 
   Future<List<CompletionFlagModel>> getAllHomeworkCompletions(HomeworkModel homework) async {
     var a = await _institutionRef.collection('homework').doc(homework.id).collection('completions').get();
-    return a.docs
-        .map(
-          (e) => CompletionFlagModel.fromMap(
-            e.id,
-            e.data(),
-          ),
-        )
-        .toList();
+    return a.docs.map((e) {
+      return CompletionFlagModel.fromMap(
+        e.id,
+        e.data(),
+      );
+    }).toList();
+    // for (var cfm in cfms) {
+    //   cfm.completer = await getPerson(cfm.completedById!);
+    //   if (cfm.confirmedById != null) {
+    //     cfm.confirmer = await getPerson(cfm.confirmedById!);
+    //   }
+    // }
+    // return cfms.toList();
   }
 
   // Future<void> updateHomeworkCompletion(HomeworkModel homework) async {
@@ -651,8 +673,8 @@ class FStore extends GetxController {
   Future<List<CurriculumModel>> getClassCurriculums(ClassModel clas) async {
     List<CurriculumModel> res = [];
     var curs = await getAllCurriculums();
-    for(var cur in curs) {
-      if((await cur.classes()).contains(clas)) {
+    for (var cur in curs) {
+      if ((await cur.classes()).contains(clas)) {
         res.add(cur);
       }
     }
@@ -672,9 +694,7 @@ class FStore extends GetxController {
   }
 
   Future<List<CurriculumModel>> getTeacherCurriculums() async {
-    var curriculums = await _institutionRef.collection('curriculum')
-      .where('master_id', isEqualTo: currentUser!.id)
-      .get();
+    var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: currentUser!.id).get();
     return curriculums.docs
         .map(
           (e) => CurriculumModel.fromMap(

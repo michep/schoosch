@@ -86,6 +86,20 @@ class LessonModel {
     
   }
 
+  Future<Map<String, HomeworkModel?>> homeworkForEveryone(DateTime date, {bool forceRefresh = false}) async {
+    var studs = await aclass.students();
+    for(StudentModel u in studs.sublist(0, 4)) {
+      if(_homeworks[u.id] == null || forceRefresh) {
+        _homeworks[u.id!] = await Get.find<FStore>().getLessonHomeworkForStudent(schedule, (await curriculum)!, u, date);
+      }
+    }
+    if(_homeworks['class'] == null || forceRefresh) {
+      _homeworks['class'] = await Get.find<FStore>().getLessonHomeworkForClass(schedule, (await curriculum)!, date);
+    // return [_homeworks[student.id!]!, _homeworks['class']!];
+    }
+    return _homeworks;
+  }
+
   // Future<List<HomeworkModel?>> homeworks(DateTime date) async {
   //   if (!_homeworksLoaded) {
   //     var hws = await Get.find<FStore>().getLessonHomeworks(schedule, (await curriculum)!, date);

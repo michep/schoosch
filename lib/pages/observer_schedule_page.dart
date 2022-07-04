@@ -43,15 +43,9 @@ class _ObserverScheduleState extends State<ObserverSchedule> {
       onPageChanged: _cw.setIdx,
       childrenDelegate: SliverChildBuilderDelegate(
         (context, idx) {
-          return scheduleItself(idx);
-        },
-      ),
-    );
-  }
-
-  Widget scheduleItself(int index) => FutureBuilder<List<StudentScheduleModel>>(
+          return FutureBuilder<List<StudentScheduleModel>>(
             future: widget._class.getSchedulesWeek(
-              Week(year: index ~/ 100, weekNumber: index % 100),
+              Week(year: idx ~/ 100, weekNumber: idx % 100),
             ),
             builder: (context, schedules) {
               if (!schedules.hasData) {
@@ -68,10 +62,17 @@ class _ObserverScheduleState extends State<ObserverSchedule> {
               return ListView(
                 children: [
                   ...schedules.data!.map(
-                    (schedule) => ObserverDayTile(schedule, Week(year: index ~/ 100, weekNumber: index % 100).day(schedule.day - 1)),
+                    (schedule) => ObserverDayTile(
+                      schedule,
+                      Week(year: idx ~/ 100, weekNumber: idx % 100).day(schedule.day - 1),
+                    ),
                   ),
                 ],
               );
             },
           );
+        },
+      ),
+    );
+  }
 }
