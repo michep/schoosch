@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
+import 'package:schoosch/model/chat_model.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
@@ -13,6 +14,7 @@ import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
+import 'package:schoosch/model/message_model.dart';
 import 'package:schoosch/model/node_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
@@ -737,5 +739,44 @@ class FStore extends GetxController {
       }
     }
     return res;
+  }
+
+  Stream<List<ChatModel>> getUserChatRooms() {
+    return _institutionRef.collection('chats').where('people_ids', arrayContains: currentUser!.id).snapshots().asyncMap((event) async {
+      List<ChatModel> res = [];
+      for (var i in event.docs) {
+        List<PersonModel> users = [];
+        for (var uid in i.data()['people_ids']) {
+          var u = await getPerson(uid);
+          users.add(u);
+        }
+        res.add(
+          ChatModel.fromMap(i.id, users),
+        );
+      }
+      return res;
+    });
+  }
+
+  Stream<List<MessageModel>> getChatroomMessages(ChatModel cm) {
+    return _institutionRef.collection('chats').doc(cm.id).collection('messages').snapshots().asyncMap((event) async {
+      List<MessageModel> messages = [];
+      for (var m in event.docs) {
+        MessageModel mes = MessageModel.fromMap(m.id, m.data());
+        messages.add(mes);
+      }
+      messages.sort((m1, m2) {
+        return m1.timeSent!.compareTo(m2.timeSent!);
+      });
+      return messages;
+    });
+  }
+
+  Future<void> addMessage(ChatModel cm, Map<String, dynamic> mdata) async {
+    await _institutionRef.collection('chats').doc(cm.id).collection('messages').add({
+      'message': mdata['message'],
+      'sent_by': currentUser!.id!,
+      'timestamp': DateTime.now(),
+    });
   }
 }

@@ -10,7 +10,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/teacher_student_tile.dart';
-import '../widgets/addhomeworksheet.dart';
+import '../../widgets/addhomeworksheet.dart';
 
 class TeacherLessonPage extends StatelessWidget {
   final DateTime _date;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
-import 'package:schoosch/pages/teacher_marks_table_page.dart';
+import 'package:schoosch/pages/teacher/teacher_marks_table_page.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class SubjectList extends StatelessWidget {

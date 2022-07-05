@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/pages/class_subject_page.dart';
-import 'package:schoosch/pages/observer_schedule_page.dart';
+import 'package:schoosch/pages/observer/observer_schedule_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/drawer.dart';
 // import 'package:schoosch/widgets/week_selector.dart';

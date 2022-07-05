@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/class_model.dart';
-import 'package:schoosch/pages/observer_page.dart';
+import 'package:schoosch/pages/observer/observer_page.dart';
 
 class ClassListTile extends StatelessWidget {
   final ClassModel _class;
