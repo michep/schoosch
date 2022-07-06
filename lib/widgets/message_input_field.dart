@@ -29,7 +29,10 @@ class _MesssageInputFieldState extends State<MesssageInputField> {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Container(
-        decoration: const BoxDecoration(color: Colors.black),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(20),
+        ),
         width: double.infinity,
         child: Row(
           children: [

@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
 
 class MessageModel {
   late final String? id;
@@ -11,4 +13,6 @@ class MessageModel {
     sentById = map['sent_by'] != null ? map['sent_by'] as String : throw '';
     timeSent = map['timestamp'] != null ? DateTime.fromMillisecondsSinceEpoch((map['timestamp'] as Timestamp).millisecondsSinceEpoch) : throw '';
   }
+
+  bool get sentByMe => sentById! == Get.find<FStore>().currentUser!.id;
 }

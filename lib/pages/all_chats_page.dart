@@ -37,6 +37,9 @@ class _AllChatsPageState extends State<AllChatsPage> {
               var item = snapshot.data![index];
               return ListTile(
                 title: Text(item.other.fullName),
+                leading: const CircleAvatar(
+                  child: Icon(Icons.person),
+                ),
                 onTap: () {
                   Get.to(
                     () => ChatPage(chat: item),

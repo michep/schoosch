@@ -10,6 +10,25 @@ class MessageUnit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(message.message!);
+    return Align(
+      alignment: message.sentByMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.82,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: message.sentByMe ? const Radius.circular(12) : const Radius.circular(0),
+            topRight: message.sentByMe ? const Radius.circular(0) : const Radius.circular(12),
+            bottomLeft: const Radius.circular(12),
+            bottomRight: const Radius.circular(12),
+          ),
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        child: Text(message.message!),
+      ),
+    );
   }
 }

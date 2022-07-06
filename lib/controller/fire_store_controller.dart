@@ -759,15 +759,15 @@ class FStore extends GetxController {
   }
 
   Stream<List<MessageModel>> getChatroomMessages(ChatModel cm) {
-    return _institutionRef.collection('chats').doc(cm.id).collection('messages').snapshots().asyncMap((event) async {
+    return _institutionRef.collection('chats').doc(cm.id).collection('messages').orderBy('timestamp', descending: true).snapshots().asyncMap((event) async {
       List<MessageModel> messages = [];
       for (var m in event.docs) {
         MessageModel mes = MessageModel.fromMap(m.id, m.data());
         messages.add(mes);
       }
-      messages.sort((m1, m2) {
-        return m1.timeSent!.compareTo(m2.timeSent!);
-      });
+      // messages.sort((m1, m2) {
+      //   return m1.timeSent!.compareTo(m2.timeSent!);
+      // });
       return messages;
     });
   }

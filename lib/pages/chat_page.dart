@@ -24,8 +24,10 @@ class _ChatPageState extends State<ChatPage> {
             stream: widget.chat.getAllMessages(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return Center(
-                  child: Utils.progressIndicator(),
+                return Expanded(
+                  child: Center(
+                    child: Utils.progressIndicator(),
+                  ),
                 );
               }
               if (snapshot.data!.isEmpty) {
@@ -37,8 +39,10 @@ class _ChatPageState extends State<ChatPage> {
               }
               return Expanded(
                 child: ListView.builder(
+                  reverse: true,
                   itemBuilder: (context, index) {
                     return MessageUnit(
+                      key: ValueKey(snapshot.data![index].id!),
                       message: snapshot.data![index],
                     );
                   },
