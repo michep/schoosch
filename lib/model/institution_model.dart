@@ -38,4 +38,12 @@ class InstitutionModel {
   Future<List<DayLessontimeModel>> get daylessontimes async {
     return Get.find<FStore>().getAllDayLessontime();
   }
+
+  Future<void> createChatRoom(PersonModel other) async {
+    return await Get.find<FStore>().createChatRoom(other);
+  }
+
+  // Future<List<PersonModel>> getUsersByName(String query) async {
+  //   return Get.find<FStore>().getPeopleByName(query);
+  // }
 }

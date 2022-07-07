@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/chat_model.dart';
 import 'package:schoosch/pages/chat_page.dart';
+import 'package:schoosch/pages/find_chat_page.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class AllChatsPage extends StatefulWidget {
@@ -48,6 +49,14 @@ class _AllChatsPageState extends State<AllChatsPage> {
               );
             },
             itemCount: snapshot.data!.length,
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Get.to(
+            () => const FindChat(),
           );
         },
       ),

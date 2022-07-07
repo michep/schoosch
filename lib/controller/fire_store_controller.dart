@@ -242,6 +242,12 @@ class FStore extends GetxController {
     return res;
   }
 
+  // Future<List<PersonModel>> getPeopleByName(String query) async {
+  //   if(query.length < 2) return [];
+  //   var a = await _institutionRef.collection('people').orderBy('nickname').startAt([query]).endAt([query + '\uf8ff']).get();
+
+  // }
+
   Future<String> savePerson(PersonModel person) async {
     var data = person.toMap();
     if (person.asParent != null) data.addAll(person.asParent!.toMap());
@@ -756,6 +762,20 @@ class FStore extends GetxController {
       }
       return res;
     });
+  }
+
+  Future<void> createChatRoom(PersonModel other) async {
+    await _institutionRef.collection('chats').add({
+      'people_ids': [
+        other.id,
+        currentUser!.id,
+      ],
+    });
+  }
+
+  Future<bool> checkExistance(PersonModel u) async {
+    var a = await _institutionRef.collection('chats').where('people_ids', isEqualTo: [u.id, _currentUser!.id]).get();
+    return a.docs.isNotEmpty;
   }
 
   Stream<List<MessageModel>> getChatroomMessages(ChatModel cm) {

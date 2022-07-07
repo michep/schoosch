@@ -176,6 +176,10 @@ class PersonModel {
     _id ??= id;
     return this;
   }
+
+  Future<bool> alreadyHasChat() async {
+    return await Get.find<FStore>().checkExistance(this);
+  }
 }
 
 class StudentModel extends PersonModel {
