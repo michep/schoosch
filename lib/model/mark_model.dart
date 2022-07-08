@@ -44,4 +44,8 @@ class MarkModel {
   DateTime get date {
     return _date;
   }
+
+  Stream<DocumentSnapshot> markStream() {
+    return Get.find<FStore>().markStream(this);
+  }
 }

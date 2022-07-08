@@ -340,18 +340,6 @@ class ObserverModel extends PersonModel {
     return _classes;
   }
 
-  Future<void> confirmHomework(HomeworkModel hw) async {
-    return await Get.find<FStore>().confirmHomework(hw);
-  }
-
-  Future<void> confirmCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
-    return await Get.find<FStore>().confirmCompletion(hw, completion);
-  }
-
-  Future<void> unconfirmCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
-    return await Get.find<FStore>().unconfirmCompletion(hw, completion);
-  }
-
   @override
   Map<String, dynamic> toMap() {
     Map<String, dynamic> res = super.toMap();

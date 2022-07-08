@@ -288,7 +288,7 @@ class _RoomSearchState extends State<RoomSearch> {
                     return Utils.progressIndicator();
                   }
                   if (snapshota.data!.isEmpty) {
-                    return const Text('no scahedule');
+                    return const Text('на эту неделю расписания нет.');
                   }
                   return FutureBuilder<List<LessonModel>>(
                       future: snapshota.data!.where((element) => element.day == DateTime.now().weekday).toList()[0].getLessons(),
@@ -297,7 +297,7 @@ class _RoomSearchState extends State<RoomSearch> {
                           return Utils.progressIndicator();
                         }
                         if (snapshotb.data!.isEmpty) {
-                          return const Text('no lessons for today');
+                          return const Text('на сегодня уроков нет.');
                         }
                         return ListBody(
                             children: snapshotb.data!

@@ -60,8 +60,9 @@ class ObserverDayTile extends StatelessWidget {
                   var homw = list[3] as Map<String, HomeworkModel?>;
                   return ListTile(
                     title: Text(
-                      les.toString(),
+                      cur.aliasOrName,
                     ),
+                    leading: Text(les.order.toString(),),
                     subtitle: homw.values.every((element) => element == null) ? null : const Text('есть домашнее задание'),
                     onTap: () {
                       onTap(les, cur, ven, tim, homw);

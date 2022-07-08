@@ -23,7 +23,7 @@ class CurriculumChoicePage extends StatelessWidget {
               return Utils.progressIndicator();
             }
             if (snapshot.data!.isEmpty) {
-              return const Text('NOTHING');
+              return const Text('нет доступных предметов.');
             }
             return ListView.builder(
               itemBuilder: (_, index) {

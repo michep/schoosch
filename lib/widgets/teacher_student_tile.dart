@@ -29,7 +29,7 @@ class _TeacherStudentTileState extends State<TeacherStudentTile> {
         widget.lesson.marksForStudent(widget.student, widget.date, forceUpdate: true),
       ]),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const Text('sheeesh');
+        if (!snapshot.hasData) return const Text('не удалось загрузить данные.');
         var homework = snapshot.data![0] as HomeworkModel?;
         var marks = snapshot.data![1] as List<MarkModel>?;
         return ExpansionTile(

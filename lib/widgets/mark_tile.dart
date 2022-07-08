@@ -15,12 +15,7 @@ class MarkTile extends StatelessWidget {
     return ListTile(
       // trailing: Text(_mark.mark.toString()),
       trailing: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('institution')
-            .doc(Get.find<FStore>().currentInstitution!.id)
-            .collection('mark')
-            .doc(_mark.id)
-            .snapshots(),
+        stream: _mark.markStream(),
         builder: (context, snapshot) {
           if (snapshot.data != null) {
             var a = snapshot.data!.data() as Map<String, dynamic>;

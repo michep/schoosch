@@ -36,7 +36,7 @@ class ScanPageState extends State<ScanPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("scanner"),
+        title: const Text("сканер QR"),
       ),
       body: Stack(
         alignment: Alignment.center,
@@ -59,7 +59,7 @@ class ScanPageState extends State<ScanPage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
-                  barcode != null ? "${barcode!.code}" : "scan a qr...",
+                  barcode != null ? "${barcode!.code}" : "наведите на код...",
                   maxLines: 2,
                 ),
               ),

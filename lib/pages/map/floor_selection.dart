@@ -36,7 +36,7 @@ class FloorSelection extends StatelessWidget {
                   );
                 }
                 if (flors.data!.isEmpty) {
-                  return const SizedBox(height: 50, child: Text('OOOO'));
+                  return const SizedBox(height: 50, child: Text('не удалось загрузить этажи.'));
                 }
                 return Column(mainAxisSize: MainAxisSize.min, children: [
                   RawMaterialButton(

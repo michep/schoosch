@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/widgets/utils.dart';
 
 class TeacherTablePage extends StatelessWidget {
   final CurriculumModel currentcur;
@@ -56,7 +57,7 @@ class TeacherTablePage extends StatelessWidget {
           future: liststud[index].curriculumMarks(currentcur),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return const Text('nothing');
+              return Center(child: Utils.progressIndicator(),);
             }
             if (snapshot.data!.isEmpty) {
               return Container(
@@ -68,7 +69,7 @@ class TeacherTablePage extends StatelessWidget {
                   color: Colors.black54,
                 ),
                 margin: const EdgeInsets.all(4.0),
-                child: const Text('NO MARKS'),
+                child: const Text('нет оценок.'),
               );
             }
             return Row(children: _buildMarkCells(snapshot.data!));
@@ -87,7 +88,7 @@ class TeacherTablePage extends StatelessWidget {
           future: currentcur.allStudents(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return const Text('NO DATA');
+              return Center(child: Utils.progressIndicator(),);
             }
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,

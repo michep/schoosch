@@ -206,8 +206,10 @@ class _HomeworkCardState extends State<HomeworkCard> {
                   title: Text(widget.homework.text),
                   trailing: isConfirmed ? const Icon(Icons.check) : null,
                   onTap: () async {
-                    await widget.homework.updateHomeworkCheck();
-                    setState(() {});
+                    var completion = await widget.homework.getCompletion();
+                    onTap(completion).whenComplete(() {
+                      setState(() {});
+                    });
                   },
                   tileColor: isChecked
                       ? const Color.fromARGB(153, 76, 175, 79)
@@ -222,4 +224,28 @@ class _HomeworkCardState extends State<HomeworkCard> {
       },
     );
   }
+
+  Future<void> onTap(CompletionFlagModel? c) => showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ElevatedButton.icon(
+          onPressed: () {
+            c == null
+                ? widget.homework.createCompletion()
+                : c.status == Status.completed
+                    ? widget.homework.uncompleteCompletion(c)
+                    : widget.homework.completeCompletion(c);
+          },
+          label: Text(c == null
+              ? 'сообщить о выполнении'
+              : c.status == Status.completed
+                  ? 'отметить как невыполненное'
+                  : 'отметить как выполненное'),
+          icon: Icon(c == null
+              ? Icons.add
+              : c.status == Status.completed
+                  ? Icons.close
+                  : Icons.check),
+        );
+      });
 }

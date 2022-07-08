@@ -442,6 +442,11 @@ class FStore extends GetxController {
     return _institutionRef.collection('mark').add(data);
   }
 
+  Stream<DocumentSnapshot> markStream(MarkModel mark) {
+    var a = _institutionRef.collection('mark').doc(mark.id).snapshots();
+    return a;
+  }
+
   Future saveHomework(String homeworkText, CurriculumModel curriculum, TeacherModel teacher, DateTime date, {StudentModel? student}) async {
     Map<String, dynamic> data = {};
     data['text'] = homeworkText;
@@ -489,6 +494,46 @@ class FStore extends GetxController {
     // });
   }
 
+  Future<CompletionFlagModel?> hasMyCompletion(HomeworkModel hw) async {
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    var b = await a.where('completed_by', isEqualTo: currentUser!.id).get();
+    if (b.docs.isEmpty) {
+      return null;
+    } else {
+      return CompletionFlagModel.fromMap(
+        b.docs[0].id,
+        b.docs[0].data(),
+      );
+    }
+  }
+
+  Future createCompletion(HomeworkModel hw) async {
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    // var b = (await a.where('completed_by', isEqualTo: currentUser!.id).get()).docs.first;
+    return await a.add({
+      'completed_by': currentUser!.id,
+      'confirmed_by': null,
+      'completed_time': DateTime.now(),
+      'confirmed_time': null,
+      'status': 1,
+    });
+  }
+
+  Future<void> completeCompletion(HomeworkModel hw, CompletionFlagModel c) async {
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    return await a.doc(c.id).update({
+      'completed_time': DateTime.now(),
+      'status': 1,
+    });
+  }
+
+  Future<void> uncompleteCompletion(HomeworkModel hw, CompletionFlagModel c) async {
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    return await a.doc(c.id).update({
+      'status': 0,
+    });
+  }
+
   Future<void> confirmHomework(HomeworkModel homework) async {
     var a = _institutionRef.collection('homework').doc(homework.id).collection('completions');
     var b = await a.where('completed_by', isEqualTo: currentUser!.id).limit(1).get();
@@ -534,7 +579,10 @@ class FStore extends GetxController {
     if (b.docs.isEmpty) {
       return null;
     } else {
-      return CompletionFlagModel.fromMap(b.docs[0].id, b.docs[0].data());
+      return CompletionFlagModel.fromMap(
+        b.docs[0].id,
+        b.docs[0].data(),
+      );
     }
   }
 

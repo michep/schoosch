@@ -27,16 +27,40 @@ class HomeworkModel {
 
   // bool get isChecked => usersChecked.contains(Get.find<FStore>().currentUser!.id);
 
-  Future<void> updateHomeworkCheck() async {
-    return await Get.find<FStore>().updateHomeworkChecked(this);
-  }
+  // Future<void> updateHomeworkCheck() async {
+  //   return await Get.find<FStore>().updateHomeworkChecked(this);
+  // }
 
   Future<CompletionFlagModel?> getCompletion() async {
     return await Get.find<FStore>().getHomeworkCompletion(this);
   }
 
-  Future<List<CompletionFlagModel?>> getAllCompletions() async {
+  // Future<CompletionFlagModel?> hasMeCompletion() async {
+  //   return await Get.find<FStore>().hasMyCompletion(this);
+  // }
+
+  Future<void> createCompletion() async {
+    return await Get.find<FStore>().createCompletion(this);
+  }
+
+  Future<void> completeCompletion(CompletionFlagModel c) async {
+    return await Get.find<FStore>().completeCompletion(this, c);
+  }
+
+  Future<void> uncompleteCompletion(CompletionFlagModel c) async {
+    return await Get.find<FStore>().uncompleteCompletion(this, c);
+  }
+
+  Future<List<CompletionFlagModel>> getAllCompletions() async {
     return await Get.find<FStore>().getAllHomeworkCompletions(this);
+  }
+
+  Future<void> confirmCompletion(CompletionFlagModel completion) async {
+    return await Get.find<FStore>().confirmCompletion(this, completion);
+  }
+
+  Future<void> unconfirmCompletion(CompletionFlagModel completion) async {
+    return await Get.find<FStore>().unconfirmCompletion(this, completion);
   }
 
   Future<void> confirmHomework() async {
