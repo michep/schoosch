@@ -111,9 +111,11 @@ class _DialogState extends State<Dialog> {
                     setState(() {
                       isloading = true;
                     });
-                    await Get.find<FStore>().currentInstitution!.createChatRoom(widget.person);
-                    setState(() {
-                      isloading = false;
+                    Get.find<FStore>().currentInstitution!.createChatRoom(widget.person).whenComplete(() {
+                      setState(() {
+                        isloading = false;
+                      });
+                      Navigator.of(context).pop();
                     });
                   },
                   icon: const Icon(Icons.check),
