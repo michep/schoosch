@@ -90,6 +90,16 @@ class FStore extends GetxController {
     return res;
   }
 
+  Future<String> saveDayLessontime(DayLessontimeModel dayLessontime) async {
+    if (dayLessontime.id != null) {
+      await _institutionRef.collection('lessontime').doc(dayLessontime.id).set(dayLessontime.toMap());
+      return dayLessontime.id!;
+    } else {
+      var v = await _institutionRef.collection('class').add(dayLessontime.toMap());
+      return v.id;
+    }
+  }
+
   Future<ClassModel> getClass(String id) async {
     var res = await _institutionRef.collection('class').doc(id).get();
     return ClassModel.fromMap(res.id, res.data()!);

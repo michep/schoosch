@@ -13,10 +13,12 @@
     "className": "Name",
     "classGrade": "Grade",
     "classMaster": "Teacher",
-    "classSchedule": "Schedule",
+    "classSchedule": "Lessons Times",
     "classStudents": "Students",
     "classList": "Classes",
     "newClass": "New Class",
+
+    "dayLessontimeList": "Lessons Times",
 
     "curriculumName": "Curriculum",
     "curriculumAlternateName": "Alias",
@@ -25,7 +27,7 @@
     "curriculumList": "Curriculums",
     "newCurriculum": "New Curriculum",
 
-    "dayScheduleList": "Lessons Schedule",
+    "dayScheduleList": "Schedule",
 
     "classScheduleName": "{classname} schedule",
 

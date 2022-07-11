@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
-import 'package:schoosch/model/venue_model.dart';
+import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class VenuePage extends StatefulWidget {
-  final VenueModel _venue;
+class DayLessontimePage extends StatefulWidget {
+  final DayLessontimeModel _dayLessontime;
   final String _title;
 
-  const VenuePage(this._venue, this._title, {Key? key}) : super(key: key);
+  const DayLessontimePage(this._dayLessontime, this._title, {Key? key}) : super(key: key);
 
   @override
-  State<VenuePage> createState() => _VenuePageState();
+  State<DayLessontimePage> createState() => _DayLessontimePageState();
 }
 
-class _VenuePageState extends State<VenuePage> {
+class _DayLessontimePageState extends State<DayLessontimePage> {
   final TextEditingController _name = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    _name.value = TextEditingValue(text: widget._venue.name);
+    _name.value = TextEditingValue(text: widget._dayLessontime.name);
     super.initState();
   }
 
@@ -33,7 +33,7 @@ class _VenuePageState extends State<VenuePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
-            onPressed: () => _delete(widget._venue),
+            onPressed: () => _delete(widget._dayLessontime),
           ),
         ],
       ),
@@ -51,11 +51,19 @@ class _VenuePageState extends State<VenuePage> {
                   ),
                   validator: (value) => Utils.validateTextNotEmpty(value, loc.errorNameEmpty),
                 ),
+                FutureBuilder(
+                    future: widget._dayLessontime.lessontimes,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) return const SizedBox.shrink();
+                      return ListView(
+                        children: [...snapshot.data!],
+                      );
+                    }),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
                     child: Text(loc.saveChanges),
-                    onPressed: () => _save(widget._venue),
+                    onPressed: () => _save(widget._dayLessontime),
                   ),
                 ),
               ],
@@ -66,16 +74,16 @@ class _VenuePageState extends State<VenuePage> {
     );
   }
 
-  Future<void> _save(VenueModel venue) async {
+  Future<void> _save(DayLessontimeModel dayLessontime) async {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> map = {};
       map['name'] = _name.text;
 
-      var nvenue = VenueModel.fromMap(venue.id, map);
-      await nvenue.save();
-      Get.back<VenueModel>(result: nvenue);
+      var ndayLessontime = DayLessontimeModel.fromMap(dayLessontime.id, map);
+      await ndayLessontime.save();
+      Get.back<DayLessontimeModel>(result: ndayLessontime);
     }
   }
 
-  Future<void> _delete(VenueModel venue) async {}
+  Future<void> _delete(DayLessontimeModel dayLessontime) async {}
 }

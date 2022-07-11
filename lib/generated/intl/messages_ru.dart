@@ -52,6 +52,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Группа учащихся"),
         "curriculumTeacher":
             MessageLookupByLibrary.simpleMessage("Преподаватель"),
+        "dayLessontimeList":
+            MessageLookupByLibrary.simpleMessage("Расписание времени уроков"),
         "dayScheduleList":
             MessageLookupByLibrary.simpleMessage("Раписания времени уроков"),
         "editInstitution": MessageLookupByLibrary.simpleMessage(

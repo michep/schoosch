@@ -35,7 +35,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "classList": MessageLookupByLibrary.simpleMessage("Classes"),
         "classMaster": MessageLookupByLibrary.simpleMessage("Teacher"),
         "className": MessageLookupByLibrary.simpleMessage("Name"),
-        "classSchedule": MessageLookupByLibrary.simpleMessage("Schedule"),
+        "classSchedule": MessageLookupByLibrary.simpleMessage("Lessons Times"),
         "classScheduleName": m0,
         "classStudents": MessageLookupByLibrary.simpleMessage("Students"),
         "curriculumAlternateName":
@@ -44,8 +44,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "curriculumName": MessageLookupByLibrary.simpleMessage("Curriculum"),
         "curriculumStudents": MessageLookupByLibrary.simpleMessage("Students"),
         "curriculumTeacher": MessageLookupByLibrary.simpleMessage("Teacher"),
-        "dayScheduleList":
-            MessageLookupByLibrary.simpleMessage("Lessons Schedule"),
+        "dayLessontimeList":
+            MessageLookupByLibrary.simpleMessage("Lessons Times"),
+        "dayScheduleList": MessageLookupByLibrary.simpleMessage("Schedule"),
         "editInstitution":
             MessageLookupByLibrary.simpleMessage("Edit Institution"),
         "errorClassGradeEmpty":
