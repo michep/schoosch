@@ -37,8 +37,11 @@ class AddMarkSheetState extends State<AddMarkSheet> {
                 });
               },
               style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 1 ? Colors.amber : Colors.black)),
-              child: const Text(
+              child: Text(
                 "1",
+                style: TextStyle(
+                  color: mark == 1 ? Colors.black : Colors.white,
+                ),
               ),
             ),
             ElevatedButton(
@@ -47,8 +50,13 @@ class AddMarkSheetState extends State<AddMarkSheet> {
                   mark = 2;
                 });
               },
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 1 ? Colors.amber : Colors.black)),
-              child: const Text("2"),
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 2 ? Colors.amber : Colors.black)),
+              child: Text(
+                "2",
+                style: TextStyle(
+                  color: mark == 2 ? Colors.black : Colors.white,
+                ),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -56,8 +64,13 @@ class AddMarkSheetState extends State<AddMarkSheet> {
                   mark = 3;
                 });
               },
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 1 ? Colors.amber : Colors.black)),
-              child: const Text("3"),
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 3 ? Colors.amber : Colors.black)),
+              child: Text(
+                "3",
+                style: TextStyle(
+                  color: mark == 3 ? Colors.black : Colors.white,
+                ),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -65,8 +78,13 @@ class AddMarkSheetState extends State<AddMarkSheet> {
                   mark = 4;
                 });
               },
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 1 ? Colors.amber : Colors.black)),
-              child: const Text("4"),
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 4 ? Colors.amber : Colors.black)),
+              child: Text(
+                "4",
+                style: TextStyle(
+                  color: mark == 4 ? Colors.black : Colors.white,
+                ),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -74,8 +92,13 @@ class AddMarkSheetState extends State<AddMarkSheet> {
                   mark = 5;
                 });
               },
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 1 ? Colors.amber : Colors.black)),
-              child: const Text("5"),
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(mark == 5 ? Colors.amber : Colors.black)),
+              child: Text(
+                "5",
+                style: TextStyle(
+                  color: mark == 5 ? Colors.black : Colors.white,
+                ),
+              ),
             ),
           ],
         ),

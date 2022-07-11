@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:schoosch/model/curriculum_model.dart';
-import 'package:schoosch/model/homework_model.dart';
+// import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -25,13 +25,13 @@ class _TeacherStudentTileState extends State<TeacherStudentTile> {
   Widget build(BuildContext context) {
     return FutureBuilder<List>(
       future: Future.wait([
-        widget.lesson.homeworkForStudent(widget.student, widget.date),
+        // widget.lesson.homeworkForStudent(widget.student, widget.date),
         widget.lesson.marksForStudent(widget.student, widget.date, forceUpdate: true),
       ]),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const Text('не удалось загрузить данные.');
-        var homework = snapshot.data![0] as HomeworkModel?;
-        var marks = snapshot.data![1] as List<MarkModel>?;
+        // var homework = snapshot.data![0] as HomeworkModel?;
+        var marks = snapshot.data![0] as List<MarkModel>?;
         return ExpansionTile(
           title: Text(
             widget.student.fullName,

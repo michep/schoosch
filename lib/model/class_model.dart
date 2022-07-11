@@ -105,9 +105,10 @@ class ClassModel {
 
   Future<List<StudentModel>> students({forceRefresh = false}) async {
     if (!_studentsLoaded || forceRefresh) {
+      _studentsLoaded = true;
       _students.clear();
       _students.addAll((await Get.find<FStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
-      _studentsLoaded = true;
+      // _studentsLoaded = true;
     }
     return _students;
   }
