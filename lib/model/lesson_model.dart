@@ -88,7 +88,7 @@ class LessonModel {
 
   Future<Map<String, HomeworkModel?>> homeworkForEveryone(DateTime date, {bool forceRefresh = false}) async {
     var studs = await aclass.students();
-    for(StudentModel u in studs.sublist(0, 4)) {
+    for(StudentModel u in studs) {
       if(_homeworks[u.id] == null || forceRefresh) {
         _homeworks[u.id!] = await Get.find<FStore>().getLessonHomeworkForStudent(schedule, (await curriculum)!, u, date);
       }
@@ -121,7 +121,7 @@ class LessonModel {
 
   Future<String> marksForStudentAsString(StudentModel student, DateTime date) async {
     var ms = await marksForStudent(student, date);
-    return ms.map((e) => e.mark.toString()).join(', ');
+    return ms.map((e) => e.mark.toString()).join('; ');
   }
 
   Map<String, dynamic> toMap() {

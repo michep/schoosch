@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/all_chats_page.dart';
 import 'package:schoosch/pages/all_marks_table_page.dart';
@@ -8,7 +7,6 @@ import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
 import 'package:schoosch/pages/teacher_rate_page.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
 import 'package:schoosch/pages/about_page.dart';
-import 'package:schoosch/pages/map/school_map_page.dart';
 
 class MDrawer extends StatelessWidget {
   const MDrawer({Key? key}) : super(key: key);
@@ -38,16 +36,16 @@ class MDrawer extends StatelessWidget {
           label: const Text('Оценить учителей'),
         ),
       );
-      items.add(
-        TextButton.icon(
-          onPressed: () async {
-            ClassModel? clas = await PersonModel.currentStudent!.studentClass;
-            Get.to(() => SchoolMapPage(clas));
-          },
-          icon: const Icon(Icons.map_rounded),
-          label: const Text('План школы'),
-        ),
-      );
+      // items.add(
+      //   TextButton.icon(
+      //     onPressed: () async {
+      //       ClassModel? clas = await PersonModel.currentStudent!.studentClass;
+      //       Get.to(() => SchoolMapPage(clas));
+      //     },
+      //     icon: const Icon(Icons.map_rounded),
+      //     label: const Text('План школы'),
+      //   ),
+      // );
       items.add(
         TextButton.icon(
           onPressed: () async {

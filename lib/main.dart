@@ -34,7 +34,7 @@ Future<void> main() async {
   Get.put<BlueprintController>(bcont);
   if (fauth.currentUser != null) {
     await fstore.init(fauth.currentUser!.email!);
-    await bcont.init();
+    // await bcont.init();
   }
 
   runApp(const MyApp());

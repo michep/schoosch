@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class CompletionFlagModel {
@@ -58,6 +59,16 @@ class CompletionFlagModel {
       confirmerLoaded = true;
     }
     return _confirmer?.asTeacher;
+  }
+
+  Future<CompletionFlagModel?> refresh(HomeworkModel homework) async {
+    var refr = await Get.find<FStore>().refreshCompletion(homework, this);
+    // completedTime = refr!.completedTime;
+    // confirmedById = refr.confirmedById;
+    // completedById = refr.completedById;
+    // confirmedTime = refr.confirmedTime;
+    // status = refr.status;
+    return refr;
   }
 }
 

@@ -100,12 +100,11 @@ class TeacherLessonPage extends StatelessWidget {
                   }
                   return SizedBox(
                     child: ExpansionTile(
-                      title: Text(
+                      title: const Text(
                         "Ученики",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
-                          color: Colors.grey[700],
                         ),
                       ),
                       children: [
@@ -124,36 +123,106 @@ class TeacherLessonPage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text('заданное ДЗ:'),
-                  FutureBuilder<HomeworkModel?>(
-                    future: _lesson.homeworkForClass(_date),
+                  FutureBuilder<Map<String, HomeworkModel?>>(
+                    future: _lesson.homeworkForEveryone(_date),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return const Text("нет домашнего задания");
+                        return const Card(
+                            elevation: 3,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 15.0),
+                              child: Center(child: Text("нет домашнего задания")),
+                            ));
                       }
-                      return FutureBuilder<List<CompletionFlagModel>>(
-                        future: snapshot.data!.getAllCompletions(),
-                        builder: (context, completionsnapshot) {
-                          if (!completionsnapshot.hasData) {
-                            return Center(
-                              child: Utils.progressIndicator(),
-                            );
-                          }
-                          if (completionsnapshot.data!.isEmpty) {
-                            return ExpansionTile(
-                              title: Text(snapshot.data!.text),
-                              children: const [Text('нет активных выполнений')],
-                            );
-                          }
-                          return ExpansionTile(
-                            title: Text(snapshot.data!.text),
-                            children: [
-                              ...completionsnapshot.data!.map(
-                                (e) => CompletionListTile(completion: e, homework: snapshot.data!),
-                              ),
-                            ],
-                          );
-                        },
+                      // return List.generate(
+                      //   snapshot.data!.length,
+                      //   (index) => FutureBuilder<List<CompletionFlagModel>>(
+                      //     future: cmpltn!.getAllCompletions(),
+                      //     builder: (context, completionsnapshot) {
+                      //       if (!completionsnapshot.hasData) {
+                      //         return Center(
+                      //           child: Utils.progressIndicator(),
+                      //         );
+                      //       }
+                      //       if (completionsnapshot.data!.isEmpty) {
+                      //         return ExpansionTile(
+                      //           title: Text(cmpltn.text),
+                      //           children: const [Text('нет активных выполнений')],
+                      //         );
+                      //       }
+                      //       return ExpansionTile(
+                      //         title: Text(cmpltn.text),
+                      //         children: [
+                      //           ...completionsnapshot.data!.map(
+                      //             (e) => CompletionListTile(completion: e, homework: cmpltn),
+                      //           ),
+                      //         ],
+                      //       );
+                      //     },
+                      //   ),
+                      // );
+
+                      return Column(
+                        children: [
+                          ...snapshot.data!.values.map(
+                            (e) {
+                              if (e != null) {
+                                return FutureBuilder<List<CompletionFlagModel>>(
+                                  future: e.getAllCompletions(),
+                                  builder: (context, completionsnapshot) {
+                                    if (!completionsnapshot.hasData) {
+                                      return Center(
+                                        child: Utils.progressIndicator(),
+                                      );
+                                    }
+                                    if (completionsnapshot.data!.isEmpty) {
+                                      return ExpansionTile(
+                                        title: Text(e.text),
+                                        children: const [Text('нет активных выполнений')],
+                                      );
+                                    }
+                                    return ExpansionTile(
+                                      title: Text(e.text),
+                                      children: [
+                                        ...completionsnapshot.data!.map(
+                                          (c) => CompletionListTile(completion: c, homework: e),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              } else {
+                                return const SizedBox();
+                              }
+                            },
+                          ),
+                        ],
                       );
+
+                      // return FutureBuilder<List<CompletionFlagModel>>(
+                      //   future: snapshot.data!.getAllCompletions(),
+                      //   builder: (context, completionsnapshot) {
+                      //     if (!completionsnapshot.hasData) {
+                      //       return Center(
+                      //         child: Utils.progressIndicator(),
+                      //       );
+                      //     }
+                      //     if (completionsnapshot.data!.isEmpty) {
+                      //       return ExpansionTile(
+                      //         title: Text(snapshot.data!.text),
+                      //         children: const [Text('нет активных выполнений')],
+                      //       );
+                      //     }
+                      //     return ExpansionTile(
+                      //       title: Text(snapshot.data!.text),
+                      //       children: [
+                      //         ...completionsnapshot.data!.map(
+                      //           (e) => CompletionListTile(completion: e, homework: snapshot.data!),
+                      //         ),
+                      //       ],
+                      //     );
+                      //   },
+                      // );
                     },
                   ),
                 ],
@@ -179,9 +248,9 @@ class TeacherLessonPage extends StatelessWidget {
 }
 
 class CompletionListTile extends StatefulWidget {
-  final CompletionFlagModel completion;
+  CompletionFlagModel completion;
   final HomeworkModel homework;
-  const CompletionListTile({Key? key, required this.completion, required this.homework}) : super(key: key);
+  CompletionListTile({Key? key, required this.completion, required this.homework}) : super(key: key);
 
   @override
   State<CompletionListTile> createState() => _CompletionListTileState();
@@ -203,8 +272,8 @@ class _CompletionListTileState extends State<CompletionListTile> {
         DateFormat('HH:mm, MMM dd').format(widget.completion.completedTime!),
       ),
       trailing: widget.completion.status! == Status.confirmed ? const Icon(Icons.check) : null,
-      onTap: () async {
-        onTap(widget.completion).whenComplete(() {
+      onTap: () {
+        onTap().whenComplete(() {
           setState(() {});
         });
       },
@@ -216,15 +285,19 @@ class _CompletionListTileState extends State<CompletionListTile> {
     );
   }
 
-  Future<void> onTap(CompletionFlagModel c) => showModalBottomSheet(
+  Future<void> onTap() => showModalBottomSheet(
       context: context,
       builder: (context) {
         return ElevatedButton.icon(
-          onPressed: () {
-            c.status == Status.completed ? widget.homework.unconfirmCompletion(c) : widget.homework.confirmCompletion(c);
+          onPressed: () async {
+            widget.completion.status == Status.confirmed
+                ? widget.homework.unconfirmCompletion(widget.completion)
+                : widget.homework.confirmCompletion(widget.completion);
+            widget.completion = (await widget.completion.refresh(widget.homework))!;
+            Navigator.pop(context);
           },
-          label: Text(c.status == Status.completed ? 'отметить как не проверенное' : 'отметить как проверенное'),
-          icon: Icon(c.status == Status.completed ? Icons.close : Icons.check),
+          label: Text(widget.completion.status == Status.confirmed ? 'отметить как не проверенное' : 'отметить как проверенное'),
+          icon: Icon(widget.completion.status == Status.confirmed ? Icons.close : Icons.check),
         );
       });
 }

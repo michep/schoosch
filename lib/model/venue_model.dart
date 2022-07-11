@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class VenueModel {
   late String? _id;
   late String name;
-  late int floor;
-  late String type;
+  late int? floor;
+  late String? type;
   List<Offset> coords = [];
   late Offset _labelOffset;
   late var path = Path();
@@ -27,30 +27,30 @@ class VenueModel {
     name = map['name'] != null
         ? map['name'] as String
         : throw 'need name key in venue $id';
-    floor = map['floor'] != null
-        ? map['floor'] as int
-        : throw 'need floor key in venue $id';
-    type = map['type'] != null
-        ? map['type'] as String
-        : throw 'need type key in venue $id';
-    if (!['room', 'floor'].contains(type)) throw 'incorrect type in venue $_id';
-    if (map['coords'] != null) {
-      var listCoords = map['coords'] as List<dynamic>;
-      for (var i = 0; i < listCoords.length; i = i + 2) {
-        coords.add(Offset(
-            (listCoords[i] as int).toDouble(), (listCoords[i + 1] as int).toDouble()));
-      }
-    } else {
-      throw 'need coords key in venue $id';
-    }
-    if (map['offset'] != null) {
-      var listOffset = map['offset'] as List<dynamic>;
-        _labelOffset = Offset((listOffset[0] as int).toDouble(), (listOffset[1] as int).toDouble());
+    // floor = map['floor'] != null
+    //     ? map['floor'] as int
+    //     : null; //TODO: разобраться с этажами
+    // type = map['type'] != null
+    //     ? map['type'] as String
+    //     : null;
+    // if (!['room', 'floor'].contains(type)) throw 'incorrect type in venue $_id';
+    // if (map['coords'] != null) {
+    //   var listCoords = map['coords'] as List<dynamic>;
+    //   for (var i = 0; i < listCoords.length; i = i + 2) {
+    //     coords.add(Offset(
+    //         (listCoords[i] as int).toDouble(), (listCoords[i + 1] as int).toDouble()));
+    //   }
+    // } else {
+    //   throw 'need coords key in venue $id';
+    // }
+    // if (map['offset'] != null) {
+    //   var listOffset = map['offset'] as List<dynamic>;
+    //     _labelOffset = Offset((listOffset[0] as int).toDouble(), (listOffset[1] as int).toDouble());
         
-    } else {
-      throw 'need offset key in venue $id';
-    }
-    _initPath();
+    // } else {
+    //   throw 'need offset key in venue $id';
+    // }
+    // _initPath();
   }
 
   Map<String, dynamic> toMap() {

@@ -51,7 +51,7 @@ class BlueprintController extends GetxController {
   void findARoom(String name) {
     var found = _allBluePrints.firstWhereOrNull((element) => (element.name == name));
     if (found != null) {
-      chosenFloor$.value = found.floor;
+      chosenFloor$.value = found.floor!;
       chosenRoom$.value = found.name;
       mode$.value = CurrentMode.searching;
     }

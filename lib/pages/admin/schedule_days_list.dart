@@ -37,7 +37,7 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
                     title: Text(Utils.dayName(day)),
                     trailing: IconButton(
                       icon: const Icon(Icons.add),
-                      onPressed: () => _newSchedule(day),
+                      onPressed: () => _newSchedule(day + 1),
                     ),
                     children: [
                       ...snapshot.data!.map(

@@ -339,7 +339,7 @@ class FStore extends GetxController {
         .toList();
     for (var i in lilst) {
       if (!res.contains(i.floor) && i.floor != 0) {
-        res.add(i.floor);
+        res.add(i.floor!);
       }
     }
     res.sort();
@@ -527,6 +527,12 @@ class FStore extends GetxController {
     });
   }
 
+  Future<CompletionFlagModel?> refreshCompletion(HomeworkModel hw, CompletionFlagModel c) async {
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    var b = await a.doc(c.id).get();
+    return CompletionFlagModel.fromMap(b.id, b.data()!);
+  }
+
   Future<void> uncompleteCompletion(HomeworkModel hw, CompletionFlagModel c) async {
     var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
     return await a.doc(c.id).update({
@@ -619,7 +625,7 @@ class FStore extends GetxController {
   Future<HomeworkModel?> getLessonHomeworkForStudent(DayScheduleModel schedule, CurriculumModel curriculum, StudentModel student, DateTime date) async {
     var res = await _institutionRef
         .collection('homework')
-        .where('date', isGreaterThanOrEqualTo: date) //.subtract(const Duration(hours: 23, minutes: 59))
+        .where('date', isLessThan: date) //.subtract(const Duration(hours: 23, minutes: 59))
         .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
         .where('curriculum_id', isEqualTo: curriculum.id)
         .where('student_id', isEqualTo: student.id)

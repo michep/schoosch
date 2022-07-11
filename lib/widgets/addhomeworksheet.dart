@@ -30,9 +30,9 @@ class AddHomeworkSheetState extends State<AddHomeworkSheet> {
         const Text('добавить дз'),
         Container(
           margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blue, width: 2),
-          ),
+          // decoration: BoxDecoration(
+          //   border: Border.all(color: Colors.blue, width: 2),
+          // ),
           child: TextField(
             controller: cont,
             decoration: const InputDecoration(labelText: 'пишите сюда...'),

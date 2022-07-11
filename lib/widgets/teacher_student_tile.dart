@@ -41,13 +41,13 @@ class _TeacherStudentTileState extends State<TeacherStudentTile> {
             children: [
               IconButton(
                 onPressed: () => createHomework(context),
-                icon: const Icon(Icons.checklist_rounded),
+                icon: const Icon(Icons.auto_stories_outlined),
                 iconSize: 25,
               ),
               IconButton(
                 onPressed: () => createMark(context, widget.lesson.order, widget.curriculum, widget.date),
                 iconSize: 25,
-                icon: const Icon(Icons.auto_stories_outlined),
+                icon: const Icon(Icons.text_increase_outlined),
               )
             ],
           ),
@@ -58,9 +58,9 @@ class _TeacherStudentTileState extends State<TeacherStudentTile> {
           //         ))
           //     .toList(): [const Text('нет оценок')],
           children: [
-            homework != null ? ListTile(
-              title: Text(homework.text),
-            ) : const Text('нет домашнего задания'),
+            // homework != null ? ListTile(
+            //   title: Text(homework.text),
+            // ) : const Text('нет домашнего задания'),
             if (marks!.isNotEmpty) ...marks.map((mark) => markTile(mark, context)).toList() else const Text('нет оценок'),
           ],
         );

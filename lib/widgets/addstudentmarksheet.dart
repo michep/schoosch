@@ -84,9 +84,9 @@ class AddMarkSheetState extends State<AddMarkSheet> {
         ),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 15),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blue, width: 2),
-          ),
+          // decoration: BoxDecoration(
+          //   border: Border.all(color: Colors.blue, width: 2),
+          // ),
           child: TextField(
             controller: cont,
             decoration: const InputDecoration(
