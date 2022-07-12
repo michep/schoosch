@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
+import 'package:schoosch/model/lessontime_model.dart';
+import 'package:schoosch/widgets/lessontime_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class DayLessontimePage extends StatefulWidget {
@@ -51,14 +53,11 @@ class _DayLessontimePageState extends State<DayLessontimePage> {
                   ),
                   validator: (value) => Utils.validateTextNotEmpty(value, loc.errorNameEmpty),
                 ),
-                FutureBuilder(
-                    future: widget._dayLessontime.lessontimes,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) return const SizedBox.shrink();
-                      return ListView(
-                        children: [...snapshot.data!],
-                      );
-                    }),
+                Column(
+                  children: [
+                    LessonTimeTile(),
+                  ],
+                ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
