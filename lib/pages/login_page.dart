@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/blueprint_controller.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -56,13 +55,13 @@ class _LoginPageState extends State<LoginPage> {
 
   void _authenticated(User? user) async {
     var store = Get.find<FStore>();
-    var bcont = Get.find<BlueprintController>();
+    // var bcont = Get.find<BlueprintController>();
     if (user == null) {
       store.resetCurrentUser();
     }
     if (user != null && store.currentUser == null) {
       await store.init(user.email!);
-      await bcont.init();
+      // await bcont.init();
       PersonModel.currentUser!.currentType == PersonType.admin ? Get.offAll(() => const AdminPage()) : Get.offAll(() => const HomePage());
     }
   }

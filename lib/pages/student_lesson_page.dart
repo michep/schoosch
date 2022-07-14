@@ -52,7 +52,7 @@ class _StudentLessonPageState extends State<StudentLessonPage> {
           const SizedBox(
             height: 5,
           ),
-          Text(widget._time.format(context)),
+          Text(widget._time.formatPeriod()),
           const SizedBox(
             height: 5,
           ),

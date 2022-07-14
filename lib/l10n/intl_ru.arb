@@ -28,6 +28,7 @@
     "newCurriculum": "Новый учебный предмет",
 
     "dayScheduleList": "Раписания времени уроков",
+    "dayLessonTimeName": "Раписание времени уроков",
 
     "classScheduleName": "{classname}, расписание",
 
@@ -84,5 +85,8 @@
     "errorPersonParentStudentsEmpty": "Нужно выбрать учащихся",
     "errorPersonParentClassesEmpty": "Нужно выбрать классы",
 
-    "errorScheduleFromDateEmpty": "Дата начала действия должна быть выбрана"
+    "errorScheduleFromDateEmpty": "Дата начала действия должна быть выбрана",
+
+    "fromTitle": "Время начала",
+    "tillTitle": "Время окончания"
 }

@@ -67,13 +67,22 @@ class FStore extends GetxController {
     return data;
   }
 
-  Future<List<LessontimeModel>> getLessontime(String id) async {
+  Future<List<LessontimeModel>> getLessontimes(String id) async {
     List<LessontimeModel> res = [];
-    var lessontimes = await _institutionRef.collection('lessontime').doc(id).collection('time').orderBy('order').get();
+    var lessontimes = await _institutionRef.collection('lessontime').doc(id).collection('time').get();
     for (var lessontime in lessontimes.docs) {
       res.add(LessontimeModel.fromMap(lessontime.id, lessontime.data()));
     }
     return res;
+  }
+
+  Future<String> saveLessontime(DayLessontimeModel daylessontime, LessontimeModel lessontime) async {
+    await _institutionRef.collection('lessontime').doc(daylessontime.id).collection('time').doc(lessontime.id).set(lessontime.toMap());
+    return lessontime.id;
+  }
+
+  Future<void> deleteLessontime(DayLessontimeModel daylessontime, LessontimeModel lessontime) async {
+    await _institutionRef.collection('lessontime').doc(daylessontime.id).collection('time').doc(lessontime.id).delete();
   }
 
   Future<DayLessontimeModel> getDayLessontime(String id) async {

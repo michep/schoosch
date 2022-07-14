@@ -19,6 +19,7 @@
     "newClass": "New Class",
 
     "dayLessontimeList": "Lessons Times",
+    "dayLessonTimeName": "Lesson Times",
 
     "curriculumName": "Curriculum",
     "curriculumAlternateName": "Alias",
@@ -84,5 +85,8 @@
     "errorPersonParentStudentsEmpty": "Students should be selected",
     "errorPersonParentClassesEmpty": "Classes should be selected",
 
-    "errorScheduleFromDateEmpty": "Start Date should be provided"
+    "errorScheduleFromDateEmpty": "Start Date should be provided",
+
+    "fromTitle": "From time",
+    "tillTitle": "Till time"
 }

@@ -83,7 +83,7 @@ class ClassModel {
   Future<List<LessontimeModel?>?> getLessontimes() async {
     if (_dayLessontimeId.isEmpty) return null;
     if (!_lessontimesLoaded) {
-      _lessontimes.addAll(await Get.find<FStore>().getLessontime(_dayLessontimeId)); //TODO: fallboack to default lessontimes?
+      _lessontimes.addAll(await Get.find<FStore>().getLessontimes(_dayLessontimeId)); //TODO: fallboack to default lessontimes?
       _lessontimesLoaded = true;
     }
     return _lessontimes;
@@ -113,11 +113,11 @@ class ClassModel {
   }
 
   Future<Set<CurriculumModel>> getUniqueCurriculums({bool forceRefresh = false}) async {
-    if(allCurriculums.isEmpty || forceRefresh) {
+    if (allCurriculums.isEmpty || forceRefresh) {
       var weekschedules = await getSchedulesWeek(Week.current());
-      for(var sched in weekschedules) {
+      for (var sched in weekschedules) {
         var les = await sched.allLessons();
-        for(var l in les) {
+        for (var l in les) {
           var cur = await l.curriculum;
           allCurriculums.add(cur!);
         }
@@ -127,8 +127,8 @@ class ClassModel {
   }
 
   Future<List<CurriculumModel>> getCurriculums({bool forceRefresh = false}) async {
-    if(_listCurriculums.isEmpty || forceRefresh) {
-      _listCurriculums.addAll(await Get.find<FStore>().getClassCurriculums(this)); 
+    if (_listCurriculums.isEmpty || forceRefresh) {
+      _listCurriculums.addAll(await Get.find<FStore>().getClassCurriculums(this));
     }
     return _listCurriculums;
   }

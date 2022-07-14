@@ -200,6 +200,16 @@ class S {
     );
   }
 
+  /// `Lesson Times`
+  String get dayLessonTimeName {
+    return Intl.message(
+      'Lesson Times',
+      name: 'dayLessonTimeName',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Curriculum`
   String get curriculumName {
     return Intl.message(
@@ -725,6 +735,26 @@ class S {
     return Intl.message(
       'Start Date should be provided',
       name: 'errorScheduleFromDateEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From time`
+  String get fromTitle {
+    return Intl.message(
+      'From time',
+      name: 'fromTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Till time`
+  String get tillTitle {
+    return Intl.message(
+      'Till time',
+      name: 'tillTitle',
       desc: '',
       args: [],
     );

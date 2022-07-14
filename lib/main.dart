@@ -16,9 +16,7 @@ import 'package:schoosch/pages/class_selection_page.dart';
 import 'package:schoosch/pages/disconnected_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:schoosch/theme.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 import 'model/person_model.dart';
@@ -32,7 +30,7 @@ Future<void> main() async {
   Get.put<FAuth>(fauth);
   Get.put<FStore>(fstore);
   Get.put(CurrentWeek(Week.current()));
-  Get.put<BlueprintController>(bcont);
+  // Get.put<BlueprintController>(bcont);
   if (fauth.currentUser != null) {
     await fstore.init(fauth.currentUser!.email!);
     await bcont.init();

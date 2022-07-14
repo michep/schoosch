@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
-import 'package:schoosch/widgets/lessontime_tile.dart';
+import 'package:schoosch/pages/admin/lessontime_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class DayLessontimePage extends StatefulWidget {
@@ -19,11 +19,18 @@ class DayLessontimePage extends StatefulWidget {
 class _DayLessontimePageState extends State<DayLessontimePage> {
   final TextEditingController _name = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final List<LessontimeModel> _lessontimes = [];
+  final List<LessontimeModel> _removed = [];
 
   @override
   void initState() {
     _name.value = TextEditingValue(text: widget._dayLessontime.name);
     super.initState();
+    widget._dayLessontime.lessontimes.then((value) {
+      setState(() {
+        _lessontimes.addAll(value);
+      });
+    });
   }
 
   @override
@@ -49,15 +56,18 @@ class _DayLessontimePageState extends State<DayLessontimePage> {
                 TextFormField(
                   controller: _name,
                   decoration: InputDecoration(
-                    label: Text(loc.venueName),
+                    label: Text(loc.dayLessonTimeName),
                   ),
                   validator: (value) => Utils.validateTextNotEmpty(value, loc.errorNameEmpty),
                 ),
                 Column(
                   children: [
-                    LessonTimeTile(),
+                    ..._lessontimes.map((e) {
+                      return LessonTimeTile(e, e.order == _lessontimes.length, _deleteLast);
+                    }),
                   ],
                 ),
+                IconButton(onPressed: _add, icon: const Icon(Icons.add)),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
@@ -73,6 +83,23 @@ class _DayLessontimePageState extends State<DayLessontimePage> {
     );
   }
 
+  void _deleteLast() {
+    if (_lessontimes.isNotEmpty) {
+      setState(() {
+        _removed.add(_lessontimes.removeLast());
+      });
+    }
+  }
+
+  void _add() {
+    setState(() {
+      _lessontimes.add(LessontimeModel.fromMap((_lessontimes.length + 1).toString(), <String, dynamic>{
+        'from': '00:00',
+        'till': '00:00',
+      }));
+    });
+  }
+
   Future<void> _save(DayLessontimeModel dayLessontime) async {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> map = {};
@@ -80,7 +107,17 @@ class _DayLessontimePageState extends State<DayLessontimePage> {
 
       var ndayLessontime = DayLessontimeModel.fromMap(dayLessontime.id, map);
       await ndayLessontime.save();
+      await _saveTimes();
       Get.back<DayLessontimeModel>(result: ndayLessontime);
+    }
+  }
+
+  Future<void> _saveTimes() async {
+    for (var t in _removed) {
+      t.delete(widget._dayLessontime);
+    }
+    for (var t in _lessontimes) {
+      t.save(widget._dayLessontime);
     }
   }
 

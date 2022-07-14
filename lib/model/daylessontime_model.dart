@@ -21,7 +21,7 @@ class DayLessontimeModel {
 
   Future<List<LessontimeModel>> get lessontimes async {
     if (!_lessontimesLoaded) {
-      _lessontimes.addAll(await Get.find<FStore>().getLessontime(_id!));
+      _lessontimes.addAll(await Get.find<FStore>().getLessontimes(_id!));
       _lessontimesLoaded = true;
     }
     return _lessontimes;

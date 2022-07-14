@@ -52,7 +52,7 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
                 : Container(
                     width: 0,
                   ),
-            subtitle: Text('${tim.format(context)}, ${ven.name}'),
+            subtitle: Text('${tim.formatPeriod()}, ${ven.name}'),
             onTap: () => _onTap(widget._lesson, cur, ven, tim),
           );
         });

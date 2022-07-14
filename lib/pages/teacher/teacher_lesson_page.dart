@@ -81,7 +81,7 @@ class TeacherLessonPage extends StatelessWidget {
               const SizedBox(
                 height: 5,
               ),
-              Text(_time.format(context)),
+              Text(_time.formatPeriod()),
               const SizedBox(
                 height: 5,
               ),

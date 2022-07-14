@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
-import 'package:schoosch/pages/admin/schedule_lessons_list.dart';
+import 'package:schoosch/pages/admin/schedule_lessons_edit.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class ScheduleDaysListPage extends StatefulWidget {
@@ -59,8 +59,7 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
   }
 
   Future<void> _onTap(StudentScheduleModel schedule) async {
-    var res = await Get.to<DayScheduleModel>(
-        () => ScheduleLessonsListPage(widget._aclass, schedule, '${schedule.aclass.name}, ${Utils.dayName(schedule.day - 1)}'),
+    var res = await Get.to<DayScheduleModel>(() => ScheduleLessonsPage(widget._aclass, schedule, '${schedule.aclass.name}, ${Utils.dayName(schedule.day - 1)}'),
         transition: Transition.rightToLeft);
     if (res is DayScheduleModel) {
       setState(() {});
@@ -70,7 +69,7 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
   Future<void> _newSchedule(int day) async {
     var nschedule = DayScheduleModel.empty(widget._aclass, day);
     nschedule.day = day;
-    var res = await Get.to<DayScheduleModel>(() => ScheduleLessonsListPage(widget._aclass, nschedule, '${nschedule.aclass.name}, ${Utils.dayName(day)}'));
+    var res = await Get.to<DayScheduleModel>(() => ScheduleLessonsPage(widget._aclass, nschedule, '${nschedule.aclass.name}, ${Utils.dayName(day)}'));
     if (res is DayScheduleModel) {
       setState(() {});
     }

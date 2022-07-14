@@ -44,6 +44,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "curriculumName": MessageLookupByLibrary.simpleMessage("Curriculum"),
         "curriculumStudents": MessageLookupByLibrary.simpleMessage("Students"),
         "curriculumTeacher": MessageLookupByLibrary.simpleMessage("Teacher"),
+        "dayLessonTimeName":
+            MessageLookupByLibrary.simpleMessage("Lesson Times"),
         "dayLessontimeList":
             MessageLookupByLibrary.simpleMessage("Lessons Times"),
         "dayScheduleList": MessageLookupByLibrary.simpleMessage("Schedule"),
@@ -87,6 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Teacher should be selected"),
         "errorVenueEmpty":
             MessageLookupByLibrary.simpleMessage("Venue should be selected"),
+        "fromTitle": MessageLookupByLibrary.simpleMessage("From time"),
         "lesson": MessageLookupByLibrary.simpleMessage("Lesson"),
         "lessonName": MessageLookupByLibrary.simpleMessage("Lesson"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
@@ -120,6 +123,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "scheduleNoLesson": MessageLookupByLibrary.simpleMessage("no lesson"),
         "scheduleTillDate": MessageLookupByLibrary.simpleMessage("End date"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "tillTitle": MessageLookupByLibrary.simpleMessage("Till time"),
         "venueList": MessageLookupByLibrary.simpleMessage("Venues"),
         "venueName": MessageLookupByLibrary.simpleMessage("Venue"),
         "weekSchedule": MessageLookupByLibrary.simpleMessage(
