@@ -110,7 +110,7 @@ class _PersonPageState extends State<PersonPage> {
                         ),
                         validator: (value) => Utils.validateDateTimeNotEmpty(value, loc.errorPersonBirthdayEmpty),
                         onShowPicker: (context, currentValue) async {
-                          final date = await showDatePicker(
+                          var date = await showDatePicker(
                             context: context,
                             firstDate: DateTime(1900),
                             initialDate: currentValue ?? DateTime.now(),

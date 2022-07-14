@@ -3,7 +3,7 @@ import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 
 class DayLessontimeModel {
-  final String? _id;
+  late String? _id;
   late String name;
   final List<LessontimeModel> _lessontimes = [];
   bool _lessontimesLoaded = false;
@@ -21,9 +21,21 @@ class DayLessontimeModel {
 
   Future<List<LessontimeModel>> get lessontimes async {
     if (!_lessontimesLoaded) {
-      _lessontimes.addAll(await Get.find<FStore>().getLessontime(_id!));
+      _lessontimes.addAll(await Get.find<FStore>().getLessontimes(_id!));
       _lessontimesLoaded = true;
     }
     return _lessontimes;
+  }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> res = {};
+    res['name'] = name;
+    return res;
+  }
+
+  Future<DayLessontimeModel> save() async {
+    var id = await Get.find<FStore>().saveDayLessontime(this);
+    _id ??= id;
+    return this;
   }
 }

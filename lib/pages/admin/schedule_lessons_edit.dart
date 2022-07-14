@@ -15,18 +15,18 @@ import 'package:schoosch/pages/admin/lesson_edit.dart';
 import 'package:schoosch/pages/admin/schedule_lessonlist_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class ScheduleLessonsListPage extends StatefulWidget {
+class ScheduleLessonsPage extends StatefulWidget {
   final ClassModel _aclass;
   final DayScheduleModel _schedule;
   final String _title;
 
-  const ScheduleLessonsListPage(this._aclass, this._schedule, this._title, {Key? key}) : super(key: key);
+  const ScheduleLessonsPage(this._aclass, this._schedule, this._title, {Key? key}) : super(key: key);
 
   @override
-  State<ScheduleLessonsListPage> createState() => _VenuePageState();
+  State<ScheduleLessonsPage> createState() => _VenuePageState();
 }
 
-class _VenuePageState extends State<ScheduleLessonsListPage> {
+class _VenuePageState extends State<ScheduleLessonsPage> {
   final _formKey = GlobalKey<FormState>();
 
   final Map<int, List<LessonModel>> _lessons = {};

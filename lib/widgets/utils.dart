@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
+  static DefaultMaterialLocalizations defaultLocalizations = const DefaultMaterialLocalizations();
   static Widget progressIndicator() {
     return const Center(
       child: CircularProgressIndicator(),
@@ -19,6 +20,17 @@ class Utils {
 
   static String? validateDateTimeNotEmpty(DateTime? value, String error) {
     return (value == null) ? error : null;
+  }
+
+  static String? validaTimeNotEmptyeAndValid(String? value, String error) {
+    if (value == null) return error;
+    var a = value.split(':');
+    if (a.length != 2) return error;
+    var h = int.tryParse(a[0]);
+    var m = int.tryParse(a[1]);
+    if (h == null || h < 0 || h > 24) return error;
+    if (m == null || m < 0 || m > 60) return error;
+    return null;
   }
 
   static Future<void> showErrorSnackbar(String text) async {
@@ -42,5 +54,14 @@ class Utils {
     } else {
       return '${DateFormat(format, locale).format(from)} \u2014 по сей день';
     }
+  }
+
+  static String formatDatetime(DateTime value, {String format = 'dd MMM yyyy', locale = 'ru'}) {
+    return DateFormat(format, locale).format(value);
+  }
+
+  static String formatTimeOfDay(TimeOfDay? value, {bool alwaysUse24HourFormat = true}) {
+    if (value != null) return defaultLocalizations.formatTimeOfDay(value, alwaysUse24HourFormat: alwaysUse24HourFormat);
+    return '';
   }
 }

@@ -41,7 +41,7 @@ class _VenuePageState extends State<VenuePage> {
         child: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.all(16),
             child: ListView(
               children: [
                 TextFormField(

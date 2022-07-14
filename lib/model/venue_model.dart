@@ -24,15 +24,13 @@ class VenueModel {
         });
 
   VenueModel.fromMap(this._id, Map<String, Object?> map) {
-    name = map['name'] != null
-        ? map['name'] as String
-        : throw 'need name key in venue $id';
+    name = map['name'] != null ? map['name'] as String : throw 'need name key in venue $id';
     // floor = map['floor'] != null
     //     ? map['floor'] as int
-    //     : null; //TODO: разобраться с этажами
+    //     : throw 'need floor key in venue $id';
     // type = map['type'] != null
     //     ? map['type'] as String
-    //     : null;
+    //     : throw 'need type key in venue $id';
     // if (!['room', 'floor'].contains(type)) throw 'incorrect type in venue $_id';
     // if (map['coords'] != null) {
     //   var listCoords = map['coords'] as List<dynamic>;
@@ -46,7 +44,6 @@ class VenueModel {
     // if (map['offset'] != null) {
     //   var listOffset = map['offset'] as List<dynamic>;
     //     _labelOffset = Offset((listOffset[0] as int).toDouble(), (listOffset[1] as int).toDouble());
-        
     // } else {
     //   throw 'need offset key in venue $id';
     // }
@@ -83,15 +80,10 @@ class VenueModel {
 
     var ts = TextSpan(
       text: name,
-      style: const TextStyle(
-          color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+      style: const TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
     );
-    var tp = TextPainter(text: ts, textDirection: TextDirection.ltr)
-      ..layout(maxWidth: 200);
+    var tp = TextPainter(text: ts, textDirection: TextDirection.ltr)..layout(maxWidth: 200);
 
-    tp.paint(
-        canvas,
-        Offset(
-            _labelOffset.dx - tp.width / 2, _labelOffset.dy - tp.height / 2));
+    tp.paint(canvas, Offset(_labelOffset.dx - tp.width / 2, _labelOffset.dy - tp.height / 2));
   }
 }

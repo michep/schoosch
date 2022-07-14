@@ -54,7 +54,7 @@ class _StudentLessonPageState extends State<StudentLessonPage> {
             const SizedBox(
               height: 5,
             ),
-            Text(widget._time.format(context)),
+            Text(widget._time.formatPeriod()),
             const SizedBox(
               height: 5,
             ),
@@ -87,8 +87,16 @@ class _StudentLessonPageState extends State<StudentLessonPage> {
                   return ListView(
                     shrinkWrap: true,
                     children: [
-                      if (stud != null) HomeworkCard(homework: stud, isClass: false,),
-                      if (clas != null) HomeworkCard(homework: clas, isClass: true,),
+                      if (stud != null)
+                        HomeworkCard(
+                          homework: stud,
+                          isClass: false,
+                        ),
+                      if (clas != null)
+                        HomeworkCard(
+                          homework: clas,
+                          isClass: true,
+                        ),
                     ],
                   );
                 }),

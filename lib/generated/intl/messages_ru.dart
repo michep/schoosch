@@ -52,6 +52,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Группа учащихся"),
         "curriculumTeacher":
             MessageLookupByLibrary.simpleMessage("Преподаватель"),
+        "dayLessonTimeName":
+            MessageLookupByLibrary.simpleMessage("Раписание времени уроков"),
+        "dayLessontimeList":
+            MessageLookupByLibrary.simpleMessage("Расписание времени уроков"),
         "dayScheduleList":
             MessageLookupByLibrary.simpleMessage("Раписания времени уроков"),
         "editInstitution": MessageLookupByLibrary.simpleMessage(
@@ -94,6 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Преподаватель должен быть выбран"),
         "errorVenueEmpty":
             MessageLookupByLibrary.simpleMessage("Кабинет должен быть выбран"),
+        "fromTitle": MessageLookupByLibrary.simpleMessage("Время начала"),
         "lesson": MessageLookupByLibrary.simpleMessage("Урок"),
         "lessonName": MessageLookupByLibrary.simpleMessage("Урок"),
         "name": MessageLookupByLibrary.simpleMessage("Название"),
@@ -134,6 +139,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "scheduleTillDate":
             MessageLookupByLibrary.simpleMessage("Окончание действия"),
         "search": MessageLookupByLibrary.simpleMessage("Поиск"),
+        "tillTitle": MessageLookupByLibrary.simpleMessage("Время окончания"),
         "venueList":
             MessageLookupByLibrary.simpleMessage("Кабинеты и помещения"),
         "venueName": MessageLookupByLibrary.simpleMessage("Кабинет"),

@@ -150,10 +150,10 @@ class S {
     );
   }
 
-  /// `Schedule`
+  /// `Lessons Times`
   String get classSchedule {
     return Intl.message(
-      'Schedule',
+      'Lessons Times',
       name: 'classSchedule',
       desc: '',
       args: [],
@@ -185,6 +185,26 @@ class S {
     return Intl.message(
       'New Class',
       name: 'newClass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lessons Times`
+  String get dayLessontimeList {
+    return Intl.message(
+      'Lessons Times',
+      name: 'dayLessontimeList',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lesson Times`
+  String get dayLessonTimeName {
+    return Intl.message(
+      'Lesson Times',
+      name: 'dayLessonTimeName',
       desc: '',
       args: [],
     );
@@ -250,10 +270,10 @@ class S {
     );
   }
 
-  /// `Lessons Schedule`
+  /// `Schedule`
   String get dayScheduleList {
     return Intl.message(
-      'Lessons Schedule',
+      'Schedule',
       name: 'dayScheduleList',
       desc: '',
       args: [],
@@ -715,6 +735,26 @@ class S {
     return Intl.message(
       'Start Date should be provided',
       name: 'errorScheduleFromDateEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From time`
+  String get fromTitle {
+    return Intl.message(
+      'From time',
+      name: 'fromTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Till time`
+  String get tillTitle {
+    return Intl.message(
+      'Till time',
+      name: 'tillTitle',
       desc: '',
       args: [],
     );

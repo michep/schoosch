@@ -54,7 +54,7 @@ class ObserverLessonPage extends StatelessWidget {
                   const SizedBox(
                     height: 5,
                   ),
-                  Text(lessontime.format(context)),
+                  Text(lessontime.formatPeriod()),
                   const SizedBox(
                     height: 5,
                   ),
