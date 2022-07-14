@@ -44,17 +44,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<ConnectivityResult>(
-        stream: Connectivity().onConnectivityChanged,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: Utils.progressIndicator(),
-            );
-          }
-          if (snapshot.data! == ConnectivityResult.none) {
-            Get.off(() => const DisconnectedPage());
-          }
+    // return StreamBuilder<ConnectivityResult>(
+    //     stream: Connectivity().onConnectivityChanged,
+    //     builder: (context, snapshot) {
+    //       if (!snapshot.hasData) {
+    //         return Center(
+    //           child: Utils.progressIndicator(),
+    //         );
+    //       }
+    //       if (snapshot.data! == ConnectivityResult.none) {
+    //         Get.off(() => const DisconnectedPage());
+    //       }
           return GetMaterialApp(
             supportedLocales: S.delegate.supportedLocales,
             localizationsDelegates: const [
@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
             // theme: darkTheme,
             home: _homePageSelector(),
           );
-        });
+        // });
   }
 
   Widget _homePageSelector() {

@@ -247,6 +247,7 @@ class TeacherLessonPage extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class CompletionListTile extends StatefulWidget {
   CompletionFlagModel completion;
   final HomeworkModel homework;
