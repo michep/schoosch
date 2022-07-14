@@ -37,58 +37,54 @@ class _LessonTimePageState extends State<LessonTimePage> {
             padding: const EdgeInsets.all(16.0),
             child: ListView(
               children: [
-                Column(
-                  children: [
-                    TextFormField(
-                      readOnly: true,
-                      controller: _fromCont,
-                      decoration: InputDecoration(
-                        label: Text(loc.fromTitle),
-                      ),
-                      // validator: (value) => Utils.validaTimeNotEmptyeAndValid(value, loc.errorFromEmptyOrInvalid),
-                      onTap: () async {
-                        var s = _fromCont.text.split(':');
-                        final time = await showTimePicker(
-                          context: context,
-                          initialTime: s.length == 2 ? TimeOfDay(hour: int.parse(s[0]), minute: int.parse(s[1])) : const TimeOfDay(hour: 0, minute: 0),
-                        );
-                        if (time != null) {
-                          setState(() {
-                            widget._lessontime.from = time;
-                            _fromCont.text = Utils.formatTimeOfDay(time);
-                          });
-                        }
-                      },
-                    ),
-                    TextFormField(
-                      readOnly: true,
-                      controller: _tillCont,
-                      decoration: InputDecoration(
-                        label: Text(loc.tillTitle),
-                      ),
-                      // validator: (value) => Utils.validaTimeNotEmptyeAndValid(value, loc.errorTillEmptyOrInvalid),
-                      onTap: () async {
-                        var s = _tillCont.text.split(':');
-                        final time = await showTimePicker(
-                          context: context,
-                          initialTime: s.length == 2 ? TimeOfDay(hour: int.parse(s[0]), minute: int.parse(s[1])) : const TimeOfDay(hour: 0, minute: 0),
-                        );
-                        if (time != null) {
-                          setState(() {
-                            widget._lessontime.till = time;
-                            _tillCont.text = Utils.formatTimeOfDay(time);
-                          });
-                        }
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: ElevatedButton(
-                        child: Text(loc.saveChanges),
-                        onPressed: () => _save(widget._lessontime),
-                      ),
-                    ),
-                  ],
+                TextFormField(
+                  readOnly: true,
+                  controller: _fromCont,
+                  decoration: InputDecoration(
+                    label: Text(loc.fromTitle),
+                  ),
+                  // validator: (value) => Utils.validaTimeNotEmptyeAndValid(value, loc.errorFromEmptyOrInvalid),
+                  onTap: () async {
+                    var s = _fromCont.text.split(':');
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: s.length == 2 ? TimeOfDay(hour: int.parse(s[0]), minute: int.parse(s[1])) : const TimeOfDay(hour: 0, minute: 0),
+                    );
+                    if (time != null) {
+                      setState(() {
+                        widget._lessontime.from = time;
+                        _fromCont.text = Utils.formatTimeOfDay(time);
+                      });
+                    }
+                  },
+                ),
+                TextFormField(
+                  readOnly: true,
+                  controller: _tillCont,
+                  decoration: InputDecoration(
+                    label: Text(loc.tillTitle),
+                  ),
+                  // validator: (value) => Utils.validaTimeNotEmptyeAndValid(value, loc.errorTillEmptyOrInvalid),
+                  onTap: () async {
+                    var s = _tillCont.text.split(':');
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: s.length == 2 ? TimeOfDay(hour: int.parse(s[0]), minute: int.parse(s[1])) : const TimeOfDay(hour: 0, minute: 0),
+                    );
+                    if (time != null) {
+                      setState(() {
+                        widget._lessontime.till = time;
+                        _tillCont.text = Utils.formatTimeOfDay(time);
+                      });
+                    }
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: ElevatedButton(
+                    child: Text(loc.saveChanges),
+                    onPressed: () => _save(widget._lessontime),
+                  ),
                 )
               ],
             ),

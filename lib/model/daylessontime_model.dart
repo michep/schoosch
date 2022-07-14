@@ -22,6 +22,7 @@ class DayLessontimeModel {
   Future<List<LessontimeModel>> get lessontimes async {
     if (!_lessontimesLoaded) {
       _lessontimes.addAll(await Get.find<FStore>().getLessontimes(_id!));
+      _lessontimes.sort((a, b) => a.order.compareTo(b.order));
       _lessontimesLoaded = true;
     }
     return _lessontimes;
