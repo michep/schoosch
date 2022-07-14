@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/curriculum_model.dart';
+import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class AddHomeworkSheet extends StatefulWidget {
-  final TeacherModel teacher;
-  final CurriculumModel curriculum;
-  final DateTime date;
+  final TeacherModel? teacher;
+  final CurriculumModel? curriculum;
+  final DateTime? date;
   final StudentModel? student;
+  final bool isEdit;
+  final HomeworkModel? homework;
 
   const AddHomeworkSheet(
+    {
     this.teacher,
     this.curriculum,
     this.date,
-    this.student, {
+    this.student, 
+    required this.isEdit,
+    this.homework,
     Key? key,
   }) : super(key: key);
 
@@ -23,6 +29,15 @@ class AddHomeworkSheet extends StatefulWidget {
 
 class AddHomeworkSheetState extends State<AddHomeworkSheet> {
   TextEditingController cont = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.isEdit) {
+      cont.text = widget.homework!.text;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -40,7 +55,9 @@ class AddHomeworkSheetState extends State<AddHomeworkSheet> {
         ),
         ElevatedButton.icon(
           onPressed: () async {
-            widget.teacher.createHomework(cont.text, widget.curriculum, widget.date, student: widget.student);
+            widget.isEdit
+                ? widget.homework!.change(cont.text)
+                : widget.teacher!.createHomework(cont.text, widget.curriculum!, widget.date!, student: widget.student);
             cont.clear();
             Get.back();
           },

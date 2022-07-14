@@ -70,6 +70,13 @@ class LessonModel {
     return _homeworks['class'];
   }
 
+  Future<HomeworkModel?> hasHomework(DateTime date) async {
+    if(_homeworks['class'] == null) {
+      _homeworks['class'] = await Get.find<FStore>().alreadyHasHomework(date, (await curriculum)!,);
+    }
+    return _homeworks['class'];
+  }
+
   Future<Map<String, HomeworkModel?>> homeworkForStudentAndClass(StudentModel student, DateTime date, {bool forceRefresh = false,}) async {
     if(_homeworks[student.id] == null || forceRefresh) {
       _homeworks[student.id!] = await Get.find<FStore>().getLessonHomeworkForStudent(schedule, (await curriculum)!, student, date);
@@ -86,7 +93,7 @@ class LessonModel {
     
   }
 
-  Future<Map<String, HomeworkModel?>> homeworkForEveryone(DateTime date, {bool forceRefresh = false}) async {
+  Future<Map<String, dynamic>> homeworkForEveryone(DateTime date, {bool forceRefresh = false}) async {
     var studs = await aclass.students();
     for(StudentModel u in studs) {
       if(_homeworks[u.id] == null || forceRefresh) {
