@@ -907,7 +907,38 @@ class FStore extends GetxController {
         }
       }
     }
-    print(res);
+    // print(res);
     return res;
+  }
+
+  Future<ReplacementModel?> getLessonReplacement(ClassModel clas, DateTime date, int order) async {
+    var a = await _institutionRef
+        .collection('class')
+        .doc(clas.id)
+        .collection('replace')
+        .where('date', isGreaterThanOrEqualTo: date)
+        .where(
+          'date',
+          isLessThanOrEqualTo: date.add(
+            const Duration(hours: 24, minutes: 59),
+          ),
+        )
+        .where('lesson_order', isEqualTo: order)
+        .get();
+    if (a.docs.isNotEmpty) {
+      var r = a.docs[0];
+      CurriculumModel cur = await getCurriculum(r['new_curriculum_id']);
+      PersonModel teach = await getPerson(r['new_teacher_id']);
+      VenueModel venue = await getVenue(r['new_venue_id']);
+      return ReplacementModel.fromMap(r.id, {
+        'date': r['date'],
+        'lesson_order': r['lesson_order'],
+        'new_teacher': teach,
+        'new_curriculum': cur,
+        'new_venue': venue,
+      });
+    } else {
+      return null;
+    }
   }
 }

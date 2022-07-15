@@ -22,12 +22,29 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Future.wait([
-          widget._lesson.curriculum,
-          widget._lesson.venue,
-          widget._lesson.lessontime,
-          widget._lesson.marksForStudentAsString(widget._student, widget._date),
-        ]),
+        future: widget._lesson.getReplacement(widget._date).then((value) {
+          if (value != null) {
+            return Future.wait([
+              value.curriculum,
+              value.venue,
+              value.lessontime,
+              value.marksForStudentAsString(widget._student, widget._date),
+            ]);
+          } else {
+            return Future.wait([
+              widget._lesson.curriculum,
+              widget._lesson.venue,
+              widget._lesson.lessontime,
+              widget._lesson.marksForStudentAsString(widget._student, widget._date),
+            ]);
+          }
+        }),
+        // future: Future.wait([
+        //   widget._lesson.curriculum,
+        //   widget._lesson.venue,
+        //   widget._lesson.lessontime,
+        //   widget._lesson.marksForStudentAsString(widget._student, widget._date),
+        // ]),
         builder: (context, snap) {
           if (!snap.hasData) {
             return const ListTile();

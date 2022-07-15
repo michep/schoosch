@@ -82,8 +82,10 @@ class ClassModel {
   Future<List<LessontimeModel?>?> getLessontimes() async {
     if (_dayLessontimeId.isEmpty) return null;
     if (!_lessontimesLoaded) {
-      _lessontimes.addAll(await Get.find<FStore>().getLessontime(_dayLessontimeId)); //TODO: fallboack to default lessontimes?
-      _lessontimesLoaded = true;
+      _lessontimes.addAll(
+        await Get.find<FStore>().getLessontime(_dayLessontimeId),
+      );
+      _lessontimesLoaded = true; //TODO: fallboack to default lessontimes?
     }
     return _lessontimes;
   }
@@ -127,8 +129,8 @@ class ClassModel {
   // }
 
   Future<List<CurriculumModel>> getCurriculums({bool forceRefresh = false}) async {
-    if(_listCurriculums.isEmpty || forceRefresh) {
-      _listCurriculums.addAll(await Get.find<FStore>().getClassCurriculums(this)); 
+    if (_listCurriculums.isEmpty || forceRefresh) {
+      _listCurriculums.addAll(await Get.find<FStore>().getClassCurriculums(this));
     }
     return _listCurriculums;
   }
