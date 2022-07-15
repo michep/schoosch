@@ -91,10 +91,11 @@ class _TeacherStudentTileState extends State<TeacherStudentTile> {
       context: context,
       builder: (a) {
         return AddHomeworkSheet(
-          widget.teacher,
-          widget.curriculum,
-          widget.date,
-          widget.student,
+          teacher: widget.teacher,
+          curriculum: widget.curriculum,
+          date: widget.date,
+          student: widget.student,
+          isEdit: false,
         );
       },
     );

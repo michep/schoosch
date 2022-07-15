@@ -17,6 +17,7 @@ import 'package:schoosch/pages/disconnected_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:schoosch/theme.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 import 'model/person_model.dart';
@@ -66,7 +67,7 @@ class MyApp extends StatelessWidget {
             scrollBehavior: AppScrollBehavior(),
             onGenerateTitle: (context) => S.of(context).appTiile,
             debugShowCheckedModeBanner: false,
-            // theme: darkTheme,
+            theme: darkTheme,
             home: _homePageSelector(),
           );
         // });

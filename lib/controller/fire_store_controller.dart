@@ -18,6 +18,7 @@ import 'package:schoosch/model/message_model.dart';
 import 'package:schoosch/model/node_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
+import 'package:schoosch/model/replacement_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/model/class_model.dart';
 
@@ -667,6 +668,26 @@ class FStore extends GetxController {
     return res.docs.isNotEmpty ? HomeworkModel.fromMap(res.docs[0].id, res.docs[0].data()) : null;
   }
 
+  Future<void> updateHomework(HomeworkModel homework, String newText) async {
+    var a = _institutionRef.collection('homework').doc(homework.id);
+    return a.update({
+      'text': newText,
+    });
+  }
+
+  Future<HomeworkModel?> alreadyHasHomework(DateTime date, CurriculumModel curriculum) async {
+    var res = await _institutionRef
+        .collection('homework')
+        .where('date', isLessThan: date.add(const Duration(hours: 12))) //.subtract(const Duration(hours: 23, minutes: 59))
+        .where('date', isGreaterThan: date.subtract(const Duration(hours: 12)))
+        .where('curriculum_id', isEqualTo: curriculum.id)
+        .where('student_id', isNull: true)
+        .orderBy('date', descending: true)
+        .limit(1)
+        .get();
+    return res.docs.isNotEmpty ? HomeworkModel.fromMap(res.docs[0].id, res.docs[0].data()) : null;
+  }
+
   Future<List<HomeworkModel>> getLessonHomeworks(DayScheduleModel schedule, CurriculumModel curriculum, DateTime date) async {
     return (await _institutionRef
             .collection('homework')
@@ -871,5 +892,72 @@ class FStore extends GetxController {
       'sent_by': currentUser!.id!,
       'timestamp': DateTime.now(),
     });
+  }
+
+  Future<Map<int, List<ReplacementModel>>> getWeekReplaces(ClassModel clas, Week week) async {
+    var a = await _institutionRef
+        .collection('class')
+        .doc(clas.id)
+        .collection('replace')
+        .where('date', isGreaterThan: week.day(0))
+        .where('date', isLessThan: week.day(6))
+        .get();
+    List<ReplacementModel> reps = [];
+    Map<int, List<ReplacementModel>> res = {};
+    for (var r in a.docs) {
+      CurriculumModel cur = await getCurriculum(r['new_curriculum_id']);
+      PersonModel teach = await getPerson(r['new_teacher_id']);
+      reps.add(ReplacementModel.fromMap(r.id, {
+        'date': r['date'],
+        'lesson_order': r['lesson_order'],
+        'new_teacher': teach,
+        'new_curriculum': cur,
+      }));
+    }
+    for (var day in week.days) {
+      for (var rep in reps) {
+        DateTime d = DateTime(rep.date!.year, rep.date!.month, rep.date!.day);
+        if (day.compareTo(d) == 0) {
+          if (res.containsKey(day.weekday)) {
+            res[day.weekday]!.add(rep);
+          } else {
+            res[day.weekday] = [rep];
+          }
+        }
+      }
+    }
+    // print(res);
+    return res;
+  }
+
+  Future<ReplacementModel?> getLessonReplacement(ClassModel clas, DateTime date, int order) async {
+    var a = await _institutionRef
+        .collection('class')
+        .doc(clas.id)
+        .collection('replace')
+        .where('date', isGreaterThanOrEqualTo: date)
+        .where(
+          'date',
+          isLessThanOrEqualTo: date.add(
+            const Duration(hours: 24, minutes: 59),
+          ),
+        )
+        .where('lesson_order', isEqualTo: order)
+        .get();
+    if (a.docs.isNotEmpty) {
+      var r = a.docs[0];
+      CurriculumModel cur = await getCurriculum(r['new_curriculum_id']);
+      PersonModel teach = await getPerson(r['new_teacher_id']);
+      VenueModel venue = await getVenue(r['new_venue_id']);
+      return ReplacementModel.fromMap(r.id, {
+        'date': r['date'],
+        'lesson_order': r['lesson_order'],
+        'new_teacher': teach,
+        'new_curriculum': cur,
+        'new_venue': venue,
+      });
+    } else {
+      return null;
+    }
   }
 }

@@ -25,8 +25,8 @@ var darkTheme = FlexThemeData.dark(
       navigationBarOpacity: 0.95,
       navigationBarMutedUnselectedLabel: true,
       navigationBarMutedUnselectedIcon: true,
-      inputDecoratorIsFilled: true,
-      inputDecoratorBorderType: FlexInputBorderType.outline,
+      // inputDecoratorIsFilled: true,
+      inputDecoratorBorderType: FlexInputBorderType.underline,
       inputDecoratorUnfocusedHasBorder: true,
       blendOnColors: true,
     ));

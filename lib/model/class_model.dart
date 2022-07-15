@@ -23,7 +23,6 @@ class ClassModel {
   final Map<Week, List<StudentScheduleModel>> _weekSchedules = {};
   final Map<int, List<StudentScheduleModel>> _daySchedules = {};
   final List<CurriculumModel> _listCurriculums = [];
-  final Set<CurriculumModel> allCurriculums = {};
 
   String? get id => _id;
 
@@ -83,8 +82,10 @@ class ClassModel {
   Future<List<LessontimeModel?>?> getLessontimes() async {
     if (_dayLessontimeId.isEmpty) return null;
     if (!_lessontimesLoaded) {
-      _lessontimes.addAll(await Get.find<FStore>().getLessontimes(_dayLessontimeId)); //TODO: fallboack to default lessontimes?
-      _lessontimesLoaded = true;
+      _lessontimes.addAll(
+        await Get.find<FStore>().getLessontimes(_dayLessontimeId),
+      );
+      _lessontimesLoaded = true; //TODO: fallboack to default lessontimes?
     }
     return _lessontimes;
   }
@@ -113,19 +114,19 @@ class ClassModel {
     return _students;
   }
 
-  Future<Set<CurriculumModel>> getUniqueCurriculums({bool forceRefresh = false}) async {
-    if (allCurriculums.isEmpty || forceRefresh) {
-      var weekschedules = await getSchedulesWeek(Week.current());
-      for (var sched in weekschedules) {
-        var les = await sched.allLessons();
-        for (var l in les) {
-          var cur = await l.curriculum;
-          allCurriculums.add(cur!);
-        }
-      }
-    }
-    return allCurriculums;
-  }
+  // Future<Set<CurriculumModel>> getUniqueCurriculums({bool forceRefresh = false}) async {
+  //   if(allCurriculums.isEmpty || forceRefresh) {
+  //     var weekschedules = await getSchedulesWeek(Week.current());
+  //     for(var sched in weekschedules) {
+  //       var les = await sched.allLessons();
+  //       for(var l in les) {
+  //         var cur = await l.curriculum;
+  //         allCurriculums.add(cur!);
+  //       }
+  //     }
+  //   }
+  //   return allCurriculums;
+  // }
 
   Future<List<CurriculumModel>> getCurriculums({bool forceRefresh = false}) async {
     if (_listCurriculums.isEmpty || forceRefresh) {

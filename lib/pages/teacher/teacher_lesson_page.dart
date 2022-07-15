@@ -42,13 +42,31 @@ class TeacherLessonPage extends StatelessWidget {
     TeacherModel teacher,
     CurriculumModel curriculum,
     DateTime date,
-    StudentModel? student,
   ) async {
     return await showModalBottomSheet(
-        context: context,
-        builder: (a) {
-          return AddHomeworkSheet(teacher, curriculum, date, student);
-        });
+      context: context,
+      builder: (a) {
+        return AddHomeworkSheet(
+          teacher: teacher,
+          curriculum: curriculum,
+          date: date,
+          student: null,
+          isEdit: false,
+        );
+      },
+    );
+  }
+
+  Future<void> updateHomework(BuildContext context, HomeworkModel homework) async {
+    return await showModalBottomSheet(
+      context: context,
+      builder: (a) {
+        return AddHomeworkSheet(
+          isEdit: true,
+          homework: homework,
+        );
+      },
+    );
   }
 
   @override
@@ -119,49 +137,49 @@ class TeacherLessonPage extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
+              const Text('ДЗ на следущий урок'),
+              FutureBuilder<HomeworkModel?>(
+                  future: _lesson.hasHomework(_date),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SizedBox();
+                    }
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: Text('вы еще не задали дз.'),
+                      );
+                    }
+                    return Card(
+                      child: ListTile(
+                        title: Text(snapshot.data!.text),
+                        trailing: IconButton(
+                          onPressed: () async {
+                            updateHomework(context, snapshot.data!);
+                          },
+                          icon: const Icon(Icons.edit_outlined),
+                        ),
+                      ),
+                    );
+                  }),
+              const SizedBox(
+                height: 10,
+              ),
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('заданное ДЗ:'),
-                  FutureBuilder<Map<String, HomeworkModel?>>(
+                  const Text('ДЗ на сегодня'),
+                  FutureBuilder<Map<String, dynamic>>(
                     future: _lesson.homeworkForEveryone(_date),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return const Card(
-                            elevation: 3,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 15.0),
-                              child: Center(child: Text("нет домашнего задания")),
-                            ));
+                          elevation: 3,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 15.0),
+                            child: Center(child: Text("нет домашнего задания")),
+                          ),
+                        );
                       }
-                      // return List.generate(
-                      //   snapshot.data!.length,
-                      //   (index) => FutureBuilder<List<CompletionFlagModel>>(
-                      //     future: cmpltn!.getAllCompletions(),
-                      //     builder: (context, completionsnapshot) {
-                      //       if (!completionsnapshot.hasData) {
-                      //         return Center(
-                      //           child: Utils.progressIndicator(),
-                      //         );
-                      //       }
-                      //       if (completionsnapshot.data!.isEmpty) {
-                      //         return ExpansionTile(
-                      //           title: Text(cmpltn.text),
-                      //           children: const [Text('нет активных выполнений')],
-                      //         );
-                      //       }
-                      //       return ExpansionTile(
-                      //         title: Text(cmpltn.text),
-                      //         children: [
-                      //           ...completionsnapshot.data!.map(
-                      //             (e) => CompletionListTile(completion: e, homework: cmpltn),
-                      //           ),
-                      //         ],
-                      //       );
-                      //     },
-                      //   ),
-                      // );
-
                       return Column(
                         children: [
                           ...snapshot.data!.values.map(
@@ -231,13 +249,22 @@ class TeacherLessonPage extends StatelessWidget {
                 height: 10,
               ),
               Center(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    createClassHomework(context, _teacher, _curiculum, _date, null);
-                  },
-                  icon: const Icon(Icons.calculate_outlined),
-                  label: const Text("задать ДЗ классу"),
-                ),
+                child: FutureBuilder<HomeworkModel?>(
+                    future: _lesson.hasHomework(_date),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: Utils.progressIndicator());
+                      }
+                      return ElevatedButton.icon(
+                        onPressed: !snapshot.hasData
+                            ? () {
+                                createClassHomework(context, _teacher, _curiculum, _date);
+                              }
+                            : null,
+                        icon: const Icon(Icons.calculate_outlined),
+                        label: Text(snapshot.hasData ? "Вы уже задали задание." : "задать ДЗ классу"),
+                      );
+                    }),
               ),
             ],
           ),

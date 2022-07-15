@@ -66,4 +66,8 @@ class HomeworkModel {
   Future<void> confirmHomework() async {
     return await Get.find<FStore>().confirmHomework(this);
   }
+
+  Future<void> change(String newText) async {
+    return await Get.find<FStore>().updateHomework(this, newText);
+  }
 }
