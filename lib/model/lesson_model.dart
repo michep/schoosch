@@ -11,6 +11,23 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/replacement_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 
+enum LessonType {
+  normal,
+  replaced,
+  replacment
+}
+
+extension LessonTypeExt on LessonType {
+  static LessonType getType(int? i) {
+    switch (i) {
+      case 0: return LessonType.normal; 
+      case 1: return LessonType.replaced;
+      case 2: return LessonType.replacment;
+      default: return LessonType.normal; 
+    }
+  }
+}
+
 class LessonModel {
   final ClassModel aclass;
   final DayScheduleModel schedule;
@@ -24,6 +41,7 @@ class LessonModel {
   VenueModel? _venue;
   LessontimeModel? _lessontime;
   LessonModel? replaceLesson;
+  LessonType? type;
 
   String? get id => _id;
 
@@ -38,6 +56,20 @@ class LessonModel {
     order = map['order'] != null ? map['order'] as int : throw 'need order key in lesson $_id';
     _curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in lesson $_id';
     _venueId = map['venue_id'] != null ? map['venue_id'] as String : throw 'need venue_id key in lesson $_id';
+    type =  map['type'] != null ? LessonTypeExt.getType((map['type'] as int)) : LessonType.normal;
+  }
+
+  // static LessonModel fromReplacement(LessonModel lessonmodel, ReplacementModel replacement) {
+  //   return LessonModel.fromMap(lessonmodel.aclass, lessonmodel.schedule, lessonmodel._id, {
+  //     'order': replacement.lessonOrder,
+  //     'curriculum_id': replacement.curriculum!.id,
+  //     'venue_id': replacement.venue!.id,
+  //     'type': 2
+  //   });
+  // }
+
+  void setReplacedType() {
+    type = LessonType.replaced;
   }
 
   Future<CurriculumModel?> get curriculum async {
@@ -58,21 +90,21 @@ class LessonModel {
     return _lessontime ??= await aclass.getLessontime(order);
   }
 
-  Future<LessonModel?> getReplacement(DateTime date) async {
-    if (replaceLesson == null) {
-      var rep = await Get.find<FStore>().getLessonReplacement(aclass, date, order);
-      if (rep != null) {
-        replaceLesson =  LessonModel.fromMap(aclass, schedule, _id, {
-          'order': order,
-          'curriculum_id': rep.newCurriculum!.id,
-          'venue_id': rep.newVenue!.id,
-        });
-      } else {
-        replaceLesson = null;
-      }
-    }
-    return replaceLesson;
-  }
+  // Future<LessonModel?> getReplacement(DateTime date) async {
+  //   if (replaceLesson == null) {
+  //     var rep = await Get.find<FStore>().getLessonReplacement(aclass, date, order);
+  //     if (rep != null) {
+  //       replaceLesson =  LessonModel.fromMap(aclass, schedule, _id, {
+  //         'order': order,
+  //         'curriculum_id': rep.newCurriculum!.id,
+  //         'venue_id': rep.newVenue!.id,
+  //       });
+  //     } else {
+  //       replaceLesson = null;
+  //     }
+  //   }
+  //   return replaceLesson;
+  // }
 
   Future<HomeworkModel?> homeworkForStudent(StudentModel student, DateTime date) async {
     if (_homeworks[student.id] == null) {
@@ -172,4 +204,8 @@ class LessonModel {
   Future<void> delete() async {
     return Get.find<FStore>().deleteLesson(this);
   }
+}
+
+class ReplacementModel extends LessonModel {
+  ReplacementModel.fromMap(ClassModel aclass, DayScheduleModel schedule, String? id, Map<String, dynamic> map): super.fromMap(aclass, schedule, id, map);
 }

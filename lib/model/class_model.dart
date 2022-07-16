@@ -72,6 +72,10 @@ class ClassModel {
     return _weekSchedules[week] ??= await Get.find<FStore>().getClassWeekSchedule(this, week);
   }
 
+  Future<void> createReplacement(Map<String, dynamic> map) async {
+    return await Get.find<FStore>().createReplacement(this, map);
+  }
+
   Future<List<StudentScheduleModel>> getSchedulesDay(int day, {bool forceRefresh = false}) async {
     if (_daySchedules[day] == null || forceRefresh) {
       _daySchedules[day] = await Get.find<FStore>().getClassDaySchedule(this, day);

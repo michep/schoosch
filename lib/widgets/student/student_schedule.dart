@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -18,10 +16,7 @@ class StudentScheduleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<StudentScheduleModel>>(
-      // future: _class.getSchedulesWeek(_week),
-      future: Get.find<FStore>().getWeekReplaces(_class, _week).then((v) {
-        return _class.getSchedulesWeek(_week);
-      }),
+      future: _class.getSchedulesWeek(_week),
       builder: (context, schedules) {
         if (!schedules.hasData) {
           return Utils.progressIndicator();

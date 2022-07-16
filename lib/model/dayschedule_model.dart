@@ -68,9 +68,9 @@ class StudentScheduleModel extends DayScheduleModel {
 
   StudentScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map);
 
-  Future<List<LessonModel>> lessonsForStudent(StudentModel student) async {
+  Future<List<LessonModel>> lessonsForStudent(StudentModel student, {DateTime? date}) async {
     if (!_studentLessonsLoaded) {
-      _studentLessons.addAll(await Get.find<FStore>().getScheduleLessonsForStudent(_class, this, student));
+      _studentLessons.addAll(await Get.find<FStore>().getScheduleLessonsForStudent(_class, this, student, date));
       _studentLessonsLoaded = true;
     }
     return _studentLessons;

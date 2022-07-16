@@ -7,6 +7,7 @@ import 'package:schoosch/pages/admin/curriculum_list.dart';
 import 'package:schoosch/pages/admin/daylessontime_list.dart';
 import 'package:schoosch/pages/admin/institution.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
+import 'package:schoosch/pages/admin/replacements_edit.dart';
 import 'package:schoosch/pages/admin/venue_list.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
 import 'package:schoosch/pages/about_page.dart';
@@ -38,6 +39,10 @@ class AdminDrawer extends StatelessWidget {
             TextButton(
               onPressed: _openCurriculumsPage,
               child: Text(loc.curriculumList),
+            ),
+            TextButton(
+              onPressed: _openReplacementsPage,
+              child: Text('Replacements'),
             ),
             TextButton(
               onPressed: _openClassesPage,
@@ -84,6 +89,11 @@ class AdminDrawer extends StatelessWidget {
   Future<void> _openClassesPage() async {
     // Get.back();
     Get.to(() => ClassListPage(InstitutionModel.currentInstitution));
+  }
+
+  Future<void> _openReplacementsPage() async {
+    // Get.back();
+    Get.to(() => ReplacementsPage(InstitutionModel.currentInstitution));
   }
 
   Future<void> _openDayLessontimePage() async {
