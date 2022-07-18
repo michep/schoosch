@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/all_chats_page.dart';
 import 'package:schoosch/pages/all_marks_table_page.dart';
+import 'package:schoosch/pages/free_teachers_page.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
 import 'package:schoosch/pages/teacher_rate_page.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
@@ -67,6 +68,17 @@ class MDrawer extends StatelessWidget {
           label: const Text('ваши оценки'),
         ),
       );
+    }
+    if(PersonModel.currentUser!.currentType == PersonType.observer) {
+      items.add(
+      TextButton.icon(
+        onPressed: () {
+          Get.to(() => const FreeTeachersPage());
+        },
+        icon: const Icon(Icons.free_cancellation_outlined),
+        label: const Text('свободные уроки'),
+      ),
+    );
     }
     items.add(
       TextButton.icon(

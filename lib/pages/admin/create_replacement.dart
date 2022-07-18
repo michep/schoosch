@@ -25,8 +25,12 @@ class _CreateReplacementState extends State<CreateReplacement> {
   CurriculumModel? newCurriculum;
   int? newOrder;
   VenueModel? newVenue;
+  final _formKey = GlobalKey<FormState>();
 
   TextEditingController dateCont = TextEditingController();
+  TextEditingController orderCont = TextEditingController();
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -35,74 +39,124 @@ class _CreateReplacementState extends State<CreateReplacement> {
       appBar: AppBar(),
       body: SafeArea(
         child: Form(
-          child: Column(
-            children: [
-              TextFormField(
-                controller: dateCont,
-                onTap: () => showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(DateTime.now().year - 1),
-                  lastDate: DateTime(DateTime.now().year + 1),
-                ).then((value) {
-                  if (value != null) {
-                    date = value;
-                    dateCont.text = DateFormat('dd/MM/yyyy').format(value);
-                  }
-                }),
-              ),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                onChanged: (v) {
-                  newOrder = int.parse(v);
-                },
-              ),
-              SelectableValueDropdownFormField<CurriculumModel>(
-                title: loc.curriculumName,
-                initFutureFunc: _initCurriculum,
-                initOptionsFutureFunc: _initCurriculumOptions,
-                listFunc: () => Container(),
-                titleFunc: (value) => value?.aliasOrName ?? '',
-                callback: _setCurriculum,
-              ),
-              SelectableValueDropdownFormField<VenueModel>(
-                title: loc.venueName,
-                initFutureFunc: _initVenue,
-                initOptionsFutureFunc: _initVenueOptions,
-                listFunc: () => Container(),
-                titleFunc: (value) => value?.name ?? '',
-                callback: _setVenue,
-              ),
-              SelectableValueDropdownFormField<PersonModel>(
-                title: loc.curriculumTeacher,
-                initFutureFunc: _initMaster,
-                initOptionsFutureFunc: _initMasterOptions,
-                titleFunc: (value) => value?.fullName ?? '',
-                listFunc: () => Container(),
-                callback: (value) => _setMaster(value),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: ElevatedButton(
-                  child: Text(loc.saveChanges),
-                  onPressed: () async {
-                    await _createReplacement({
-                      'order': newOrder,
-                      'curriculum_id': newCurriculum!.id,
-                      'venue_id': newVenue!.id,
-                      'teacher_id': newTeacher!.id,
-                      'date': date,
-                    }).whenComplete(
-                      () => Get.back(),
-                    );
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ListView(
+              children: [
+                TextFormField(
+                  controller: dateCont,
+                  onTap: () => showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(DateTime.now().year - 1),
+                    lastDate: DateTime(DateTime.now().year + 1),
+                  ).then((value) {
+                    if (value != null) {
+                      date = value;
+                      dateCont.text = DateFormat('dd/MM/yyyy').format(value);
+                    }
+                  }),
+                  validator: (v) {
+                    if (v == null || v.isEmpty) {
+                      return 'нужно указать дату заменяемого урока.';
+                    }
+                    return null;
                   },
                 ),
-              ),
-            ],
+                TextFormField(
+                  controller: orderCont,
+                  keyboardType: TextInputType.number,
+                  onChanged: (v) {
+                    newOrder = int.parse(v);
+                  },
+                  validator: (v) {
+                    if (v == null || v.isEmpty) {
+                      return 'нужно указать номер заменяемого урока.';
+                    }
+                    return null;
+                  },
+                ),
+                SelectableValueDropdownFormField<CurriculumModel>(
+                  title: loc.curriculumName,
+                  initFutureFunc: _initCurriculum,
+                  initOptionsFutureFunc: _initCurriculumOptions,
+                  listFunc: () => Container(),
+                  titleFunc: (value) => value?.aliasOrName ?? '',
+                  callback: _setCurriculum,
+                  validatorFunc: (v) {
+                    if (v == null) {
+                      return 'нужно выбрать урок на замену.';
+                    }
+                    return null;
+                  },
+                ),
+                SelectableValueDropdownFormField<VenueModel>(
+                  title: loc.venueName,
+                  initFutureFunc: _initVenue,
+                  initOptionsFutureFunc: _initVenueOptions,
+                  listFunc: () => Container(),
+                  titleFunc: (value) => value?.name ?? '',
+                  callback: _setVenue,
+                  validatorFunc: (v) {
+                    if (v == null) {
+                      return 'нужно выбрать кабинет на замену.';
+                    }
+                    return null;
+                  },
+                ),
+                SelectableValueDropdownFormField<PersonModel>(
+                  title: loc.curriculumTeacher,
+                  initFutureFunc: _initMaster,
+                  initOptionsFutureFunc: _initMasterOptions,
+                  titleFunc: (value) => value?.fullName ?? '',
+                  listFunc: () => Container(),
+                  callback: (value) => _setMaster(value),
+                  validatorFunc: (v) {
+                    if (v == null) {
+                      return 'нужно выбрать учителя на замену.';
+                    }
+                    return null;
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: ElevatedButton(
+                    onPressed: isLoading
+                        ? null
+                        : () async {
+                            await saveForm();
+                          },
+                    child: isLoading ? Utils.progressIndicator() : Text(loc.saveChanges),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> saveForm() async {
+    bool isValid = _formKey.currentState!.validate();
+    if (isValid) {
+      setState(() {
+        isLoading = true;
+      });
+      await _createReplacement({
+        'order': newOrder,
+        'curriculum_id': newCurriculum!.id,
+        'venue_id': newVenue!.id,
+        'teacher_id': newTeacher!.id,
+        'date': date,
+      }).whenComplete(() {
+        setState(() {
+          isLoading = false;
+          Get.back();
+        });
+      });
+    }
   }
 
   Future<void> _createReplacement(Map<String, dynamic> map) async {

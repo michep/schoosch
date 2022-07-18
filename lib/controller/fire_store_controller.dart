@@ -511,17 +511,6 @@ class FStore extends GetxController {
         });
       }
     }
-    // var b = (await a.get()).data()!['checked_users'];
-    // bool delete = b.contains(currentUser!.id);
-    // if(delete) b.remove(currentUser!.id);
-    // return await _institutionRef.collection('homework').doc(homework.id).update({
-    //   'checked_users': !delete ? [
-    //     ...(b),
-    //     currentUser!.id,
-    //   ] : [
-    //     ...(b),
-    //   ]
-    // });
   }
 
   Future<CompletionFlagModel?> hasMyCompletion(HomeworkModel hw) async {
@@ -630,18 +619,7 @@ class FStore extends GetxController {
         e.data(),
       );
     }).toList();
-    // for (var cfm in cfms) {
-    //   cfm.completer = await getPerson(cfm.completedById!);
-    //   if (cfm.confirmedById != null) {
-    //     cfm.confirmer = await getPerson(cfm.confirmedById!);
-    //   }
-    // }
-    // return cfms.toList();
   }
-
-  // Future<void> updateHomeworkCompletion(HomeworkModel homework) async {
-  //   var a = await _institutionRef.collection('homework').doc(homework.id).collection('completions')
-  // }
 
   Future<double> getAverageTeacherRating(TeacherModel teacher) async {
     double sum = 0;
@@ -906,13 +884,13 @@ class FStore extends GetxController {
 
   Future<void> createReplacement(ClassModel aclass, Map<String, dynamic> map) async {
     await _institutionRef.collection('class').doc(aclass.id).collection('replace').add({
-      'order':  map['order'],
+      'order': map['order'],
       'curriculum_id': map['curriculum_id'],
       'teacher_id': map['teacher_id'],
       'venue_id': map['venue_id'],
       'date': map['date'],
     });
-  } 
+  }
 
   Future<List<ReplacementModel>> getReplacementsOnDate(ClassModel aclass, DayScheduleModel schedule, DateTime date) async {
     var a = await _institutionRef
@@ -931,6 +909,25 @@ class FStore extends GetxController {
     if (a.docs.isNotEmpty) {
       for (var r in a.docs) {
         res.add(ReplacementModel.fromMap(aclass, schedule, r.id, r.data()));
+      }
+    }
+    return res;
+  }
+
+  Future<List<PersonModel>> getFreeTeachersOnLesson(
+    DateTime date,
+    int order,
+  ) async {
+    List<PersonModel> res = [];
+    var a = await getAllCurriculums();
+    for(var cur in a) {
+      var m = await cur.master;
+      var b = await getTeacherWeekSchedule(m!, Week.fromDate(date));
+      var c = b[date.weekday];
+      var less = await c.getLessons();
+      var d = less.where((element) => element.order == order);
+      if(d.isEmpty) {
+        res.add(m);
       }
     }
     return res;
