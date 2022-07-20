@@ -69,17 +69,17 @@ class MDrawer extends StatelessWidget {
         ),
       );
     }
-    if(PersonModel.currentUser!.currentType == PersonType.observer) {
-      items.add(
-      TextButton.icon(
-        onPressed: () {
-          Get.to(() => const FreeTeachersPage());
-        },
-        icon: const Icon(Icons.free_cancellation_outlined),
-        label: const Text('свободные уроки'),
-      ),
-    );
-    }
+    // if(PersonModel.currentUser!.currentType == PersonType.observer) {
+    //   items.add(
+    //   TextButton.icon(
+    //     onPressed: () {
+    //       Get.to(() => const FreeTeachersPage());
+    //     },
+    //     icon: const Icon(Icons.free_cancellation_outlined),
+    //     label: const Text('свободные уроки'),
+    //   ),
+    // );
+    // }
     items.add(
       TextButton.icon(
         onPressed: () {

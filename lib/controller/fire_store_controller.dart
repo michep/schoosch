@@ -737,8 +737,25 @@ class FStore extends GetxController {
         }
         var schedulemodel = days[day]!;
         List<LessonModel> lessonsList = [];
+        List<ReplacementModel> repsList = [];
+        // Map<ClassModel, List<ReplacementModel>> repsList = {};
+        repsList = await getAllReplacementsOnDate(
+          curriculumIds,
+          schedulemodel,
+          week.day(schedulemodel.day - 1),
+        );
         for (var lesson in schedulesMap[schedulePath]!) {
           var lessonmodel = LessonModel.fromMap(classmodel, schedulemodel, lesson.id, lesson.data());
+          LessonModel? nl;
+          for (var replace in repsList) {
+            if (replace.order == lessonmodel.order) {
+              lessonmodel.setReplacedType();
+              nl = replace;
+              if(curriculumIds.contains((await nl.curriculum)!.id)) {
+                lessonsList.add(nl);
+              }
+            }
+          }
           lessonsList.add(lessonmodel);
         }
         schedulemodel.addLessons(lessonsList);
@@ -908,26 +925,38 @@ class FStore extends GetxController {
     List<ReplacementModel> res = [];
     if (a.docs.isNotEmpty) {
       for (var r in a.docs) {
-        res.add(ReplacementModel.fromMap(aclass, schedule, r.id, r.data()));
+        var repl = ReplacementModel.fromMap(aclass, schedule, r.id, r.data());
+        repl.setAsReplacement();
+        res.add(repl);
       }
     }
     return res;
   }
 
-  Future<List<PersonModel>> getFreeTeachersOnLesson(
-    DateTime date,
-    int order,
-  ) async {
+  Future<List<ReplacementModel>> getAllReplacementsOnDate(List<String> curriculumIds, DayScheduleModel schedule, DateTime date) async {
+    List<ReplacementModel> res = [];
+    var a = await _institutionRef.collection('class').get();
+    for (var clas in a.docs) {
+      ClassModel aclas = ClassModel.fromMap(clas.id, clas.data());
+      var reps = await getReplacementsOnDate(aclas, schedule, date);
+      res.addAll(reps);
+    }
+    return res;
+  }
+
+  Future<List<PersonModel>> getFreeTeachersOnLesson(DateTime date, int order) async {
     List<PersonModel> res = [];
     var a = await getAllCurriculums();
-    for(var cur in a) {
-      var m = await cur.master;
-      var b = await getTeacherWeekSchedule(m!, Week.fromDate(date));
-      var c = b[date.weekday];
-      var less = await c.getLessons();
-      var d = less.where((element) => element.order == order);
-      if(d.isEmpty) {
-        res.add(m);
+    for (var cur in a) {
+      var mast = await cur.master;
+      var weekschedule = await getTeacherWeekSchedule(mast!, Week.fromDate(date));
+      var schedules = weekschedule.where((element) => element.day == date.weekday).toList();
+      if (schedules.isNotEmpty) {
+        var less = await schedules.first.getLessons();
+        var d = less.where((element) => element.order == order);
+        if (d.isEmpty) {
+          res.add(mast);
+        }
       }
     }
     return res;

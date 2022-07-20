@@ -9,6 +9,7 @@ import 'package:schoosch/pages/admin/institution.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/replacements_edit.dart';
 import 'package:schoosch/pages/admin/venue_list.dart';
+import 'package:schoosch/pages/free_teachers_page.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
 import 'package:schoosch/pages/about_page.dart';
 
@@ -43,6 +44,10 @@ class AdminDrawer extends StatelessWidget {
             TextButton(
               onPressed: _openReplacementsPage,
               child: Text('Replacements'),
+            ),
+            TextButton(
+              onPressed: _openFreeTeachersPage,
+              child: Text('Free teachers'),
             ),
             TextButton(
               onPressed: _openClassesPage,
@@ -84,6 +89,11 @@ class AdminDrawer extends StatelessWidget {
   Future<void> _openCurriculumsPage() async {
     // Get.back();
     Get.to(() => CurriculumListPage(InstitutionModel.currentInstitution));
+  }
+
+  Future<void> _openFreeTeachersPage() async {
+    // Get.back();
+    Get.to(() => FreeTeachersPage(InstitutionModel.currentInstitution));
   }
 
   Future<void> _openClassesPage() async {

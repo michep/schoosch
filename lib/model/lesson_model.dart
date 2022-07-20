@@ -8,7 +8,6 @@ import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/model/replacement_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 
 enum LessonType {
@@ -56,7 +55,7 @@ class LessonModel {
     order = map['order'] != null ? map['order'] as int : throw 'need order key in lesson $_id';
     _curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in lesson $_id';
     _venueId = map['venue_id'] != null ? map['venue_id'] as String : throw 'need venue_id key in lesson $_id';
-    type =  map['type'] != null ? LessonTypeExt.getType((map['type'] as int)) : LessonType.normal;
+    type = map['type'] != null ? LessonTypeExt.getType((map['type'] as int)) : LessonType.normal;
   }
 
   // static LessonModel fromReplacement(LessonModel lessonmodel, ReplacementModel replacement) {
@@ -208,4 +207,8 @@ class LessonModel {
 
 class ReplacementModel extends LessonModel {
   ReplacementModel.fromMap(ClassModel aclass, DayScheduleModel schedule, String? id, Map<String, dynamic> map): super.fromMap(aclass, schedule, id, map);
+
+  void setAsReplacement() {
+    type = LessonType.replacment;
+  }
 }

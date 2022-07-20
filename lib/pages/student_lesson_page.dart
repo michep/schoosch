@@ -40,7 +40,7 @@ class _StudentLessonPageState extends State<StudentLessonPage> {
               height: 10,
             ),
             Text(
-              widget._curiculum.aliasOrName,
+              '${widget._curiculum.aliasOrName} ${widget._lesson.type == LessonType.replacment ? '(замена)' : ''}',
               style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             const SizedBox(

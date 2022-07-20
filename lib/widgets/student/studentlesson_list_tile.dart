@@ -40,6 +40,7 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
           return ListTile(
             leading: Text(widget._lesson.order.toString()),
             title: Text(cur.aliasOrName),
+            tileColor: widget._lesson.type == LessonType.replacment ? Colors.grey.withOpacity(0.1) : null,
             trailing: mar != ""
                 ? Container(
                     padding: const EdgeInsets.all(5),

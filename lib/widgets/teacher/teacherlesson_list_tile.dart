@@ -39,6 +39,7 @@ class _TeacherLessonListTileState extends State<TeacherLessonListTile> {
             title: Text(cur.aliasOrName),
             trailing: Text(widget._lesson.aclass.name),
             subtitle: Text('${tim.formatPeriod()}, ${ven.name}'),
+            tileColor: widget._lesson.type == LessonType.replacment ? Colors.grey.withOpacity(0.1) : widget._lesson.type == LessonType.replaced ? Colors.black54 : null,
             onTap: () => _onTap(widget._lesson, cur, ven, tim),
           );
         });

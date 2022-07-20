@@ -43,6 +43,10 @@ class InstitutionModel {
     return await Get.find<FStore>().createChatRoom(other);
   }
 
+  Future<List<PersonModel>> findFreeTeachers(DateTime date, int order) async {
+    return await Get.find<FStore>().getFreeTeachersOnLesson(date, order);
+  } 
+
   // Future<List<PersonModel>> getUsersByName(String query) async {
   //   return Get.find<FStore>().getPeopleByName(query);
   // }
