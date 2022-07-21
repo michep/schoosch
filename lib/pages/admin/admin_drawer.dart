@@ -7,7 +7,7 @@ import 'package:schoosch/pages/admin/curriculum_list.dart';
 import 'package:schoosch/pages/admin/daylessontime_list.dart';
 import 'package:schoosch/pages/admin/institution.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
-import 'package:schoosch/pages/admin/replacements_edit.dart';
+import 'package:schoosch/pages/admin/class_choice_page.dart';
 import 'package:schoosch/pages/admin/venue_list.dart';
 import 'package:schoosch/pages/free_teachers_page.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
@@ -48,6 +48,10 @@ class AdminDrawer extends StatelessWidget {
             TextButton(
               onPressed: _openFreeTeachersPage,
               child: Text('Free teachers'),
+            ),
+            TextButton(
+              onPressed: _openFreeLessonsPage,
+              child: Text('Free lessons'),
             ),
             TextButton(
               onPressed: _openClassesPage,
@@ -96,6 +100,11 @@ class AdminDrawer extends StatelessWidget {
     Get.to(() => FreeTeachersPage(InstitutionModel.currentInstitution));
   }
 
+  Future<void> _openFreeLessonsPage() async {
+    // Get.back();
+    Get.to(() => ClassChoicePage(InstitutionModel.currentInstitution, false));
+  }
+
   Future<void> _openClassesPage() async {
     // Get.back();
     Get.to(() => ClassListPage(InstitutionModel.currentInstitution));
@@ -103,7 +112,7 @@ class AdminDrawer extends StatelessWidget {
 
   Future<void> _openReplacementsPage() async {
     // Get.back();
-    Get.to(() => ReplacementsPage(InstitutionModel.currentInstitution));
+    Get.to(() => ClassChoicePage(InstitutionModel.currentInstitution, true));
   }
 
   Future<void> _openDayLessontimePage() async {

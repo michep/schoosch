@@ -24,6 +24,8 @@ class BlueprintController extends GetxController {
   final List<NodeModel> _curpathonfloor = [];
   // late RxList<NodeModel> nodesList$;
 
+  bool canShow = false;
+
   BlueprintController() {
     chosenRoom$ = _chosenroom.obs;
     chosenroomfrom$ = _roomgofrom.obs;
@@ -39,7 +41,10 @@ class BlueprintController extends GetxController {
     _allNodes = await Get.find<FStore>().getAllNodes();
     _connections = await Get.find<FStore>().getAllNodeConnections();
     // bg = getGraph(_allNodes, _connections);
-    bg = getGraph();
+    if(_allNodes.isNotEmpty && _connections.isNotEmpty) {
+      bg = getGraph();
+      canShow = true;
+    }
   }
 
   RxList<VenueModel> get bluePrints$ => _currentBluePrints.obs;

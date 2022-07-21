@@ -75,7 +75,6 @@ class _FreeTeachersPageState extends State<FreeTeachersPage> {
                           isLoad = false;
                         });
                       });
-                      setState(() {});
                     }
                   },
                   child: const Text('найти'),
