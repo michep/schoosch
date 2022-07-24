@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
+import 'package:schoosch/model/attendance_model.dart';
 import 'package:schoosch/model/chat_model.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
@@ -751,7 +752,7 @@ class FStore extends GetxController {
             if (replace.order == lessonmodel.order) {
               lessonmodel.setReplacedType();
               nl = replace;
-              if(curriculumIds.contains((await nl.curriculum)!.id)) {
+              if (curriculumIds.contains((await nl.curriculum)!.id)) {
                 lessonsList.add(nl);
               }
             }
@@ -872,7 +873,7 @@ class FStore extends GetxController {
     });
   }
 
-  Future<bool> checkExistance(PersonModel u) async {
+  Future<bool> checkChatExistence(PersonModel u) async {
     var a = await _institutionRef.collection('chats').where('people_ids', isEqualTo: [u.id, _currentUser!.id]).get();
     return a.docs.isNotEmpty;
   }
@@ -960,5 +961,19 @@ class FStore extends GetxController {
       }
     }
     return res;
+  }
+
+  Future<void> createAttendance(ClassModel aclass, AttendanceModel attendance) async {
+    await _institutionRef.collection('class').doc(aclass.id).collection('attendance').add(attendance.toMap());
+  }
+
+  Future checkAttendenceForStudentDateOrder(ClassModel aclass, StudentModel student, DateTime date, int lessonOrder) async {
+    var a = _institutionRef
+        .collection('class')
+        .doc(aclass.id)
+        .collection('attendance')
+        .where('date', isEqualTo: date)
+        .where('person_id', isEqualTo: student.id)
+        .where('lesson_order', isEqualTo: lessonOrder);
   }
 }

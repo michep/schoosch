@@ -27,6 +27,10 @@ class InstitutionModel {
     return Get.find<FStore>().getAllPeople();
   }
 
+  Future<PersonModel> getPerson(String id) async {
+    return Get.find<FStore>().getPerson(id);
+  }
+
   Future<List<ClassModel>> get classes async {
     return Get.find<FStore>().getAllClasses();
   }

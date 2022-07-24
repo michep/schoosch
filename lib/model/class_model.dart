@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/attendance_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
@@ -137,6 +138,14 @@ class ClassModel {
       _listCurriculums.addAll(await Get.find<FStore>().getClassCurriculums(this));
     }
     return _listCurriculums;
+  }
+
+  Future<AttendanceModel?> checkAttendenceStudentDateOrder(StudentModel student, DateTime date, int lessonOrder) async {
+    Get.find<FStore>().checkAttendenceForStudentDateOrder(this, student, date, lessonOrder);
+  }
+
+  Future<void> createAttendance(AttendanceModel attendance) async {
+    return Get.find<FStore>().createAttendance(this, attendance);
   }
 
   Map<String, dynamic> toMap() {

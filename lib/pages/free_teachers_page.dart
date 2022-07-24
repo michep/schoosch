@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -62,22 +60,26 @@ class _FreeTeachersPageState extends State<FreeTeachersPage> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: ElevatedButton(
-                  onPressed: isLoad ? null : () async {
-                    if (date != null || orderCont.text.isNotEmpty) {
-                      setState(() {
-                        isLoad = true;
-                      });
-                      resList = await widget.institution.findFreeTeachers(
-                        date!,
-                        int.parse(orderCont.text),
-                      ).whenComplete(() {
-                        setState(() {
-                          isLoad = false;
-                        });
-                      });
-                      setState(() {});
-                    }
-                  },
+                  onPressed: isLoad
+                      ? null
+                      : () async {
+                          if (date != null || orderCont.text.isNotEmpty) {
+                            setState(() {
+                              isLoad = true;
+                            });
+                            resList = await widget.institution
+                                .findFreeTeachers(
+                              date!,
+                              int.parse(orderCont.text),
+                            )
+                                .whenComplete(() {
+                              setState(() {
+                                isLoad = false;
+                              });
+                            });
+                            setState(() {});
+                          }
+                        },
                   child: const Text('найти'),
                 ),
               ),

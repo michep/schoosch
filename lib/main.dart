@@ -56,21 +56,21 @@ class MyApp extends StatelessWidget {
     //       if (snapshot.data! == ConnectivityResult.none) {
     //         Get.off(() => const DisconnectedPage());
     //       }
-          return GetMaterialApp(
-            supportedLocales: S.delegate.supportedLocales,
-            localizationsDelegates: const [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-            ],
-            // locale: const Locale('ru'),
-            scrollBehavior: AppScrollBehavior(),
-            onGenerateTitle: (context) => S.of(context).appTiile,
-            debugShowCheckedModeBanner: false,
-            theme: darkTheme,
-            home: _homePageSelector(),
-          );
-        // });
+    return GetMaterialApp(
+      supportedLocales: S.delegate.supportedLocales,
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      // locale: const Locale('ru'),
+      scrollBehavior: AppScrollBehavior(),
+      onGenerateTitle: (context) => S.of(context).appTiile,
+      debugShowCheckedModeBanner: false,
+      theme: darkTheme,
+      home: _homePageSelector(),
+    );
+    // });
   }
 
   Widget _homePageSelector() {

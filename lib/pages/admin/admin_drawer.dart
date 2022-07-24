@@ -43,11 +43,11 @@ class AdminDrawer extends StatelessWidget {
             ),
             TextButton(
               onPressed: _openReplacementsPage,
-              child: Text('Replacements'),
+              child: const Text('Replacements'),
             ),
             TextButton(
               onPressed: _openFreeTeachersPage,
-              child: Text('Free teachers'),
+              child: const Text('Free teachers'),
             ),
             TextButton(
               onPressed: _openClassesPage,
