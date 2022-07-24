@@ -1,6 +1,6 @@
-# schoosch
+# schoosch (SCHOOl SCHedule)
 
-A new Flutter project.
+An amazing interactive shedule for schools with lots of useful features for teachers, students and their parents and a standalone admin view.
 
 ## Getting Started
 
