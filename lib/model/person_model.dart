@@ -178,7 +178,7 @@ class PersonModel {
   }
 
   Future<bool> alreadyHasChat() async {
-    return await Get.find<FStore>().checkExistance(this);
+    return await Get.find<FStore>().checkChatExistence(this);
   }
 }
 
