@@ -13,7 +13,8 @@ import 'package:schoosch/model/venue_model.dart';
 enum LessonType {
   normal,
   replaced,
-  replacment
+  replacment,
+  empty,
 }
 
 extension LessonTypeExt on LessonType {
@@ -22,6 +23,7 @@ extension LessonTypeExt on LessonType {
       case 0: return LessonType.normal; 
       case 1: return LessonType.replaced;
       case 2: return LessonType.replacment;
+      case 3: return LessonType.empty;
       default: return LessonType.normal; 
     }
   }
@@ -32,8 +34,8 @@ class LessonModel {
   final DayScheduleModel schedule;
   String? _id;
   late int order;
-  late final String _curriculumId;
-  late final String _venueId;
+  late final String? _curriculumId;
+  late final String? _venueId;
   final Map<String, HomeworkModel?> _homeworks = {};
   final Map<String, List<MarkModel>> _marks = {};
   CurriculumModel? _curriculum;
@@ -52,10 +54,10 @@ class LessonModel {
         });
 
   LessonModel.fromMap(this.aclass, this.schedule, this._id, Map<String, Object?> map) {
-    order = map['order'] != null ? map['order'] as int : throw 'need order key in lesson $_id';
-    _curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in lesson $_id';
-    _venueId = map['venue_id'] != null ? map['venue_id'] as String : throw 'need venue_id key in lesson $_id';
     type = map['type'] != null ? LessonTypeExt.getType((map['type'] as int)) : LessonType.normal;
+    order = map['order'] != null ? map['order'] as int : throw 'need order key in lesson $_id';
+    _curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : type == LessonType.empty ? null : throw 'need curriculum_id key in lesson $_id';
+    _venueId = map['venue_id'] != null ? map['venue_id'] as String : type == LessonType.empty ? null : throw 'need venue_id key in lesson $_id';
   }
 
   // static LessonModel fromReplacement(LessonModel lessonmodel, ReplacementModel replacement) {
@@ -72,15 +74,15 @@ class LessonModel {
   }
 
   Future<CurriculumModel?> get curriculum async {
-    if (_curriculumId.isNotEmpty) {
-      return _curriculum ??= await Get.find<FStore>().getCurriculum(_curriculumId);
+    if (_curriculumId!.isNotEmpty) {
+      return _curriculum ??= await Get.find<FStore>().getCurriculum(_curriculumId!);
     }
     return null;
   }
 
   Future<VenueModel?> get venue async {
-    if (_venueId.isNotEmpty) {
-      return _venue ??= await Get.find<FStore>().getVenue(_venueId);
+    if (_venueId!.isNotEmpty) {
+      return _venue ??= await Get.find<FStore>().getVenue(_venueId!);
     }
     return null;
   }
@@ -210,5 +212,18 @@ class ReplacementModel extends LessonModel {
 
   void setAsReplacement() {
     type = LessonType.replacment;
+  }
+}
+
+class EmptyLesson extends LessonModel {
+  EmptyLesson.fromMap(ClassModel aclass, DayScheduleModel schedule, String? id, int order) : super.fromMap(aclass, schedule, id, {
+    'order': order,
+    'curriculum_id': null,
+    'venue_id': null,
+    'type': 3,
+  });
+
+  void setAsEmpty() {
+    type == LessonType.empty;
   }
 }

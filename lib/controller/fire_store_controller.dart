@@ -190,6 +190,29 @@ class FStore extends GetxController {
       reps.addAll((await getReplacementsOnDate(aclass, schedule, date)).toList());
     }
 
+    int maxOrder = 1;
+    for(var l in less) {
+      if(l.order > maxOrder) {
+        maxOrder = l.order;
+      }
+    }
+
+    List<int> empt = List.generate(maxOrder, (index) => index + 1);
+    empt.removeWhere((element) {
+      for(var l in less) {
+        if(l.order == element) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    for(var i in empt) {
+      var nl = EmptyLesson.fromMap(aclass, schedule, '$i', i);
+      nl.setAsEmpty();
+      less.add(nl);
+    }
+
     for (var l in less) {
       LessonModel? nl;
       for (var r in reps) {
@@ -207,23 +230,11 @@ class FStore extends GetxController {
   Future<List<LessonModel>> getScheduleLessonsForStudent(ClassModel aclass, StudentScheduleModel schedule, StudentModel student, DateTime? date) async {
     List<LessonModel> res = [];
     var less = await getScheduleLessons(aclass, schedule, date: date);
-    // List<ReplacementModel> reps = [];
-    // if (date != null) {
-    //   reps.addAll((await getReplacementsOnDate(aclass, schedule, date)).toList());
-    // }
 
     for (var l in less) {
-      // LessonModel? nl;
-      // for (var r in reps) {
-      //   if (r.order == l.order) {
-      //     l.setReplacedType();
-      //     nl = r;
-      //   }
-      // }
-      var cur = await l.curriculum;
-      if (cur != null && cur.isAvailableForStudent(student.id!)) {
+      var cur = l.type == LessonType.empty ? null : await l.curriculum;
+      if ((cur != null && cur.isAvailableForStudent(student.id!)) || l.type == LessonType.empty) {
         res.add(l);
-        // res.add(nl ?? l);
       }
     }
     return res;
@@ -986,9 +997,8 @@ class FStore extends GetxController {
     var a = (await getClassDaySchedule(aclass, date.weekday)).where((element) => element.till == null).first;
     var b = await getScheduleLessons(aclass, a);
     for(var l in b) {
-      var empty = b.where((element) => element.order == l.order + 1).toList();
-      if(empty.isEmpty) {
-        res.add(l.order + 1);
+      if(l.type == LessonType.empty) {
+        res.add(l.order);
       }
     }
     return res;
