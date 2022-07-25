@@ -223,7 +223,7 @@ class FStore extends GetxController {
       }
       res.add(nl ?? l);
     }
-
+    res.sort((a, b) => a.order.compareTo(b.order),);
     return res;
   }
 

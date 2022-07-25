@@ -45,7 +45,7 @@ class TeacherTablePage extends StatelessWidget {
           ),
         ),
         margin: const EdgeInsets.all(4.0),
-        child: Text(liststud[index].lastname),
+        child: Text(liststud[index].abbreviatedName),
       ),
     );
   }
