@@ -13,12 +13,9 @@ import 'package:schoosch/firebase_options.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
 import 'package:schoosch/pages/class_selection_page.dart';
-import 'package:schoosch/pages/disconnected_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:schoosch/theme.dart';
-import 'package:schoosch/widgets/utils.dart';
 
 import 'model/person_model.dart';
 

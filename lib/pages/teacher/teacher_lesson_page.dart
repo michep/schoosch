@@ -140,7 +140,10 @@ class TeacherLessonPage extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              const Text('ДЗ на следущий урок'),
+              const Align(
+                alignment: Alignment.center,
+                child: Text('ДЗ на следущий урок'),
+              ),
               FutureBuilder<HomeworkModel?>(
                   future: _lesson.hasHomework(_date),
                   builder: (context, snapshot) {
@@ -326,7 +329,7 @@ class _CompletionListTileState extends State<CompletionListTile> {
                 ? widget.homework.unconfirmCompletion(widget.completion)
                 : widget.homework.confirmCompletion(widget.completion);
             widget.completion = (await widget.completion.refresh(widget.homework))!;
-            Navigator.pop(context);
+            Get.back();
           },
           label: Text(widget.completion.status == Status.confirmed ? 'отметить как не проверенное' : 'отметить как проверенное'),
           icon: Icon(widget.completion.status == Status.confirmed ? Icons.close : Icons.check),

@@ -90,11 +90,13 @@ class _ClassChoicePageState extends State<ClassChoicePage> {
   Future<void> _onTapClass(ClassModel aclass) async {
     Navigator.push(
       context,
-      widget.forReplacements ? MaterialPageRoute(
-        builder: (context) => CreateReplacement(aclass),
-      ) : MaterialPageRoute(builder: (context) => FreeLessonsPage(aclass)),
+      widget.forReplacements
+          ? MaterialPageRoute(
+              builder: (context) => CreateReplacement(aclass),
+            )
+          : MaterialPageRoute(
+              builder: (context) => FreeLessonsPage(aclass),
+            ),
     );
   }
-
-  
 }

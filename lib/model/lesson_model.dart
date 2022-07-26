@@ -109,14 +109,14 @@ class LessonModel {
 
   Future<HomeworkModel?> homeworkForStudent(StudentModel student, DateTime date) async {
     if (_homeworks[student.id] == null) {
-      _homeworks[student.id!] = await Get.find<FStore>().getLessonHomeworkForStudent(schedule, (await curriculum)!, student, date);
+      _homeworks[student.id!] = await Get.find<FStore>().getLessonHomeworkForStudent(schedule, aclass, (await curriculum)!, student, date);
     }
     return _homeworks[student.id!];
   }
 
   Future<HomeworkModel?> homeworkForClass(DateTime date) async {
     if (_homeworks['class'] == null) {
-      _homeworks['class'] = await Get.find<FStore>().getLessonHomeworkForClass(schedule, (await curriculum)!, date);
+      _homeworks['class'] = await Get.find<FStore>().getLessonHomeworkForClass(schedule, aclass, (await curriculum)!, date);
     }
     return _homeworks['class'];
   }
@@ -125,6 +125,8 @@ class LessonModel {
     if (_homeworks['class'] == null) {
       _homeworks['class'] = await Get.find<FStore>().alreadyHasHomework(
         date,
+        schedule,
+        aclass, 
         (await curriculum)!,
       );
     }
@@ -137,10 +139,10 @@ class LessonModel {
     bool forceRefresh = false,
   }) async {
     if (_homeworks[student.id] == null || forceRefresh) {
-      _homeworks[student.id!] = await Get.find<FStore>().getLessonHomeworkForStudent(schedule, (await curriculum)!, student, date);
+      _homeworks[student.id!] = await Get.find<FStore>().getLessonHomeworkForStudent(schedule, aclass, (await curriculum)!, student, date);
     }
     if (_homeworks['class'] == null || forceRefresh) {
-      _homeworks['class'] = await Get.find<FStore>().getLessonHomeworkForClass(schedule, (await curriculum)!, date);
+      _homeworks['class'] = await Get.find<FStore>().getLessonHomeworkForClass(schedule, aclass, (await curriculum)!, date);
       // return [_homeworks[student.id!]!, _homeworks['class']!];
     }
 
@@ -154,11 +156,11 @@ class LessonModel {
     var studs = await aclass.students();
     for (StudentModel u in studs) {
       if (_homeworks[u.id] == null || forceRefresh) {
-        _homeworks[u.id!] = await Get.find<FStore>().getLessonHomeworkForStudent(schedule, (await curriculum)!, u, date);
+        _homeworks[u.id!] = await Get.find<FStore>().getLessonHomeworkForStudent(schedule, aclass, (await curriculum)!, u, date);
       }
     }
     if (_homeworks['class'] == null || forceRefresh) {
-      _homeworks['class'] = await Get.find<FStore>().getLessonHomeworkForClass(schedule, (await curriculum)!, date);
+      _homeworks['class'] = await Get.find<FStore>().getLessonHomeworkForClass(schedule, aclass, (await curriculum)!, date);
       // return [_homeworks[student.id!]!, _homeworks['class']!];
     }
     return _homeworks;
