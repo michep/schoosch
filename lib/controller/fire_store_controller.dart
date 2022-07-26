@@ -490,7 +490,7 @@ class FStore extends GetxController {
   }
 
   Future updateHomeworkChecked(HomeworkModel homework) async {
-    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completion');
     var b = await a.where('completed_by', isEqualTo: currentUser!.id).get();
     if (b.docs.isEmpty) {
       return await a.add({
@@ -515,7 +515,7 @@ class FStore extends GetxController {
   }
 
   Future<CompletionFlagModel?> hasMyCompletion(HomeworkModel hw) async {
-    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
     var b = await a.where('completed_by', isEqualTo: currentUser!.id).get();
     if (b.docs.isEmpty) {
       return null;
@@ -528,7 +528,7 @@ class FStore extends GetxController {
   }
 
   Future createCompletion(HomeworkModel hw) async {
-    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
     // var b = (await a.where('completed_by', isEqualTo: currentUser!.id).get()).docs.first;
     return await a.add({
       'completed_by': currentUser!.id,
@@ -540,7 +540,7 @@ class FStore extends GetxController {
   }
 
   Future<void> completeCompletion(HomeworkModel hw, CompletionFlagModel c) async {
-    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
     return await a.doc(c.id).update({
       'completed_time': DateTime.now(),
       'status': 1,
@@ -548,20 +548,20 @@ class FStore extends GetxController {
   }
 
   Future<CompletionFlagModel?> refreshCompletion(HomeworkModel hw, CompletionFlagModel c) async {
-    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
     var b = await a.doc(c.id).get();
     return CompletionFlagModel.fromMap(b.id, b.data()!);
   }
 
   Future<void> uncompleteCompletion(HomeworkModel hw, CompletionFlagModel c) async {
-    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
     return await a.doc(c.id).update({
       'status': 0,
     });
   }
 
   Future<void> confirmHomework(HomeworkModel homework) async {
-    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completion');
     var b = await a.where('completed_by', isEqualTo: currentUser!.id).limit(1).get();
     if (b.docs.isNotEmpty) {
       if ((await a.doc(b.docs[0].id).get()).data()!['status'] == 1) {
@@ -573,7 +573,7 @@ class FStore extends GetxController {
   }
 
   Future<void> confirmCompletion(HomeworkModel homework, CompletionFlagModel completion) async {
-    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions').doc(completion.id);
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completion').doc(completion.id);
     return a.update({
       'status': 2,
       'confirmed_by': currentUser!.id!,
@@ -582,7 +582,7 @@ class FStore extends GetxController {
   }
 
   Future<void> unconfirmCompletion(HomeworkModel homework, CompletionFlagModel completion) async {
-    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions').doc(completion.id);
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completion').doc(completion.id);
     return a.update({
       'status': 1,
     });
@@ -600,7 +600,7 @@ class FStore extends GetxController {
   // }
 
   Future<CompletionFlagModel?> getHomeworkCompletion(HomeworkModel homework) async {
-    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completion');
     var b = await a.where('completed_by', isEqualTo: currentUser!.id).get();
     if (b.docs.isEmpty) {
       return null;
@@ -613,7 +613,7 @@ class FStore extends GetxController {
   }
 
   Future<List<CompletionFlagModel>> getAllHomeworkCompletions(HomeworkModel homework) async {
-    var a = await _institutionRef.collection('homework').doc(homework.id).collection('completions').get();
+    var a = await _institutionRef.collection('homework').doc(homework.id).collection('completion').get();
     return a.docs.map((e) {
       return CompletionFlagModel.fromMap(
         e.id,
@@ -631,27 +631,42 @@ class FStore extends GetxController {
     return sum / ratings.docs.length;
   }
 
-  Future<HomeworkModel?> getLessonHomeworkForStudent(DayScheduleModel schedule, CurriculumModel curriculum, StudentModel student, DateTime date) async {
+  Future<HomeworkModel?> getHomeworForStudentBeforeDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
     var res = await _institutionRef
         .collection('homework')
-        .where('date', isLessThan: date) //.subtract(const Duration(hours: 23, minutes: 59))
-        .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
+        .where('date', isLessThan: date)
         .where('curriculum_id', isEqualTo: curriculum.id)
         .where('student_id', isEqualTo: student.id)
-        .orderBy('date', descending: true)
-        .limit(1)
+        .where('class_id', isEqualTo: aclass.id)
+        .orderBy('date')
+        .limitToLast(1)
         .get();
     return res.docs.isNotEmpty ? HomeworkModel.fromMap(res.docs[0].id, res.docs[0].data()) : null;
   }
 
-  Future<HomeworkModel?> getLessonHomeworkForClass(DayScheduleModel schedule, CurriculumModel curriculum, DateTime date) async {
+  Future<HomeworkModel?> getHomeworkForClassBeforeDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
     var res = await _institutionRef
         .collection('homework')
         // .where('date', isGreaterThanOrEqualTo: schedule.date)
         .where('date', isLessThan: date)
         .where('curriculum_id', isEqualTo: curriculum.id)
         .where('student_id', isNull: true)
-        .orderBy('date', descending: true)
+        .where('class_id', isEqualTo: aclass.id)
+        .orderBy('date')
+        .limitToLast(1)
+        .get();
+    return res.docs.isNotEmpty ? HomeworkModel.fromMap(res.docs[0].id, res.docs[0].data()) : null;
+  }
+
+  Future<HomeworkModel?> getHomeworkForClassAfterDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
+    var res = await _institutionRef
+        .collection('homework')
+        // .where('date', isGreaterThanOrEqualTo: schedule.date)
+        .where('date', isGreaterThanOrEqualTo: date)
+        .where('curriculum_id', isEqualTo: curriculum.id)
+        .where('student_id', isNull: true)
+        .where('class_id', isEqualTo: aclass.id)
+        .orderBy('date')
         .limit(1)
         .get();
     return res.docs.isNotEmpty ? HomeworkModel.fromMap(res.docs[0].id, res.docs[0].data()) : null;
@@ -662,31 +677,6 @@ class FStore extends GetxController {
     return a.update({
       'text': newText,
     });
-  }
-
-  Future<HomeworkModel?> alreadyHasHomework(DateTime date, CurriculumModel curriculum) async {
-    var res = await _institutionRef
-        .collection('homework')
-        .where('date', isLessThan: date.add(const Duration(hours: 12))) //.subtract(const Duration(hours: 23, minutes: 59))
-        .where('date', isGreaterThan: date.subtract(const Duration(hours: 12)))
-        .where('curriculum_id', isEqualTo: curriculum.id)
-        .where('student_id', isNull: true)
-        .orderBy('date', descending: true)
-        .limit(1)
-        .get();
-    return res.docs.isNotEmpty ? HomeworkModel.fromMap(res.docs[0].id, res.docs[0].data()) : null;
-  }
-
-  Future<List<HomeworkModel>> getLessonHomeworks(DayScheduleModel schedule, CurriculumModel curriculum, DateTime date) async {
-    return (await _institutionRef
-            .collection('homework')
-            .where('date', isGreaterThanOrEqualTo: date)
-            .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
-            .where('curriculum_id', isEqualTo: curriculum.id)
-            .get())
-        .docs
-        .map((e) => HomeworkModel.fromMap(e.id, e.data()))
-        .toList();
   }
 
   Future<List<MarkModel>> getLessonMarksForStudent(DayScheduleModel schedule, LessonModel lesson, StudentModel student, DateTime date) async {
@@ -927,7 +917,6 @@ class FStore extends GetxController {
     if (a.docs.isNotEmpty) {
       for (var r in a.docs) {
         var repl = ReplacementModel.fromMap(aclass, schedule, r.id, r.data());
-        repl.setAsReplacement();
         res.add(repl);
       }
     }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
+import 'package:schoosch/model/person_model.dart';
 
 class HomeworkModel {
   final String id;
@@ -17,13 +18,13 @@ class HomeworkModel {
     date = map['date'] != null ? DateTime.fromMillisecondsSinceEpoch((map['date'] as Timestamp).millisecondsSinceEpoch) : DateTime(2000);
     // _curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in homework  $_id';
     _studentId = map['student_id'] != null ? map['student_id'] as String : null;
-    usersChecked =
-        map['checked_users'] != null ? (map['checked_users'] as List<dynamic>).map((e) => e.toString()).toList() : [];
+    usersChecked = map['checked_users'] != null ? (map['checked_users'] as List<dynamic>).map((e) => e.toString()).toList() : [];
 
     // _teacherId = map['teacher_id'] != null ? map['teacher_id'] as String : throw 'need teacher_id key in homework  $_id';
   }
 
   String? get studentId => _studentId;
+  Future<StudentModel?> get student async => (await Get.find<FStore>().getPerson(_studentId!)).asStudent!;
 
   // bool get isChecked => usersChecked.contains(Get.find<FStore>().currentUser!.id);
 

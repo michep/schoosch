@@ -23,20 +23,6 @@ class TeacherLessonPage extends StatelessWidget {
 
   const TeacherLessonPage(this._lesson, this._curiculum, this._venue, this._time, this._date, this._teacher, {Key? key}) : super(key: key);
 
-  // Future<void> activateBottomSheet(
-  //     BuildContext context,
-  //     StudentModel student,
-  //     TeacherModel teacher,
-  //     int lessonorder,
-  //     CurriculumModel curriculum,
-  //     DateTime date) async {
-  //   return await showModalBottomSheet(
-  //       context: context,
-  //       builder: (a) {
-  //         return AddMarkSheet(student, teacher, lessonorder, curriculum, date);
-  //       });
-  // }
-
   Future<void> createClassHomework(
     BuildContext context,
     TeacherModel teacher,
@@ -139,7 +125,7 @@ class TeacherLessonPage extends StatelessWidget {
               ),
               const Text('ДЗ на следущий урок'),
               FutureBuilder<HomeworkModel?>(
-                  future: _lesson.hasHomework(_date),
+                  future: _lesson.homeworkNextLessonForClass(_date),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const SizedBox();
@@ -169,7 +155,7 @@ class TeacherLessonPage extends StatelessWidget {
                 children: [
                   const Text('ДЗ на сегодня'),
                   FutureBuilder<Map<String, dynamic>>(
-                    future: _lesson.homeworkForEveryone(_date),
+                    future: _lesson.homeworkThisLessonForClassAndAllStudents(_date),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return const Card(
@@ -216,31 +202,6 @@ class TeacherLessonPage extends StatelessWidget {
                           ),
                         ],
                       );
-
-                      // return FutureBuilder<List<CompletionFlagModel>>(
-                      //   future: snapshot.data!.getAllCompletions(),
-                      //   builder: (context, completionsnapshot) {
-                      //     if (!completionsnapshot.hasData) {
-                      //       return Center(
-                      //         child: Utils.progressIndicator(),
-                      //       );
-                      //     }
-                      //     if (completionsnapshot.data!.isEmpty) {
-                      //       return ExpansionTile(
-                      //         title: Text(snapshot.data!.text),
-                      //         children: const [Text('нет активных выполнений')],
-                      //       );
-                      //     }
-                      //     return ExpansionTile(
-                      //       title: Text(snapshot.data!.text),
-                      //       children: [
-                      //         ...completionsnapshot.data!.map(
-                      //           (e) => CompletionListTile(completion: e, homework: snapshot.data!),
-                      //         ),
-                      //       ],
-                      //     );
-                      //   },
-                      // );
                     },
                   ),
                 ],
@@ -250,7 +211,7 @@ class TeacherLessonPage extends StatelessWidget {
               ),
               Center(
                 child: FutureBuilder<HomeworkModel?>(
-                    future: _lesson.hasHomework(_date),
+                    future: _lesson.homeworkThisLessonForClass(_date),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: Utils.progressIndicator());

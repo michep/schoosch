@@ -15,8 +15,8 @@ class ObserverDayTile extends StatelessWidget {
   const ObserverDayTile(this._schedule, this._date, {Key? key}) : super(key: key);
 
   void onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim, Map<String, HomeworkModel?> homw) {
-    Get.to(() =>
-      ObserverLessonPage(
+    Get.to(
+      () => ObserverLessonPage(
         lesson: les,
         curriculum: cur,
         venue: ven,
@@ -47,7 +47,7 @@ class ObserverDayTile extends StatelessWidget {
                   les.curriculum,
                   les.lessontime,
                   les.venue,
-                  les.homeworkForEveryone(_date),
+                  les.homeworkThisLessonForClassAndAllStudents(_date),
                 ]),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
@@ -62,7 +62,9 @@ class ObserverDayTile extends StatelessWidget {
                     title: Text(
                       cur.aliasOrName,
                     ),
-                    leading: Text(les.order.toString(),),
+                    leading: Text(
+                      les.order.toString(),
+                    ),
                     subtitle: homw.values.every((element) => element == null) ? null : const Text('есть домашнее задание'),
                     onTap: () {
                       onTap(les, cur, ven, tim, homw);

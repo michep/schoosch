@@ -4,7 +4,8 @@ import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/venue_model.dart';
-import 'package:schoosch/pages/teacher/teacher_lesson_page.dart';
+// import 'package:schoosch/pages/teacher/teacher_lesson_page.dart';
+import 'package:schoosch/pages/teacher/teacher_lesson_page_new.dart';
 
 class TeacherLessonListTile extends StatefulWidget {
   final LessonModel _lesson;
@@ -39,7 +40,11 @@ class _TeacherLessonListTileState extends State<TeacherLessonListTile> {
             title: Text(cur.aliasOrName),
             trailing: Text(widget._lesson.aclass.name),
             subtitle: Text('${tim.formatPeriod()}, ${ven.name}'),
-            tileColor: widget._lesson.type == LessonType.replacment ? Colors.grey.withOpacity(0.1) : widget._lesson.type == LessonType.replaced ? Colors.black54 : null,
+            tileColor: widget._lesson.type == LessonType.replacment
+                ? Colors.grey.withOpacity(0.1)
+                : widget._lesson.type == LessonType.replaced
+                    ? Colors.black54
+                    : null,
             onTap: () => _onTap(widget._lesson, cur, ven, tim),
           );
         });
@@ -47,6 +52,7 @@ class _TeacherLessonListTileState extends State<TeacherLessonListTile> {
 
   void _onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim) async {
     var master = await cur.master;
-    Get.to(() => TeacherLessonPage(les, cur, ven, tim, widget._date, master!));
+    // Get.to(() => TeacherLessonPage(les, cur, ven, tim, widget._date, master!));
+    Get.to(() => TeacherLessonPageNew(les, cur, ven, tim, widget._date, master!));
   }
 }

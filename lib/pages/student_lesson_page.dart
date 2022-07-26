@@ -63,7 +63,7 @@ class _StudentLessonPageState extends State<StudentLessonPage> {
               height: 5,
             ),
             FutureBuilder<Map<String, HomeworkModel?>?>(
-                future: widget._lesson.homeworkForStudentAndClass(widget._student, widget._date, forceRefresh: false),
+                future: widget._lesson.homeworkThisLessonForClassAndStudent(widget._student, widget._date, forceRefresh: false),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const Text('');

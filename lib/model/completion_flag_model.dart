@@ -11,9 +11,9 @@ class CompletionFlagModel {
   late final DateTime? completedTime;
   late final DateTime? confirmedTime;
   late final Status? status;
-  late final PersonModel? _completer;
+  late PersonModel? _completer;
   bool completerLoaded = false;
-  late final PersonModel? _confirmer;
+  late PersonModel? _confirmer;
   bool confirmerLoaded = false;
 
   CompletionFlagModel.fromMap(this.id, Map<String, dynamic> map) {
