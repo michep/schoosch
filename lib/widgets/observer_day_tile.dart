@@ -15,8 +15,8 @@ class ObserverDayTile extends StatelessWidget {
   const ObserverDayTile(this._schedule, this._date, {Key? key}) : super(key: key);
 
   void onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim, Map<String, HomeworkModel?> homw) {
-    Get.to(() =>
-      ObserverLessonPage(
+    Get.to(
+      () => ObserverLessonPage(
         lesson: les,
         curriculum: cur,
         venue: ven,
@@ -30,7 +30,10 @@ class ObserverDayTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<LessonModel>>(
-      future: _schedule.allLessons(date: _date),
+      future: _schedule.allLessons(
+        date: _date,
+        needsEmpty: true,
+      ),
       builder: (context, snap) {
         if (!snap.hasData) {
           return const SizedBox.shrink();
@@ -62,7 +65,9 @@ class ObserverDayTile extends StatelessWidget {
                     title: Text(
                       cur.aliasOrName,
                     ),
-                    leading: Text(les.order.toString(),),
+                    leading: Text(
+                      les.order.toString(),
+                    ),
                     subtitle: homw.values.every((element) => element == null) ? null : const Text('есть домашнее задание'),
                     onTap: () {
                       onTap(les, cur, ven, tim, homw);

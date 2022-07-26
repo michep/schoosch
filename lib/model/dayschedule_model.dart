@@ -38,10 +38,15 @@ class DayScheduleModel {
     return Utils.formatPeriod(from!, till);
   }
 
-  Future<List<LessonModel>> allLessons({bool forceRefresh = false, DateTime? date}) async {
+  Future<List<LessonModel>> allLessons({bool forceRefresh = false, DateTime? date, bool needsEmpty = false}) async {
     if (!_lessonsLoaded || forceRefresh) {
       _lessons.clear();
-      _lessons.addAll(await Get.find<FStore>().getScheduleLessons(_class, this, date: date));
+      _lessons.addAll(await Get.find<FStore>().getScheduleLessons(
+        _class,
+        this,
+        date: date,
+        needsEmpty: needsEmpty,
+      ));
       _lessonsLoaded = true;
     }
     return _lessons;

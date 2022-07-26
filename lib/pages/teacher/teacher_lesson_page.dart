@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
@@ -42,6 +43,7 @@ class TeacherLessonPage extends StatelessWidget {
     TeacherModel teacher,
     CurriculumModel curriculum,
     DateTime date,
+    ClassModel aclass,
   ) async {
     return await showModalBottomSheet(
       context: context,
@@ -50,6 +52,7 @@ class TeacherLessonPage extends StatelessWidget {
           teacher: teacher,
           curriculum: curriculum,
           date: date,
+          aclass: aclass,
           student: null,
           isEdit: false,
         );
@@ -250,21 +253,22 @@ class TeacherLessonPage extends StatelessWidget {
               ),
               Center(
                 child: FutureBuilder<HomeworkModel?>(
-                    future: _lesson.hasHomework(_date),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: Utils.progressIndicator());
-                      }
-                      return ElevatedButton.icon(
-                        onPressed: !snapshot.hasData
-                            ? () {
-                                createClassHomework(context, _teacher, _curiculum, _date);
-                              }
-                            : null,
-                        icon: const Icon(Icons.calculate_outlined),
-                        label: Text(snapshot.hasData ? "Вы уже задали задание." : "задать ДЗ классу"),
-                      );
-                    }),
+                  future: _lesson.hasHomework(_date),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: Utils.progressIndicator());
+                    }
+                    return ElevatedButton.icon(
+                      onPressed: !snapshot.hasData
+                          ? () {
+                              createClassHomework(context, _teacher, _curiculum, _date, _lesson.aclass);
+                            }
+                          : null,
+                      icon: const Icon(Icons.calculate_outlined),
+                      label: Text(snapshot.hasData ? "Вы уже задали задание." : "задать ДЗ классу"),
+                    );
+                  },
+                ),
               ),
             ],
           ),

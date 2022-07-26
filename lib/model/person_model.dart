@@ -242,8 +242,8 @@ class TeacherModel extends PersonModel {
     return Get.find<FStore>().saveMark(this, student, curriculum, date, mark, lessonorder, marktype, comment);
   }
 
-  Future<void> createHomework(String homeworkText, CurriculumModel curriculum, DateTime date, {StudentModel? student}) async {
-    return Get.find<FStore>().saveHomework(homeworkText, curriculum, this, date, student: student);
+  Future<void> createHomework(String homeworkText, CurriculumModel curriculum, DateTime date, ClassModel aclass, {StudentModel? student}) async {
+    return Get.find<FStore>().saveHomework(homeworkText, curriculum, this, date, aclass, student: student);
   }
 
   Future<void> updateMark(int newMark, String docId) async {

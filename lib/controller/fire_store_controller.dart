@@ -174,7 +174,7 @@ class FStore extends GetxController {
     }
   }
 
-  Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule, {DateTime? date}) async {
+  Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule, {DateTime? date, bool needsEmpty = false}) async {
     List<LessonModel> res = [];
     var less = (await _institutionRef.collection('class').doc(aclass.id).collection('schedule').doc(schedule.id).collection('lesson').orderBy('order').get())
         .docs
@@ -190,27 +190,29 @@ class FStore extends GetxController {
       reps.addAll((await getReplacementsOnDate(aclass, schedule, date)).toList());
     }
 
-    int maxOrder = 1;
-    for(var l in less) {
-      if(l.order > maxOrder) {
-        maxOrder = l.order;
-      }
-    }
-
-    List<int> empt = List.generate(maxOrder, (index) => index + 1);
-    empt.removeWhere((element) {
-      for(var l in less) {
-        if(l.order == element) {
-          return true;
+    if (needsEmpty) {
+      int maxOrder = 1;
+      for (var l in less) {
+        if (l.order > maxOrder) {
+          maxOrder = l.order;
         }
       }
-      return false;
-    });
 
-    for(var i in empt) {
-      var nl = EmptyLesson.fromMap(aclass, schedule, '$i', i);
-      nl.setAsEmpty();
-      less.add(nl);
+      List<int> empt = List.generate(maxOrder, (index) => index + 1);
+      empt.removeWhere((element) {
+        for (var l in less) {
+          if (l.order == element) {
+            return true;
+          }
+        }
+        return false;
+      });
+
+      for (var i in empt) {
+        var nl = EmptyLesson.fromMap(aclass, schedule, '$i', i);
+        nl.setAsEmpty();
+        less.add(nl);
+      }
     }
 
     for (var l in less) {
@@ -223,13 +225,15 @@ class FStore extends GetxController {
       }
       res.add(nl ?? l);
     }
-    res.sort((a, b) => a.order.compareTo(b.order),);
+    res.sort(
+      (a, b) => a.order.compareTo(b.order),
+    );
     return res;
   }
 
   Future<List<LessonModel>> getScheduleLessonsForStudent(ClassModel aclass, StudentScheduleModel schedule, StudentModel student, DateTime? date) async {
     List<LessonModel> res = [];
-    var less = await getScheduleLessons(aclass, schedule, date: date);
+    var less = await getScheduleLessons(aclass, schedule, date: date, needsEmpty: true);
 
     for (var l in less) {
       var cur = l.type == LessonType.empty ? null : await l.curriculum;
@@ -507,10 +511,11 @@ class FStore extends GetxController {
     return a;
   }
 
-  Future saveHomework(String homeworkText, CurriculumModel curriculum, TeacherModel teacher, DateTime date, {StudentModel? student}) async {
+  Future saveHomework(String homeworkText, CurriculumModel curriculum, TeacherModel teacher, DateTime date, ClassModel aclass, {StudentModel? student}) async {
     Map<String, dynamic> data = {};
     data['text'] = homeworkText;
     data['student_id'] = student?.id;
+    data['class_id'] = aclass.id;
     data['teacher_id'] = teacher.id;
     data['curriculum_id'] = curriculum.id;
     data['date'] = date;
@@ -519,7 +524,7 @@ class FStore extends GetxController {
   }
 
   Future updateHomeworkChecked(HomeworkModel homework) async {
-    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completion');
     var b = await a.where('completed_by', isEqualTo: currentUser!.id).get();
     if (b.docs.isEmpty) {
       return await a.add({
@@ -544,7 +549,7 @@ class FStore extends GetxController {
   }
 
   Future<CompletionFlagModel?> hasMyCompletion(HomeworkModel hw) async {
-    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
     var b = await a.where('completed_by', isEqualTo: currentUser!.id).get();
     if (b.docs.isEmpty) {
       return null;
@@ -557,7 +562,7 @@ class FStore extends GetxController {
   }
 
   Future createCompletion(HomeworkModel hw) async {
-    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
     // var b = (await a.where('completed_by', isEqualTo: currentUser!.id).get()).docs.first;
     return await a.add({
       'completed_by': currentUser!.id,
@@ -569,7 +574,7 @@ class FStore extends GetxController {
   }
 
   Future<void> completeCompletion(HomeworkModel hw, CompletionFlagModel c) async {
-    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
     return await a.doc(c.id).update({
       'completed_time': DateTime.now(),
       'status': 1,
@@ -577,20 +582,20 @@ class FStore extends GetxController {
   }
 
   Future<CompletionFlagModel?> refreshCompletion(HomeworkModel hw, CompletionFlagModel c) async {
-    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
     var b = await a.doc(c.id).get();
     return CompletionFlagModel.fromMap(b.id, b.data()!);
   }
 
   Future<void> uncompleteCompletion(HomeworkModel hw, CompletionFlagModel c) async {
-    var a = _institutionRef.collection('homework').doc(hw.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
     return await a.doc(c.id).update({
       'status': 0,
     });
   }
 
   Future<void> confirmHomework(HomeworkModel homework) async {
-    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions');
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completion');
     var b = await a.where('completed_by', isEqualTo: currentUser!.id).limit(1).get();
     if (b.docs.isNotEmpty) {
       if ((await a.doc(b.docs[0].id).get()).data()!['status'] == 1) {
@@ -602,7 +607,7 @@ class FStore extends GetxController {
   }
 
   Future<void> confirmCompletion(HomeworkModel homework, CompletionFlagModel completion) async {
-    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions').doc(completion.id);
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completion').doc(completion.id);
     return a.update({
       'status': 2,
       'confirmed_by': currentUser!.id!,
@@ -611,7 +616,7 @@ class FStore extends GetxController {
   }
 
   Future<void> unconfirmCompletion(HomeworkModel homework, CompletionFlagModel completion) async {
-    var a = _institutionRef.collection('homework').doc(homework.id).collection('completions').doc(completion.id);
+    var a = _institutionRef.collection('homework').doc(homework.id).collection('completion').doc(completion.id);
     return a.update({
       'status': 1,
     });
@@ -680,10 +685,13 @@ class FStore extends GetxController {
         .where('date', isLessThan: date)
         .where('curriculum_id', isEqualTo: curriculum.id)
         .where('student_id', isNull: true)
+        // .where('class_id', isNull: false)
         .orderBy('date', descending: true)
         .limit(1)
         .get();
-    return res.docs.isNotEmpty ? HomeworkModel.fromMap(res.docs[0].id, res.docs[0].data()) : null;
+    var r =  res.docs.isNotEmpty ? HomeworkModel.fromMap(res.docs[0].id, res.docs[0].data()) : null;
+    // return r != null ? r.class_id != null ? r : null : null
+    return r; 
   }
 
   Future<void> updateHomework(HomeworkModel homework, String newText) async {
@@ -995,9 +1003,9 @@ class FStore extends GetxController {
   Future<List<int>> getFreeLessonsOnDay(ClassModel aclass, DateTime date) async {
     List<int> res = [];
     var a = (await getClassDaySchedule(aclass, date.weekday)).where((element) => element.till == null).first;
-    var b = await getScheduleLessons(aclass, a);
-    for(var l in b) {
-      if(l.type == LessonType.empty) {
+    var b = await getScheduleLessons(aclass, a, needsEmpty: true);
+    for (var l in b) {
+      if (l.type == LessonType.empty) {
         res.add(l.order);
       }
     }
