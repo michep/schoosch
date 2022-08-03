@@ -30,7 +30,7 @@ class ObserverDayTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<LessonModel>>(
-      future: _schedule.allLessons(),
+      future: _schedule.allLessons(date: _date),
       builder: (context, snap) {
         if (!snap.hasData) {
           return const SizedBox.shrink();

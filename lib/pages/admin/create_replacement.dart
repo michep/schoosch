@@ -119,6 +119,7 @@ class _CreateReplacementState extends State<CreateReplacement> {
                     return null;
                   },
                 ),
+                const SizedBox(height: 20,),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(

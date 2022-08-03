@@ -31,10 +31,10 @@ Future<void> main() async {
   Get.put<FAuth>(fauth);
   Get.put<FStore>(fstore);
   Get.put(CurrentWeek(Week.current()));
-  // Get.put<BlueprintController>(bcont);
+  Get.put<BlueprintController>(bcont);
   if (fauth.currentUser != null) {
     await fstore.init(fauth.currentUser!.email!);
-    // await bcont.init();
+    await bcont.init();
   }
 
   runApp(const MyApp());

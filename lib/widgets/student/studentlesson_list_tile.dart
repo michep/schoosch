@@ -22,39 +22,50 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Future.wait([
-          widget._lesson.curriculum,
-          widget._lesson.venue,
-          widget._lesson.lessontime,
-          widget._lesson.marksForStudentAsString(widget._student, widget._date),
-        ]),
+        future: widget._lesson.type != LessonType.empty
+            ? Future.wait([
+                widget._lesson.curriculum,
+                widget._lesson.venue,
+                widget._lesson.lessontime,
+                widget._lesson.marksForStudentAsString(widget._student, widget._date),
+              ])
+            : Future.delayed(
+                const Duration(
+                  milliseconds: 0,
+                ),
+                () {
+                  return [];
+                }
+              ),
         builder: (context, snap) {
           if (!snap.hasData) {
             return const ListTile();
           }
           var list = snap.data! as List<dynamic>;
-          var cur = list[0] as CurriculumModel;
-          var ven = list[1] as VenueModel;
-          var tim = list[2] as LessontimeModel;
-          var mar = list[3] as String;
+          var cur = widget._lesson.type != LessonType.empty ? list[0] as CurriculumModel : null;
+          var ven = widget._lesson.type != LessonType.empty ? list[1] as VenueModel : null;
+          var tim = widget._lesson.type != LessonType.empty ? list[2] as LessontimeModel : null;
+          var mar = widget._lesson.type != LessonType.empty ? list[3] as String : null;
           return ListTile(
             leading: Text(widget._lesson.order.toString()),
-            title: Text(cur.aliasOrName),
+            title: Text(widget._lesson.type == LessonType.empty ? 'Окно' : cur!.aliasOrName),
             tileColor: widget._lesson.type == LessonType.replacment ? Colors.grey.withOpacity(0.1) : null,
-            trailing: mar != ""
-                ? Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: Colors.red, width: 1.5),
-                    ),
-                    child: Text(mar),
-                  )
-                : Container(
-                    width: 0,
-                  ),
-            subtitle: Text('${tim.formatPeriod()}, ${ven.name}'),
-            onTap: () => _onTap(widget._lesson, cur, ven, tim),
+            trailing: widget._lesson.type == LessonType.empty
+                ? null
+                : mar != ""
+                    ? Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: Colors.red, width: 1.5),
+                        ),
+                        child: Text(mar!),
+                      )
+                    : Container(
+                        width: 0,
+                      ),
+            subtitle: widget._lesson.type == LessonType.empty ? null : Text('${tim!.formatPeriod()}, ${ven!.name}'),
+            onTap: widget._lesson.type != LessonType.empty ? () => _onTap(widget._lesson, cur!, ven!, tim!) : null,
           );
         });
   }

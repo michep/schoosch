@@ -3,17 +3,19 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/pages/admin/create_replacement.dart';
+import 'package:schoosch/pages/admin/freelessons_page.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class ReplacementsPage extends StatefulWidget {
+class ClassChoicePage extends StatefulWidget {
   final InstitutionModel _institution;
-  const ReplacementsPage(this._institution, {Key? key}) : super(key: key);
+  final bool forReplacements;
+  const ClassChoicePage(this._institution, this.forReplacements, {Key? key}) : super(key: key);
 
   @override
-  State<ReplacementsPage> createState() => _ReplacementsPageState();
+  State<ClassChoicePage> createState() => _ClassChoicePageState();
 }
 
-class _ReplacementsPageState extends State<ReplacementsPage> {
+class _ClassChoicePageState extends State<ClassChoicePage> {
   final TextEditingController _name = TextEditingController();
 
   @override
@@ -88,9 +90,9 @@ class _ReplacementsPageState extends State<ReplacementsPage> {
   Future<void> _onTapClass(ClassModel aclass) async {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      widget.forReplacements ? MaterialPageRoute(
         builder: (context) => CreateReplacement(aclass),
-      ),
+      ) : MaterialPageRoute(builder: (context) => FreeLessonsPage(aclass)),
     );
   }
 

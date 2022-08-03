@@ -119,6 +119,10 @@ class ClassModel {
     return _students;
   }
 
+  Future<List<int>> freeLessonsForDate(DateTime date) async {
+    return await Get.find<FStore>().getFreeLessonsOnDay(this, date);
+  }
+
   // Future<Set<CurriculumModel>> getUniqueCurriculums({bool forceRefresh = false}) async {
   //   if(allCurriculums.isEmpty || forceRefresh) {
   //     var weekschedules = await getSchedulesWeek(Week.current());

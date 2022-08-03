@@ -175,8 +175,9 @@ class FStore extends GetxController {
     }
   }
 
-  Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule) async {
-    return (await _institutionRef.collection('class').doc(aclass.id).collection('schedule').doc(schedule.id).collection('lesson').orderBy('order').get())
+  Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule, {DateTime? date}) async {
+    List<LessonModel> res = [];
+    var less = (await _institutionRef.collection('class').doc(aclass.id).collection('schedule').doc(schedule.id).collection('lesson').orderBy('order').get())
         .docs
         .map((lesson) => LessonModel.fromMap(
               aclass,
@@ -185,27 +186,58 @@ class FStore extends GetxController {
               lesson.data(),
             ))
         .toList();
-  }
-
-  Future<List<LessonModel>> getScheduleLessonsForStudent(ClassModel aclass, StudentScheduleModel schedule, StudentModel student, DateTime? date) async {
-    List<LessonModel> res = [];
-    var less = await getScheduleLessons(aclass, schedule);
     List<ReplacementModel> reps = [];
     if (date != null) {
       reps.addAll((await getReplacementsOnDate(aclass, schedule, date)).toList());
     }
 
+    int maxOrder = 1;
+    for (var l in less) {
+      if (l.order > maxOrder) {
+        maxOrder = l.order;
+      }
+    }
+
+    List<int> empt = List.generate(maxOrder, (index) => index + 1);
+    empt.removeWhere((element) {
+      for (var l in less) {
+        if (l.order == element) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    for (var i in empt) {
+      var nl = EmptyLesson.fromMap(aclass, schedule, '$i', i);
+      nl.setAsEmpty();
+      less.add(nl);
+    }
+
     for (var l in less) {
       LessonModel? nl;
       for (var r in reps) {
-        if (r.order == l.order) {
+        if (l.order == r.order) {
           l.setReplacedType();
           nl = r;
         }
       }
-      var cur = await l.curriculum;
-      if (cur != null && cur.isAvailableForStudent(student.id!)) {
-        res.add(nl ?? l);
+      res.add(nl ?? l);
+    }
+    res.sort(
+      (a, b) => a.order.compareTo(b.order),
+    );
+    return res;
+  }
+
+  Future<List<LessonModel>> getScheduleLessonsForStudent(ClassModel aclass, StudentScheduleModel schedule, StudentModel student, DateTime? date) async {
+    List<LessonModel> res = [];
+    var less = await getScheduleLessons(aclass, schedule, date: date);
+
+    for (var l in less) {
+      var cur = l.type == LessonType.empty ? null : await l.curriculum;
+      if ((cur != null && cur.isAvailableForStudent(student.id!)) || l.type == LessonType.empty) {
+        res.add(l);
       }
     }
     return res;
@@ -964,5 +996,17 @@ class FStore extends GetxController {
         .where('date', isEqualTo: date)
         .where('person_id', isEqualTo: student.id)
         .where('lesson_order', isEqualTo: lessonOrder);
+  }
+
+  Future<List<int>> getFreeLessonsOnDay(ClassModel aclass, DateTime date) async {
+    List<int> res = [];
+    var a = (await getClassDaySchedule(aclass, date.weekday)).where((element) => element.till == null).first;
+    var b = await getScheduleLessons(aclass, a);
+    for (var l in b) {
+      if (l.type == LessonType.empty) {
+        res.add(l.order);
+      }
+    }
+    return res;
   }
 }
