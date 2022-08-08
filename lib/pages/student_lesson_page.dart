@@ -91,11 +91,13 @@ class _StudentLessonPageState extends State<StudentLessonPage> {
                         HomeworkCard(
                           homework: stud,
                           isClass: false,
+                          student: widget._student,
                         ),
                       if (clas != null)
                         HomeworkCard(
                           homework: clas,
                           isClass: true,
+                          student: widget._student,
                         ),
                     ],
                   );
@@ -185,7 +187,8 @@ class _StudentLessonPageState extends State<StudentLessonPage> {
 class HomeworkCard extends StatefulWidget {
   final HomeworkModel homework;
   final bool isClass;
-  const HomeworkCard({Key? key, required this.homework, required this.isClass}) : super(key: key);
+  final StudentModel student;
+  const HomeworkCard({Key? key, required this.homework, required this.isClass, required this.student}) : super(key: key);
 
   @override
   State<HomeworkCard> createState() => _HomeworkCardState();
@@ -195,7 +198,7 @@ class _HomeworkCardState extends State<HomeworkCard> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<CompletionFlagModel?>(
-      future: widget.homework.getCompletion(),
+      future: widget.homework.getCompletion(widget.student),
       builder: (context, snapshot) {
         bool isChecked = false;
         bool isConfirmed = false;
@@ -221,7 +224,7 @@ class _HomeworkCardState extends State<HomeworkCard> {
                   title: Text(widget.homework.text),
                   trailing: isConfirmed ? const Icon(Icons.check) : null,
                   onTap: () async {
-                    var completion = await widget.homework.getCompletion();
+                    var completion = await widget.homework.getCompletion(widget.student);
                     onTap(completion).whenComplete(() {
                       setState(() {});
                     });

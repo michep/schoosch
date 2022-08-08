@@ -9,8 +9,8 @@ import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
-import 'package:schoosch/widgets/class_task_competions.dart';
-import 'package:schoosch/widgets/students_tasks_completion.dart';
+import 'package:schoosch/widgets/class_task_completions.dart';
+import 'package:schoosch/widgets/students_task_completions.dart';
 import 'package:schoosch/widgets/teacher_student_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 import '../../widgets/addhomeworksheet.dart';
@@ -58,11 +58,11 @@ class TeacherLessonPageNew extends StatelessWidget {
                   child: TabBarView(
                     children: [
                       ClassTaskWithCompetionsView(_date, _lesson.homeworkThisLessonForClass),
-                      StudentsTasksWithCompetionView(),
+                      StudentsTasksWithCompetionsView(_date, _lesson.homeworkThisLessonForClassAndAllStudents),
                       Container(),
                       Container(),
                       ClassTaskWithCompetionsView(_date, _lesson.homeworkNextLessonForClass),
-                      Container(),
+                      StudentsTasksWithCompetionsView(_date, _lesson.homeworkNextLessonForClassAndAllStudents),
                     ],
                   ),
                 )

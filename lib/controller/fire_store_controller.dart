@@ -631,9 +631,8 @@ class FStore extends GetxController {
   //   });
   // }
 
-  Future<CompletionFlagModel?> getHomeworkCompletion(HomeworkModel homework) async {
-    var a = _institutionRef.collection('homework').doc(homework.id).collection('completion');
-    var b = await a.where('completed_by', isEqualTo: currentUser!.id).get();
+  Future<CompletionFlagModel?> getHomeworkCompletion(HomeworkModel homework, StudentModel student) async {
+    var b = await _institutionRef.collection('homework').doc(homework.id).collection('completion').where('completed_by', isEqualTo: student.id).get();
     if (b.docs.isEmpty) {
       return null;
     } else {
@@ -663,7 +662,7 @@ class FStore extends GetxController {
     return sum / ratings.docs.length;
   }
 
-  Future<HomeworkModel?> getHomeworForStudentBeforeDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
+  Future<HomeworkModel?> getHomeworkForStudentBeforeDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
     var res = await _institutionRef
         .collection('homework')
         .where('date', isLessThan: date)
@@ -686,6 +685,20 @@ class FStore extends GetxController {
         .where('class_id', isEqualTo: aclass.id)
         .orderBy('date')
         .limitToLast(1)
+        .get();
+    return res.docs.isNotEmpty ? HomeworkModel.fromMap(res.docs[0].id, res.docs[0].data()) : null;
+  }
+
+  Future<HomeworkModel?> getHomeworkForStudentAfterDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
+    var res = await _institutionRef
+        .collection('homework')
+        // .where('date', isGreaterThanOrEqualTo: schedule.date)
+        .where('date', isGreaterThanOrEqualTo: date)
+        .where('curriculum_id', isEqualTo: curriculum.id)
+        .where('student_id', isEqualTo: student.id)
+        .where('class_id', isEqualTo: aclass.id)
+        .orderBy('date')
+        .limit(1)
         .get();
     return res.docs.isNotEmpty ? HomeworkModel.fromMap(res.docs[0].id, res.docs[0].data()) : null;
   }

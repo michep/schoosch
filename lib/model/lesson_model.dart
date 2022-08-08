@@ -96,13 +96,6 @@ class LessonModel {
     return _lessontime ??= await aclass.getLessontime(order);
   }
 
-  Future<HomeworkModel?> homeworkThisLessonForStudent(StudentModel student, DateTime date) async {
-    if (_homeworksThisLesson[student.id] == null) {
-      _homeworksThisLesson[student.id!] = await Get.find<FStore>().getHomeworForStudentBeforeDate(aclass, (await curriculum)!, student, date);
-    }
-    return _homeworksThisLesson[student.id!];
-  }
-
   Future<HomeworkModel?> homeworkThisLessonForClass(DateTime date) async {
     if (_homeworksThisLesson['class'] == null) {
       _homeworksThisLesson['class'] = await Get.find<FStore>().getHomeworkForClassBeforeDate(aclass, (await curriculum)!, date);
@@ -110,16 +103,16 @@ class LessonModel {
     return _homeworksThisLesson['class'];
   }
 
-  Future<HomeworkModel?> homeworkNextLessonForClass(DateTime date) async {
-    if (_homeworksNextLesson['class'] == null) {
-      _homeworksNextLesson['class'] = await Get.find<FStore>().getHomeworkForClassAfterDate(aclass, (await curriculum)!, date);
+  Future<HomeworkModel?> homeworkThisLessonForStudent(StudentModel student, DateTime date) async {
+    if (_homeworksThisLesson[student.id] == null) {
+      _homeworksThisLesson[student.id!] = await Get.find<FStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, student, date);
     }
-    return _homeworksNextLesson['class'];
+    return _homeworksThisLesson[student.id!];
   }
 
   Future<Map<String, HomeworkModel?>> homeworkThisLessonForClassAndStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
     if (_homeworksThisLesson[student.id] == null || forceRefresh) {
-      _homeworksThisLesson[student.id!] = await Get.find<FStore>().getHomeworForStudentBeforeDate(aclass, (await curriculum)!, student, date);
+      _homeworksThisLesson[student.id!] = await Get.find<FStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, student, date);
     }
     if (_homeworksThisLesson['class'] == null || forceRefresh) {
       _homeworksThisLesson['class'] = await Get.find<FStore>().getHomeworkForClassBeforeDate(aclass, (await curriculum)!, date);
@@ -131,17 +124,58 @@ class LessonModel {
     };
   }
 
-  Future<Map<String, dynamic>> homeworkThisLessonForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
+  Future<Map<String, HomeworkModel?>> homeworkThisLessonForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
     var studs = await aclass.students();
     for (StudentModel stud in studs) {
       if (_homeworksThisLesson[stud.id] == null || forceRefresh) {
-        _homeworksThisLesson[stud.id!] = await Get.find<FStore>().getHomeworForStudentBeforeDate(aclass, (await curriculum)!, stud, date);
+        _homeworksThisLesson[stud.id!] = await Get.find<FStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, stud, date);
       }
     }
     if (_homeworksThisLesson['class'] == null || forceRefresh) {
       _homeworksThisLesson['class'] = await Get.find<FStore>().getHomeworkForClassBeforeDate(aclass, (await curriculum)!, date);
     }
     return _homeworksThisLesson;
+  }
+
+  Future<HomeworkModel?> homeworkNextLessonForClass(DateTime date) async {
+    if (_homeworksNextLesson['class'] == null) {
+      _homeworksNextLesson['class'] = await Get.find<FStore>().getHomeworkForClassAfterDate(aclass, (await curriculum)!, date);
+    }
+    return _homeworksNextLesson['class'];
+  }
+
+  Future<HomeworkModel?> homeworkNextLessonForStudent(StudentModel student, DateTime date) async {
+    if (_homeworksNextLesson['class'] == null) {
+      _homeworksNextLesson['class'] = await Get.find<FStore>().getHomeworkForStudentAfterDate(aclass, (await curriculum)!, student, date);
+    }
+    return _homeworksNextLesson['class'];
+  }
+
+  Future<Map<String, HomeworkModel?>> homeworkNextLessonForClassAndStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
+    if (_homeworksNextLesson[student.id] == null || forceRefresh) {
+      _homeworksNextLesson[student.id!] = await Get.find<FStore>().getHomeworkForStudentAfterDate(aclass, (await curriculum)!, student, date);
+    }
+    if (_homeworksNextLesson['class'] == null || forceRefresh) {
+      _homeworksNextLesson['class'] = await Get.find<FStore>().getHomeworkForClassAfterDate(aclass, (await curriculum)!, date);
+    }
+
+    return {
+      'student': _homeworksNextLesson[student.id],
+      'class': _homeworksNextLesson['class'],
+    };
+  }
+
+  Future<Map<String, HomeworkModel?>> homeworkNextLessonForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
+    var studs = await aclass.students();
+    for (StudentModel stud in studs) {
+      if (_homeworksNextLesson[stud.id] == null || forceRefresh) {
+        _homeworksNextLesson[stud.id!] = await Get.find<FStore>().getHomeworkForStudentAfterDate(aclass, (await curriculum)!, stud, date);
+      }
+    }
+    if (_homeworksNextLesson['class'] == null || forceRefresh) {
+      _homeworksNextLesson['class'] = await Get.find<FStore>().getHomeworkForClassAfterDate(aclass, (await curriculum)!, date);
+    }
+    return _homeworksNextLesson;
   }
 
   Future<List<MarkModel>> marksForStudent(StudentModel student, DateTime date, {bool forceUpdate = false}) async {

@@ -24,7 +24,7 @@ class HomeworkModel {
   }
 
   String? get studentId => _studentId;
-  Future<StudentModel?> get student async => (await Get.find<FStore>().getPerson(_studentId!)).asStudent!;
+  Future<StudentModel?> get student async => _studentId != null ? (await Get.find<FStore>().getPerson(_studentId!)).asStudent! : null;
 
   // bool get isChecked => usersChecked.contains(Get.find<FStore>().currentUser!.id);
 
@@ -32,8 +32,8 @@ class HomeworkModel {
   //   return await Get.find<FStore>().updateHomeworkChecked(this);
   // }
 
-  Future<CompletionFlagModel?> getCompletion() async {
-    return await Get.find<FStore>().getHomeworkCompletion(this);
+  Future<CompletionFlagModel?> getCompletion(StudentModel student) async {
+    return await Get.find<FStore>().getHomeworkCompletion(this, student);
   }
 
   // Future<CompletionFlagModel?> hasMeCompletion() async {
