@@ -31,6 +31,8 @@ dependencies:
   directed_graph: ^0.3.6
   flex_color_scheme: ^5.0.1
   connectivity_plus: ^2.3.5
+  onesignal_flutter: ^3.0.0
+  http: ^0.13.5
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -20,6 +21,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/model/class_model.dart';
+import 'package:http/http.dart' as http;
 
 class FStore extends GetxController {
   late final FirebaseFirestore _store;
@@ -808,11 +810,11 @@ class FStore extends GetxController {
     return res;
   }
 
-  Future<List<CurriculumModel>> getStudentCurriculums() async {
+  Future<List<CurriculumModel>> getStudentCurriculums(PersonModel student) async {
     List<CurriculumModel> res = [];
     var curs = await getAllCurriculums();
     for (var cur in curs) {
-      if (cur.isAvailableForStudent(currentUser!.id!)) {
+      if (cur.isAvailableForStudent(student.id!)) {
         res.add(cur);
       }
     }
@@ -1021,5 +1023,25 @@ class FStore extends GetxController {
       }
     }
     return res;
+  }
+
+  Future<void> sendNotif(List<PersonModel> targets) async {
+    await http.post(
+      Uri.parse("https://onesignal.com/api/v1/notifications"),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic NDQ4M2EyODUtZmRiNS00OGE0LWE1ZDEtYmZjOTI3ZTVlZTUz',
+      },
+      body: json.encode(
+        {
+          "app_id": "0725282a-b87a-4ea8-97ab-165108deee94",
+          "include_external_user_ids": targets.map((e) => e.id).toList(),
+          "channel_for_external_user_ids": "push",
+          "data": {"foo": "bar"},
+          "contents": {"en": 'рабочее уведомление'}
+        },
+      ),
+    );
   }
 }

@@ -55,7 +55,7 @@ class MDrawer extends StatelessWidget {
         TextButton.icon(
           onPressed: () async {
             // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
-            Get.to(() => const StudentsTablePage());
+            Get.to(() => StudentsTablePage(student: PersonModel.currentStudent!));
           },
           icon: const Icon(Icons.table_chart_outlined),
           label: const Text('все оценки'),
@@ -70,6 +70,22 @@ class MDrawer extends StatelessWidget {
           },
           icon: const Icon(Icons.table_chart_outlined),
           label: const Text('ваши оценки'),
+        ),
+      );
+    } else if (PersonModel.currentUser!.currentType == PersonType.parent) {
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
+            StudentModel stud = await PersonModel.currentParent!.currentChild;
+            Get.to(
+              () => StudentsTablePage(
+                student: stud,
+              ),
+            );
+          },
+          icon: const Icon(Icons.table_chart_outlined),
+          label: const Text('успеваемость'),
         ),
       );
     }

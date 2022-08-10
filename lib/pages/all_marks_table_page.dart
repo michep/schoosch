@@ -4,10 +4,12 @@ import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:intl/intl.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class StudentsTablePage extends StatelessWidget {
-  const StudentsTablePage({Key? key}) : super(key: key);
+  final StudentModel student;
+  const StudentsTablePage({Key? key, required this.student,}) : super(key: key);
 
   List<Widget> _buildMarkCells(List<MarkModel> listmark) {
     return List.generate(
@@ -117,7 +119,7 @@ class StudentsTablePage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder<List<CurriculumModel>>(
-          future: Get.find<FStore>().getStudentCurriculums(),
+          future: Get.find<FStore>().getStudentCurriculums(student),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(child: Utils.progressIndicator(),);

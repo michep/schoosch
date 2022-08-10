@@ -46,32 +46,47 @@ class ObserverDayTile extends StatelessWidget {
           children: [
             ...snap.data!.map(
               (les) => FutureBuilder(
-                future: Future.wait([
-                  les.curriculum,
-                  les.lessontime,
-                  les.venue,
-                  les.homeworkForEveryone(_date),
-                ]),
+                future: les.type != LessonType.empty
+                    ? Future.wait([
+                        les.curriculum,
+                        les.lessontime,
+                        les.venue,
+                        les.homeworkForEveryone(_date),
+                      ])
+                    : Future.delayed(
+                        const Duration(
+                          milliseconds: 0,
+                        ),
+                        () {
+                          return [];
+                        },
+                      ),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const ListTile();
                   }
                   var list = snapshot.data! as List<dynamic>;
-                  var cur = list[0] as CurriculumModel;
-                  var tim = list[1] as LessontimeModel;
-                  var ven = list[2] as VenueModel;
-                  var homw = list[3] as Map<String, HomeworkModel?>;
+                  var cur = les.type != LessonType.empty ? list[0] as CurriculumModel : null;
+                  var tim = les.type != LessonType.empty ? list[1] as LessontimeModel : null;
+                  var ven = les.type != LessonType.empty ? list[2] as VenueModel : null;
+                  var homw = les.type != LessonType.empty ? list[3] as Map<String, HomeworkModel?> : null;
                   return ListTile(
                     title: Text(
-                      cur.aliasOrName,
+                      les.type != LessonType.empty ? cur!.aliasOrName : 'окно',
                     ),
                     leading: Text(
                       les.order.toString(),
                     ),
-                    subtitle: homw.values.every((element) => element == null) ? null : const Text('есть домашнее задание'),
-                    onTap: () {
-                      onTap(les, cur, ven, tim, homw);
-                    },
+                    subtitle: les.type != LessonType.empty
+                        ? homw!.values.every((element) => element == null)
+                            ? null
+                            : const Text('есть домашнее задание')
+                        : null,
+                    onTap: les.type != LessonType.empty
+                        ? () {
+                            onTap(les, cur!, ven!, tim!, homw!);
+                          }
+                        : null,
                   );
                 },
               ),
