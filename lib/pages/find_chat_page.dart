@@ -31,7 +31,7 @@ class _FindChatState extends State<FindChat> {
                 ),
               ),
               FutureBuilder<List<PersonModel>>(
-                future: Get.find<FStore>().currentInstitution!.people,
+                future: Get.find<FStore>().currentInstitution!.people(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Expanded(

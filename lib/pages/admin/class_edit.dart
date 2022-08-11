@@ -85,7 +85,7 @@ class _ClassPageState extends State<ClassPage> {
                         initOptionsFutureFunc: _initMasterOptions,
                         titleFunc: (value) => value?.fullName ?? '',
                         listFunc: () => PeopleListPage(
-                          InstitutionModel.currentInstitution,
+                          InstitutionModel.currentInstitution.people,
                           selectionMode: true,
                           type: 'teacher',
                         ),
@@ -112,7 +112,7 @@ class _ClassPageState extends State<ClassPage> {
                   title: loc.classStudents,
                   initListFutureFunc: _initStudents,
                   titleFunc: (value) => value?.fullName ?? '',
-                  listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'student'),
+                  listFunc: () => PeopleListPage(InstitutionModel.currentInstitution.people, selectionMode: true, type: 'student'),
                   detailsFunc: (value) => PersonPage(value!, value.fullName),
                   listValidatorFunc: () => _students.isEmpty ? loc.errorClassStudentsEmpty : null,
                   addElementFunc: _addChild,
@@ -145,7 +145,7 @@ class _ClassPageState extends State<ClassPage> {
   }
 
   Future<List<PersonModel>> _initMasterOptions() async {
-    var ppl = await InstitutionModel.currentInstitution.people;
+    var ppl = await InstitutionModel.currentInstitution.people();
     return ppl.where((element) => element.asTeacher != null).toList();
   }
 

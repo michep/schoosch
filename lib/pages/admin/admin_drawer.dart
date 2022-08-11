@@ -87,7 +87,7 @@ class AdminDrawer extends StatelessWidget {
 
   Future<void> _openPeoplePage() async {
     // Get.back();
-    Get.to(() => PeopleListPage(InstitutionModel.currentInstitution));
+    Get.to(() => PeopleListPage(InstitutionModel.currentInstitution.people));
   }
 
   Future<void> _openCurriculumsPage() async {

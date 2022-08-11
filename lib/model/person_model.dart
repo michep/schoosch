@@ -207,7 +207,7 @@ class StudentModel extends PersonModel {
   }
 
   Future<List<MarkModel>> curriculumMarks(CurriculumModel cur) async {
-    return Get.find<FStore>().getStudentsMarks(this, cur);
+    return Get.find<FStore>().getStudentCurriculumMarks(this, cur);
   }
 }
 
@@ -235,11 +235,6 @@ class TeacherModel extends PersonModel {
 
   Future<List<TeacherScheduleModel>> getSchedulesWeek(Week week) async {
     return _schedule[week] ??= await Get.find<FStore>().getTeacherWeekSchedule(this, week);
-  }
-
-  Future<void> createMark(PersonModel student, int mark, int lessonorder, CurriculumModel curriculum, String marktype, DateTime date,
-      {String comment = ""}) async {
-    return Get.find<FStore>().saveMark(this, student, curriculum, date, mark, lessonorder, marktype, comment);
   }
 
   Future<void> createHomework(String homeworkText, CurriculumModel curriculum, DateTime date, {StudentModel? student}) async {

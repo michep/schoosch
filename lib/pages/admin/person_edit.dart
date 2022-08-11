@@ -127,7 +127,7 @@ class _PersonPageState extends State<PersonPage> {
                         title: loc.personRelatedStudents,
                         initListFutureFunc: _initChildren,
                         titleFunc: (value) => value?.fullName ?? '',
-                        listFunc: () => PeopleListPage(InstitutionModel.currentInstitution, selectionMode: true, type: 'student'),
+                        listFunc: () => PeopleListPage(InstitutionModel.currentInstitution.people, selectionMode: true, type: 'student'),
                         detailsFunc: (value) => PersonPage(value!, value.fullName),
                         listValidatorFunc: () => _children.isEmpty ? loc.errorPersonParentStudentsEmpty : null,
                         addElementFunc: _addChild,

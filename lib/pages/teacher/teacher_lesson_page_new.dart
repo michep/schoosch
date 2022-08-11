@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
-import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
-import 'package:schoosch/widgets/class_task_completions.dart';
-import 'package:schoosch/widgets/students_task_completions.dart';
-import 'package:schoosch/widgets/teacher_student_tile.dart';
+import 'package:schoosch/widgets/class_homework_completions.dart';
+import 'package:schoosch/widgets/students_absences.dart';
+import 'package:schoosch/widgets/students_homework_completions.dart';
+import 'package:schoosch/widgets/students_marks.dart';
 import 'package:schoosch/widgets/utils.dart';
-import '../../widgets/addhomeworksheet.dart';
 
 class TeacherLessonPageNew extends StatelessWidget {
   final DateTime _date;
@@ -57,12 +53,12 @@ class TeacherLessonPageNew extends StatelessWidget {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      ClassTaskWithCompetionsView(_date, _lesson.homeworkThisLessonForClass),
-                      StudentsTasksWithCompetionsView(_date, _lesson.homeworkThisLessonForClassAndAllStudents),
-                      Container(),
-                      Container(),
-                      ClassTaskWithCompetionsView(_date, _lesson.homeworkNextLessonForClass),
-                      StudentsTasksWithCompetionsView(_date, _lesson.homeworkNextLessonForClassAndAllStudents),
+                      ClassTaskWithCompetionsPage(_date, _lesson.homeworkThisLessonForClass, readOnly: true),
+                      StudentsTasksWithCompetionsPage(_date, _lesson.homeworkThisLessonForClassAndAllStudents, readOnly: true),
+                      StudentsAbsencePage(_date, _lesson),
+                      StudentsMarksPage(_date, _lesson),
+                      ClassTaskWithCompetionsPage(_date, _lesson.homeworkNextLessonForClass),
+                      StudentsTasksWithCompetionsPage(_date, _lesson.homeworkNextLessonForClassAndAllStudents),
                     ],
                   ),
                 )

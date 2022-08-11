@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
-import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class PeopleListPage extends StatefulWidget {
-  final InstitutionModel _institution;
+  final Future<List<PersonModel>> Function() peopleFutureFunc;
   final bool selectionMode;
   final String type;
 
-  const PeopleListPage(this._institution, {this.selectionMode = false, this.type = 'all', Key? key}) : super(key: key);
+  const PeopleListPage(this.peopleFutureFunc, {this.selectionMode = false, this.type = 'all', Key? key}) : super(key: key);
   @override
   State<PeopleListPage> createState() => _PeopleListPageState();
 }
@@ -92,7 +91,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
             ),
             Expanded(
               child: FutureBuilder<List<PersonModel>>(
-                  future: widget._institution.people,
+                  future: widget.peopleFutureFunc(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) return Utils.progressIndicator();
                     var sorted = snapshot.data!;

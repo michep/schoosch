@@ -4,6 +4,7 @@ import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:intl/intl.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class StudentsTablePage extends StatelessWidget {
@@ -85,10 +86,12 @@ class StudentsTablePage extends StatelessWidget {
     return List.generate(
       listcur.length,
       (index) => FutureBuilder<List<MarkModel>>(
-        future: Get.find<FStore>().getCurriculumMarks(listcur[index]),
+        future: Get.find<FStore>().getStudentCurriculumMarks(PersonModel.currentStudent!, listcur[index]),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(child: Utils.progressIndicator(),);
+            return Center(
+              child: Utils.progressIndicator(),
+            );
           }
           if (snapshot.data!.isEmpty) {
             return Container(
@@ -120,7 +123,9 @@ class StudentsTablePage extends StatelessWidget {
           future: Get.find<FStore>().getStudentCurriculums(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Center(child: Utils.progressIndicator(),);
+              return Center(
+                child: Utils.progressIndicator(),
+              );
             }
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,

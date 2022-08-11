@@ -1,6 +1,7 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
@@ -178,17 +179,42 @@ class LessonModel {
     return _homeworksNextLesson;
   }
 
+  Future<Map<String, List<MarkModel>>> getAllMarks(DateTime date, {bool forceUpdate = false}) async {
+    Map<String, List<MarkModel>> res = {};
+    var mrks = await Get.find<FStore>().getAllLessonMarks(this, date);
+    for (var mrk in mrks) {
+      if (res[mrk.studentId] == null) {
+        res[mrk.studentId] = [mrk];
+      } else {
+        res[mrk.studentId]!.add(mrk);
+      }
+    }
+    return res;
+  }
+
   Future<List<MarkModel>> marksForStudent(StudentModel student, DateTime date, {bool forceUpdate = false}) async {
     if (_marks[student.id] == null || forceUpdate) {
-      _marks[student.id!] = await Get.find<FStore>().getLessonMarksForStudent(schedule, this, student, date);
+      _marks[student.id!] = await Get.find<FStore>().getStudentLessonMarks(this, student, date);
     }
 
     return _marks[student.id!]!;
   }
 
+  Future<void> saveMark(MarkModel mark) async {
+    mark.save();
+  }
+
   Future<String> marksForStudentAsString(StudentModel student, DateTime date) async {
     var ms = await marksForStudent(student, date);
     return ms.map((e) => e.mark.toString()).join('; ');
+  }
+
+  Future<List<AbsenceModel>> getAllAbsences(DateTime date, {bool forceUpdate = false}) async {
+    return Get.find<FStore>().getAllAbsences(this, date);
+  }
+
+  Future<void> createAbsence(AbsenceModel absence) async {
+    return Get.find<FStore>().createAbsence(this, absence);
   }
 
   Map<String, dynamic> toMap() {

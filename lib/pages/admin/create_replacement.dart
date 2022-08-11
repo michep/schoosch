@@ -119,7 +119,9 @@ class _CreateReplacementState extends State<CreateReplacement> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: ElevatedButton(
@@ -195,7 +197,7 @@ class _CreateReplacementState extends State<CreateReplacement> {
   }
 
   Future<List<PersonModel>> _initMasterOptions() async {
-    var ppl = await InstitutionModel.currentInstitution.people;
+    var ppl = await InstitutionModel.currentInstitution.people();
     return ppl.where((element) => element.asTeacher != null).toList();
   }
 

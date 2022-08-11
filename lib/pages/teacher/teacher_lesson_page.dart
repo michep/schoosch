@@ -112,9 +112,9 @@ class TeacherLessonPage extends StatelessWidget {
                         ),
                       ),
                       children: [
-                        ...snapshot.data!.map(
-                          (student) => TeacherStudentTile(_date, _lesson, _curiculum, _teacher, student),
-                        ),
+                        // ...snapshot.data!.map(
+                        //   (student) => TeacherStudentTile(_date, _lesson, _curiculum, _teacher, student),
+                        // ),
                       ],
                     ),
                   );

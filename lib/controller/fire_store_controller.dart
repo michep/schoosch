@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
-import 'package:schoosch/model/attendance_model.dart';
+import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/chat_model.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
@@ -491,24 +491,10 @@ class FStore extends GetxController {
     await _institutionRef.collection('teachersrates').add(data);
   }
 
-  Future saveMark(
-      TeacherModel user, PersonModel student, CurriculumModel curriculum, DateTime date, int mark, int lessonOrder, String markType, String comment) async {
-    Map<String, dynamic> data = {};
-    data['comment'] = comment;
-    data['curriculum_id'] = curriculum.id;
-    data['date'] = Timestamp.fromDate(date);
-    data['lesson_order'] = lessonOrder;
-    data['mark'] = mark;
-    data['student_id'] = student.id;
-    data['teacher_id'] = user.id;
-    data['type'] = markType;
-    return _institutionRef.collection('mark').add(data);
-  }
-
-  Stream<DocumentSnapshot> markStream(MarkModel mark) {
-    var a = _institutionRef.collection('mark').doc(mark.id).snapshots();
-    return a;
-  }
+  // Stream<DocumentSnapshot> markStream(MarkModel mark) {
+  //   var a = _institutionRef.collection('mark').doc(mark.id).snapshots();
+  //   return a;
+  // }
 
   Future saveHomework(String homeworkText, CurriculumModel curriculum, TeacherModel teacher, DateTime date, {StudentModel? student}) async {
     Map<String, dynamic> data = {};
@@ -724,24 +710,6 @@ class FStore extends GetxController {
     });
   }
 
-  Future<List<MarkModel>> getLessonMarksForStudent(DayScheduleModel schedule, LessonModel lesson, StudentModel student, DateTime date) async {
-    return (await _institutionRef
-            .collection('mark')
-            .where('date', isGreaterThanOrEqualTo: date)
-            .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
-            .where('curriculum_id', isEqualTo: (await lesson.curriculum)!.id)
-            .where('lesson_order', isEqualTo: lesson.order)
-            .where('student_id', isEqualTo: student.id)
-            .get())
-        .docs
-        .map((e) => MarkModel.fromMap(e.id, e.data()))
-        .toList();
-  }
-
-  Future<void> updateMark(String docId, int newMark) async {
-    return await _institutionRef.collection('mark').doc(docId).update({'mark': newMark});
-  }
-
   Future<List<TeacherScheduleModel>> getTeacherWeekSchedule(TeacherModel teacher, Week week) async {
     var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: teacher.id).get();
 
@@ -824,18 +792,6 @@ class FStore extends GetxController {
     return res;
   }
 
-  Future<List<MarkModel>> getCurriculumMarks(CurriculumModel cur) async {
-    var marks = await _institutionRef.collection('mark').where('curriculum_id', isEqualTo: cur.id).where('student_id', isEqualTo: currentUser!.id).get();
-    return marks.docs
-        .map(
-          (e) => MarkModel.fromMap(
-            e.id,
-            e.data(),
-          ),
-        )
-        .toList();
-  }
-
   Future<List<CurriculumModel>> getTeacherCurriculums() async {
     var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: currentUser!.id).get();
     return curriculums.docs
@@ -848,11 +804,32 @@ class FStore extends GetxController {
         .toList();
   }
 
-  // Future<List<StudentModel>> getCurriculumStudents(CurriculumModel cur) {
-  //   currentUser!.asTeacher.
-  // }
+  Future<List<MarkModel>> getAllLessonMarks(LessonModel lesson, DateTime date) async {
+    var marks = await _institutionRef
+        .collection('mark')
+        .where('date', isGreaterThanOrEqualTo: date)
+        .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
+        .where('curriculum_id', isEqualTo: (await lesson.curriculum)!.id)
+        .where('lesson_order', isEqualTo: lesson.order)
+        .get();
+    return marks.docs.map((e) => MarkModel.fromMap(e.id, e.data())).toList();
+  }
 
-  Future<List<MarkModel>> getStudentsMarks(StudentModel student, CurriculumModel cur) async {
+  Future<List<MarkModel>> getStudentLessonMarks(LessonModel lesson, StudentModel student, DateTime date) async {
+    return (await _institutionRef
+            .collection('mark')
+            .where('date', isGreaterThanOrEqualTo: date)
+            .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
+            .where('curriculum_id', isEqualTo: (await lesson.curriculum)!.id)
+            .where('lesson_order', isEqualTo: lesson.order)
+            .where('student_id', isEqualTo: student.id)
+            .get())
+        .docs
+        .map((e) => MarkModel.fromMap(e.id, e.data()))
+        .toList();
+  }
+
+  Future<List<MarkModel>> getStudentCurriculumMarks(StudentModel student, CurriculumModel cur) async {
     var marks = await _institutionRef
         .collection('mark')
         .where('student_id', isEqualTo: student.id)
@@ -867,6 +844,20 @@ class FStore extends GetxController {
           ),
         )
         .toList();
+  }
+
+  Future<void> updateMark(String docId, int newMark) async {
+    return await _institutionRef.collection('mark').doc(docId).update({'mark': newMark});
+  }
+
+  Future<String> saveMark(MarkModel mark) async {
+    if (mark.id != null) {
+      await _institutionRef.collection('mark').doc(mark.id).set(mark.toMap());
+      return mark.id!;
+    } else {
+      var mrk = await _institutionRef.collection('mark').add(mark.toMap());
+      return mrk.id;
+    }
   }
 
   Future<List<ClassModel>> getCurriculumClasses(CurriculumModel curriculum) async {
@@ -997,20 +988,6 @@ class FStore extends GetxController {
     return res;
   }
 
-  Future<void> createAttendance(ClassModel aclass, AttendanceModel attendance) async {
-    await _institutionRef.collection('class').doc(aclass.id).collection('attendance').add(attendance.toMap());
-  }
-
-  Future checkAttendenceForStudentDateOrder(ClassModel aclass, StudentModel student, DateTime date, int lessonOrder) async {
-    var a = _institutionRef
-        .collection('class')
-        .doc(aclass.id)
-        .collection('attendance')
-        .where('date', isEqualTo: date)
-        .where('person_id', isEqualTo: student.id)
-        .where('lesson_order', isEqualTo: lessonOrder);
-  }
-
   Future<List<int>> getFreeLessonsOnDay(ClassModel aclass, DateTime date) async {
     List<int> res = [];
     var a = (await getClassDaySchedule(aclass, date.weekday)).where((element) => element.till == null).first;
@@ -1021,5 +998,45 @@ class FStore extends GetxController {
       }
     }
     return res;
+  }
+
+  Future<List<AbsenceModel>> getAllAbsences(LessonModel lesson, DateTime date) async {
+    var abs = await _institutionRef
+        .collection('class')
+        .doc(lesson.aclass.id)
+        .collection('absence')
+        .where('date', isGreaterThanOrEqualTo: date)
+        .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
+        .where('lesson_order', isEqualTo: lesson.order)
+        .get();
+
+    return abs.docs.map((e) => AbsenceModel.fromMap(e.id, e.data())).toList();
+  }
+
+  Future<AbsenceModel?> getAbsence(LessonModel lesson, String person_id, DateTime date) async {
+    var abs = await _institutionRef
+        .collection('class')
+        .doc(lesson.aclass.id)
+        .collection('absence')
+        .where('date', isGreaterThanOrEqualTo: date)
+        .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
+        .where('lesson_order', isEqualTo: lesson.order)
+        .where('person_id', isEqualTo: person_id)
+        .limit(1)
+        .get();
+    if (abs.docs.isEmpty) return null;
+    return AbsenceModel.fromMap(abs.docs[0].id, abs.docs[0].data());
+  }
+
+  Future<void> createAbsence(LessonModel lesson, AbsenceModel absence) async {
+    if (await getAbsence(lesson, absence.person_id, absence.date) == null) {
+      await _institutionRef.collection('class').doc(lesson.aclass.id).collection('absence').add(absence.toMap());
+    }
+  }
+
+  Future<void> deleteAbsence(LessonModel lesson, AbsenceModel absence) async {
+    if (absence.id != null) {
+      await _institutionRef.collection('class').doc(lesson.aclass.id).collection('absence').doc(absence.id).delete();
+    }
   }
 }

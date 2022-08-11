@@ -23,7 +23,7 @@ class InstitutionModel {
     return Get.find<FStore>().getAllVenues();
   }
 
-  Future<List<PersonModel>> get people async {
+  Future<List<PersonModel>> people() async {
     return Get.find<FStore>().getAllPeople();
   }
 
@@ -49,7 +49,7 @@ class InstitutionModel {
 
   Future<List<PersonModel>> findFreeTeachers(DateTime date, int order) async {
     return await Get.find<FStore>().getFreeTeachersOnLesson(date, order);
-  } 
+  }
 
   // Future<List<PersonModel>> getUsersByName(String query) async {
   //   return Get.find<FStore>().getPeopleByName(query);
