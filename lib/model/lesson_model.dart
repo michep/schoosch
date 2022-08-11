@@ -205,7 +205,7 @@ class LessonModel {
   }
 
   Future<String> marksForStudentAsString(StudentModel student, DateTime date) async {
-    var ms = await marksForStudent(student, date);
+    var ms = await marksForStudent(student, date, forceUpdate: true);
     return ms.map((e) => e.mark.toString()).join('; ');
   }
 

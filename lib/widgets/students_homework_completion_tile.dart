@@ -34,10 +34,16 @@ class _StudentHomeworkCompetionTileState extends State<StudentHomeworkCompetionT
     if (widget.compl != null) {
       switch (widget.compl!.status) {
         case Status.completed:
-          icon = const Icon(Icons.check);
+          icon = IconButton(
+            icon: const Icon(Icons.circle_outlined),
+            onPressed: () {},
+          );
           break;
         case Status.confirmed:
-          icon = const Icon(Icons.check_circle_outline);
+          icon = IconButton(
+            icon: const Icon(Icons.check_circle_outline),
+            onPressed: () {},
+          );
           break;
         default:
           icon = const SizedBox.shrink();

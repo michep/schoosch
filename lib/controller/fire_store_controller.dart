@@ -867,6 +867,12 @@ class FStore extends GetxController {
     }
   }
 
+  Future<void> deleteMark(MarkModel mark) async {
+    if (mark.id != null) {
+      await _institutionRef.collection('mark').doc(mark.id).delete();
+    }
+  }
+
   Future<List<ClassModel>> getCurriculumClasses(CurriculumModel curriculum) async {
     List<ClassModel> res = [];
     var r = await _store.collectionGroup('lesson').where('curriculum_id', isEqualTo: curriculum.id).get();

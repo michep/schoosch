@@ -32,6 +32,10 @@ class ClassTaskWithCompetionsPage extends StatelessWidget {
                     ListTile(
                       leading: Text(Utils.formatDatetime(hw.date, format: 'dd MMM')),
                       title: Text(hw.text),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () {},
+                      ),
                     ),
                     const Text('Выполнение:'),
                     Expanded(

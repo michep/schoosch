@@ -28,7 +28,16 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const SizedBox.shrink();
             return ListView(
-              children: [...snapshot.data!.keys.map((e) => MarkListTile(e, widget._lesson, widget._date))].toList(),
+              children: [
+                ...snapshot.data!.keys.map((e) => MarkListTile(
+                      e,
+                      widget._lesson,
+                      widget._date,
+                      deleteMark,
+                      editMark,
+                      key: ValueKey(e),
+                    ))
+              ].toList(),
             );
           },
         ),
@@ -60,20 +69,35 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
           'mark': 4,
         },
       );
-      await mrk.save();
-      setState(() {});
+      mrk.save().then((value) => setState(() {}));
     }
   }
 
-  Future<void> deleteMark() async {}
+  void deleteMark(MarkModel mark) {
+    mark.delete().then((value) => setState(() {}));
+  }
+
+  Future<void> editMark(MarkModel mark) async {
+    var res = await Get.bottomSheet<bool>(
+      MarkSheet(
+        mark,
+        editMode: true,
+      ),
+    );
+    if (res is bool) {
+      setState(() {});
+    }
+  }
 }
 
 class MarkListTile extends StatefulWidget {
   final String studentId;
   final LessonModel lesson;
   final DateTime date;
+  final void Function(MarkModel) deleteFunc;
+  final Future<void> Function(MarkModel) editFunc;
 
-  const MarkListTile(this.studentId, this.lesson, this.date, {Key? key}) : super(key: key);
+  const MarkListTile(this.studentId, this.lesson, this.date, this.deleteFunc, this.editFunc, {Key? key}) : super(key: key);
 
   @override
   State<MarkListTile> createState() => _MarkListTileState();
@@ -86,24 +110,157 @@ class _MarkListTileState extends State<MarkListTile> {
   void initState() {
     super.initState();
     InstitutionModel.currentInstitution.getPerson(widget.studentId).then((value) {
-      setState(() {
-        student = value.asStudent;
-      });
+      if (mounted) {
+        setState(() {
+          student = value.asStudent;
+        });
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     if (student == null) return const SizedBox.shrink();
-    return FutureBuilder<String>(
-      future: widget.lesson.marksForStudentAsString(student!, widget.date),
+    return FutureBuilder<List<MarkModel>>(
+      future: widget.lesson.marksForStudent(student!, widget.date, forceUpdate: true),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const SizedBox.shrink();
-        return ListTile(
+        return ExpansionTile(
           title: Text(student!.fullName),
-          trailing: Text(snapshot.data!),
+          subtitle: Text(marksString(snapshot.data!)),
+          children: [
+            ...snapshot.data!.map((e) => MarkTile(e, widget.deleteFunc, widget.editFunc, key: ValueKey(e.id))).toList(),
+          ],
         );
       },
     );
+  }
+
+  String marksString(List<MarkModel?> marks) {
+    List<String> ms = [];
+    for (var m in marks) {
+      ms.add(m!.mark.toString());
+    }
+    return ms.join('; ');
+  }
+}
+
+class MarkTile extends StatelessWidget {
+  final MarkModel mark;
+  final void Function(MarkModel) deleteFunc;
+  final Future<void> Function(MarkModel) editFunc;
+
+  const MarkTile(this.mark, this.deleteFunc, this.editFunc, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(mark.comment),
+      leading: Text(mark.mark.toString()),
+      subtitle: FutureBuilder<PersonModel>(
+        future: mark.teacher,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return const SizedBox.shrink();
+          return Text(snapshot.data!.fullName);
+        },
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            onPressed: () => editFunc(mark),
+            icon: const Icon(Icons.edit),
+          ),
+          IconButton(
+            onPressed: () => deleteFunc(mark),
+            icon: const Icon(Icons.delete),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MarkSheet extends StatefulWidget {
+  final MarkModel mark;
+  final bool editMode;
+
+  const MarkSheet(this.mark, {Key? key, this.editMode = false}) : super(key: key);
+
+  @override
+  State<MarkSheet> createState() => _MarkSheetState();
+}
+
+class _MarkSheetState extends State<MarkSheet> {
+  late TextEditingController commentCont;
+  late TextEditingController markCont;
+
+  @override
+  void initState() {
+    super.initState();
+    commentCont = TextEditingController.fromValue(TextEditingValue(text: widget.mark.comment));
+    markCont = TextEditingController.fromValue(TextEditingValue(text: widget.mark.mark.toStringAsFixed(0)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: widget.editMode ? const Text('Изменить оценку') : const Text('Поставить оценку'),
+              ),
+              widget.editMode ? const SizedBox.shrink() : TextField(decoration: InputDecoration(label: Text('Ученик'))),
+              TextField(
+                controller: markCont,
+                decoration: const InputDecoration(
+                  label: Text('Оценка'),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
+                controller: commentCont,
+                decoration: const InputDecoration(
+                  label: Text('Комментарий'),
+                ),
+                keyboardType: TextInputType.multiline,
+                minLines: 1,
+                maxLines: 3,
+              ),
+              Center(
+                child: ElevatedButton(
+                  onPressed: save,
+                  child: const Text('Сохранить'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void save() async {
+    var nmark = MarkModel.fromMap(
+      widget.mark.id,
+      {
+        'teacher_id': widget.mark.teacherId,
+        'student_id': widget.mark.studentId,
+        'date': Timestamp.fromDate(widget.mark.date),
+        'curriculum_id': widget.mark.curriculumId,
+        'lesson_order': widget.mark.lessonOrder,
+        'type': widget.mark.type,
+        'comment': commentCont.value.text,
+        'mark': int.parse(markCont.value.text),
+      },
+    );
+    await nmark.save();
+    Get.back<bool>(result: true);
   }
 }

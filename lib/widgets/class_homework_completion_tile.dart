@@ -20,9 +20,11 @@ class _ClassHomeworkCompetionTileState extends State<ClassHomeworkCompetionTile>
   void initState() {
     super.initState();
     widget.compl.student.then((value) {
-      setState(() {
-        studentFullName = value.fullName;
-      });
+      if (mounted) {
+        setState(() {
+          studentFullName = value.fullName;
+        });
+      }
     });
   }
 
@@ -33,10 +35,16 @@ class _ClassHomeworkCompetionTileState extends State<ClassHomeworkCompetionTile>
 
     switch (widget.compl.status) {
       case Status.completed:
-        icon = const Icon(Icons.circle_outlined);
+        icon = IconButton(
+          icon: const Icon(Icons.circle_outlined),
+          onPressed: () {},
+        );
         break;
       case Status.confirmed:
-        icon = const Icon(Icons.check_circle_outline);
+        icon = IconButton(
+          icon: const Icon(Icons.check_circle_outline),
+          onPressed: () {},
+        );
         break;
       default:
         icon = const SizedBox.shrink();
