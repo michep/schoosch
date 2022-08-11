@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
@@ -9,7 +10,6 @@ import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
-import 'package:schoosch/widgets/teacher_student_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 import '../../widgets/addhomeworksheet.dart';
 
@@ -28,6 +28,7 @@ class TeacherLessonPage extends StatelessWidget {
     TeacherModel teacher,
     CurriculumModel curriculum,
     DateTime date,
+    ClassModel aclass,
   ) async {
     return await showModalBottomSheet(
       context: context,
@@ -36,6 +37,7 @@ class TeacherLessonPage extends StatelessWidget {
           teacher: teacher,
           curriculum: curriculum,
           date: date,
+          aclass: aclass,
           student: null,
           isEdit: false,
         );
@@ -102,9 +104,9 @@ class TeacherLessonPage extends StatelessWidget {
                   if (snapshot.data!.isEmpty) {
                     return const Text("нет учеников");
                   }
-                  return SizedBox(
+                  return const SizedBox(
                     child: ExpansionTile(
-                      title: const Text(
+                      title: Text(
                         "Ученики",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -123,7 +125,10 @@ class TeacherLessonPage extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              const Text('ДЗ на следущий урок'),
+              const Align(
+                alignment: Alignment.center,
+                child: Text('ДЗ на следущий урок'),
+              ),
               FutureBuilder<HomeworkModel?>(
                   future: _lesson.homeworkNextLessonForClass(_date),
                   builder: (context, snapshot) {
@@ -211,21 +216,22 @@ class TeacherLessonPage extends StatelessWidget {
               ),
               Center(
                 child: FutureBuilder<HomeworkModel?>(
-                    future: _lesson.homeworkThisLessonForClass(_date),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: Utils.progressIndicator());
-                      }
-                      return ElevatedButton.icon(
-                        onPressed: !snapshot.hasData
-                            ? () {
-                                createClassHomework(context, _teacher, _curiculum, _date);
-                              }
-                            : null,
-                        icon: const Icon(Icons.calculate_outlined),
-                        label: Text(snapshot.hasData ? "Вы уже задали задание." : "задать ДЗ классу"),
-                      );
-                    }),
+                  future: _lesson.homeworkNextLessonForClass(_date),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: Utils.progressIndicator());
+                    }
+                    return ElevatedButton.icon(
+                      onPressed: !snapshot.hasData
+                          ? () {
+                              createClassHomework(context, _teacher, _curiculum, _date, _lesson.aclass);
+                            }
+                          : null,
+                      icon: const Icon(Icons.calculate_outlined),
+                      label: Text(snapshot.hasData ? "Вы уже задали задание." : "задать ДЗ классу"),
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -283,7 +289,7 @@ class _CompletionListTileState extends State<CompletionListTile> {
                 ? widget.homework.unconfirmCompletion(widget.completion)
                 : widget.homework.confirmCompletion(widget.completion);
             widget.completion = (await widget.completion.refresh(widget.homework))!;
-            Navigator.pop(context);
+            Get.back();
           },
           label: Text(widget.completion.status == Status.confirmed ? 'отметить как не проверенное' : 'отметить как проверенное'),
           icon: Icon(widget.completion.status == Status.confirmed ? Icons.close : Icons.check),

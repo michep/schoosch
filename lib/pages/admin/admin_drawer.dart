@@ -51,7 +51,7 @@ class AdminDrawer extends StatelessWidget {
             ),
             TextButton(
               onPressed: _openFreeLessonsPage,
-              child: Text('Free lessons'),
+              child: const Text('Free lessons'),
             ),
             TextButton(
               onPressed: _openClassesPage,

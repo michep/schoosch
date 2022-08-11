@@ -148,11 +148,13 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
     for (var order in keys) {
       List<DragAndDropItem> items = [];
       for (var lesson in _lessons[order]!) {
-        items.add(
-          DragAndDropItem(
-            child: ScheduleLessonListTile(lesson, _removeLesson, key: ValueKey(lesson)),
-          ),
-        );
+        if (lesson.type != LessonType.empty) {
+          items.add(
+            DragAndDropItem(
+              child: ScheduleLessonListTile(lesson, _removeLesson, key: ValueKey(lesson)),
+            ),
+          );
+        }
       }
       res.add(
         DragAndDropList(

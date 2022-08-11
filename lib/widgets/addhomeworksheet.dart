@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -7,17 +8,18 @@ import 'package:schoosch/model/person_model.dart';
 class AddHomeworkSheet extends StatefulWidget {
   final TeacherModel? teacher;
   final CurriculumModel? curriculum;
+  final ClassModel? aclass;
   final DateTime? date;
   final StudentModel? student;
   final bool isEdit;
   final HomeworkModel? homework;
 
-  const AddHomeworkSheet(
-    {
+  const AddHomeworkSheet({
     this.teacher,
     this.curriculum,
     this.date,
-    this.student, 
+    this.student,
+    this.aclass,
     required this.isEdit,
     this.homework,
     Key? key,
@@ -57,7 +59,7 @@ class AddHomeworkSheetState extends State<AddHomeworkSheet> {
           onPressed: () async {
             widget.isEdit
                 ? widget.homework!.change(cont.text)
-                : widget.teacher!.createHomework(cont.text, widget.curriculum!, widget.date!, student: widget.student);
+                : widget.teacher!.createHomework(cont.text, widget.curriculum!, widget.date!, widget.aclass!, student: widget.student);
             cont.clear();
             Get.back();
           },

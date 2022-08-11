@@ -20,6 +20,7 @@ class HomePage extends StatelessWidget {
       appBar: const MAppBar(
         'Schoosch / Скуш',
         showProfile: true,
+        showSendNotif: true,
       ),
       body: SafeArea(
         child: Column(

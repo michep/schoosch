@@ -36,7 +36,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
           alignment: Alignment.bottomRight,
           child: FloatingActionButton(
             onPressed: addMark,
-            child: Icon(Icons.add),
+            child: const Icon(Icons.add),
           ),
         ),
       ],

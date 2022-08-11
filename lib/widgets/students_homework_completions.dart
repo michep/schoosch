@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
-import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/widgets/class_homework_completion_tile.dart';
 import 'package:schoosch/widgets/students_homework_completion_tile.dart';
-import 'package:schoosch/widgets/utils.dart';
 
 class StudentsTasksWithCompetionsPage extends StatelessWidget {
   final DateTime _date;
@@ -30,7 +27,7 @@ class StudentsTasksWithCompetionsPage extends StatelessWidget {
                   return FutureBuilder<List<CompletionFlagModel>>(
                     future: e!.getAllCompletions(),
                     builder: (context, snapcompl) {
-                      if (!snapcompl.hasData) return SizedBox.shrink();
+                      if (!snapcompl.hasData) return const SizedBox.shrink();
                       var compl = snapcompl.data!.isNotEmpty ? snapcompl.data![0] : null;
                       return StudentHomeworkCompetionTile(e, compl);
                     },
@@ -46,7 +43,7 @@ class StudentsTasksWithCompetionsPage extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               onPressed: () {},
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           ),
         )

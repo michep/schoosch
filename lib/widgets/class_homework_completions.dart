@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
-import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/class_homework_completion_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -29,12 +28,12 @@ class ClassTaskWithCompetionsPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Задание всему классу:'),
+                    const Text('Задание всему классу:'),
                     ListTile(
                       leading: Text(Utils.formatDatetime(hw.date, format: 'dd MMM')),
                       title: Text(hw.text),
                     ),
-                    Text('Выполнение:'),
+                    const Text('Выполнение:'),
                     Expanded(
                       child: ListView(
                         children: [
@@ -54,7 +53,7 @@ class ClassTaskWithCompetionsPage extends StatelessWidget {
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               onPressed: () {},
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           ),
         ),

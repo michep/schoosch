@@ -13,17 +13,22 @@ import 'package:schoosch/firebase_options.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
 import 'package:schoosch/pages/class_selection_page.dart';
-import 'package:schoosch/pages/disconnected_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:schoosch/theme.dart';
-import 'package:schoosch/widgets/utils.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'model/person_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+
+  OneSignal.shared.setAppId("0725282a-b87a-4ea8-97ab-165108deee94");
+
+  OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
+    print("Accepted permission: $accepted");
+  });
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var fauth = FAuth();
   var fstore = FStore();
