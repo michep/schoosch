@@ -53,7 +53,7 @@ class _MarkPageState extends State<MarkPage> {
                   initFutureFunc: _initStudent,
                   initOptionsFutureFunc: _initStudentOptions,
                   titleFunc: (value) => value?.fullName ?? '',
-                  listFunc: () => PeopleListPage(widget.lesson.aclass.students, selectionMode: true, type: 'student'),
+                  listFunc: () => PeopleListPage(widget.lesson.aclass.students, selectionMode: true, type: 'student', title: loc.classStudentsTitle),
                   detailsFunc: () => PersonPage(_student!, _student!.fullName),
                   validatorFunc: (value) => Utils.validateTextAndvAlueNotEmpty<StudentModel>(value, _student, loc.errorStudentEmpty),
                   callback: (value) => _setStudent(value),

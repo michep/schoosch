@@ -20,11 +20,9 @@ class PeopleListPage extends StatefulWidget {
 class _PeopleListPageState extends State<PeopleListPage> {
   final TextEditingController _name = TextEditingController();
   late String _typeValue;
-  late String title;
 
   @override
   void initState() {
-    title = widget.title ?? S.of(context).peopleList;
     _typeValue = widget.type;
     super.initState();
   }
@@ -34,7 +32,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
     var loc = S.of(context);
     return Scaffold(
       appBar: MAppBar(
-        title,
+        widget.title ?? S.of(context).peopleList,
         actions: [IconButton(onPressed: _newPerson, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
