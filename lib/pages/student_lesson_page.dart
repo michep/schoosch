@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+// import 'package:get/get.dart';
+// import 'package:intl/intl.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
-import 'package:schoosch/model/curriculum_model.dart';
+// import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
-import 'package:schoosch/model/lesson_model.dart';
-import 'package:schoosch/model/lessontime_model.dart';
-import 'package:schoosch/model/mark_model.dart';
+// import 'package:schoosch/model/lesson_model.dart';
+// import 'package:schoosch/model/lessontime_model.dart';
+// import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/model/venue_model.dart';
-import 'package:schoosch/widgets/appbar.dart';
+// import 'package:schoosch/model/venue_model.dart';
+// import 'package:schoosch/widgets/appbar.dart';
 
 // class StudentLessonPage extends StatefulWidget {
 //   final StudentModel _student;
@@ -209,38 +209,38 @@ class _HomeworkCardState extends State<HomeworkCard> {
             isConfirmed = true;
           }
         }
-        return Card(
-          elevation: 3,
-          child: Container(
-            margin: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
+        return Container(
+          margin: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
                   widget.isClass ? "Д/З класса" : "Д/З личное",
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                 ),
-                ListTile(
-                  title: Text(widget.homework.text),
-                  trailing: isConfirmed
-                      ? const Icon(Icons.check_circle_outline_rounded)
-                      : isChecked
-                          ? const Icon(Icons.circle_outlined)
-                          : null,
-                  onTap: () async {
-                    var completion = await widget.homework.getCompletion(widget.student);
-                    onTap(completion).whenComplete(() {
-                      setState(() {});
-                    });
-                  },
-                  // tileColor: isChecked
-                  //     ? const Color.fromARGB(153, 76, 175, 79)
-                  //     : isConfirmed
-                  //         ? Colors.green
-                  //         : null,
-                ),
-              ],
-            ),
+              ),
+              ListTile(
+                title: Text(widget.homework.text),
+                trailing: isConfirmed
+                    ? const Icon(Icons.check_circle_outline_rounded)
+                    : isChecked
+                        ? const Icon(Icons.circle_outlined)
+                        : null,
+                onTap: () async {
+                  var completion = await widget.homework.getCompletion(widget.student);
+                  onTap(completion).whenComplete(() {
+                    setState(() {});
+                  });
+                },
+                // tileColor: isChecked
+                //     ? const Color.fromARGB(153, 76, 175, 79)
+                //     : isConfirmed
+                //         ? Colors.green
+                //         : null,
+              ),
+            ],
           ),
         );
       },
@@ -273,5 +273,5 @@ class _HomeworkCardState extends State<HomeworkCard> {
                     : Icons.check),
           ),
         );
-      });
+      },);
 }

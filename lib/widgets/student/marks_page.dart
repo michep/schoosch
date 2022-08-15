@@ -53,25 +53,22 @@ class _MarksForStudentPageState extends State<MarksForStudentPage> {
         return ListView(
           children: [
             ...snapshot.data!.map(
-              (e) => Card(
-                elevation: 3,
-                child: ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.red,
-                        width: 1.5,
-                      ),
-                      borderRadius: BorderRadius.circular(4),
+              (e) => ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.red,
+                      width: 1.5,
                     ),
-                    child: Text(
-                      e.mark.toString(),
-                      style: const TextStyle(fontSize: 20),
-                    ),
+                    borderRadius: BorderRadius.circular(4),
                   ),
-                  title: Text(e.comment),
+                  child: Text(
+                    e.mark.toString(),
+                    style: const TextStyle(fontSize: 20),
+                  ),
                 ),
+                title: Text(e.comment),
               ),
             )
           ],
