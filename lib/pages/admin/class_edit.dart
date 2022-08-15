@@ -134,13 +134,14 @@ class _ClassPageState extends State<ClassPage> {
     );
   }
 
-  Future<PersonModel> _initMaster() async {
+  Future<PersonModel?> _initMaster() async {
     return widget._aclass.master.then((value) {
       if (value != null) {
         _mastercont.text = value.fullName;
         _master = value;
+        return value;
       }
-      return _master as PersonModel;
+      return null;
     });
   }
 

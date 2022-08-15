@@ -7,6 +7,7 @@ import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -24,7 +25,7 @@ class MarkPage extends StatefulWidget {
 
 class _MarkPageState extends State<MarkPage> {
   late TextEditingController commentCont;
-  late TextEditingController markCont;
+  int mark = 0;
   final TextEditingController _studentcont = TextEditingController();
 
   StudentModel? _student;
@@ -32,23 +33,15 @@ class _MarkPageState extends State<MarkPage> {
   @override
   void initState() {
     super.initState();
+    mark = widget.mark.mark;
     commentCont = TextEditingController.fromValue(TextEditingValue(text: widget.mark.comment));
-    markCont = TextEditingController.fromValue(TextEditingValue(text: widget.mark.mark.toStringAsFixed(0)));
   }
 
   @override
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () {},
-          ),
-        ],
-      ),
+      appBar: MAppBar(widget.title),
       body: SafeArea(
         child: Form(
           child: Padding(
@@ -56,7 +49,7 @@ class _MarkPageState extends State<MarkPage> {
             child: ListView(
               children: [
                 SelectableValueDropdownFormField<PersonModel>(
-                  title: "Ученик",
+                  title: S.of(context).studentTitle,
                   initFutureFunc: _initStudent,
                   initOptionsFutureFunc: _initStudentOptions,
                   titleFunc: (value) => value?.fullName ?? '',
@@ -65,17 +58,11 @@ class _MarkPageState extends State<MarkPage> {
                   validatorFunc: (value) => Utils.validateTextAndvAlueNotEmpty<StudentModel>(value, _student, loc.errorStudentEmpty),
                   callback: (value) => _setStudent(value),
                 ),
-                TextField(
-                  controller: markCont,
-                  decoration: const InputDecoration(
-                    label: Text('Оценка'),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-                TextField(
+                MarkFormField(widget.mark.mark, setMark),
+                TextFormField(
                   controller: commentCont,
-                  decoration: const InputDecoration(
-                    label: Text('Комментарий'),
+                  decoration: InputDecoration(
+                    label: Text(S.of(context).commentTitle),
                   ),
                   keyboardType: TextInputType.multiline,
                   minLines: 1,
@@ -96,9 +83,13 @@ class _MarkPageState extends State<MarkPage> {
     );
   }
 
+  void setMark(int? mark) {
+    this.mark = mark!;
+  }
+
   Future<PersonModel?> _initStudent() async {
-    _student = (await widget.mark.student).asStudent;
-    if (_student != null) {
+    if (widget.mark.studentId.isNotEmpty) {
+      _student = (await widget.mark.student).asStudent;
       _studentcont.text = _student!.fullName;
       return _student;
     }
@@ -131,10 +122,75 @@ class _MarkPageState extends State<MarkPage> {
         'lesson_order': widget.mark.lessonOrder,
         'type': widget.mark.type,
         'comment': commentCont.value.text,
-        'mark': int.parse(markCont.value.text),
+        'mark': mark,
       },
     );
     await nmark.save();
     Get.back<bool>(result: true);
+  }
+}
+
+class MarkFormField extends StatefulWidget {
+  final int mark;
+  final void Function(int?) callback;
+
+  const MarkFormField(this.mark, this.callback, {Key? key}) : super(key: key);
+
+  @override
+  State<MarkFormField> createState() => _MarkFormFieldState();
+}
+
+class _MarkFormFieldState extends State<MarkFormField> {
+  late int mark;
+
+  @override
+  void initState() {
+    mark = widget.mark;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var selStyle = ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary));
+    return InputDecorator(
+      decoration: InputDecoration(label: Text(S.of(context).markTitle)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          ElevatedButton(
+            onPressed: () => setMark(1),
+            style: mark == 1 ? selStyle : null,
+            child: const Text('1'),
+          ),
+          ElevatedButton(
+            onPressed: () => setMark(2),
+            style: mark == 2 ? selStyle : null,
+            child: const Text('2'),
+          ),
+          ElevatedButton(
+            onPressed: () => setMark(3),
+            style: mark == 3 ? selStyle : null,
+            child: const Text('3'),
+          ),
+          ElevatedButton(
+            onPressed: () => setMark(4),
+            style: mark == 4 ? selStyle : null,
+            child: const Text('4'),
+          ),
+          ElevatedButton(
+            onPressed: () => setMark(5),
+            style: mark == 5 ? selStyle : null,
+            child: const Text('5'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void setMark(int mark) {
+    setState(() {
+      this.mark = mark;
+      widget.callback(mark);
+    });
   }
 }

@@ -769,6 +769,66 @@ class S {
       args: [],
     );
   }
+
+  /// `Mark`
+  String get markTitle {
+    return Intl.message(
+      'Mark',
+      name: 'markTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Student`
+  String get studentTitle {
+    return Intl.message(
+      'Student',
+      name: 'studentTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Comment`
+  String get commentTitle {
+    return Intl.message(
+      'Comment',
+      name: 'commentTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set Mark`
+  String get setMarkTitle {
+    return Intl.message(
+      'Set Mark',
+      name: 'setMarkTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update Mark`
+  String get updateMarkTitle {
+    return Intl.message(
+      'Update Mark',
+      name: 'updateMarkTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Class Students`
+  String get classStudentsTitle {
+    return Intl.message(
+      'Class Students',
+      name: 'classStudentsTitle',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

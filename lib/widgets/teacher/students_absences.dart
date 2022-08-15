@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -42,7 +43,15 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
   }
 
   Future<void> addAbsence() async {
-    var stud = await Get.to(() => PeopleListPage(widget._lesson.aclass.students, selectionMode: true, type: 'student'), transition: Transition.rightToLeft);
+    var stud = await Get.to(
+      () => PeopleListPage(
+        widget._lesson.aclass.students,
+        selectionMode: true,
+        type: 'student',
+        title: S.of(context).classStudentsTitle,
+      ),
+      transition: Transition.rightToLeft,
+    );
     if (stud is PersonModel) {
       var abs = AbsenceModel.fromMap(null, {'lesson_order': widget._lesson.order, 'person_id': stud.id, 'date': Timestamp.fromDate(widget._date)});
       widget._lesson.createAbsence(abs).then((value) => setState(() {}));

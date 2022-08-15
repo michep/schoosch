@@ -423,9 +423,9 @@ class _RawAutocompleteState<T extends Object> extends State<RawAutocomplete<T>> 
     SchedulerBinding.instance.addPostFrameCallback((Duration _) {
       _updateOverlay();
     });
-    widget.initialValueFuture?.call().then((value) {
-      if (value != null) _select(value);
-    });
+    // widget.initialValueFuture?.call().then((value) {
+    //   if (value != null) _select(value);
+    // });
   }
 
   @override

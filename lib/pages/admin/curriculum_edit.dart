@@ -115,6 +115,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
       if (value != null) {
         _mastercont.text = value.fullName;
         _master = value;
+        return value;
       }
       return null;
     });

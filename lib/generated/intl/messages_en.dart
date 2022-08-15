@@ -38,6 +38,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "classSchedule": MessageLookupByLibrary.simpleMessage("Lessons Times"),
         "classScheduleName": m0,
         "classStudents": MessageLookupByLibrary.simpleMessage("Students"),
+        "classStudentsTitle":
+            MessageLookupByLibrary.simpleMessage("Class Students"),
+        "commentTitle": MessageLookupByLibrary.simpleMessage("Comment"),
         "curriculumAlternateName":
             MessageLookupByLibrary.simpleMessage("Alias"),
         "curriculumList": MessageLookupByLibrary.simpleMessage("Curriculums"),
@@ -94,6 +97,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fromTitle": MessageLookupByLibrary.simpleMessage("From time"),
         "lesson": MessageLookupByLibrary.simpleMessage("Lesson"),
         "lessonName": MessageLookupByLibrary.simpleMessage("Lesson"),
+        "markTitle": MessageLookupByLibrary.simpleMessage("Mark"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "newClass": MessageLookupByLibrary.simpleMessage("New Class"),
         "newCurriculum": MessageLookupByLibrary.simpleMessage("New Curriculum"),
@@ -125,7 +129,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "scheduleNoLesson": MessageLookupByLibrary.simpleMessage("no lesson"),
         "scheduleTillDate": MessageLookupByLibrary.simpleMessage("End date"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "setMarkTitle": MessageLookupByLibrary.simpleMessage("Set Mark"),
+        "studentTitle": MessageLookupByLibrary.simpleMessage("Student"),
         "tillTitle": MessageLookupByLibrary.simpleMessage("Till time"),
+        "updateMarkTitle": MessageLookupByLibrary.simpleMessage("Update Mark"),
         "venueList": MessageLookupByLibrary.simpleMessage("Venues"),
         "venueName": MessageLookupByLibrary.simpleMessage("Venue"),
         "weekSchedule": MessageLookupByLibrary.simpleMessage(

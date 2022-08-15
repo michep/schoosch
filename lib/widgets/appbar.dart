@@ -5,12 +5,12 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/profile_page.dart';
 
 class MAppBar extends StatelessWidget with PreferredSizeWidget {
-  const MAppBar(this._title, {this.tabs, this.showProfile = false, this.showSendNotif = false, Key? key}) : super(key: key);
+  const MAppBar(this._title, {this.showProfile = false, this.showSendNotif = false, Key? key, this.actions}) : super(key: key);
 
   final String _title;
-  final List<Tab>? tabs;
   final bool showProfile;
   final bool showSendNotif;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +18,6 @@ class MAppBar extends StatelessWidget with PreferredSizeWidget {
       title: Text(_title),
       backgroundColor: Theme.of(context).primaryColor,
       foregroundColor: Colors.white,
-      // actions: showProfile
-      //     ? const [
-      //         IconButton(
-      //           icon: Icon(Icons.person),
-      //           onPressed: _profile,
-      //         ),
-      //       ]
-      //     : [],
       actions: [
         if (showProfile)
           const IconButton(
@@ -36,16 +28,21 @@ class MAppBar extends StatelessWidget with PreferredSizeWidget {
           IconButton(
             icon: const Icon(Icons.notification_add),
             onPressed: () async {
-              await Get.find<FStore>().sendNotif([PersonModel.currentUser!,],);
+              await Get.find<FStore>().sendNotif(
+                [
+                  PersonModel.currentUser!,
+                ],
+              );
             },
           ),
+        if (actions != null) ...actions!,
       ],
-      bottom: tabs != null ? TabBar(tabs: tabs!) : null,
+      // bottom: tabs != null ? TabBar(tabs: tabs!) : null,
     );
   }
 
   @override
-  Size get preferredSize => tabs != null ? const Size.fromHeight(132) : const Size.fromHeight(48);
+  Size get preferredSize => const Size.fromHeight(48);
 
   static void _profile() {
     Get.to(() => ProfilePage(PersonModel.currentUser!));

@@ -42,6 +42,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "classScheduleName": m0,
         "classStudents":
             MessageLookupByLibrary.simpleMessage("Учащиеяся класса"),
+        "classStudentsTitle":
+            MessageLookupByLibrary.simpleMessage("Ученики класса"),
+        "commentTitle": MessageLookupByLibrary.simpleMessage("Комментарий"),
         "curriculumAlternateName":
             MessageLookupByLibrary.simpleMessage("Альтернативное название"),
         "curriculumList":
@@ -103,6 +106,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fromTitle": MessageLookupByLibrary.simpleMessage("Время начала"),
         "lesson": MessageLookupByLibrary.simpleMessage("Урок"),
         "lessonName": MessageLookupByLibrary.simpleMessage("Урок"),
+        "markTitle": MessageLookupByLibrary.simpleMessage("Оценка"),
         "name": MessageLookupByLibrary.simpleMessage("Название"),
         "newClass": MessageLookupByLibrary.simpleMessage("Новый учебный класс"),
         "newCurriculum":
@@ -141,7 +145,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "scheduleTillDate":
             MessageLookupByLibrary.simpleMessage("Окончание действия"),
         "search": MessageLookupByLibrary.simpleMessage("Поиск"),
+        "setMarkTitle":
+            MessageLookupByLibrary.simpleMessage("Поставить оценку"),
+        "studentTitle": MessageLookupByLibrary.simpleMessage("Ученик"),
         "tillTitle": MessageLookupByLibrary.simpleMessage("Время окончания"),
+        "updateMarkTitle":
+            MessageLookupByLibrary.simpleMessage("Изменить оценку"),
         "venueList":
             MessageLookupByLibrary.simpleMessage("Кабинеты и помещения"),
         "venueName": MessageLookupByLibrary.simpleMessage("Кабинет"),

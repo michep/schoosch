@@ -3,14 +3,16 @@ import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class PeopleListPage extends StatefulWidget {
   final Future<List<PersonModel>> Function() peopleFutureFunc;
   final bool selectionMode;
   final String type;
+  final String? title;
 
-  const PeopleListPage(this.peopleFutureFunc, {this.selectionMode = false, this.type = 'all', Key? key}) : super(key: key);
+  const PeopleListPage(this.peopleFutureFunc, {this.selectionMode = false, this.type = 'all', this.title, Key? key}) : super(key: key);
   @override
   State<PeopleListPage> createState() => _PeopleListPageState();
 }
@@ -18,9 +20,11 @@ class PeopleListPage extends StatefulWidget {
 class _PeopleListPageState extends State<PeopleListPage> {
   final TextEditingController _name = TextEditingController();
   late String _typeValue;
+  late String title;
 
   @override
   void initState() {
+    title = widget.title ?? S.of(context).peopleList;
     _typeValue = widget.type;
     super.initState();
   }
@@ -29,8 +33,8 @@ class _PeopleListPageState extends State<PeopleListPage> {
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(loc.peopleList),
+      appBar: MAppBar(
+        title,
         actions: [IconButton(onPressed: _newPerson, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
