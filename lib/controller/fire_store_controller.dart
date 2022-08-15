@@ -1033,7 +1033,7 @@ class FStore extends GetxController {
     return abs.docs.map((e) => AbsenceModel.fromMap(e.id, e.data())).toList();
   }
 
-  Future<AbsenceModel?> getAbsence(LessonModel lesson, String person_id, DateTime date) async {
+  Future<AbsenceModel?> getAbsence(LessonModel lesson, String personId, DateTime date) async {
     var abs = await _institutionRef
         .collection('class')
         .doc(lesson.aclass.id)
@@ -1041,7 +1041,7 @@ class FStore extends GetxController {
         .where('date', isGreaterThanOrEqualTo: date)
         .where('date', isLessThan: date.add(const Duration(hours: 23, minutes: 59)))
         .where('lesson_order', isEqualTo: lesson.order)
-        .where('person_id', isEqualTo: person_id)
+        .where('person_id', isEqualTo: personId)
         .limit(1)
         .get();
     if (abs.docs.isEmpty) return null;
@@ -1049,7 +1049,7 @@ class FStore extends GetxController {
   }
 
   Future<void> createAbsence(LessonModel lesson, AbsenceModel absence) async {
-    if (await getAbsence(lesson, absence.person_id, absence.date) == null) {
+    if (await getAbsence(lesson, absence.personId, absence.date) == null) {
       await _institutionRef.collection('class').doc(lesson.aclass.id).collection('absence').add(absence.toMap());
     }
   }

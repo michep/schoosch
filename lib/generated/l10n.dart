@@ -640,6 +640,16 @@ class S {
     );
   }
 
+  /// `Student should be selected`
+  String get errorStudentEmpty {
+    return Intl.message(
+      'Student should be selected',
+      name: 'errorStudentEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Selected Student is already in the list`
   String get errorStudentAlreadyPresent {
     return Intl.message(

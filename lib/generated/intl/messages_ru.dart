@@ -94,6 +94,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Дата начала действия должна быть выбрана"),
         "errorStudentAlreadyPresent": MessageLookupByLibrary.simpleMessage(
             "Выбранный учащийся уже присутствует в группе"),
+        "errorStudentEmpty":
+            MessageLookupByLibrary.simpleMessage("Учченик должен быть выбран"),
         "errorTeacherEmpty": MessageLookupByLibrary.simpleMessage(
             "Преподаватель должен быть выбран"),
         "errorVenueEmpty":

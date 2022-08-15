@@ -6,14 +6,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MarkModel {
   String? id;
-  late final String teacherId;
-  late final String studentId;
-  late final DateTime date;
-  late final String curriculumId;
-  late final int lessonOrder;
-  late final String type;
-  late final String comment;
-  late final int mark;
+  late String teacherId;
+  late String studentId;
+  late DateTime date;
+  late String curriculumId;
+  late int lessonOrder;
+  late String type;
+  late String comment;
+  late int mark;
+
+  MarkModel.empty()
+      : this.fromMap(null, {
+          'teacher_id': '',
+          'student_id': '',
+          'date': Timestamp.fromDate(DateTime.now()),
+          'curriculum_id': '',
+          'lesson_order': 0,
+          'type': 'regular',
+          'comment': '',
+          'mark': 0,
+        });
 
   MarkModel.fromMap(this.id, Map<String, dynamic> map) {
     teacherId = map['teacher_id'] != null ? map['teacher_id'] as String : throw 'need teacher_id key in mark $id';
@@ -40,19 +52,19 @@ class MarkModel {
     };
   }
 
-  Future<void> save() async {
-    id = await Get.find<FStore>().saveMark(this);
-  }
-
-  Future<void> delete() async {
-    Get.find<FStore>().deleteMark(this);
-  }
-
   Future<PersonModel> get teacher async {
     return Get.find<FStore>().getPerson(teacherId);
   }
 
   Future<PersonModel> get student async {
     return Get.find<FStore>().getPerson(studentId);
+  }
+
+  Future<void> save() async {
+    id = await Get.find<FStore>().saveMark(this);
+  }
+
+  Future<void> delete() async {
+    Get.find<FStore>().deleteMark(this);
   }
 }

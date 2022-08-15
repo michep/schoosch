@@ -85,6 +85,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Start Date should be provided"),
         "errorStudentAlreadyPresent": MessageLookupByLibrary.simpleMessage(
             "Selected Student is already in the list"),
+        "errorStudentEmpty":
+            MessageLookupByLibrary.simpleMessage("Student should be selected"),
         "errorTeacherEmpty":
             MessageLookupByLibrary.simpleMessage("Teacher should be selected"),
         "errorVenueEmpty":

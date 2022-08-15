@@ -42,7 +42,7 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
   }
 
   Future<void> addAbsence() async {
-    var stud = await Get.to(() => PeopleListPage(widget._lesson.aclass.students, selectionMode: true, type: 'student'));
+    var stud = await Get.to(() => PeopleListPage(widget._lesson.aclass.students, selectionMode: true, type: 'student'), transition: Transition.rightToLeft);
     if (stud is PersonModel) {
       var abs = AbsenceModel.fromMap(null, {'lesson_order': widget._lesson.order, 'person_id': stud.id, 'date': Timestamp.fromDate(widget._date)});
       widget._lesson.createAbsence(abs).then((value) => setState(() {}));

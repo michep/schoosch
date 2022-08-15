@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
-
-import '../pages/admin/people_list.dart';
+import 'package:schoosch/pages/admin/people_list.dart';
+import 'package:schoosch/pages/admin/person_edit.dart';
+import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
+import 'package:schoosch/widgets/utils.dart';
 
 class StudentsMarksPage extends StatefulWidget {
   final LessonModel _lesson;
@@ -29,14 +32,16 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
             if (!snapshot.hasData) return const SizedBox.shrink();
             return ListView(
               children: [
-                ...snapshot.data!.keys.map((e) => MarkListTile(
-                      e,
-                      widget._lesson,
-                      widget._date,
-                      deleteMark,
-                      editMark,
-                      key: ValueKey(e),
-                    ))
+                ...snapshot.data!.keys.map(
+                  (e) => MarkListTile(
+                    e,
+                    widget._lesson,
+                    widget._date,
+                    deleteMark,
+                    editMark,
+                    key: ValueKey(e),
+                  ),
+                )
               ].toList(),
             );
           },
@@ -53,23 +58,18 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
   }
 
   Future<void> addMark() async {
-    var stud = await Get.to(() => PeopleListPage(widget._lesson.aclass.students, selectionMode: true, type: 'student'));
-    if (stud is PersonModel) {
-      var curr = await widget._lesson.curriculum;
-      var mrk = MarkModel.fromMap(
-        null,
-        {
-          'teacher_id': PersonModel.currentTeacher!.id,
-          'student_id': stud.id,
-          'date': Timestamp.fromDate(widget._date),
-          'curriculum_id': curr!.id,
-          'lesson_order': widget._lesson.order,
-          'type': 'regular',
-          'comment': 'comment1',
-          'mark': 4,
-        },
-      );
-      mrk.save().then((value) => setState(() {}));
+    var res = await Get.to<bool>(
+      () => MarkSheet(
+          widget._lesson,
+          MarkModel.empty()
+            ..curriculumId = widget._lesson.curriculumId!
+            ..lessonOrder = widget._lesson.order
+            ..teacherId = PersonModel.currentUser!.id!
+            ..date = widget._date,
+          'Поставить оценку'),
+    );
+    if (res is bool) {
+      setState(() {});
     }
   }
 
@@ -78,11 +78,8 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
   }
 
   Future<void> editMark(MarkModel mark) async {
-    var res = await Get.bottomSheet<bool>(
-      MarkSheet(
-        mark,
-        editMode: true,
-      ),
+    var res = await Get.to<bool>(
+      () => MarkSheet(widget._lesson, mark, 'Изменить оценку', editMode: true),
     );
     if (res is bool) {
       setState(() {});
@@ -182,10 +179,12 @@ class MarkTile extends StatelessWidget {
 }
 
 class MarkSheet extends StatefulWidget {
+  final String title;
+  final LessonModel lesson;
   final MarkModel mark;
   final bool editMode;
 
-  const MarkSheet(this.mark, {Key? key, this.editMode = false}) : super(key: key);
+  const MarkSheet(this.lesson, this.mark, this.title, {Key? key, this.editMode = false}) : super(key: key);
 
   @override
   State<MarkSheet> createState() => _MarkSheetState();
@@ -194,6 +193,9 @@ class MarkSheet extends StatefulWidget {
 class _MarkSheetState extends State<MarkSheet> {
   late TextEditingController commentCont;
   late TextEditingController markCont;
+  final TextEditingController _studentcont = TextEditingController();
+
+  StudentModel? _student;
 
   @override
   void initState() {
@@ -204,46 +206,86 @@ class _MarkSheetState extends State<MarkSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: widget.editMode ? const Text('Изменить оценку') : const Text('Поставить оценку'),
-              ),
-              widget.editMode ? const SizedBox.shrink() : TextField(decoration: InputDecoration(label: Text('Ученик'))),
-              TextField(
-                controller: markCont,
-                decoration: const InputDecoration(
-                  label: Text('Оценка'),
+    var loc = S.of(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Form(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ListView(
+              children: [
+                SelectableValueDropdownFormField<PersonModel>(
+                  title: "Ученик",
+                  initFutureFunc: _initStudent,
+                  initOptionsFutureFunc: _initStudentOptions,
+                  titleFunc: (value) => value?.fullName ?? '',
+                  listFunc: () => PeopleListPage(widget.lesson.aclass.students, selectionMode: true, type: 'student'),
+                  detailsFunc: () => PersonPage(_student!, _student!.fullName),
+                  validatorFunc: (value) => Utils.validateTextAndvAlueNotEmpty<StudentModel>(value, _student, loc.errorStudentEmpty),
+                  callback: (value) => _setStudent(value),
                 ),
-                keyboardType: TextInputType.number,
-              ),
-              TextField(
-                controller: commentCont,
-                decoration: const InputDecoration(
-                  label: Text('Комментарий'),
+                TextField(
+                  controller: markCont,
+                  decoration: const InputDecoration(
+                    label: Text('Оценка'),
+                  ),
+                  keyboardType: TextInputType.number,
                 ),
-                keyboardType: TextInputType.multiline,
-                minLines: 1,
-                maxLines: 3,
-              ),
-              Center(
-                child: ElevatedButton(
-                  onPressed: save,
-                  child: const Text('Сохранить'),
+                TextField(
+                  controller: commentCont,
+                  decoration: const InputDecoration(
+                    label: Text('Комментарий'),
+                  ),
+                  keyboardType: TextInputType.multiline,
+                  minLines: 1,
+                  maxLines: 3,
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: ElevatedButton(
+                    onPressed: save,
+                    child: Text(loc.saveChanges),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future<PersonModel?> _initStudent() async {
+    _student = (await widget.mark.student).asStudent;
+    if (_student != null) {
+      _studentcont.text = _student!.fullName;
+      return _student;
+    }
+    return null;
+  }
+
+  Future<List<PersonModel>> _initStudentOptions() async {
+    var ppl = await widget.lesson.aclass.students();
+    return ppl;
+  }
+
+  bool _setStudent(PersonModel? value) {
+    if (value != null) {
+      _student = value as StudentModel;
+      return true;
+    } else {
+      _student = null;
+      return true;
+    }
   }
 
   void save() async {
@@ -251,7 +293,7 @@ class _MarkSheetState extends State<MarkSheet> {
       widget.mark.id,
       {
         'teacher_id': widget.mark.teacherId,
-        'student_id': widget.mark.studentId,
+        'student_id': _student!.id,
         'date': Timestamp.fromDate(widget.mark.date),
         'curriculum_id': widget.mark.curriculumId,
         'lesson_order': widget.mark.lessonOrder,

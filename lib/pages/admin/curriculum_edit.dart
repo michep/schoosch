@@ -110,13 +110,13 @@ class _CurriculumPageState extends State<CurriculumPage> {
     );
   }
 
-  Future<PersonModel> _initMaster() async {
+  Future<PersonModel?> _initMaster() async {
     return widget._curriculum.master.then((value) {
       if (value != null) {
         _mastercont.text = value.fullName;
         _master = value;
       }
-      return _master as PersonModel;
+      return null;
     });
   }
 

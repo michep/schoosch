@@ -75,6 +75,7 @@
 
     "errorNameEmpty": "Название должно быть заполнено",
     "errorTeacherEmpty": "Преподаватель должен быть выбран",
+    "errorStudentEmpty": "Учченик должен быть выбран",
     "errorStudentAlreadyPresent": "Выбранный учащийся уже присутствует в группе",
     "errorPersonIsNotATeacher": "Выбранный персонаж не является преподавателем",
     "errorPersonIsNotAStudent": "Выбранный персонаж не является учащимся",

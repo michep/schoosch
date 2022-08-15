@@ -75,6 +75,7 @@
 
     "errorNameEmpty": "Name should be provided",
     "errorTeacherEmpty": "Teacher should be selected",
+    "errorStudentEmpty": "Student should be selected",
     "errorStudentAlreadyPresent": "Selected Student is already in the list",
     "errorPersonIsNotATeacher": "Selected Person is not a Teacher",
     "errorPersonIsNotAStudent": "Selected Person is not a Student",

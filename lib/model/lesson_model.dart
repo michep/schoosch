@@ -40,11 +40,11 @@ class LessonModel {
   final DayScheduleModel schedule;
   String? _id;
   late int order;
-  late final String? _curriculumId;
-  late final String? _venueId;
+  late final String? curriculumId;
+  late final String? venueId;
   final Map<String, HomeworkModel?> _homeworksThisLesson = {};
   final Map<String, HomeworkModel?> _homeworksNextLesson = {};
-  final Map<String, List<MarkModel>> _marks = {};
+  final Map<String, List<MarkModel>> marks = {};
   CurriculumModel? _curriculum;
   VenueModel? _venue;
   LessontimeModel? _lessontime;
@@ -63,12 +63,12 @@ class LessonModel {
   LessonModel.fromMap(this.aclass, this.schedule, this._id, Map<String, Object?> map) {
     type = map['type'] != null ? LessonTypeExt.getType((map['type'] as int)) : LessonType.normal;
     order = map['order'] != null ? map['order'] as int : throw 'need order key in lesson $_id';
-    _curriculumId = map['curriculum_id'] != null
+    curriculumId = map['curriculum_id'] != null
         ? map['curriculum_id'] as String
         : type == LessonType.empty
             ? null
             : throw 'need curriculum_id key in lesson $_id';
-    _venueId = map['venue_id'] != null
+    venueId = map['venue_id'] != null
         ? map['venue_id'] as String
         : type == LessonType.empty
             ? null
@@ -80,15 +80,15 @@ class LessonModel {
   }
 
   Future<CurriculumModel?> get curriculum async {
-    if (_curriculumId!.isNotEmpty) {
-      return _curriculum ??= await Get.find<FStore>().getCurriculum(_curriculumId!);
+    if (curriculumId!.isNotEmpty) {
+      return _curriculum ??= await Get.find<FStore>().getCurriculum(curriculumId!);
     }
     return null;
   }
 
   Future<VenueModel?> get venue async {
-    if (_venueId!.isNotEmpty) {
-      return _venue ??= await Get.find<FStore>().getVenue(_venueId!);
+    if (venueId!.isNotEmpty) {
+      return _venue ??= await Get.find<FStore>().getVenue(venueId!);
     }
     return null;
   }
@@ -193,11 +193,11 @@ class LessonModel {
   }
 
   Future<List<MarkModel>> marksForStudent(StudentModel student, DateTime date, {bool forceUpdate = false}) async {
-    if (_marks[student.id] == null || forceUpdate) {
-      _marks[student.id!] = await Get.find<FStore>().getStudentLessonMarks(this, student, date);
+    if (marks[student.id] == null || forceUpdate) {
+      marks[student.id!] = await Get.find<FStore>().getStudentLessonMarks(this, student, date);
     }
 
-    return _marks[student.id!]!;
+    return marks[student.id!]!;
   }
 
   Future<void> saveMark(MarkModel mark) async {
@@ -220,8 +220,8 @@ class LessonModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> res = {};
     res['order'] = order;
-    res['curriculum_id'] = _curriculumId;
-    res['venue_id'] = _venueId;
+    res['curriculum_id'] = curriculumId;
+    res['venue_id'] = venueId;
     return res;
   }
 
