@@ -222,18 +222,22 @@ class _HomeworkCardState extends State<HomeworkCard> {
                 ),
                 ListTile(
                   title: Text(widget.homework.text),
-                  trailing: isConfirmed ? const Icon(Icons.check) : null,
+                  trailing: isConfirmed
+                      ? const Icon(Icons.check_circle_outline_rounded)
+                      : isChecked
+                          ? const Icon(Icons.circle_outlined)
+                          : null,
                   onTap: () async {
                     var completion = await widget.homework.getCompletion(widget.student);
                     onTap(completion).whenComplete(() {
                       setState(() {});
                     });
                   },
-                  tileColor: isChecked
-                      ? const Color.fromARGB(153, 76, 175, 79)
-                      : isConfirmed
-                          ? Colors.green
-                          : null,
+                  // tileColor: isChecked
+                  //     ? const Color.fromARGB(153, 76, 175, 79)
+                  //     : isConfirmed
+                  //         ? Colors.green
+                  //         : null,
                 ),
               ],
             ),

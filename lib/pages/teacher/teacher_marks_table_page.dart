@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -7,7 +8,8 @@ import 'package:schoosch/widgets/utils.dart';
 
 class TeacherTablePage extends StatelessWidget {
   final CurriculumModel currentcur;
-  const TeacherTablePage({Key? key, required this.currentcur}) : super(key: key);
+  final ClassModel? aclass;
+  const TeacherTablePage({Key? key, required this.currentcur, this.aclass}) : super(key: key);
 
   List<Widget> _buildMarkCells(List<MarkModel> listmark) {
     return List.generate(
@@ -85,24 +87,25 @@ class TeacherTablePage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder<List<StudentModel>>(
-          future: currentcur.allStudents(),
+          future: currentcur.allStudents(aclass: aclass),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(child: Utils.progressIndicator(),);
             }
+            var students = snapshot.data!;
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _buildStudentCells(snapshot.data!),
+                  children: _buildStudentCells(students),
                 ),
                 Flexible(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildRows(snapshot.data!),
+                      children: _buildRows(students),
                     ),
                   ),
                 )

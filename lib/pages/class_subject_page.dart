@@ -66,6 +66,7 @@ class SubjectList extends StatelessWidget {
                 Get.to(
                   TeacherTablePage(
                     currentcur: snapshot.data!.elementAt(index),
+                    aclass: _class,
                   ),
                 );
               },
