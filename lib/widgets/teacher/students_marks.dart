@@ -60,13 +60,15 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
   Future<void> addMark() async {
     var res = await Get.to<bool>(
       () => MarkSheet(
-          widget._lesson,
-          MarkModel.empty()
-            ..curriculumId = widget._lesson.curriculumId!
-            ..lessonOrder = widget._lesson.order
-            ..teacherId = PersonModel.currentUser!.id!
-            ..date = widget._date,
-          'Поставить оценку'),
+        widget._lesson,
+        MarkModel.empty(
+          PersonModel.currentUser!.id!,
+          widget._lesson.curriculumId!,
+          widget._lesson.order,
+          widget._date,
+        ),
+        'Поставить оценку',
+      ),
     );
     if (res is bool) {
       setState(() {});
@@ -220,7 +222,7 @@ class _MarkSheetState extends State<MarkSheet> {
       body: SafeArea(
         child: Form(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: ListView(
               children: [
                 SelectableValueDropdownFormField<PersonModel>(

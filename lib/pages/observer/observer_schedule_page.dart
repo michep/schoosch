@@ -4,7 +4,7 @@ import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
-import 'package:schoosch/widgets/observer_day_tile.dart';
+import 'package:schoosch/widgets/observer/observer_day_tile.dart';
 // import 'package:schoosch/widgets/student/student_dayschedule_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 import 'package:schoosch/widgets/week_selector.dart';

@@ -15,13 +15,13 @@ class MarkModel {
   late String comment;
   late int mark;
 
-  MarkModel.empty()
+  MarkModel.empty(String teacherId, String curriculumId, int lessonOrder, DateTime date)
       : this.fromMap(null, {
-          'teacher_id': '',
+          'teacher_id': teacherId,
+          'date': Timestamp.fromDate(date),
+          'curriculum_id': curriculumId,
+          'lesson_order': lessonOrder,
           'student_id': '',
-          'date': Timestamp.fromDate(DateTime.now()),
-          'curriculum_id': '',
-          'lesson_order': 0,
           'type': 'regular',
           'comment': '',
           'mark': 0,

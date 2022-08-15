@@ -5,10 +5,10 @@ import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
-import 'package:schoosch/widgets/class_homework_completions.dart';
-import 'package:schoosch/widgets/students_absences.dart';
-import 'package:schoosch/widgets/students_homework_completions.dart';
-import 'package:schoosch/widgets/students_marks.dart';
+import 'package:schoosch/widgets/teacher/class_homework_completions.dart';
+import 'package:schoosch/widgets/teacher/students_absences.dart';
+import 'package:schoosch/widgets/teacher/students_homework_completions.dart';
+import 'package:schoosch/widgets/teacher/students_marks.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class TeacherLessonPageNew extends StatelessWidget {
