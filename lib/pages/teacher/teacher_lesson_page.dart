@@ -11,7 +11,7 @@ import 'package:schoosch/widgets/teacher/students_homework_completions.dart';
 import 'package:schoosch/widgets/teacher/students_marks.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class TeacherLessonPageNew extends StatelessWidget {
+class TeacherLessonPage extends StatelessWidget {
   final DateTime _date;
   final LessonModel _lesson;
   final CurriculumModel _curiculum;
@@ -19,7 +19,7 @@ class TeacherLessonPageNew extends StatelessWidget {
   final LessontimeModel _time;
   final TeacherModel _teacher;
 
-  const TeacherLessonPageNew(this._lesson, this._curiculum, this._venue, this._time, this._date, this._teacher, {Key? key}) : super(key: key);
+  const TeacherLessonPage(this._lesson, this._curiculum, this._venue, this._time, this._date, this._teacher, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,12 +53,12 @@ class TeacherLessonPageNew extends StatelessWidget {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      ClassTaskWithCompetionsPage(_date, _lesson.homeworkThisLessonForClass, readOnly: true),
-                      StudentsTasksWithCompetionsPage(_date, _lesson.homeworkThisLessonForClassAndAllStudents, readOnly: true),
+                      ClassTaskWithCompetionsPage(_date, _lesson, _lesson.homeworkThisLessonForClass, readOnly: true),
+                      StudentsTasksWithCompetionsPage(_date, _lesson, _lesson.homeworkThisLessonForClassAndAllStudents, readOnly: true),
                       StudentsAbsencePage(_date, _lesson),
                       StudentsMarksPage(_date, _lesson),
-                      ClassTaskWithCompetionsPage(_date, _lesson.homeworkNextLessonForClass),
-                      StudentsTasksWithCompetionsPage(_date, _lesson.homeworkNextLessonForClassAndAllStudents),
+                      ClassTaskWithCompetionsPage(_date, _lesson, _lesson.homeworkNextLessonForClass),
+                      StudentsTasksWithCompetionsPage(_date, _lesson, _lesson.homeworkNextLessonForClassAndAllStudents),
                     ],
                   ),
                 )

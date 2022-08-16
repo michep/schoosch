@@ -5,7 +5,7 @@ import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class HomeworkModel {
-  final String id;
+  final String? id;
   late final String text;
   late final String? _studentId;
   late final List<String> usersChecked;

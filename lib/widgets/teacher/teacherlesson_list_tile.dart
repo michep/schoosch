@@ -4,7 +4,6 @@ import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/venue_model.dart';
-// import 'package:schoosch/pages/teacher/teacher_lesson_page.dart';
 import 'package:schoosch/pages/teacher/teacher_lesson_page.dart';
 
 class TeacherLessonListTile extends StatefulWidget {
@@ -53,6 +52,6 @@ class _TeacherLessonListTileState extends State<TeacherLessonListTile> {
   void _onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim) async {
     var master = await cur.master;
     // Get.to(() => TeacherLessonPage(les, cur, ven, tim, widget._date, master!));
-    Get.to(() => TeacherLessonPageNew(les, cur, ven, tim, widget._date, master!));
+    Get.to(() => TeacherLessonPage(les, cur, ven, tim, widget._date, master!));
   }
 }

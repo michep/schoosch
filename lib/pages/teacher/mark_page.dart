@@ -27,6 +27,7 @@ class _MarkPageState extends State<MarkPage> {
   late TextEditingController commentCont;
   int mark = 0;
   final TextEditingController _studentcont = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   StudentModel? _student;
 
@@ -44,6 +45,7 @@ class _MarkPageState extends State<MarkPage> {
       appBar: MAppBar(widget.title),
       body: SafeArea(
         child: Form(
+          key: _formKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: ListView(
@@ -58,7 +60,10 @@ class _MarkPageState extends State<MarkPage> {
                   validatorFunc: (value) => Utils.validateTextAndvAlueNotEmpty<StudentModel>(value, _student, loc.errorStudentEmpty),
                   callback: (value) => _setStudent(value),
                 ),
-                MarkFormField(widget.mark.mark, setMark),
+                MarkFormField(
+                  mark: widget.mark.mark,
+                  onSaved: setMark,
+                ),
                 TextFormField(
                   controller: commentCont,
                   decoration: InputDecoration(
@@ -112,85 +117,95 @@ class _MarkPageState extends State<MarkPage> {
   }
 
   void save() async {
-    var nmark = MarkModel.fromMap(
-      widget.mark.id,
-      {
-        'teacher_id': widget.mark.teacherId,
-        'student_id': _student!.id,
-        'date': Timestamp.fromDate(widget.mark.date),
-        'curriculum_id': widget.mark.curriculumId,
-        'lesson_order': widget.mark.lessonOrder,
-        'type': widget.mark.type,
-        'comment': commentCont.value.text,
-        'mark': mark,
-      },
-    );
-    await nmark.save();
-    Get.back<bool>(result: true);
+    if (_formKey.currentState!.validate()) {
+      var nmark = MarkModel.fromMap(
+        widget.mark.id,
+        {
+          'teacher_id': widget.mark.teacherId,
+          'student_id': _student!.id,
+          'date': Timestamp.fromDate(widget.mark.date),
+          'curriculum_id': widget.mark.curriculumId,
+          'lesson_order': widget.mark.lessonOrder,
+          'type': widget.mark.type,
+          'comment': commentCont.value.text,
+          'mark': mark,
+        },
+      );
+      await nmark.save();
+      Get.back<bool>(result: true);
+    }
   }
 }
 
-class MarkFormField extends StatefulWidget {
+class MarkFormField extends StatelessWidget {
   final int mark;
-  final void Function(int?) callback;
+  final void Function(int?) onSaved;
+  final String? Function(int?)? validator;
 
-  const MarkFormField(this.mark, this.callback, {Key? key}) : super(key: key);
-
-  @override
-  State<MarkFormField> createState() => _MarkFormFieldState();
-}
-
-class _MarkFormFieldState extends State<MarkFormField> {
-  late int mark;
-
-  @override
-  void initState() {
-    mark = widget.mark;
-    super.initState();
-  }
+  const MarkFormField({
+    Key? key,
+    required this.mark,
+    required this.onSaved,
+    this.validator,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var selStyle = ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary));
-    return InputDecorator(
-      decoration: InputDecoration(label: Text(S.of(context).markTitle)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          ElevatedButton(
-            onPressed: () => setMark(1),
-            style: mark == 1 ? selStyle : null,
-            child: const Text('1'),
+    return FormField<int>(
+      initialValue: mark,
+      onSaved: onSaved,
+      validator: validator,
+      builder: ((state) {
+        var selStyle = ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(state.context).colorScheme.secondary));
+        return InputDecorator(
+          decoration: InputDecoration(label: Text(S.of(state.context).markTitle)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  state.didChange(5);
+                  state.save();
+                },
+                style: state.value == 1 ? selStyle : null,
+                child: const Text('1'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  state.didChange(5);
+                  state.save();
+                },
+                style: state.value == 2 ? selStyle : null,
+                child: const Text('2'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  state.didChange(5);
+                  state.save();
+                },
+                style: state.value == 3 ? selStyle : null,
+                child: const Text('3'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  state.didChange(5);
+                  state.save();
+                },
+                style: state.value == 4 ? selStyle : null,
+                child: const Text('4'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  state.didChange(5);
+                  state.save();
+                },
+                style: state.value == 5 ? selStyle : null,
+                child: const Text('5'),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () => setMark(2),
-            style: mark == 2 ? selStyle : null,
-            child: const Text('2'),
-          ),
-          ElevatedButton(
-            onPressed: () => setMark(3),
-            style: mark == 3 ? selStyle : null,
-            child: const Text('3'),
-          ),
-          ElevatedButton(
-            onPressed: () => setMark(4),
-            style: mark == 4 ? selStyle : null,
-            child: const Text('4'),
-          ),
-          ElevatedButton(
-            onPressed: () => setMark(5),
-            style: mark == 5 ? selStyle : null,
-            child: const Text('5'),
-          ),
-        ],
-      ),
+        );
+      }),
     );
-  }
-
-  void setMark(int mark) {
-    setState(() {
-      this.mark = mark;
-      widget.callback(mark);
-    });
   }
 }
