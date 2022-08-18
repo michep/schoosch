@@ -164,7 +164,7 @@ class MarkFormField extends StatelessWidget {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  state.didChange(5);
+                  state.didChange(1);
                   state.save();
                 },
                 style: state.value == 1 ? selStyle : null,
@@ -172,7 +172,7 @@ class MarkFormField extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  state.didChange(5);
+                  state.didChange(2);
                   state.save();
                 },
                 style: state.value == 2 ? selStyle : null,
@@ -180,7 +180,7 @@ class MarkFormField extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  state.didChange(5);
+                  state.didChange(3);
                   state.save();
                 },
                 style: state.value == 3 ? selStyle : null,
@@ -188,7 +188,7 @@ class MarkFormField extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  state.didChange(5);
+                  state.didChange(4);
                   state.save();
                 },
                 style: state.value == 4 ? selStyle : null,
