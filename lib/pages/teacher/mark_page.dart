@@ -8,6 +8,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/mark_field.dart';
 import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -63,6 +64,7 @@ class _MarkPageState extends State<MarkPage> {
                 MarkFormField(
                   mark: widget.mark.mark,
                   onSaved: setMark,
+                  validator: (value) => Utils.validateMark(value, S.of(context).errorMarkError),
                 ),
                 TextFormField(
                   controller: commentCont,
@@ -134,78 +136,5 @@ class _MarkPageState extends State<MarkPage> {
       await nmark.save();
       Get.back<bool>(result: true);
     }
-  }
-}
-
-class MarkFormField extends StatelessWidget {
-  final int mark;
-  final void Function(int?) onSaved;
-  final String? Function(int?)? validator;
-
-  const MarkFormField({
-    Key? key,
-    required this.mark,
-    required this.onSaved,
-    this.validator,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return FormField<int>(
-      initialValue: mark,
-      onSaved: onSaved,
-      validator: validator,
-      builder: ((state) {
-        var selStyle = ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(state.context).colorScheme.secondary));
-        return InputDecorator(
-          decoration: InputDecoration(label: Text(S.of(state.context).markTitle)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  state.didChange(1);
-                  state.save();
-                },
-                style: state.value == 1 ? selStyle : null,
-                child: const Text('1'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  state.didChange(2);
-                  state.save();
-                },
-                style: state.value == 2 ? selStyle : null,
-                child: const Text('2'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  state.didChange(3);
-                  state.save();
-                },
-                style: state.value == 3 ? selStyle : null,
-                child: const Text('3'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  state.didChange(4);
-                  state.save();
-                },
-                style: state.value == 4 ? selStyle : null,
-                child: const Text('4'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  state.didChange(5);
-                  state.save();
-                },
-                style: state.value == 5 ? selStyle : null,
-                child: const Text('5'),
-              ),
-            ],
-          ),
-        );
-      }),
-    );
   }
 }

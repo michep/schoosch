@@ -69,6 +69,7 @@
   "errorPersonParentStudentsEmpty": "Students should be selected",
   "errorPersonParentClassesEmpty": "Classes should be selected",
   "errorScheduleFromDateEmpty": "Start Date should be provided",
+  "errorMarkError": "Mark shoud be defined",
   "fromTitle": "From time",
   "tillTitle": "Till time",
   "markTitle": "Mark",
@@ -76,5 +77,11 @@
   "commentTitle": "Comment",
   "setMarkTitle": "Set Mark",
   "updateMarkTitle": "Update Mark",
-  "classStudentsTitle": "Class Students"
+  "classStudentsTitle": "Class Students",
+  "currentLessonClassTask": "Задание классу на этот урок",
+  "currentLessonPersonalTasks": "Персональные задания на этот урок",
+  "currentLessonAbsences": "Отсутствующие",
+  "currentLessonMarks": "Оценки",
+  "nextLessonClassTask": "Задание классу на следующий урок",
+  "nextLessonPersonalTasks": "Персональные задания на следующий урок"
 }

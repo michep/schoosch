@@ -750,6 +750,16 @@ class S {
     );
   }
 
+  /// `Mark shoud be defined`
+  String get errorMarkError {
+    return Intl.message(
+      'Mark shoud be defined',
+      name: 'errorMarkError',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `From time`
   String get fromTitle {
     return Intl.message(
@@ -825,6 +835,66 @@ class S {
     return Intl.message(
       'Class Students',
       name: 'classStudentsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Задание классу на этот урок`
+  String get currentLessonClassTask {
+    return Intl.message(
+      'Задание классу на этот урок',
+      name: 'currentLessonClassTask',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Персональные задания на этот урок`
+  String get currentLessonPersonalTasks {
+    return Intl.message(
+      'Персональные задания на этот урок',
+      name: 'currentLessonPersonalTasks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Отсутствующие`
+  String get currentLessonAbsences {
+    return Intl.message(
+      'Отсутствующие',
+      name: 'currentLessonAbsences',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Оценки`
+  String get currentLessonMarks {
+    return Intl.message(
+      'Оценки',
+      name: 'currentLessonMarks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Задание классу на следующий урок`
+  String get nextLessonClassTask {
+    return Intl.message(
+      'Задание классу на следующий урок',
+      name: 'nextLessonClassTask',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Персональные задания на следующий урок`
+  String get nextLessonPersonalTasks {
+    return Intl.message(
+      'Персональные задания на следующий урок',
+      name: 'nextLessonPersonalTasks',
       desc: '',
       args: [],
     );

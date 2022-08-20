@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
@@ -35,19 +36,19 @@ class TeacherLessonPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(_lesson.aclass.name),
-                Text('${_lesson.order} урок'),
+                Text('${_lesson.order} ${S.of(context).lesson}'),
                 Text(Utils.formatDatetime(_date)),
                 Text(_time.formatPeriod()),
-                const TabBar(
-                  labelPadding: EdgeInsets.all(16),
+                TabBar(
+                  labelPadding: const EdgeInsets.all(16),
                   isScrollable: true,
                   tabs: [
-                    Text('Задание классу на этот урок'),
-                    Text('Персональные задания на этот урок'),
-                    Text('Отсутствующие'),
-                    Text('Оценки'),
-                    Text('Задание классу на следующий урок'),
-                    Text('Персональные задания на следующий урок'),
+                    Text(S.of(context).currentLessonClassTask),
+                    Text(S.of(context).currentLessonPersonalTasks),
+                    Text(S.of(context).currentLessonAbsences),
+                    Text(S.of(context).currentLessonMarks),
+                    Text(S.of(context).nextLessonClassTask),
+                    Text(S.of(context).nextLessonPersonalTasks),
                   ],
                 ),
                 Expanded(

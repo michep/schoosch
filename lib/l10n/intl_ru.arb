@@ -69,6 +69,7 @@
   "errorPersonParentStudentsEmpty": "Нужно выбрать учащихся",
   "errorPersonParentClassesEmpty": "Нужно выбрать классы",
   "errorScheduleFromDateEmpty": "Дата начала действия должна быть выбрана",
+  "errorMarkError": "Нужно выбрать оценку",
   "fromTitle": "Время начала",
   "tillTitle": "Время окончания",
   "markTitle": "Оценка",
@@ -76,5 +77,11 @@
   "commentTitle": "Комментарий",
   "setMarkTitle": "Поставить оценку",
   "updateMarkTitle": "Изменить оценку",
-  "classStudentsTitle": "Ученики класса"
+  "classStudentsTitle": "Ученики класса",
+  "currentLessonClassTask": "Задание классу на этот урок",
+  "currentLessonPersonalTasks": "Персональные задания на этот урок",
+  "currentLessonAbsences": "Отсутствующие",
+  "currentLessonMarks": "Оценки",
+  "nextLessonClassTask": "Задание классу на следующий урок",
+  "nextLessonPersonalTasks": "Персональные задания на следующий урок"
 }

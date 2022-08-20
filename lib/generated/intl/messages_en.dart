@@ -41,6 +41,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "classStudentsTitle":
             MessageLookupByLibrary.simpleMessage("Class Students"),
         "commentTitle": MessageLookupByLibrary.simpleMessage("Comment"),
+        "currentLessonAbsences":
+            MessageLookupByLibrary.simpleMessage("Отсутствующие"),
+        "currentLessonClassTask":
+            MessageLookupByLibrary.simpleMessage("Задание классу на этот урок"),
+        "currentLessonMarks": MessageLookupByLibrary.simpleMessage("Оценки"),
+        "currentLessonPersonalTasks": MessageLookupByLibrary.simpleMessage(
+            "Персональные задания на этот урок"),
         "curriculumAlternateName":
             MessageLookupByLibrary.simpleMessage("Alias"),
         "curriculumList": MessageLookupByLibrary.simpleMessage("Curriculums"),
@@ -66,6 +73,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Students should be selected"),
         "errorCurriculumEmpty": MessageLookupByLibrary.simpleMessage(
             "Curriculum should be selected"),
+        "errorMarkError":
+            MessageLookupByLibrary.simpleMessage("Mark shoud be defined"),
         "errorNameEmpty":
             MessageLookupByLibrary.simpleMessage("Name should be provided"),
         "errorPersonBirthdayEmpty":
@@ -103,6 +112,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "newCurriculum": MessageLookupByLibrary.simpleMessage("New Curriculum"),
         "newPerson": m1,
         "newVenue": MessageLookupByLibrary.simpleMessage("New Vanue"),
+        "nextLessonClassTask": MessageLookupByLibrary.simpleMessage(
+            "Задание классу на следующий урок"),
+        "nextLessonPersonalTasks": MessageLookupByLibrary.simpleMessage(
+            "Персональные задания на следующий урок"),
         "peopleList":
             MessageLookupByLibrary.simpleMessage("Student, Teachers and other"),
         "personBirthday": MessageLookupByLibrary.simpleMessage("Birthday"),

@@ -33,6 +33,10 @@ class Utils {
     return null;
   }
 
+  static String? validateMark(int? mark, String error) {
+    return (mark == null || mark < 1 || mark > 5) ? error : null;
+  }
+
   static Future<void> showErrorSnackbar(String text) async {
     Get.snackbar(
       'Ошибка',
