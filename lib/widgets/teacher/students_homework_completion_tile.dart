@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
+import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class StudentHomeworkCompetionTile extends StatelessWidget {
   final HomeworkModel hw;
+  final LessonModel lesson;
   final CompletionFlagModel? compl;
+  final void Function(HomeworkModel) editHomrework;
 
-  const StudentHomeworkCompetionTile(this.hw, this.compl, {Key? key}) : super(key: key);
+  const StudentHomeworkCompetionTile(this.hw, this.lesson, this.compl, this.editHomrework, {Key? key}) : super(key: key);
 
   @override
   Widget build(Object context) {
@@ -38,6 +41,7 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
       complTime = const SizedBox.shrink();
     }
     return ListTile(
+      // onTap: () => editHomrework(hw),
       leading: complTime,
       title: FutureBuilder<StudentModel?>(
           future: hw.student,
@@ -45,8 +49,21 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
             if (!snapshot.hasData) return const SizedBox.shrink();
             return Text(snapshot.data?.fullName ?? '');
           }),
-      subtitle: Text(hw.text),
-      trailing: icon,
+      subtitle: Text(
+        hw.text,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          icon,
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () => editHomrework(hw),
+          )
+        ],
+      ),
     );
   }
 }

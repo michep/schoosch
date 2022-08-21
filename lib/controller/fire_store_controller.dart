@@ -500,16 +500,14 @@ class FStore extends GetxController {
   //   return a;
   // }
 
-  Future saveHomework(String homeworkText, CurriculumModel curriculum, TeacherModel teacher, DateTime date, ClassModel aclass, {StudentModel? student}) async {
-    Map<String, dynamic> data = {};
-    data['text'] = homeworkText;
-    data['student_id'] = student?.id;
-    data['class_id'] = aclass.id;
-    data['teacher_id'] = teacher.id;
-    data['curriculum_id'] = curriculum.id;
-    data['date'] = date;
-    // data['checked_users'] = [];
-    return _institutionRef.collection('homework').add(data);
+  Future<String> saveHomework(HomeworkModel homework) async {
+    if (homework.id != null) {
+      await _institutionRef.collection('homework').doc(homework.id).set(homework.toMap());
+      return homework.id!;
+    } else {
+      var hw = await _institutionRef.collection('homework').add(homework.toMap());
+      return hw.id;
+    }
   }
 
   Future updateHomeworkChecked(HomeworkModel homework) async {

@@ -2,26 +2,36 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
+import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/homework_page.dart';
 import 'package:schoosch/widgets/teacher/class_homework_completion_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class ClassTaskWithCompetionsPage extends StatelessWidget {
+class ClassTaskWithCompetionsPage extends StatefulWidget {
   final DateTime _date;
   final LessonModel _lesson;
-  final Future<HomeworkModel?> Function(DateTime) _hwFuture;
+  final CurriculumModel _curriculum;
+  final TeacherModel _teacher;
+  final Future<HomeworkModel?> Function(DateTime, bool) _hwFuture;
   final bool readOnly;
 
-  const ClassTaskWithCompetionsPage(this._date, this._lesson, this._hwFuture, {Key? key, this.readOnly = false}) : super(key: key);
+  const ClassTaskWithCompetionsPage(this._teacher, this._curriculum, this._date, this._lesson, this._hwFuture, {Key? key, this.readOnly = false})
+      : super(key: key);
 
+  @override
+  State<ClassTaskWithCompetionsPage> createState() => _ClassTaskWithCompetionsPageState();
+}
+
+class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPage> {
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         FutureBuilder<HomeworkModel?>(
-          future: _hwFuture(_date),
+          future: widget._hwFuture(widget._date, true),
           builder: (context, snapHW) {
             if (!snapHW.hasData) return const SizedBox.shrink();
             var hw = snapHW.data!;
@@ -35,9 +45,17 @@ class ClassTaskWithCompetionsPage extends StatelessWidget {
                   children: [
                     const Text('Задание всему классу:'),
                     ListTile(
-                      onTap: () => editClassHomework(hw),
+                      // onTap: () => editClassHomework(hw),
                       leading: Text(Utils.formatDatetime(hw.date, format: 'dd MMM')),
-                      title: Text(hw.text),
+                      title: Text(
+                        hw.text,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () => editClassHomework(hw),
+                      ),
                     ),
                     const Text('Выполнение:'),
                     Expanded(
@@ -54,7 +72,7 @@ class ClassTaskWithCompetionsPage extends StatelessWidget {
           },
         ),
         Visibility(
-          visible: !readOnly,
+          visible: !widget.readOnly,
           child: Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
@@ -67,23 +85,32 @@ class ClassTaskWithCompetionsPage extends StatelessWidget {
     );
   }
 
-  void addClassHomework() {
-    Get.to<bool>(
+  void addClassHomework() async {
+    var res = await Get.to<bool>(
       () => HomeworkPage(
-        _lesson,
+        widget._lesson,
         HomeworkModel.fromMap(
           null,
           {
-            'class_id': _lesson.aclass.id,
-            'date': Timestamp.fromDate(_date),
+            'class_id': widget._lesson.aclass.id,
+            'date': Timestamp.fromDate(widget._date),
             'text': '',
+            'teacher_id': widget._teacher.id,
+            'curriculum_id': widget._curriculum.id,
           },
         ),
+        personalHomework: false,
       ),
     );
+    if (res is bool && res == true) {
+      setState(() {});
+    }
   }
 
-  void editClassHomework(HomeworkModel hw) {
-    Get.to(() => HomeworkPage(_lesson, hw));
+  void editClassHomework(HomeworkModel hw) async {
+    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, personalHomework: false));
+    if (res is bool && res == true) {
+      setState(() {});
+    }
   }
 }

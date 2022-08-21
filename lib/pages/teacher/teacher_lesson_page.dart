@@ -13,21 +13,21 @@ import 'package:schoosch/widgets/teacher/students_marks.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class TeacherLessonPage extends StatelessWidget {
-  final DateTime _date;
-  final LessonModel _lesson;
-  final CurriculumModel _curiculum;
-  final VenueModel _venue;
-  final LessontimeModel _time;
-  final TeacherModel _teacher;
+  final DateTime date;
+  final LessonModel lesson;
+  final CurriculumModel curiculum;
+  final VenueModel venue;
+  final LessontimeModel time;
+  final TeacherModel teacher;
 
-  const TeacherLessonPage(this._lesson, this._curiculum, this._venue, this._time, this._date, this._teacher, {Key? key}) : super(key: key);
+  const TeacherLessonPage(this.lesson, this.curiculum, this.venue, this.time, this.date, this.teacher, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 6,
       child: Scaffold(
-        appBar: MAppBar(_curiculum.aliasOrName),
+        appBar: MAppBar(curiculum.aliasOrName),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(8),
@@ -35,10 +35,10 @@ class TeacherLessonPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(_lesson.aclass.name),
-                Text('${_lesson.order} ${S.of(context).lesson}'),
-                Text(Utils.formatDatetime(_date)),
-                Text(_time.formatPeriod()),
+                Text(lesson.aclass.name),
+                Text('${lesson.order} ${S.of(context).lesson}'),
+                Text(Utils.formatDatetime(date)),
+                Text(time.formatPeriod()),
                 TabBar(
                   labelPadding: const EdgeInsets.all(16),
                   isScrollable: true,
@@ -54,12 +54,16 @@ class TeacherLessonPage extends StatelessWidget {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      ClassTaskWithCompetionsPage(_date, _lesson, _lesson.homeworkThisLessonForClass, readOnly: true),
-                      StudentsTasksWithCompetionsPage(_date, _lesson, _lesson.homeworkThisLessonForClassAndAllStudents, readOnly: true),
-                      StudentsAbsencePage(_date, _lesson),
-                      StudentsMarksPage(_date, _lesson),
-                      ClassTaskWithCompetionsPage(_date, _lesson, _lesson.homeworkNextLessonForClass),
-                      StudentsTasksWithCompetionsPage(_date, _lesson, _lesson.homeworkNextLessonForClassAndAllStudents),
+                      ClassTaskWithCompetionsPage(teacher, curiculum, date, lesson, (d, f) => lesson.homeworkThisLessonForClass(d, forceRefresh: f),
+                          readOnly: true),
+                      StudentsTasksWithCompetionsPage(
+                          teacher, curiculum, date, lesson, (d, f) => lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
+                          readOnly: true),
+                      StudentsAbsencePage(date, lesson),
+                      StudentsMarksPage(date, lesson),
+                      ClassTaskWithCompetionsPage(teacher, curiculum, date, lesson, (d, f) => lesson.homeworkNextLessonForClass(d, forceRefresh: f)),
+                      StudentsTasksWithCompetionsPage(
+                          teacher, curiculum, date, lesson, (d, f) => lesson.homeworkNextLessonForClassAndAllStudents(d, forceRefresh: f)),
                     ],
                   ),
                 )

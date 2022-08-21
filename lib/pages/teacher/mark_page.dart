@@ -25,18 +25,18 @@ class MarkPage extends StatefulWidget {
 }
 
 class _MarkPageState extends State<MarkPage> {
-  late TextEditingController commentCont;
-  int mark = 0;
-  final TextEditingController _studentcont = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
+  final TextEditingController _commentcont = TextEditingController();
+  final TextEditingController _studentcont = TextEditingController();
+  final ScrollController _scrollcon = ScrollController();
+  int mark = 0;
   StudentModel? _student;
 
   @override
   void initState() {
-    super.initState();
     mark = widget.mark.mark;
-    commentCont = TextEditingController.fromValue(TextEditingValue(text: widget.mark.comment));
+    _commentcont.value = TextEditingValue(text: widget.mark.comment);
+    super.initState();
   }
 
   @override
@@ -52,7 +52,7 @@ class _MarkPageState extends State<MarkPage> {
             child: ListView(
               children: [
                 SelectableValueDropdownFormField<PersonModel>(
-                  title: S.of(context).studentTitle,
+                  title: loc.studentTitle,
                   initFutureFunc: _initStudent,
                   initOptionsFutureFunc: _initStudentOptions,
                   titleFunc: (value) => value?.fullName ?? '',
@@ -66,14 +66,17 @@ class _MarkPageState extends State<MarkPage> {
                   onSaved: setMark,
                   validator: (value) => Utils.validateMark(value, S.of(context).errorMarkError),
                 ),
-                TextFormField(
-                  controller: commentCont,
-                  decoration: InputDecoration(
-                    label: Text(S.of(context).commentTitle),
+                Scrollbar(
+                  controller: _scrollcon,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      label: Text(S.of(context).commentTitle),
+                    ),
+                    controller: _commentcont,
+                    scrollController: _scrollcon,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 3,
                   ),
-                  keyboardType: TextInputType.multiline,
-                  minLines: 1,
-                  maxLines: 3,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -129,7 +132,7 @@ class _MarkPageState extends State<MarkPage> {
           'curriculum_id': widget.mark.curriculumId,
           'lesson_order': widget.mark.lessonOrder,
           'type': widget.mark.type,
-          'comment': commentCont.value.text,
+          'comment': _commentcont.value.text,
           'mark': mark,
         },
       );

@@ -237,14 +237,6 @@ class TeacherModel extends PersonModel {
     return _schedule[week] ??= await Get.find<FStore>().getTeacherWeekSchedule(this, week);
   }
 
-  Future<void> createHomework(String homeworkText, CurriculumModel curriculum, DateTime date, ClassModel aclass, {StudentModel? student}) async {
-    return Get.find<FStore>().saveHomework(homeworkText, curriculum, this, date, aclass, student: student);
-  }
-
-  Future<void> updateMark(int newMark, String docId) async {
-    return Get.find<FStore>().updateMark(docId, newMark);
-  }
-
   Future<void> confirmCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
     return await Get.find<FStore>().confirmCompletion(hw, completion);
   }
