@@ -495,11 +495,6 @@ class FStore extends GetxController {
     await _institutionRef.collection('teachersrates').add(data);
   }
 
-  // Stream<DocumentSnapshot> markStream(MarkModel mark) {
-  //   var a = _institutionRef.collection('mark').doc(mark.id).snapshots();
-  //   return a;
-  // }
-
   Future<String> saveHomework(HomeworkModel homework) async {
     if (homework.id != null) {
       await _institutionRef.collection('homework').doc(homework.id).set(homework.toMap());
@@ -510,7 +505,7 @@ class FStore extends GetxController {
     }
   }
 
-  Future updateHomeworkChecked(HomeworkModel homework) async {
+  Future updateHomeworkCompletion(HomeworkModel homework) async {
     var a = _institutionRef.collection('homework').doc(homework.id).collection('completion');
     var b = await a.where('completed_by', isEqualTo: currentUser!.id).get();
     if (b.docs.isEmpty) {
@@ -608,17 +603,6 @@ class FStore extends GetxController {
       'status': 1,
     });
   }
-
-  // Future<void> updateHomeworkUncheck(HomeworkModel homework) {
-  //   var a = _institutionRef.collection('homework').doc(homework.id);
-  //   var b = (await a.get()).data()!['checked_users'];
-  //   return await _institutionRef.collection('homework').doc(homework.id).update({
-  //     'checked_users': [
-  //       ...(b),
-  //       currentUser!.id,
-  //     ]
-  //   });
-  // }
 
   Future<CompletionFlagModel?> getHomeworkCompletion(HomeworkModel homework, StudentModel student) async {
     var b = await _institutionRef.collection('homework').doc(homework.id).collection('completion').where('completed_by', isEqualTo: student.id).get();

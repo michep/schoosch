@@ -9,9 +9,10 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
   final HomeworkModel hw;
   final LessonModel lesson;
   final CompletionFlagModel? compl;
+  final bool readOnly;
   final void Function(HomeworkModel) editHomrework;
 
-  const StudentHomeworkCompetionTile(this.hw, this.lesson, this.compl, this.editHomrework, {Key? key}) : super(key: key);
+  const StudentHomeworkCompetionTile(this.hw, this.lesson, this.compl, this.editHomrework, {Key? key, this.readOnly = false}) : super(key: key);
 
   @override
   Widget build(Object context) {
@@ -58,10 +59,11 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           icon,
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () => editHomrework(hw),
-          )
+          if (!readOnly)
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () => editHomrework(hw),
+            )
         ],
       ),
     );

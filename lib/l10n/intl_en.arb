@@ -70,6 +70,7 @@
   "errorPersonParentClassesEmpty": "Classes should be selected",
   "errorScheduleFromDateEmpty": "Start Date should be provided",
   "errorMarkError": "Mark shoud be defined",
+  "errorHomeworkTextEmpty": "Homework text shold not be empty",
   "fromTitle": "From time",
   "tillTitle": "Till time",
   "markTitle": "Mark",
@@ -78,10 +79,14 @@
   "setMarkTitle": "Set Mark",
   "updateMarkTitle": "Update Mark",
   "classStudentsTitle": "Class Students",
-  "currentLessonClassTask": "Задание классу на этот урок",
-  "currentLessonPersonalTasks": "Персональные задания на этот урок",
-  "currentLessonAbsences": "Отсутствующие",
-  "currentLessonMarks": "Оценки",
-  "nextLessonClassTask": "Задание классу на следующий урок",
-  "nextLessonPersonalTasks": "Персональные задания на следующий урок"
+  "currentLessonClassHomework": "Class homework for this day",
+  "currentLessonPersonalHomeworks": "Personal homeworks for this day",
+  "currentLessonAbsences": "Absent",
+  "currentLessonMarks": "Marks",
+  "nextLessonClassHomework": "Class homework for next day",
+  "nextLessonPersonalHomeworks": "Personal omeworks for next day",
+  "homeworkTitle": "Homework",
+  "homeworkTextTitle": "Homework Text",
+  "classHomeworkTitle": "Class Homework",
+  "classHomeworkCompletionsTitle": "Homework Completions"
 }

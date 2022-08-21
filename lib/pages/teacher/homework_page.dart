@@ -43,7 +43,7 @@ class _HomeworkPageState extends State<HomeworkPage> {
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return Scaffold(
-      appBar: const MAppBar('Домашнее задание'),
+      appBar: MAppBar(S.of(context).homeworkTitle),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -74,13 +74,13 @@ class _HomeworkPageState extends State<HomeworkPage> {
                   controller: _scrollcon,
                   thumbVisibility: true,
                   child: TextFormField(
-                    decoration: const InputDecoration(
-                      label: Text('Задание'),
+                    decoration: InputDecoration(
+                      label: Text(S.of(context).homeworkTextTitle),
                     ),
                     controller: _commentcont,
                     maxLines: 3,
                     scrollController: _scrollcon,
-                    validator: (value) => Utils.validateTextNotEmpty(value, 'Текст задания не может быть пустым'),
+                    validator: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty),
                   ),
                 ),
                 Padding(

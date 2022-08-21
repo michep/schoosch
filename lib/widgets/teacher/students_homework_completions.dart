@@ -45,7 +45,7 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
                     builder: (context, snapcompl) {
                       if (!snapcompl.hasData) return const SizedBox.shrink();
                       var compl = snapcompl.data!.isNotEmpty ? snapcompl.data![0] : null;
-                      return StudentHomeworkCompetionTile(e, widget._lesson, compl, editStudentHomework);
+                      return StudentHomeworkCompetionTile(e, widget._lesson, compl, editStudentHomework, readOnly: widget.readOnly);
                     },
                   );
                 })

@@ -70,6 +70,7 @@
   "errorPersonParentClassesEmpty": "Нужно выбрать классы",
   "errorScheduleFromDateEmpty": "Дата начала действия должна быть выбрана",
   "errorMarkError": "Нужно выбрать оценку",
+  "errorHomeworkTextEmpty": "Текст задания не может быть пустым",
   "fromTitle": "Время начала",
   "tillTitle": "Время окончания",
   "markTitle": "Оценка",
@@ -78,10 +79,14 @@
   "setMarkTitle": "Поставить оценку",
   "updateMarkTitle": "Изменить оценку",
   "classStudentsTitle": "Ученики класса",
-  "currentLessonClassTask": "Задание классу на этот урок",
-  "currentLessonPersonalTasks": "Персональные задания на этот урок",
+  "currentLessonClassHomework": "Задание классу на этот урок",
+  "currentLessonPersonalHomeworks": "Персональные задания на этот урок",
   "currentLessonAbsences": "Отсутствующие",
   "currentLessonMarks": "Оценки",
-  "nextLessonClassTask": "Задание классу на следующий урок",
-  "nextLessonPersonalTasks": "Персональные задания на следующий урок"
+  "nextLessonClassHomework": "Задание классу на следующий урок",
+  "nextLessonPersonalHomeworks": "Персональные задания на следующий урок",
+  "homeworkTitle": "Домашнее задание",
+  "homeworkTextTitle": "Текст задания",
+  "classHomeworkTitle": "Задание всему классу",
+  "classHomeworkCompletionsTitle": "Выполнение"
 }

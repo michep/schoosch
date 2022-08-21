@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
@@ -43,7 +44,7 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('Задание всему классу:'),
+                    Text(S.of(context).classHomeworkTitle),
                     ListTile(
                       // onTap: () => editClassHomework(hw),
                       leading: Text(Utils.formatDatetime(hw.date, format: 'dd MMM')),
@@ -52,12 +53,14 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.edit),
-                        onPressed: () => editClassHomework(hw),
-                      ),
+                      trailing: widget.readOnly
+                          ? null
+                          : IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () => editClassHomework(hw),
+                            ),
                     ),
-                    const Text('Выполнение:'),
+                    Text(S.of(context).classHomeworkCompletionsTitle),
                     Expanded(
                       child: ListView(
                         children: [

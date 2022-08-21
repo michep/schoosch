@@ -760,6 +760,16 @@ class S {
     );
   }
 
+  /// `Homework text shold not be empty`
+  String get errorHomeworkTextEmpty {
+    return Intl.message(
+      'Homework text shold not be empty',
+      name: 'errorHomeworkTextEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `From time`
   String get fromTitle {
     return Intl.message(
@@ -840,61 +850,101 @@ class S {
     );
   }
 
-  /// `Задание классу на этот урок`
-  String get currentLessonClassTask {
+  /// `Class homework for this day`
+  String get currentLessonClassHomework {
     return Intl.message(
-      'Задание классу на этот урок',
-      name: 'currentLessonClassTask',
+      'Class homework for this day',
+      name: 'currentLessonClassHomework',
       desc: '',
       args: [],
     );
   }
 
-  /// `Персональные задания на этот урок`
-  String get currentLessonPersonalTasks {
+  /// `Personal homeworks for this day`
+  String get currentLessonPersonalHomeworks {
     return Intl.message(
-      'Персональные задания на этот урок',
-      name: 'currentLessonPersonalTasks',
+      'Personal homeworks for this day',
+      name: 'currentLessonPersonalHomeworks',
       desc: '',
       args: [],
     );
   }
 
-  /// `Отсутствующие`
+  /// `Absent`
   String get currentLessonAbsences {
     return Intl.message(
-      'Отсутствующие',
+      'Absent',
       name: 'currentLessonAbsences',
       desc: '',
       args: [],
     );
   }
 
-  /// `Оценки`
+  /// `Marks`
   String get currentLessonMarks {
     return Intl.message(
-      'Оценки',
+      'Marks',
       name: 'currentLessonMarks',
       desc: '',
       args: [],
     );
   }
 
-  /// `Задание классу на следующий урок`
-  String get nextLessonClassTask {
+  /// `Class homework for next day`
+  String get nextLessonClassHomework {
     return Intl.message(
-      'Задание классу на следующий урок',
-      name: 'nextLessonClassTask',
+      'Class homework for next day',
+      name: 'nextLessonClassHomework',
       desc: '',
       args: [],
     );
   }
 
-  /// `Персональные задания на следующий урок`
-  String get nextLessonPersonalTasks {
+  /// `Personal omeworks for next day`
+  String get nextLessonPersonalHomeworks {
     return Intl.message(
-      'Персональные задания на следующий урок',
-      name: 'nextLessonPersonalTasks',
+      'Personal omeworks for next day',
+      name: 'nextLessonPersonalHomeworks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Homework`
+  String get homeworkTitle {
+    return Intl.message(
+      'Homework',
+      name: 'homeworkTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Homework Text`
+  String get homeworkTextTitle {
+    return Intl.message(
+      'Homework Text',
+      name: 'homeworkTextTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Class Homework`
+  String get classHomeworkTitle {
+    return Intl.message(
+      'Class Homework',
+      name: 'classHomeworkTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Homework Completions`
+  String get classHomeworkCompletionsTitle {
+    return Intl.message(
+      'Homework Completions',
+      name: 'classHomeworkCompletionsTitle',
       desc: '',
       args: [],
     );
