@@ -61,15 +61,29 @@ class CompletionFlagModel {
     return _confirmer?.asTeacher;
   }
 
-  Future<CompletionFlagModel?> refresh(HomeworkModel homework) async {
-    var refr = await Get.find<FStore>().refreshCompletion(homework, this);
-    // completedTime = refr!.completedTime;
-    // confirmedById = refr.confirmedById;
-    // completedById = refr.completedById;
-    // confirmedTime = refr.confirmedTime;
-    // status = refr.status;
-    return refr;
-  }
+  // Future<CompletionFlagModel?> refresh(HomeworkModel homework) async {
+  //   var refr = await Get.find<FStore>().refreshCompletion(homework, this);
+  //   completedTime = refr!.completedTime;
+  //   confirmedById = refr.confirmedById;
+  //   completedById = refr.completedById;
+  //   confirmedTime = refr.confirmedTime;
+  //   status = refr.status;
+  //   return refr;
+  // }
+
+  // Map<String, dynamic> toMap() {
+  //   return {
+  //     'completed_by': completedById,
+  //     'completed_time': completedTime,
+  //     'confirmed_by': confirmedById,
+  //     'confirmed_time': confirmedTime,
+  //     'status': status,
+  //   };
+  // }
+
+  // Future<String> save() async {
+  //   Get.find<FStore>().saveCompletionFlag(this);
+  // }
 }
 
 enum Status { decompleted, completed, confirmed }

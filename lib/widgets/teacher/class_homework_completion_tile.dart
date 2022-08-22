@@ -7,8 +7,9 @@ import 'package:schoosch/widgets/utils.dart';
 class ClassHomeworkCompetionTile extends StatelessWidget {
   final HomeworkModel hw;
   final CompletionFlagModel compl;
+  final void Function(HomeworkModel, CompletionFlagModel) toggleHomeworkCompletion;
 
-  const ClassHomeworkCompetionTile(this.hw, this.compl, {Key? key}) : super(key: key);
+  const ClassHomeworkCompetionTile(this.hw, this.compl, this.toggleHomeworkCompletion, {Key? key}) : super(key: key);
 
   @override
   Widget build(Object context) {
@@ -19,13 +20,13 @@ class ClassHomeworkCompetionTile extends StatelessWidget {
       case Status.completed:
         icon = IconButton(
           icon: const Icon(Icons.circle_outlined),
-          onPressed: () {},
+          onPressed: () => toggleHomeworkCompletion(hw, compl),
         );
         break;
       case Status.confirmed:
         icon = IconButton(
           icon: const Icon(Icons.check_circle_outline),
-          onPressed: () {},
+          onPressed: () => toggleHomeworkCompletion(hw, compl),
         );
         break;
       default:

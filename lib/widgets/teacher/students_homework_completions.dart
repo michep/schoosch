@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
@@ -45,7 +46,7 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
                     builder: (context, snapcompl) {
                       if (!snapcompl.hasData) return const SizedBox.shrink();
                       var compl = snapcompl.data!.isNotEmpty ? snapcompl.data![0] : null;
-                      return StudentHomeworkCompetionTile(e, widget._lesson, compl, editStudentHomework, readOnly: widget.readOnly);
+                      return StudentHomeworkCompetionTile(e, widget._lesson, compl, editStudentHomework, toggleHomeworkCompletion, readOnly: widget.readOnly);
                     },
                   );
                 })
@@ -94,5 +95,18 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
     if (res is bool && res == true) {
       setState(() {});
     }
+  }
+
+  void toggleHomeworkCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
+    switch (completion.status) {
+      case Status.completed:
+        await hw.confirmCompletion(completion, PersonModel.currentUser!);
+        break;
+      case Status.confirmed:
+        await hw.unconfirmCompletion(completion, PersonModel.currentUser!);
+        break;
+      default:
+    }
+    setState(() {});
   }
 }

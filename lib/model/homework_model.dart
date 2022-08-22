@@ -28,37 +28,41 @@ class HomeworkModel {
     return await Get.find<FStore>().getHomeworkCompletion(this, student);
   }
 
-  Future<void> createCompletion() async {
-    return await Get.find<FStore>().createCompletion(this);
-  }
-
-  Future<void> completeCompletion(CompletionFlagModel c) async {
-    return await Get.find<FStore>().completeCompletion(this, c);
-  }
-
-  Future<void> uncompleteCompletion(CompletionFlagModel c) async {
-    return await Get.find<FStore>().uncompleteCompletion(this, c);
-  }
-
   Future<List<CompletionFlagModel>> getAllCompletions() async {
     return await Get.find<FStore>().getAllHomeworkCompletions(this);
   }
 
-  Future<void> confirmCompletion(CompletionFlagModel completion) async {
-    return await Get.find<FStore>().confirmCompletion(this, completion);
+  Future<String> createCompletion(StudentModel student) async {
+    return await Get.find<FStore>().createCompletion(this, student);
   }
 
-  Future<void> unconfirmCompletion(CompletionFlagModel completion) async {
-    return await Get.find<FStore>().unconfirmCompletion(this, completion);
+  Future<void> deleteCompletion(StudentModel student) async {
+    return await Get.find<FStore>().deleteCompletion(this, student);
   }
 
-  Future<void> confirmHomework() async {
-    return await Get.find<FStore>().confirmHomework(this);
+  Future<void> confirmCompletion(CompletionFlagModel completion, PersonModel person) async {
+    return await Get.find<FStore>().confirmCompletion(this, completion, person);
   }
 
-  Future<void> change(String newText) async {
-    return await Get.find<FStore>().updateHomework(this, newText);
+  Future<void> unconfirmCompletion(CompletionFlagModel completion, PersonModel person) async {
+    return await Get.find<FStore>().unconfirmCompletion(this, completion, person);
   }
+
+  // Future<void> completeCompletion(CompletionFlagModel c, TeacherModel teacher) async {
+  //   return await Get.find<FStore>().completeCompletion(this, c, teacher);
+  // }
+
+  // Future<void> uncompleteCompletion(CompletionFlagModel c) async {
+  //   return await Get.find<FStore>().uncompleteCompletion(this, c);
+  // }
+
+  // Future<void> confirmHomework() async {
+  //   return await Get.find<FStore>().confirmHomework(this);
+  // }
+
+  // Future<void> change(String newText) async {
+  //   return await Get.find<FStore>().updateHomework(this, newText);
+  // }
 
   Map<String, dynamic> toMap() {
     return {

@@ -64,7 +64,7 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
                     Expanded(
                       child: ListView(
                         children: [
-                          ...snapCompl.data!.map((compl) => ClassHomeworkCompetionTile(hw, compl)),
+                          ...snapCompl.data!.map((compl) => ClassHomeworkCompetionTile(hw, compl, toggleHomeworkCompletion)),
                         ],
                       ),
                     ),
@@ -115,5 +115,18 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
     if (res is bool && res == true) {
       setState(() {});
     }
+  }
+
+  void toggleHomeworkCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
+    switch (completion.status) {
+      case Status.completed:
+        await hw.confirmCompletion(completion, PersonModel.currentUser!);
+        break;
+      case Status.confirmed:
+        await hw.unconfirmCompletion(completion, PersonModel.currentUser!);
+        break;
+      default:
+    }
+    setState(() {});
   }
 }

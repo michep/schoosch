@@ -237,9 +237,9 @@ class TeacherModel extends PersonModel {
     return _schedule[week] ??= await Get.find<FStore>().getTeacherWeekSchedule(this, week);
   }
 
-  Future<void> confirmCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
-    return await Get.find<FStore>().confirmCompletion(hw, completion);
-  }
+  // Future<void> confirmCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
+  //   return await Get.find<FStore>().confirmCompletion(hw, completion);
+  // }
 }
 
 class ParentModel extends PersonModel {

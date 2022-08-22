@@ -11,8 +11,10 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
   final CompletionFlagModel? compl;
   final bool readOnly;
   final void Function(HomeworkModel) editHomrework;
+  final void Function(HomeworkModel, CompletionFlagModel) toggleHomeworkCompletion;
 
-  const StudentHomeworkCompetionTile(this.hw, this.lesson, this.compl, this.editHomrework, {Key? key, this.readOnly = false}) : super(key: key);
+  const StudentHomeworkCompetionTile(this.hw, this.lesson, this.compl, this.editHomrework, this.toggleHomeworkCompletion, {Key? key, this.readOnly = false})
+      : super(key: key);
 
   @override
   Widget build(Object context) {
@@ -24,13 +26,13 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
         case Status.completed:
           icon = IconButton(
             icon: const Icon(Icons.circle_outlined),
-            onPressed: () {},
+            onPressed: () => toggleHomeworkCompletion(hw, compl!),
           );
           break;
         case Status.confirmed:
           icon = IconButton(
             icon: const Icon(Icons.check_circle_outline),
-            onPressed: () {},
+            onPressed: () => toggleHomeworkCompletion(hw, compl!),
           );
           break;
         default:

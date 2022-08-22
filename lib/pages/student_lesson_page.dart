@@ -245,19 +245,20 @@ class _HomeworkCardState extends State<HomeworkCard> {
         return Padding(
           padding: const EdgeInsets.all(10.0),
           child: ElevatedButton.icon(
-            onPressed: () {
-              c == null
-                  ? widget.homework.createCompletion()
-                  : c.status == Status.completed
-                      ? widget.homework.uncompleteCompletion(c)
-                      : widget.homework.completeCompletion(c);
+            onPressed: () async {
+              if (c == null) {
+                await widget.homework.createCompletion(widget.student);
+              } else if (c.status == Status.completed) {
+                await widget.homework.deleteCompletion(widget.student);
+              }
+              setState(() {});
               Navigator.pop(context);
             },
             label: Text(c == null
                 ? 'сообщить о выполнении'
                 : c.status == Status.completed
                     ? 'отметить как невыполненное'
-                    : 'отметить как выполненное'),
+                    : 'выполнение уже подтверждено, его нельзя отметить как невыполненное'),
             icon: Icon(c == null
                 ? Icons.add
                 : c.status == Status.completed

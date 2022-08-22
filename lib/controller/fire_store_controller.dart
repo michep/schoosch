@@ -543,38 +543,47 @@ class FStore extends GetxController {
     }
   }
 
-  Future createCompletion(HomeworkModel hw) async {
+  Future<String> createCompletion(HomeworkModel hw, StudentModel student) async {
     var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
     // var b = (await a.where('completed_by', isEqualTo: currentUser!.id).get()).docs.first;
-    return await a.add({
-      'completed_by': currentUser!.id,
-      'confirmed_by': null,
+    var res = await a.add({
+      'completed_by': student.id,
       'completed_time': DateTime.now(),
+      'confirmed_by': null,
       'confirmed_time': null,
       'status': 1,
     });
+    return res.id;
   }
 
-  Future<void> completeCompletion(HomeworkModel hw, CompletionFlagModel c) async {
-    var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
-    return await a.doc(c.id).update({
-      'completed_time': DateTime.now(),
-      'status': 1,
-    });
+  Future<void> deleteCompletion(HomeworkModel hw, StudentModel student) async {
+    var res = await _institutionRef.collection('homework').doc(hw.id).collection('completion').where('completed_by', isEqualTo: student.id).get();
+    for (var d in res.docs) {
+      d.reference.delete();
+    }
   }
 
-  Future<CompletionFlagModel?> refreshCompletion(HomeworkModel hw, CompletionFlagModel c) async {
-    var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
-    var b = await a.doc(c.id).get();
-    return CompletionFlagModel.fromMap(b.id, b.data()!);
-  }
+  // Future<void> completeCompletion(HomeworkModel hw, CompletionFlagModel c, TeacherModel teacher) async {
+  //   var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
+  //   return await a.doc(c.id).update({
+  //     'completed_time': DateTime.now(),
+  //     'compl'
+  //     'status': 2,
+  //   });
+  // }
 
-  Future<void> uncompleteCompletion(HomeworkModel hw, CompletionFlagModel c) async {
-    var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
-    return await a.doc(c.id).update({
-      'status': 0,
-    });
-  }
+  // Future<CompletionFlagModel?> refreshCompletion(HomeworkModel hw, CompletionFlagModel c) async {
+  //   var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
+  //   var b = await a.doc(c.id).get();
+  //   return CompletionFlagModel.fromMap(b.id, b.data()!);
+  // }
+
+  // Future<void> uncompleteCompletion(HomeworkModel hw, CompletionFlagModel c) async {
+  //   var a = _institutionRef.collection('homework').doc(hw.id).collection('completion');
+  //   return await a.doc(c.id).update({
+  //     'status': 0,
+  //   });
+  // }
 
   Future<void> confirmHomework(HomeworkModel homework) async {
     var a = _institutionRef.collection('homework').doc(homework.id).collection('completion');
@@ -588,19 +597,21 @@ class FStore extends GetxController {
     }
   }
 
-  Future<void> confirmCompletion(HomeworkModel homework, CompletionFlagModel completion) async {
+  Future<void> confirmCompletion(HomeworkModel homework, CompletionFlagModel completion, PersonModel person) async {
     var a = _institutionRef.collection('homework').doc(homework.id).collection('completion').doc(completion.id);
     return a.update({
       'status': 2,
-      'confirmed_by': currentUser!.id!,
+      'confirmed_by': person.id,
       'confirmed_time': DateTime.now(),
     });
   }
 
-  Future<void> unconfirmCompletion(HomeworkModel homework, CompletionFlagModel completion) async {
+  Future<void> unconfirmCompletion(HomeworkModel homework, CompletionFlagModel completion, PersonModel person) async {
     var a = _institutionRef.collection('homework').doc(homework.id).collection('completion').doc(completion.id);
     return a.update({
       'status': 1,
+      'confirmed_by': person.id,
+      'confirmed_time': null,
     });
   }
 
