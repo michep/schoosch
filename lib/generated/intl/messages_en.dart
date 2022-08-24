@@ -76,6 +76,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Students should be selected"),
         "errorCurriculumEmpty": MessageLookupByLibrary.simpleMessage(
             "Curriculum should be selected"),
+        "errorHomeWorkExists": MessageLookupByLibrary.simpleMessage(
+            "There is already a homework for this student, please select another student"),
         "errorHomeworkTextEmpty": MessageLookupByLibrary.simpleMessage(
             "Homework text shold not be empty"),
         "errorMarkError":

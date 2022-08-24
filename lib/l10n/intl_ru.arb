@@ -88,5 +88,6 @@
   "homeworkTitle": "Домашнее задание",
   "homeworkTextTitle": "Текст задания",
   "classHomeworkTitle": "Задание всему классу",
-  "classHomeworkCompletionsTitle": "Выполнение"
+  "classHomeworkCompletionsTitle": "Выполнение",
+  "errorHomeWorkExists": "Задание для этого ученика уже существует, пожалуйста выберите другого ученика"
 }

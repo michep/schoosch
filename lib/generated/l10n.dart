@@ -949,6 +949,16 @@ class S {
       args: [],
     );
   }
+
+  /// `There is already a homework for this student, please select another student`
+  String get errorHomeWorkExists {
+    return Intl.message(
+      'There is already a homework for this student, please select another student',
+      name: 'errorHomeWorkExists',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

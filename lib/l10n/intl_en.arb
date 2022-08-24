@@ -88,5 +88,6 @@
   "homeworkTitle": "Homework",
   "homeworkTextTitle": "Homework Text",
   "classHomeworkTitle": "Class Homework",
-  "classHomeworkCompletionsTitle": "Homework Completions"
+  "classHomeworkCompletionsTitle": "Homework Completions",
+  "errorHomeWorkExists": "There is already a homework for this student, please select another student"
 }

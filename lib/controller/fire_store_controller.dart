@@ -675,11 +675,12 @@ class FStore extends GetxController {
     return r;
   }
 
-  Future<HomeworkModel?> getHomeworkForStudentAfterDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
+  Future<HomeworkModel?> getHomeworkForStudentOnDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
     var res = await _institutionRef
         .collection('homework')
         // .where('date', isGreaterThanOrEqualTo: schedule.date)
         .where('date', isGreaterThanOrEqualTo: date)
+        .where('date', isLessThan: date.add(const Duration(hours: 24)))
         .where('curriculum_id', isEqualTo: curriculum.id)
         .where('student_id', isEqualTo: student.id)
         .where('class_id', isEqualTo: aclass.id)
@@ -689,11 +690,12 @@ class FStore extends GetxController {
     return res.docs.isNotEmpty ? HomeworkModel.fromMap(res.docs[0].id, res.docs[0].data()) : null;
   }
 
-  Future<HomeworkModel?> getHomeworkForClassAfterDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
+  Future<HomeworkModel?> getHomeworkForClassOnDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
     var res = await _institutionRef
         .collection('homework')
         // .where('date', isGreaterThanOrEqualTo: schedule.date)
         .where('date', isGreaterThanOrEqualTo: date)
+        .where('date', isLessThan: date.add(const Duration(hours: 24)))
         .where('curriculum_id', isEqualTo: curriculum.id)
         .where('class_id', isEqualTo: aclass.id)
         .where('student_id', isNull: true)

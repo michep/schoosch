@@ -15,10 +15,11 @@ import 'package:schoosch/widgets/utils.dart';
 class HomeworkPage extends StatefulWidget {
   final LessonModel lesson;
   final HomeworkModel homework;
-  final StudentModel? student;
+  final StudentModel? student = null;
   final bool personalHomework;
+  final List<String> studentIds;
 
-  const HomeworkPage(this.lesson, this.homework, {Key? key, this.personalHomework = true, this.student}) : super(key: key);
+  const HomeworkPage(this.lesson, this.homework, this.studentIds, {Key? key, this.personalHomework = true}) : super(key: key);
 
   @override
   State<HomeworkPage> createState() => _HomeworkPageState();
@@ -26,6 +27,7 @@ class HomeworkPage extends StatefulWidget {
 
 class _HomeworkPageState extends State<HomeworkPage> {
   final _formKey = GlobalKey<FormState>();
+  final _studentFieldKey = GlobalKey<FormFieldState>();
   StudentModel? _student;
   final TextEditingController _studentcont = TextEditingController();
   final TextEditingController _commentcont = TextEditingController();
@@ -61,13 +63,15 @@ class _HomeworkPageState extends State<HomeworkPage> {
                 ),
                 if (widget.personalHomework)
                   SelectableValueDropdownFormField<PersonModel>(
+                    key: _studentFieldKey,
                     title: loc.studentTitle,
                     initFutureFunc: _initStudent,
                     initOptionsFutureFunc: _initStudentOptions,
                     titleFunc: (value) => value?.fullName ?? '',
                     listFunc: () => PeopleListPage(widget.lesson.aclass.students, selectionMode: true, type: 'student', title: loc.classStudentsTitle),
                     detailsFunc: () => PersonPage(_student!, _student!.fullName),
-                    validatorFunc: (value) => Utils.validateTextAndvAlueNotEmpty<StudentModel>(value, _student, loc.errorStudentEmpty),
+                    // validatorFunc: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty),
+                    validatorFunc: validateStudent,
                     callback: (value) => _setStudent(value),
                   ),
                 Scrollbar(
@@ -120,6 +124,14 @@ class _HomeworkPageState extends State<HomeworkPage> {
       _student = null;
       return true;
     }
+  }
+
+  String? validateStudent(String? value) {
+    String? res;
+    res = Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty);
+    if (res != null) return res;
+    if (widget.studentIds.contains(_student?.id)) return S.of(context).errorHomeWorkExists;
+    return null;
   }
 
   void save() async {

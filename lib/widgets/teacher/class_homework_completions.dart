@@ -27,64 +27,71 @@ class ClassTaskWithCompetionsPage extends StatefulWidget {
 }
 
 class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPage> {
+  HomeworkModel? hw;
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        FutureBuilder<HomeworkModel?>(
-          future: widget._hwFuture(widget._date, true),
-          builder: (context, snapHW) {
-            if (!snapHW.hasData) return const SizedBox.shrink();
-            var hw = snapHW.data!;
-            return FutureBuilder<List<CompletionFlagModel>>(
-              future: hw.getAllCompletions(),
-              builder: (context, snapCompl) {
-                if (!snapCompl.hasData) return const SizedBox.shrink();
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(S.of(context).classHomeworkTitle),
-                    ListTile(
-                      // onTap: () => editClassHomework(hw),
-                      leading: Text(Utils.formatDatetime(hw.date, format: 'dd MMM')),
-                      title: Text(
-                        hw.text,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                      trailing: widget.readOnly
-                          ? null
-                          : IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () => editClassHomework(hw),
-                            ),
-                    ),
-                    Text(S.of(context).classHomeworkCompletionsTitle),
-                    Expanded(
-                      child: ListView(
+    var buttonVisible = false;
+    return FutureBuilder<HomeworkModel?>(
+      future: widget._hwFuture(widget._date, true),
+      builder: (context, snapHW) {
+        if (snapHW.connectionState == ConnectionState.done) {
+          buttonVisible = !(widget.readOnly || snapHW.data != null);
+        }
+        hw = snapHW.data;
+        return Stack(
+          children: [
+            snapHW.hasData
+                ? FutureBuilder<List<CompletionFlagModel>>(
+                    future: hw!.getAllCompletions(),
+                    builder: (context, snapCompl) {
+                      if (!snapCompl.hasData) return const SizedBox.shrink();
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          ...snapCompl.data!.map((compl) => ClassHomeworkCompetionTile(hw, compl, toggleHomeworkCompletion)),
+                          Text(S.of(context).classHomeworkTitle),
+                          ListTile(
+                            // onTap: () => editClassHomework(hw),
+                            leading: Text(Utils.formatDatetime(hw!.date, format: 'dd MMM')),
+                            title: Text(
+                              hw!.text,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            trailing: widget.readOnly
+                                ? null
+                                : IconButton(
+                                    icon: const Icon(Icons.edit),
+                                    onPressed: () => editClassHomework(hw!),
+                                  ),
+                          ),
+                          Text(S.of(context).classHomeworkCompletionsTitle),
+                          Expanded(
+                            child: ListView(
+                              children: [
+                                ...snapCompl.data!.map((compl) => ClassHomeworkCompetionTile(hw!, compl, toggleHomeworkCompletion)),
+                              ],
+                            ),
+                          ),
                         ],
-                      ),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-        ),
-        Visibility(
-          visible: !widget.readOnly,
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: FloatingActionButton(
-              onPressed: addClassHomework,
-              child: const Icon(Icons.add),
+                      );
+                    },
+                  )
+                : const SizedBox.shrink(),
+            Visibility(
+              visible: buttonVisible,
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  onPressed: addClassHomework,
+                  child: const Icon(Icons.add),
+                ),
+              ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 
@@ -102,6 +109,7 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
             'curriculum_id': widget._curriculum.id,
           },
         ),
+        [],
         personalHomework: false,
       ),
     );
@@ -111,7 +119,7 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
   }
 
   void editClassHomework(HomeworkModel hw) async {
-    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, personalHomework: false));
+    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, [], personalHomework: false));
     if (res is bool && res == true) {
       setState(() {});
     }

@@ -51,7 +51,7 @@ class ObserverDayTile extends StatelessWidget {
                         les.curriculum,
                         les.lessontime,
                         les.venue,
-                        les.homeworkNextLessonForClass(_date),
+                        les.homeworkOnDateForClassAndAllStudents(_date),
                       ])
                     : Future.delayed(
                         const Duration(

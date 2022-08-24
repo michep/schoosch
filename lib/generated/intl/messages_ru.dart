@@ -86,6 +86,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Нужно выбрать учащихся"),
         "errorCurriculumEmpty": MessageLookupByLibrary.simpleMessage(
             "Учебный предмет должен быть выбран"),
+        "errorHomeWorkExists": MessageLookupByLibrary.simpleMessage(
+            "Задание для этого ученика уже существует, пожалуйста выберите другого ученика"),
         "errorHomeworkTextEmpty": MessageLookupByLibrary.simpleMessage(
             "Текст задания не может быть пустым"),
         "errorMarkError":

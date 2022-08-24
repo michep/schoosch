@@ -29,46 +29,55 @@ class StudentsTasksWithCompetionsPage extends StatefulWidget {
 class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompetionsPage> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        FutureBuilder<Map<String, HomeworkModel?>>(
-          future: widget._hwsFuture(widget._date, true),
-          builder: (context, snapHWs) {
-            if (!snapHWs.hasData) return const SizedBox.shrink();
-            var hws = snapHWs.data!;
-            hws.remove('class');
-            hws.removeWhere((key, value) => value == null);
-            return ListView(
-              children: [
-                ...hws.values.map((e) {
-                  return FutureBuilder<List<CompletionFlagModel>>(
-                    future: e!.getAllCompletions(),
-                    builder: (context, snapcompl) {
-                      if (!snapcompl.hasData) return const SizedBox.shrink();
-                      var compl = snapcompl.data!.isNotEmpty ? snapcompl.data![0] : null;
-                      return StudentHomeworkCompetionTile(e, widget._lesson, compl, editStudentHomework, toggleHomeworkCompletion, readOnly: widget.readOnly);
-                    },
-                  );
-                })
-              ],
-            );
-          },
-        ),
-        Visibility(
-          visible: !widget.readOnly,
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: FloatingActionButton(
-              onPressed: addStudentHomework,
-              child: const Icon(Icons.add),
-            ),
-          ),
-        )
-      ],
+    List<String> studentsIdsWithHW = [];
+    Map<String, dynamic> hws = {};
+    return FutureBuilder<Map<String, HomeworkModel?>>(
+      future: widget._hwsFuture(widget._date, true),
+      builder: (context, snapHWs) {
+        if (snapHWs.connectionState == ConnectionState.done) {
+          hws.clear();
+          hws.addAll(snapHWs.data!);
+          hws.remove('class');
+          hws.removeWhere((key, value) => value == null);
+          studentsIdsWithHW = hws.keys.toList();
+        }
+        return Stack(
+          children: [
+            snapHWs.hasData
+                ? ListView(
+                    children: [
+                      ...hws.values.map((e) {
+                        return FutureBuilder<List<CompletionFlagModel>>(
+                          future: e!.getAllCompletions(),
+                          builder: (context, snapcompl) {
+                            if (!snapcompl.hasData) return const SizedBox.shrink();
+                            var compl = snapcompl.data!.isNotEmpty ? snapcompl.data![0] : null;
+                            return StudentHomeworkCompetionTile(
+                                e, widget._lesson, compl, (hws) => editStudentHomework(hws, studentsIdsWithHW), toggleHomeworkCompletion,
+                                readOnly: widget.readOnly);
+                          },
+                        );
+                      })
+                    ],
+                  )
+                : const SizedBox.shrink(),
+            Visibility(
+              visible: !widget.readOnly,
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: FloatingActionButton(
+                  onPressed: () => addStudentHomework(hws.keys.toList()),
+                  child: const Icon(Icons.add),
+                ),
+              ),
+            )
+          ],
+        );
+      },
     );
   }
 
-  void addStudentHomework() async {
+  void addStudentHomework(List<String> studentIDs) async {
     var res = await Get.to<bool>(
       () => HomeworkPage(
         widget._lesson,
@@ -82,6 +91,7 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
             'curriculum_id': widget._curriculum.id,
           },
         ),
+        studentIDs,
         personalHomework: true,
       ),
     );
@@ -90,8 +100,9 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
     }
   }
 
-  void editStudentHomework(HomeworkModel hw) async {
-    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, personalHomework: true));
+  void editStudentHomework(HomeworkModel hw, List<String> studentIDs) async {
+    studentIDs.remove(hw.studentId);
+    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, studentIDs, personalHomework: true));
     if (res is bool && res == true) {
       setState(() {});
     }
