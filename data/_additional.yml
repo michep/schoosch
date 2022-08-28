@@ -1,9 +1,0 @@
-institution:
-  - _id: '$query|/institution/[name=Гимназия им. Пастернака]/[_id]'
-    _subcollections:
-      people:
-        - firstname: 'Михаил'
-          middlename: 'Александрович'
-          lastname: 'Чепайкин'
-          type: 'student'
-          birtday: 1978-08-01 00:00:00
