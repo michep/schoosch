@@ -32,6 +32,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "appTiile": MessageLookupByLibrary.simpleMessage(
             "Schoosch is school schedule app"),
         "classGrade": MessageLookupByLibrary.simpleMessage("Grade"),
+        "classHomeworkCompletionsTitle":
+            MessageLookupByLibrary.simpleMessage("Homework Completions"),
+        "classHomeworkTitle":
+            MessageLookupByLibrary.simpleMessage("Class Homework"),
         "classList": MessageLookupByLibrary.simpleMessage("Classes"),
         "classMaster": MessageLookupByLibrary.simpleMessage("Teacher"),
         "className": MessageLookupByLibrary.simpleMessage("Name"),
@@ -41,6 +45,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "classStudentsTitle":
             MessageLookupByLibrary.simpleMessage("Class Students"),
         "commentTitle": MessageLookupByLibrary.simpleMessage("Comment"),
+        "currentLessonAbsences": MessageLookupByLibrary.simpleMessage("Absent"),
+        "currentLessonClassHomework":
+            MessageLookupByLibrary.simpleMessage("Class homework for this day"),
+        "currentLessonMarks": MessageLookupByLibrary.simpleMessage("Marks"),
+        "currentLessonPersonalHomeworks": MessageLookupByLibrary.simpleMessage(
+            "Personal homeworks for this day"),
         "curriculumAlternateName":
             MessageLookupByLibrary.simpleMessage("Alias"),
         "curriculumList": MessageLookupByLibrary.simpleMessage("Curriculums"),
@@ -66,6 +76,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Students should be selected"),
         "errorCurriculumEmpty": MessageLookupByLibrary.simpleMessage(
             "Curriculum should be selected"),
+        "errorHomeWorkExists": MessageLookupByLibrary.simpleMessage(
+            "There is already a homework for this student, please select another student"),
+        "errorHomeworkTextEmpty": MessageLookupByLibrary.simpleMessage(
+            "Homework text shold not be empty"),
+        "errorMarkError":
+            MessageLookupByLibrary.simpleMessage("Mark shoud be defined"),
         "errorNameEmpty":
             MessageLookupByLibrary.simpleMessage("Name should be provided"),
         "errorPersonBirthdayEmpty":
@@ -95,6 +111,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorVenueEmpty":
             MessageLookupByLibrary.simpleMessage("Venue should be selected"),
         "fromTitle": MessageLookupByLibrary.simpleMessage("From time"),
+        "homeworkTextTitle":
+            MessageLookupByLibrary.simpleMessage("Homework Text"),
+        "homeworkTitle": MessageLookupByLibrary.simpleMessage("Homework"),
         "lesson": MessageLookupByLibrary.simpleMessage("Lesson"),
         "lessonName": MessageLookupByLibrary.simpleMessage("Lesson"),
         "markTitle": MessageLookupByLibrary.simpleMessage("Mark"),
@@ -103,6 +122,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "newCurriculum": MessageLookupByLibrary.simpleMessage("New Curriculum"),
         "newPerson": m1,
         "newVenue": MessageLookupByLibrary.simpleMessage("New Vanue"),
+        "nextLessonClassHomework":
+            MessageLookupByLibrary.simpleMessage("Class homework for next day"),
+        "nextLessonPersonalHomeworks": MessageLookupByLibrary.simpleMessage(
+            "Personal omeworks for next day"),
         "peopleList":
             MessageLookupByLibrary.simpleMessage("Student, Teachers and other"),
         "personBirthday": MessageLookupByLibrary.simpleMessage("Birthday"),

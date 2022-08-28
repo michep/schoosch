@@ -32,6 +32,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "appTiile":
             MessageLookupByLibrary.simpleMessage("Скууш - школьный дневник"),
         "classGrade": MessageLookupByLibrary.simpleMessage("Год обучения"),
+        "classHomeworkCompletionsTitle":
+            MessageLookupByLibrary.simpleMessage("Выполнение"),
+        "classHomeworkTitle":
+            MessageLookupByLibrary.simpleMessage("Задание всему классу"),
         "classList": MessageLookupByLibrary.simpleMessage("Учебные классы"),
         "classMaster":
             MessageLookupByLibrary.simpleMessage("Классный руководитель"),
@@ -45,6 +49,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "classStudentsTitle":
             MessageLookupByLibrary.simpleMessage("Ученики класса"),
         "commentTitle": MessageLookupByLibrary.simpleMessage("Комментарий"),
+        "currentLessonAbsences":
+            MessageLookupByLibrary.simpleMessage("Отсутствующие"),
+        "currentLessonClassHomework":
+            MessageLookupByLibrary.simpleMessage("Задание классу на этот урок"),
+        "currentLessonMarks": MessageLookupByLibrary.simpleMessage("Оценки"),
+        "currentLessonPersonalHomeworks": MessageLookupByLibrary.simpleMessage(
+            "Персональные задания на этот урок"),
         "curriculumAlternateName":
             MessageLookupByLibrary.simpleMessage("Альтернативное название"),
         "curriculumList":
@@ -75,6 +86,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Нужно выбрать учащихся"),
         "errorCurriculumEmpty": MessageLookupByLibrary.simpleMessage(
             "Учебный предмет должен быть выбран"),
+        "errorHomeWorkExists": MessageLookupByLibrary.simpleMessage(
+            "Задание для этого ученика уже существует, пожалуйста выберите другого ученика"),
+        "errorHomeworkTextEmpty": MessageLookupByLibrary.simpleMessage(
+            "Текст задания не может быть пустым"),
+        "errorMarkError":
+            MessageLookupByLibrary.simpleMessage("Нужно выбрать оценку"),
         "errorNameEmpty": MessageLookupByLibrary.simpleMessage(
             "Название должно быть заполнено"),
         "errorPersonBirthdayEmpty":
@@ -104,6 +121,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorVenueEmpty":
             MessageLookupByLibrary.simpleMessage("Кабинет должен быть выбран"),
         "fromTitle": MessageLookupByLibrary.simpleMessage("Время начала"),
+        "homeworkTextTitle":
+            MessageLookupByLibrary.simpleMessage("Текст задания"),
+        "homeworkTitle":
+            MessageLookupByLibrary.simpleMessage("Домашнее задание"),
         "lesson": MessageLookupByLibrary.simpleMessage("Урок"),
         "lessonName": MessageLookupByLibrary.simpleMessage("Урок"),
         "markTitle": MessageLookupByLibrary.simpleMessage("Оценка"),
@@ -113,6 +134,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Новый учебный предмет"),
         "newPerson": m1,
         "newVenue": MessageLookupByLibrary.simpleMessage("Новый кабинет"),
+        "nextLessonClassHomework": MessageLookupByLibrary.simpleMessage(
+            "Задание классу на следующий урок"),
+        "nextLessonPersonalHomeworks": MessageLookupByLibrary.simpleMessage(
+            "Персональные задания на следующий урок"),
         "peopleList": MessageLookupByLibrary.simpleMessage(
             "Сотрудники, учителя и ученики"),
         "personBirthday": MessageLookupByLibrary.simpleMessage("Дата рождения"),

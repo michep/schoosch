@@ -69,6 +69,8 @@
   "errorPersonParentStudentsEmpty": "Students should be selected",
   "errorPersonParentClassesEmpty": "Classes should be selected",
   "errorScheduleFromDateEmpty": "Start Date should be provided",
+  "errorMarkError": "Mark shoud be defined",
+  "errorHomeworkTextEmpty": "Homework text shold not be empty",
   "fromTitle": "From time",
   "tillTitle": "Till time",
   "markTitle": "Mark",
@@ -76,5 +78,16 @@
   "commentTitle": "Comment",
   "setMarkTitle": "Set Mark",
   "updateMarkTitle": "Update Mark",
-  "classStudentsTitle": "Class Students"
+  "classStudentsTitle": "Class Students",
+  "currentLessonClassHomework": "Class homework for this day",
+  "currentLessonPersonalHomeworks": "Personal homeworks for this day",
+  "currentLessonAbsences": "Absent",
+  "currentLessonMarks": "Marks",
+  "nextLessonClassHomework": "Class homework for next day",
+  "nextLessonPersonalHomeworks": "Personal omeworks for next day",
+  "homeworkTitle": "Homework",
+  "homeworkTextTitle": "Homework Text",
+  "classHomeworkTitle": "Class Homework",
+  "classHomeworkCompletionsTitle": "Homework Completions",
+  "errorHomeWorkExists": "There is already a homework for this student, please select another student"
 }

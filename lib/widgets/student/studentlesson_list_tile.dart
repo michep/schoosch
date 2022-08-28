@@ -5,7 +5,6 @@ import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
-import 'package:schoosch/pages/student_lesson_page.dart';
 import 'package:schoosch/pages/student_lesson_page_new.dart';
 
 class StudentLessonListTile extends StatefulWidget {
@@ -33,11 +32,9 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
             : Future.delayed(
                 const Duration(
                   milliseconds: 0,
-                ),
-                () {
-                  return [];
-                }
-              ),
+                ), () {
+                return [];
+              }),
         builder: (context, snap) {
           if (!snap.hasData) {
             return const ListTile();

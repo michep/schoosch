@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      // locale: const Locale('ru'),
+      locale: const Locale('ru'),
       scrollBehavior: AppScrollBehavior(),
       onGenerateTitle: (context) => S.of(context).appTiile,
       debugShowCheckedModeBanner: false,

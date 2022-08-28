@@ -750,6 +750,26 @@ class S {
     );
   }
 
+  /// `Mark shoud be defined`
+  String get errorMarkError {
+    return Intl.message(
+      'Mark shoud be defined',
+      name: 'errorMarkError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Homework text shold not be empty`
+  String get errorHomeworkTextEmpty {
+    return Intl.message(
+      'Homework text shold not be empty',
+      name: 'errorHomeworkTextEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `From time`
   String get fromTitle {
     return Intl.message(
@@ -825,6 +845,116 @@ class S {
     return Intl.message(
       'Class Students',
       name: 'classStudentsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Class homework for this day`
+  String get currentLessonClassHomework {
+    return Intl.message(
+      'Class homework for this day',
+      name: 'currentLessonClassHomework',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personal homeworks for this day`
+  String get currentLessonPersonalHomeworks {
+    return Intl.message(
+      'Personal homeworks for this day',
+      name: 'currentLessonPersonalHomeworks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Absent`
+  String get currentLessonAbsences {
+    return Intl.message(
+      'Absent',
+      name: 'currentLessonAbsences',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Marks`
+  String get currentLessonMarks {
+    return Intl.message(
+      'Marks',
+      name: 'currentLessonMarks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Class homework for next day`
+  String get nextLessonClassHomework {
+    return Intl.message(
+      'Class homework for next day',
+      name: 'nextLessonClassHomework',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personal omeworks for next day`
+  String get nextLessonPersonalHomeworks {
+    return Intl.message(
+      'Personal omeworks for next day',
+      name: 'nextLessonPersonalHomeworks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Homework`
+  String get homeworkTitle {
+    return Intl.message(
+      'Homework',
+      name: 'homeworkTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Homework Text`
+  String get homeworkTextTitle {
+    return Intl.message(
+      'Homework Text',
+      name: 'homeworkTextTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Class Homework`
+  String get classHomeworkTitle {
+    return Intl.message(
+      'Class Homework',
+      name: 'classHomeworkTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Homework Completions`
+  String get classHomeworkCompletionsTitle {
+    return Intl.message(
+      'Homework Completions',
+      name: 'classHomeworkCompletionsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There is already a homework for this student, please select another student`
+  String get errorHomeWorkExists {
+    return Intl.message(
+      'There is already a homework for this student, please select another student',
+      name: 'errorHomeWorkExists',
       desc: '',
       args: [],
     );

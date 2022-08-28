@@ -1,58 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class ClassHomeworkCompetionTile extends StatefulWidget {
+class ClassHomeworkCompetionTile extends StatelessWidget {
   final HomeworkModel hw;
   final CompletionFlagModel compl;
+  final void Function(HomeworkModel, CompletionFlagModel) toggleHomeworkCompletion;
 
-  const ClassHomeworkCompetionTile(this.hw, this.compl, {Key? key}) : super(key: key);
-
-  @override
-  State<ClassHomeworkCompetionTile> createState() => _ClassHomeworkCompetionTileState();
-}
-
-class _ClassHomeworkCompetionTileState extends State<ClassHomeworkCompetionTile> {
-  String studentFullName = '';
-
-  @override
-  void initState() {
-    super.initState();
-    widget.compl.student.then((value) {
-      if (mounted) {
-        setState(() {
-          studentFullName = value.fullName;
-        });
-      }
-    });
-  }
+  const ClassHomeworkCompetionTile(this.hw, this.compl, this.toggleHomeworkCompletion, {Key? key}) : super(key: key);
 
   @override
   Widget build(Object context) {
     Widget icon;
     Widget complTime;
 
-    switch (widget.compl.status) {
+    switch (compl.status) {
       case Status.completed:
         icon = IconButton(
           icon: const Icon(Icons.circle_outlined),
-          onPressed: () {},
+          onPressed: () => toggleHomeworkCompletion(hw, compl),
         );
         break;
       case Status.confirmed:
         icon = IconButton(
           icon: const Icon(Icons.check_circle_outline),
-          onPressed: () {},
+          onPressed: () => toggleHomeworkCompletion(hw, compl),
         );
         break;
       default:
         icon = const SizedBox.shrink();
     }
-    complTime = Text(Utils.formatDatetime(widget.compl.completedTime!, format: 'dd MMM'));
+    complTime = Text(Utils.formatDatetime(compl.completedTime!, format: 'dd MMM'));
     return ListTile(
       leading: complTime,
-      title: Text(studentFullName),
+      title: FutureBuilder<StudentModel>(
+          future: compl.student,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return const SizedBox.shrink();
+            return Text(snapshot.data!.fullName);
+          }),
       trailing: icon,
     );
   }

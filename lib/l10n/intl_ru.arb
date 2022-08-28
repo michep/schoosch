@@ -69,6 +69,8 @@
   "errorPersonParentStudentsEmpty": "Нужно выбрать учащихся",
   "errorPersonParentClassesEmpty": "Нужно выбрать классы",
   "errorScheduleFromDateEmpty": "Дата начала действия должна быть выбрана",
+  "errorMarkError": "Нужно выбрать оценку",
+  "errorHomeworkTextEmpty": "Текст задания не может быть пустым",
   "fromTitle": "Время начала",
   "tillTitle": "Время окончания",
   "markTitle": "Оценка",
@@ -76,5 +78,16 @@
   "commentTitle": "Комментарий",
   "setMarkTitle": "Поставить оценку",
   "updateMarkTitle": "Изменить оценку",
-  "classStudentsTitle": "Ученики класса"
+  "classStudentsTitle": "Ученики класса",
+  "currentLessonClassHomework": "Задание классу на этот урок",
+  "currentLessonPersonalHomeworks": "Персональные задания на этот урок",
+  "currentLessonAbsences": "Отсутствующие",
+  "currentLessonMarks": "Оценки",
+  "nextLessonClassHomework": "Задание классу на следующий урок",
+  "nextLessonPersonalHomeworks": "Персональные задания на следующий урок",
+  "homeworkTitle": "Домашнее задание",
+  "homeworkTextTitle": "Текст задания",
+  "classHomeworkTitle": "Задание всему классу",
+  "classHomeworkCompletionsTitle": "Выполнение",
+  "errorHomeWorkExists": "Задание для этого ученика уже существует, пожалуйста выберите другого ученика"
 }

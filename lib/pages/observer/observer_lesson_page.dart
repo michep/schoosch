@@ -169,10 +169,12 @@ class _HomeworkItemState extends State<HomeworkItem> {
       builder: (context) {
         return ElevatedButton.icon(
           onPressed: () {
-            c.status == Status.completed ? widget.homework.unconfirmCompletion(c) : widget.homework.confirmCompletion(c);
+            c.status == Status.completed
+                ? widget.homework.confirmCompletion(c, PersonModel.currentUser!)
+                : widget.homework.unconfirmCompletion(c, PersonModel.currentUser!);
           },
-          label: Text(c.status == Status.completed ? 'отметить как не проверенное' : 'отметить как проверенное'),
-          icon: Icon(c.status == Status.completed ? Icons.close : Icons.check),
+          label: Text(c.status == Status.completed ? 'отметить как проверенное' : 'отметить как не проверенное'),
+          icon: Icon(c.status == Status.completed ? Icons.check : Icons.close),
         );
       });
 }

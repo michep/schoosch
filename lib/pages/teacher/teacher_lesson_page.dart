@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
@@ -11,22 +12,22 @@ import 'package:schoosch/widgets/teacher/students_homework_completions.dart';
 import 'package:schoosch/widgets/teacher/students_marks.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class TeacherLessonPageNew extends StatelessWidget {
-  final DateTime _date;
-  final LessonModel _lesson;
-  final CurriculumModel _curiculum;
-  final VenueModel _venue;
-  final LessontimeModel _time;
-  final TeacherModel _teacher;
+class TeacherLessonPage extends StatelessWidget {
+  final DateTime date;
+  final LessonModel lesson;
+  final CurriculumModel curiculum;
+  final VenueModel venue;
+  final LessontimeModel time;
+  final TeacherModel teacher;
 
-  const TeacherLessonPageNew(this._lesson, this._curiculum, this._venue, this._time, this._date, this._teacher, {Key? key}) : super(key: key);
+  const TeacherLessonPage(this.lesson, this.curiculum, this.venue, this.time, this.date, this.teacher, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 6,
       child: Scaffold(
-        appBar: MAppBar(_curiculum.aliasOrName),
+        appBar: MAppBar(curiculum.aliasOrName),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(8),
@@ -34,31 +35,63 @@ class TeacherLessonPageNew extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(_lesson.aclass.name),
-                Text('${_lesson.order} урок'),
-                Text(Utils.formatDatetime(_date)),
-                Text(_time.formatPeriod()),
-                const TabBar(
-                  labelPadding: EdgeInsets.all(16),
+                Text(lesson.aclass.name),
+                Text('${lesson.order} ${S.of(context).lesson}'),
+                Text(Utils.formatDatetime(date)),
+                Text(time.formatPeriod()),
+                TabBar(
+                  labelPadding: const EdgeInsets.all(16),
                   isScrollable: true,
                   tabs: [
-                    Text('Задание классу на этот урок'),
-                    Text('Персональные задания на этот урок'),
-                    Text('Отсутствующие'),
-                    Text('Оценки'),
-                    Text('Задание классу на следующий урок'),
-                    Text('Персональные задания на следующий урок'),
+                    Text(S.of(context).currentLessonClassHomework),
+                    Text(S.of(context).currentLessonPersonalHomeworks),
+                    Text(S.of(context).currentLessonAbsences),
+                    Text(S.of(context).currentLessonMarks),
+                    Text(S.of(context).nextLessonClassHomework),
+                    Text(S.of(context).nextLessonPersonalHomeworks),
                   ],
                 ),
                 Expanded(
                   child: TabBarView(
                     children: [
-                      ClassTaskWithCompetionsPage(_date, _lesson.homeworkThisLessonForClass, readOnly: true),
-                      StudentsTasksWithCompetionsPage(_date, _lesson.homeworkThisLessonForClassAndAllStudents, readOnly: true),
-                      StudentsAbsencePage(_date, _lesson),
-                      StudentsMarksPage(_date, _lesson),
-                      ClassTaskWithCompetionsPage(_date, _lesson.homeworkNextLessonForClass),
-                      StudentsTasksWithCompetionsPage(_date, _lesson.homeworkNextLessonForClassAndAllStudents),
+                      ClassTaskWithCompetionsPage(
+                        teacher,
+                        curiculum,
+                        date,
+                        lesson,
+                        (d, f) => lesson.homeworkThisLessonForClass(d, forceRefresh: f),
+                        readOnly: true,
+                      ),
+                      StudentsTasksWithCompetionsPage(
+                        teacher,
+                        curiculum,
+                        date,
+                        lesson,
+                        (d, f) => lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
+                        readOnly: true,
+                      ),
+                      StudentsAbsencePage(
+                        date,
+                        lesson,
+                      ),
+                      StudentsMarksPage(
+                        date,
+                        lesson,
+                      ),
+                      ClassTaskWithCompetionsPage(
+                        teacher,
+                        curiculum,
+                        date,
+                        lesson,
+                        (d, f) => lesson.homeworOnDateForClass(d, forceRefresh: f),
+                      ),
+                      StudentsTasksWithCompetionsPage(
+                        teacher,
+                        curiculum,
+                        date,
+                        lesson,
+                        (d, f) => lesson.homeworkOnDateForClassAndAllStudents(d, forceRefresh: f),
+                      ),
                     ],
                   ),
                 )

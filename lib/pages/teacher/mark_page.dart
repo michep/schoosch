@@ -8,6 +8,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/mark_field.dart';
 import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -24,17 +25,18 @@ class MarkPage extends StatefulWidget {
 }
 
 class _MarkPageState extends State<MarkPage> {
-  late TextEditingController commentCont;
-  int mark = 0;
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _commentcont = TextEditingController();
   final TextEditingController _studentcont = TextEditingController();
-
+  final ScrollController _scrollcon = ScrollController();
+  int mark = 0;
   StudentModel? _student;
 
   @override
   void initState() {
-    super.initState();
     mark = widget.mark.mark;
-    commentCont = TextEditingController.fromValue(TextEditingValue(text: widget.mark.comment));
+    _commentcont.value = TextEditingValue(text: widget.mark.comment);
+    super.initState();
   }
 
   @override
@@ -44,12 +46,13 @@ class _MarkPageState extends State<MarkPage> {
       appBar: MAppBar(widget.title),
       body: SafeArea(
         child: Form(
+          key: _formKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: ListView(
               children: [
                 SelectableValueDropdownFormField<PersonModel>(
-                  title: S.of(context).studentTitle,
+                  title: loc.studentTitle,
                   initFutureFunc: _initStudent,
                   initOptionsFutureFunc: _initStudentOptions,
                   titleFunc: (value) => value?.fullName ?? '',
@@ -58,15 +61,22 @@ class _MarkPageState extends State<MarkPage> {
                   validatorFunc: (value) => Utils.validateTextAndvAlueNotEmpty<StudentModel>(value, _student, loc.errorStudentEmpty),
                   callback: (value) => _setStudent(value),
                 ),
-                MarkFormField(widget.mark.mark, setMark),
-                TextFormField(
-                  controller: commentCont,
-                  decoration: InputDecoration(
-                    label: Text(S.of(context).commentTitle),
+                MarkFormField(
+                  mark: widget.mark.mark,
+                  onSaved: setMark,
+                  validator: (value) => Utils.validateMark(value, S.of(context).errorMarkError),
+                ),
+                Scrollbar(
+                  controller: _scrollcon,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      label: Text(S.of(context).commentTitle),
+                    ),
+                    controller: _commentcont,
+                    scrollController: _scrollcon,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 3,
                   ),
-                  keyboardType: TextInputType.multiline,
-                  minLines: 1,
-                  maxLines: 3,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -112,85 +122,22 @@ class _MarkPageState extends State<MarkPage> {
   }
 
   void save() async {
-    var nmark = MarkModel.fromMap(
-      widget.mark.id,
-      {
-        'teacher_id': widget.mark.teacherId,
-        'student_id': _student!.id,
-        'date': Timestamp.fromDate(widget.mark.date),
-        'curriculum_id': widget.mark.curriculumId,
-        'lesson_order': widget.mark.lessonOrder,
-        'type': widget.mark.type,
-        'comment': commentCont.value.text,
-        'mark': mark,
-      },
-    );
-    await nmark.save();
-    Get.back<bool>(result: true);
-  }
-}
-
-class MarkFormField extends StatefulWidget {
-  final int mark;
-  final void Function(int?) callback;
-
-  const MarkFormField(this.mark, this.callback, {Key? key}) : super(key: key);
-
-  @override
-  State<MarkFormField> createState() => _MarkFormFieldState();
-}
-
-class _MarkFormFieldState extends State<MarkFormField> {
-  late int mark;
-
-  @override
-  void initState() {
-    mark = widget.mark;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var selStyle = ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary));
-    return InputDecorator(
-      decoration: InputDecoration(label: Text(S.of(context).markTitle)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          ElevatedButton(
-            onPressed: () => setMark(1),
-            style: mark == 1 ? selStyle : null,
-            child: const Text('1'),
-          ),
-          ElevatedButton(
-            onPressed: () => setMark(2),
-            style: mark == 2 ? selStyle : null,
-            child: const Text('2'),
-          ),
-          ElevatedButton(
-            onPressed: () => setMark(3),
-            style: mark == 3 ? selStyle : null,
-            child: const Text('3'),
-          ),
-          ElevatedButton(
-            onPressed: () => setMark(4),
-            style: mark == 4 ? selStyle : null,
-            child: const Text('4'),
-          ),
-          ElevatedButton(
-            onPressed: () => setMark(5),
-            style: mark == 5 ? selStyle : null,
-            child: const Text('5'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void setMark(int mark) {
-    setState(() {
-      this.mark = mark;
-      widget.callback(mark);
-    });
+    if (_formKey.currentState!.validate()) {
+      var nmark = MarkModel.fromMap(
+        widget.mark.id,
+        {
+          'teacher_id': widget.mark.teacherId,
+          'student_id': _student!.id,
+          'date': Timestamp.fromDate(widget.mark.date),
+          'curriculum_id': widget.mark.curriculumId,
+          'lesson_order': widget.mark.lessonOrder,
+          'type': widget.mark.type,
+          'comment': _commentcont.value.text,
+          'mark': mark,
+        },
+      );
+      await nmark.save();
+      Get.back<bool>(result: true);
+    }
   }
 }

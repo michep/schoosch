@@ -117,7 +117,7 @@ class _MarkListTileState extends State<MarkListTile> {
   Widget build(BuildContext context) {
     if (student == null) return const SizedBox.shrink();
     return FutureBuilder<List<MarkModel>>(
-      future: widget.lesson.marksForStudent(student!, widget.date, forceUpdate: true),
+      future: widget.lesson.marksForStudent(student!, widget.date, forceRefresh: true),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const SizedBox.shrink();
         return ExpansionTile(
@@ -150,7 +150,11 @@ class MarkTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(mark.comment),
+      title: Text(
+        mark.comment,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+      ),
       leading: Text(mark.mark.toString()),
       subtitle: FutureBuilder<PersonModel>(
         future: mark.teacher,

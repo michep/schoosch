@@ -1,63 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
+import 'package:schoosch/model/lesson_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class StudentHomeworkCompetionTile extends StatefulWidget {
+class StudentHomeworkCompetionTile extends StatelessWidget {
   final HomeworkModel hw;
+  final LessonModel lesson;
   final CompletionFlagModel? compl;
+  final bool readOnly;
+  final void Function(HomeworkModel) editHomrework;
+  final void Function(HomeworkModel, CompletionFlagModel) toggleHomeworkCompletion;
 
-  const StudentHomeworkCompetionTile(this.hw, this.compl, {Key? key}) : super(key: key);
-
-  @override
-  State<StudentHomeworkCompetionTile> createState() => _StudentHomeworkCompetionTileState();
-}
-
-class _StudentHomeworkCompetionTileState extends State<StudentHomeworkCompetionTile> {
-  String studentFullName = '';
-
-  @override
-  void initState() {
-    super.initState();
-    widget.hw.student.then((value) {
-      setState(() {
-        studentFullName = value?.fullName ?? '';
-      });
-    });
-  }
+  const StudentHomeworkCompetionTile(this.hw, this.lesson, this.compl, this.editHomrework, this.toggleHomeworkCompletion, {Key? key, this.readOnly = false})
+      : super(key: key);
 
   @override
   Widget build(Object context) {
     Widget icon;
     Widget complTime;
 
-    if (widget.compl != null) {
-      switch (widget.compl!.status) {
+    if (compl != null) {
+      switch (compl!.status) {
         case Status.completed:
           icon = IconButton(
             icon: const Icon(Icons.circle_outlined),
-            onPressed: () {},
+            onPressed: () => toggleHomeworkCompletion(hw, compl!),
           );
           break;
         case Status.confirmed:
           icon = IconButton(
             icon: const Icon(Icons.check_circle_outline),
-            onPressed: () {},
+            onPressed: () => toggleHomeworkCompletion(hw, compl!),
           );
           break;
         default:
           icon = const SizedBox.shrink();
       }
-      complTime = Text(Utils.formatDatetime(widget.compl!.completedTime!, format: 'dd MMM'));
+      complTime = Text(Utils.formatDatetime(compl!.completedTime!, format: 'dd MMM'));
     } else {
       icon = const SizedBox.shrink();
       complTime = const SizedBox.shrink();
     }
     return ListTile(
+      // onTap: () => editHomrework(hw),
       leading: complTime,
-      title: Text(studentFullName),
-      subtitle: Text(widget.hw.text),
-      trailing: icon,
+      title: FutureBuilder<StudentModel?>(
+          future: hw.student,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return const SizedBox.shrink();
+            return Text(snapshot.data?.fullName ?? '');
+          }),
+      subtitle: Text(
+        hw.text,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          icon,
+          if (!readOnly)
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () => editHomrework(hw),
+            )
+        ],
+      ),
     );
   }
 }
