@@ -10,8 +10,9 @@ import 'package:schoosch/pages/admin/people_list.dart';
 class StudentsAbsencePage extends StatefulWidget {
   final LessonModel _lesson;
   final DateTime _date;
+  final bool readOnly;
 
-  const StudentsAbsencePage(this._date, this._lesson, {Key? key}) : super(key: key);
+  const StudentsAbsencePage(this._date, this._lesson, {Key? key, this.readOnly = false}) : super(key: key);
 
   @override
   State<StudentsAbsencePage> createState() => _StudentsAbsencePageState();
@@ -27,15 +28,26 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const SizedBox.shrink();
             return ListView(
-              children: [...snapshot.data!.map((absence) => AbsenceListTile(absence, deleteAbsence)).toList()],
+              children: [
+                ...snapshot.data!
+                    .map((absence) => AbsenceListTile(
+                          absence,
+                          deleteAbsence,
+                          widget.readOnly,
+                        ))
+                    .toList()
+              ],
             );
           },
         ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: FloatingActionButton(
-            onPressed: addAbsence,
-            child: const Icon(Icons.add),
+        Visibility(
+          visible: !widget.readOnly,
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+              onPressed: addAbsence,
+              child: const Icon(Icons.add),
+            ),
           ),
         ),
       ],
@@ -70,8 +82,9 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
 class AbsenceListTile extends StatelessWidget {
   final AbsenceModel absence;
   final Future<void> Function(AbsenceModel) deleteAbsenceFunc;
+  final bool readOnly;
 
-  const AbsenceListTile(this.absence, this.deleteAbsenceFunc, {Key? key}) : super(key: key);
+  const AbsenceListTile(this.absence, this.deleteAbsenceFunc, this.readOnly, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +94,7 @@ class AbsenceListTile extends StatelessWidget {
         if (!snapshot.hasData) return const SizedBox.shrink();
         return ListTile(
           title: Text(snapshot.data!.fullName),
-          trailing: IconButton(icon: const Icon(Icons.delete), onPressed: () => deleteAbsenceFunc(absence)),
+          trailing: readOnly ? null : IconButton(icon: const Icon(Icons.delete), onPressed: () => deleteAbsenceFunc(absence)),
         );
       },
     );

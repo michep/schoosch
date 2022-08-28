@@ -15,7 +15,7 @@ class ClassTaskWithCompetionsPage extends StatefulWidget {
   final DateTime _date;
   final LessonModel _lesson;
   final CurriculumModel _curriculum;
-  final TeacherModel _teacher;
+  final TeacherModel? _teacher;
   final Future<HomeworkModel?> Function(DateTime, bool) _hwFuture;
   final bool readOnly;
 
@@ -105,7 +105,7 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
             'class_id': widget._lesson.aclass.id,
             'date': Timestamp.fromDate(widget._date),
             'text': '',
-            'teacher_id': widget._teacher.id,
+            'teacher_id': widget._teacher!.id,
             'curriculum_id': widget._curriculum.id,
           },
         ),

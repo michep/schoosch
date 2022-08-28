@@ -10,8 +10,9 @@ import 'package:schoosch/pages/teacher/mark_page.dart';
 class StudentsMarksPage extends StatefulWidget {
   final LessonModel _lesson;
   final DateTime _date;
+  final bool readOnly;
 
-  const StudentsMarksPage(this._date, this._lesson, {Key? key}) : super(key: key);
+  const StudentsMarksPage(this._date, this._lesson, {Key? key, this.readOnly = false}) : super(key: key);
 
   @override
   State<StudentsMarksPage> createState() => _StudentsMarksPageState();
@@ -35,6 +36,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
                     widget._date,
                     deleteMark,
                     editMark,
+                    widget.readOnly,
                     key: ValueKey(e),
                   ),
                 )
@@ -42,11 +44,14 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
             );
           },
         ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: FloatingActionButton(
-            onPressed: addMark,
-            child: const Icon(Icons.add),
+        Visibility(
+          visible: !widget.readOnly,
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+              onPressed: addMark,
+              child: const Icon(Icons.add),
+            ),
           ),
         ),
       ],
@@ -91,8 +96,9 @@ class MarkListTile extends StatefulWidget {
   final DateTime date;
   final void Function(MarkModel) deleteFunc;
   final Future<void> Function(MarkModel) editFunc;
+  final bool readOnly;
 
-  const MarkListTile(this.studentId, this.lesson, this.date, this.deleteFunc, this.editFunc, {Key? key}) : super(key: key);
+  const MarkListTile(this.studentId, this.lesson, this.date, this.deleteFunc, this.editFunc, this.readOnly, {Key? key}) : super(key: key);
 
   @override
   State<MarkListTile> createState() => _MarkListTileState();
@@ -124,7 +130,7 @@ class _MarkListTileState extends State<MarkListTile> {
           title: Text(student!.fullName),
           subtitle: Text(marksString(snapshot.data!)),
           children: [
-            ...snapshot.data!.map((e) => MarkTile(e, widget.deleteFunc, widget.editFunc, key: ValueKey(e.id))).toList(),
+            ...snapshot.data!.map((e) => MarkTile(e, widget.deleteFunc, widget.editFunc, widget.readOnly, key: ValueKey(e.id))).toList(),
           ],
         );
       },
@@ -144,8 +150,9 @@ class MarkTile extends StatelessWidget {
   final MarkModel mark;
   final void Function(MarkModel) deleteFunc;
   final Future<void> Function(MarkModel) editFunc;
+  final bool readOnly;
 
-  const MarkTile(this.mark, this.deleteFunc, this.editFunc, {Key? key}) : super(key: key);
+  const MarkTile(this.mark, this.deleteFunc, this.editFunc, this.readOnly, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +170,7 @@ class MarkTile extends StatelessWidget {
           return Text(snapshot.data!.fullName);
         },
       ),
-      trailing: Row(
+      trailing: readOnly ? null : Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(

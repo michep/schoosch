@@ -13,7 +13,7 @@ import 'package:schoosch/widgets/teacher/students_homework_completion_tile.dart'
 class StudentsTasksWithCompetionsPage extends StatefulWidget {
   final DateTime _date;
   final CurriculumModel _curriculum;
-  final TeacherModel _teacher;
+  final TeacherModel? _teacher;
   final LessonModel _lesson;
   final Future<Map<String, HomeworkModel?>> Function(DateTime, bool) _hwsFuture;
 
@@ -87,7 +87,7 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
             'class_id': widget._lesson.aclass.id,
             'date': Timestamp.fromDate(widget._date),
             'text': '',
-            'teacher_id': widget._teacher.id,
+            'teacher_id': widget._teacher!.id,
             'curriculum_id': widget._curriculum.id,
           },
         ),

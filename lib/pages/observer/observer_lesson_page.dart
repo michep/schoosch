@@ -16,6 +16,7 @@ class ObserverLessonPage extends StatelessWidget {
   final LessontimeModel lessontime;
   final DateTime date;
   final Map<String, HomeworkModel?> homeworks;
+  
   const ObserverLessonPage(
       {Key? key, required this.lesson, required this.homeworks, required this.curriculum, required this.venue, required this.lessontime, required this.date})
       : super(key: key);
