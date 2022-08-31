@@ -89,5 +89,9 @@
   "homeworkTextTitle": "Текст задания",
   "classHomeworkTitle": "Задание всему классу",
   "classHomeworkCompletionsTitle": "Выполнение",
-  "errorHomeWorkExists": "Задание для этого ученика уже существует, пожалуйста выберите другого ученика"
+  "errorHomeWorkExists": "Задание для этого ученика уже существует, пожалуйста выберите другого ученика",
+  "replacementsTitle": "Подмены в расписании",
+  "freeTeachersTitle": "Поиск свободных учителей",
+  "freeLessonsTitle": "Поиск свободных уроков",
+  "aboutTitle": "О приложении"
 }

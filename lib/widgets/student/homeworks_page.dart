@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/student_lesson_page.dart';
+import 'package:schoosch/pages/student_homework.dart';
 
 class HomeworksForStudentPage extends StatefulWidget {
   final LessonModel _lesson;
@@ -24,7 +24,9 @@ class _HomeworksForStudentPageState extends State<HomeworksForStudentPage> {
           return const SizedBox.shrink();
         }
         if (snapshot.data!['student'] == null && snapshot.data!['class'] == null) {
-          return const Center(child: Text('Нет домашнего задания на этот день.'),);
+          return const Center(
+            child: Text('Нет домашнего задания на этот день.'),
+          );
         }
         var stud = snapshot.data!['student'];
         var clas = snapshot.data!['class'];

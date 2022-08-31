@@ -89,5 +89,9 @@
   "homeworkTextTitle": "Homework Text",
   "classHomeworkTitle": "Class Homework",
   "classHomeworkCompletionsTitle": "Homework Completions",
-  "errorHomeWorkExists": "There is already a homework for this student, please select another student"
+  "errorHomeWorkExists": "There is already a homework for this student, please select another student",
+  "replacementsTitle": "Schedule Replacements",
+  "freeTeachersTitle": "Search for Free Teachers",
+  "freeLessonsTitle": "Search for Free Lessons",
+  "aboutTitle": "About this app"
 }

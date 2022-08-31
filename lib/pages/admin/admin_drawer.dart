@@ -43,15 +43,15 @@ class AdminDrawer extends StatelessWidget {
             ),
             TextButton(
               onPressed: _openReplacementsPage,
-              child: const Text('Replacements'),
+              child: Text(loc.replacementsTitle),
             ),
             TextButton(
               onPressed: _openFreeTeachersPage,
-              child: const Text('Free teachers'),
+              child: Text(loc.freeTeachersTitle),
             ),
             TextButton(
               onPressed: _openFreeLessonsPage,
-              child: const Text('Free lessons'),
+              child: Text(loc.freeLessonsTitle),
             ),
             TextButton(
               onPressed: _openClassesPage,
@@ -67,7 +67,7 @@ class AdminDrawer extends StatelessWidget {
             ),
             TextButton(
               onPressed: _openAboutPage,
-              child: const Text('о приложении'),
+              child: Text(loc.aboutTitle),
             ),
           ],
         ),

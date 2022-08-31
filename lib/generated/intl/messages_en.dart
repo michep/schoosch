@@ -28,6 +28,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "aboutTitle": MessageLookupByLibrary.simpleMessage("About this app"),
         "appBarTitle": MessageLookupByLibrary.simpleMessage("Schoosch"),
         "appTiile": MessageLookupByLibrary.simpleMessage(
             "Schoosch is school schedule app"),
@@ -110,6 +111,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Teacher should be selected"),
         "errorVenueEmpty":
             MessageLookupByLibrary.simpleMessage("Venue should be selected"),
+        "freeLessonsTitle":
+            MessageLookupByLibrary.simpleMessage("Search for Free Lessons"),
+        "freeTeachersTitle":
+            MessageLookupByLibrary.simpleMessage("Search for Free Teachers"),
         "fromTitle": MessageLookupByLibrary.simpleMessage("From time"),
         "homeworkTextTitle":
             MessageLookupByLibrary.simpleMessage("Homework Text"),
@@ -145,6 +150,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "personTypeParent": MessageLookupByLibrary.simpleMessage("Parent"),
         "personTypeStudent": MessageLookupByLibrary.simpleMessage("Student"),
         "personTypeTeacher": MessageLookupByLibrary.simpleMessage("Teacher"),
+        "replacementsTitle":
+            MessageLookupByLibrary.simpleMessage("Schedule Replacements"),
         "saveChanges": MessageLookupByLibrary.simpleMessage("Save changes"),
         "scheduleFromDate":
             MessageLookupByLibrary.simpleMessage("Schedule start date"),

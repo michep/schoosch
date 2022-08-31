@@ -959,6 +959,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Schedule Replacements`
+  String get replacementsTitle {
+    return Intl.message(
+      'Schedule Replacements',
+      name: 'replacementsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search for Free Teachers`
+  String get freeTeachersTitle {
+    return Intl.message(
+      'Search for Free Teachers',
+      name: 'freeTeachersTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search for Free Lessons`
+  String get freeLessonsTitle {
+    return Intl.message(
+      'Search for Free Lessons',
+      name: 'freeLessonsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `About this app`
+  String get aboutTitle {
+    return Intl.message(
+      'About this app',
+      name: 'aboutTitle',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

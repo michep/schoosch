@@ -28,6 +28,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "aboutTitle": MessageLookupByLibrary.simpleMessage("О приложении"),
         "appBarTitle": MessageLookupByLibrary.simpleMessage("Скууш"),
         "appTiile":
             MessageLookupByLibrary.simpleMessage("Скууш - школьный дневник"),
@@ -120,6 +121,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Преподаватель должен быть выбран"),
         "errorVenueEmpty":
             MessageLookupByLibrary.simpleMessage("Кабинет должен быть выбран"),
+        "freeLessonsTitle":
+            MessageLookupByLibrary.simpleMessage("Поиск свободных уроков"),
+        "freeTeachersTitle":
+            MessageLookupByLibrary.simpleMessage("Поиск свободных учителей"),
         "fromTitle": MessageLookupByLibrary.simpleMessage("Время начала"),
         "homeworkTextTitle":
             MessageLookupByLibrary.simpleMessage("Текст задания"),
@@ -160,6 +165,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "personTypeStudent": MessageLookupByLibrary.simpleMessage("Учащийся"),
         "personTypeTeacher":
             MessageLookupByLibrary.simpleMessage("Преподаватель"),
+        "replacementsTitle":
+            MessageLookupByLibrary.simpleMessage("Подмены в расписании"),
         "saveChanges":
             MessageLookupByLibrary.simpleMessage("Сохранить изменения"),
         "scheduleFromDate":
