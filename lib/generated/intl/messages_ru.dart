@@ -70,9 +70,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "dayLessonTimeName":
             MessageLookupByLibrary.simpleMessage("Раписание времени уроков"),
         "dayLessontimeList":
-            MessageLookupByLibrary.simpleMessage("Расписание времени уроков"),
+            MessageLookupByLibrary.simpleMessage("Расписания времени уроков"),
         "dayScheduleList":
-            MessageLookupByLibrary.simpleMessage("Раписания времени уроков"),
+            MessageLookupByLibrary.simpleMessage("Раписание занятий"),
         "editInstitution": MessageLookupByLibrary.simpleMessage(
             "Информация об учебном заведении"),
         "errorClassGradeEmpty": MessageLookupByLibrary.simpleMessage(

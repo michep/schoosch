@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
+import 'package:mutex/mutex.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
@@ -23,6 +24,7 @@ class ClassModel {
   final Map<Week, List<StudentScheduleModel>> _weekSchedules = {};
   final Map<int, List<StudentScheduleModel>> _daySchedules = {};
   final List<CurriculumModel> _listCurriculums = [];
+  final Mutex _mutex = Mutex();
 
   String? get id => _id;
 
@@ -83,19 +85,27 @@ class ClassModel {
     return _daySchedules[day]!;
   }
 
-  Future<List<LessontimeModel?>?> getLessontimes() async {
-    if (_dayLessontimeId.isEmpty) return null;
+  // Future<List<LessontimeModel>> getLessontimes() async {
+  //   if (!_lessontimesLoaded) {
+  //     _lessontimes.addAll(
+  //       await Get.find<FStore>().getLessontimes(_dayLessontimeId),
+  //     );
+  //     _lessontimes.sort((a, b) => a.order.compareTo(b.order));
+  //     _lessontimesLoaded = true; //TODO: fallboack to default lessontimes?
+  //   }
+  //   return _lessontimes;
+  // }
+
+  Future<LessontimeModel> getLessontime(int n) async {
+    await _mutex.acquire();
     if (!_lessontimesLoaded) {
       _lessontimes.addAll(
         await Get.find<FStore>().getLessontimes(_dayLessontimeId),
       );
+      _lessontimes.sort((a, b) => a.order.compareTo(b.order));
       _lessontimesLoaded = true; //TODO: fallboack to default lessontimes?
     }
-    return _lessontimes;
-  }
-
-  Future<LessontimeModel> getLessontime(int n) async {
-    if (!_lessontimesLoaded) await getLessontimes();
+    _mutex.release();
     return _lessontimes[n - 1];
   }
 

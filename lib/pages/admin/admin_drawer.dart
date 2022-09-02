@@ -42,18 +42,6 @@ class AdminDrawer extends StatelessWidget {
               child: Text(loc.curriculumList),
             ),
             TextButton(
-              onPressed: _openReplacementsPage,
-              child: Text(loc.replacementsTitle),
-            ),
-            TextButton(
-              onPressed: _openFreeTeachersPage,
-              child: Text(loc.freeTeachersTitle),
-            ),
-            TextButton(
-              onPressed: _openFreeLessonsPage,
-              child: Text(loc.freeLessonsTitle),
-            ),
-            TextButton(
               onPressed: _openClassesPage,
               child: Text(loc.classList),
             ),
@@ -64,6 +52,18 @@ class AdminDrawer extends StatelessWidget {
             TextButton(
               onPressed: _openSchedulesPage,
               child: Text(loc.dayScheduleList),
+            ),
+            TextButton(
+              onPressed: _openReplacementsPage,
+              child: Text(loc.replacementsTitle),
+            ),
+            TextButton(
+              onPressed: _openFreeTeachersPage,
+              child: Text(loc.freeTeachersTitle),
+            ),
+            TextButton(
+              onPressed: _openFreeLessonsPage,
+              child: Text(loc.freeLessonsTitle),
             ),
             TextButton(
               onPressed: _openAboutPage,
