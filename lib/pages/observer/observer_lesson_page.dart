@@ -4,6 +4,7 @@ import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/teacher/class_homework_completions.dart';
@@ -14,14 +15,14 @@ import 'package:schoosch/widgets/utils.dart';
 
 class ObserverLessonPage extends StatelessWidget {
   final LessonModel lesson;
-  final CurriculumModel curiculum;
+  final CurriculumModel curriculum;
   final VenueModel venue;
   final LessontimeModel time;
   final DateTime date;
   final Map<String, HomeworkModel?> homeworks;
 
   const ObserverLessonPage(
-      {Key? key, required this.lesson, required this.homeworks, required this.curiculum, required this.venue, required this.time, required this.date})
+      {Key? key, required this.lesson, required this.homeworks, required this.curriculum, required this.venue, required this.time, required this.date})
       : super(key: key);
 
   @override
@@ -29,7 +30,7 @@ class ObserverLessonPage extends StatelessWidget {
     return DefaultTabController(
       length: 6,
       child: Scaffold(
-        appBar: MAppBar(curiculum.aliasOrName),
+        appBar: MAppBar(curriculum.aliasOrName),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(8),
@@ -38,9 +39,16 @@ class ObserverLessonPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(lesson.aclass.name),
-                Text('${lesson.order} ${S.of(context).lesson}'),
                 Text(Utils.formatDatetime(date)),
+                Text('${lesson.order} ${S.of(context).lesson}'),
                 Text(time.formatPeriod()),
+                FutureBuilder<TeacherModel?>(
+                  future: curriculum.master,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.data == null) return const SizedBox.shrink();
+                    return Text(snapshot.data!.fullName);
+                  },
+                ),
                 TabBar(
                   labelPadding: const EdgeInsets.all(16),
                   isScrollable: true,
@@ -58,7 +66,7 @@ class ObserverLessonPage extends StatelessWidget {
                     children: [
                       ClassTaskWithCompetionsPage(
                         null,
-                        curiculum,
+                        curriculum,
                         date,
                         lesson,
                         (d, f) => lesson.homeworkThisLessonForClass(d, forceRefresh: f),
@@ -66,7 +74,7 @@ class ObserverLessonPage extends StatelessWidget {
                       ),
                       StudentsTasksWithCompetionsPage(
                         null,
-                        curiculum,
+                        curriculum,
                         date,
                         lesson,
                         (d, f) => lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
@@ -84,7 +92,7 @@ class ObserverLessonPage extends StatelessWidget {
                       ),
                       ClassTaskWithCompetionsPage(
                         null,
-                        curiculum,
+                        curriculum,
                         date,
                         lesson,
                         (d, f) => lesson.homeworOnDateForClass(d, forceRefresh: f),
@@ -92,7 +100,7 @@ class ObserverLessonPage extends StatelessWidget {
                       ),
                       StudentsTasksWithCompetionsPage(
                         null,
-                        curiculum,
+                        curriculum,
                         date,
                         lesson,
                         (d, f) => lesson.homeworkOnDateForClassAndAllStudents(d, forceRefresh: f),

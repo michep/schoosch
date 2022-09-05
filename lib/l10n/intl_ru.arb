@@ -1,6 +1,6 @@
 {
-  "appTiile": "Скууш - школьный дневник",
-  "appBarTitle": "Скууш",
+  "appTiile": "Скуш - школьный дневник",
+  "appBarTitle": "Скуш",
   "saveChanges": "Сохранить изменения",
   "search": "Поиск",
   "name": "Название",
@@ -93,5 +93,9 @@
   "replacementsTitle": "Подмены в расписании",
   "freeTeachersTitle": "Поиск свободных учителей",
   "freeLessonsTitle": "Поиск свободных уроков",
-  "aboutTitle": "О приложении"
+  "aboutTitle": "О приложении",
+  "chooseClassTitle": "Выбор класса",
+  "loginPageTitle": "Вход в приложение",
+  "userProfileTitle": "Профиль пользователя",
+  "lessonTitle": "Урок"
 }

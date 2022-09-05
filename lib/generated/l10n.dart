@@ -999,6 +999,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Choose Class`
+  String get chooseClassTitle {
+    return Intl.message(
+      'Choose Class',
+      name: 'chooseClassTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Application Login`
+  String get loginPageTitle {
+    return Intl.message(
+      'Application Login',
+      name: 'loginPageTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `User profile`
+  String get userProfileTitle {
+    return Intl.message(
+      'User profile',
+      name: 'userProfileTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lesson`
+  String get lessonTitle {
+    return Intl.message(
+      'Lesson',
+      name: 'lessonTitle',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -32,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "appBarTitle": MessageLookupByLibrary.simpleMessage("Schoosch"),
         "appTiile": MessageLookupByLibrary.simpleMessage(
             "Schoosch is school schedule app"),
+        "chooseClassTitle":
+            MessageLookupByLibrary.simpleMessage("Choose Class"),
         "classGrade": MessageLookupByLibrary.simpleMessage("Grade"),
         "classHomeworkCompletionsTitle":
             MessageLookupByLibrary.simpleMessage("Homework Completions"),
@@ -121,6 +123,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "homeworkTitle": MessageLookupByLibrary.simpleMessage("Homework"),
         "lesson": MessageLookupByLibrary.simpleMessage("Lesson"),
         "lessonName": MessageLookupByLibrary.simpleMessage("Lesson"),
+        "lessonTitle": MessageLookupByLibrary.simpleMessage("Lesson"),
+        "loginPageTitle":
+            MessageLookupByLibrary.simpleMessage("Application Login"),
         "markTitle": MessageLookupByLibrary.simpleMessage("Mark"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "newClass": MessageLookupByLibrary.simpleMessage("New Class"),
@@ -163,6 +168,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "studentTitle": MessageLookupByLibrary.simpleMessage("Student"),
         "tillTitle": MessageLookupByLibrary.simpleMessage("Till time"),
         "updateMarkTitle": MessageLookupByLibrary.simpleMessage("Update Mark"),
+        "userProfileTitle":
+            MessageLookupByLibrary.simpleMessage("User profile"),
         "venueList": MessageLookupByLibrary.simpleMessage("Venues"),
         "venueName": MessageLookupByLibrary.simpleMessage("Venue"),
         "weekSchedule": MessageLookupByLibrary.simpleMessage(

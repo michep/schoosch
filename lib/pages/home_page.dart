@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/week_controller.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/drawer.dart';
@@ -17,8 +18,8 @@ class HomePage extends StatelessWidget {
       drawer: const Drawer(
         child: MDrawer(),
       ),
-      appBar: const MAppBar(
-        'Schoosch / Скуш',
+      appBar: MAppBar(
+        S.of(context).appBarTitle,
         showProfile: true,
         showSendNotif: true,
       ),

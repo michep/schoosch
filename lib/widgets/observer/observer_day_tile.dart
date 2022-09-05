@@ -18,7 +18,7 @@ class ObserverDayTile extends StatelessWidget {
     Get.to(
       () => ObserverLessonPage(
         lesson: les,
-        curiculum: cur,
+        curriculum: cur,
         venue: ven,
         time: tim,
         date: _date,

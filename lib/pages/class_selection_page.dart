@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
@@ -13,8 +14,8 @@ class ObserverClassSelectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MAppBar(
-        'Выбор класса',
+      appBar: MAppBar(
+        S.of(context).chooseClassTitle,
         showProfile: true,
       ),
       body: SafeArea(

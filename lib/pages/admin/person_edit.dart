@@ -109,7 +109,7 @@ class _PersonPageState extends State<PersonPage> {
                         decoration: InputDecoration(
                           label: Text(loc.personBirthday),
                         ),
-                        validator: (value) => Utils.validateDateTimeNotEmpty(value, loc.errorPersonBirthdayEmpty),
+                        // validator: (value) => Utils.validateDateTimeNotEmpty(value, loc.errorPersonBirthdayEmpty),
                         onShowPicker: (context, currentValue) async {
                           var date = await showDatePicker(
                             context: context,

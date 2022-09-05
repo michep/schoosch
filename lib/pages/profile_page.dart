@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
 import 'package:schoosch/pages/class_selection_page.dart';
@@ -16,7 +17,9 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MAppBar('Профиль пользователя'),
+      appBar: MAppBar(
+        S.of(context).userProfileTitle,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(

@@ -29,9 +29,11 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aboutTitle": MessageLookupByLibrary.simpleMessage("О приложении"),
-        "appBarTitle": MessageLookupByLibrary.simpleMessage("Скууш"),
+        "appBarTitle": MessageLookupByLibrary.simpleMessage("Скуш"),
         "appTiile":
-            MessageLookupByLibrary.simpleMessage("Скууш - школьный дневник"),
+            MessageLookupByLibrary.simpleMessage("Скуш - школьный дневник"),
+        "chooseClassTitle":
+            MessageLookupByLibrary.simpleMessage("Выбор класса"),
         "classGrade": MessageLookupByLibrary.simpleMessage("Год обучения"),
         "classHomeworkCompletionsTitle":
             MessageLookupByLibrary.simpleMessage("Выполнение"),
@@ -132,6 +134,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Домашнее задание"),
         "lesson": MessageLookupByLibrary.simpleMessage("Урок"),
         "lessonName": MessageLookupByLibrary.simpleMessage("Урок"),
+        "lessonTitle": MessageLookupByLibrary.simpleMessage("Урок"),
+        "loginPageTitle":
+            MessageLookupByLibrary.simpleMessage("Вход в приложение"),
         "markTitle": MessageLookupByLibrary.simpleMessage("Оценка"),
         "name": MessageLookupByLibrary.simpleMessage("Название"),
         "newClass": MessageLookupByLibrary.simpleMessage("Новый учебный класс"),
@@ -183,6 +188,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "tillTitle": MessageLookupByLibrary.simpleMessage("Время окончания"),
         "updateMarkTitle":
             MessageLookupByLibrary.simpleMessage("Изменить оценку"),
+        "userProfileTitle":
+            MessageLookupByLibrary.simpleMessage("Профиль пользователя"),
         "venueList":
             MessageLookupByLibrary.simpleMessage("Кабинеты и помещения"),
         "venueName": MessageLookupByLibrary.simpleMessage("Кабинет"),
