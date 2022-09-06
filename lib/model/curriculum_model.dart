@@ -69,13 +69,13 @@ class CurriculumModel {
 
   Future<List<StudentModel>> allStudents({ClassModel? aclass}) async {
     List<StudentModel> res = [];
-    // res.addAll(await students());
     var cl = await classes();
-    for(var c in cl) {
+    for (var c in cl) {
       var s = await c.students();
-      // res.addAll(await c.students());
-      if(aclass != null) {
+      if (aclass != null) {
         res.addAllIf(c.grade == aclass.grade, s);
+      } else {
+        res.addAll(s);
       }
     }
     return res;

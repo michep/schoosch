@@ -58,6 +58,7 @@ flutter_native_splash:
   image: "assets/icon/лого1.png"
   android: true
   ios: true
+  web: true
 
 flutter_intl:
   enabled: true
