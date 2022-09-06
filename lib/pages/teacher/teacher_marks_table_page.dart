@@ -36,7 +36,7 @@ class TeacherTablePage extends StatelessWidget {
       liststud.length,
       (index) => Container(
         alignment: Alignment.center,
-        width: 150.0,
+        width: 120.0,
         height: 60.0,
         decoration: const BoxDecoration(
           border: Border.symmetric(
@@ -47,7 +47,9 @@ class TeacherTablePage extends StatelessWidget {
           ),
         ),
         margin: const EdgeInsets.all(4.0),
-        child: Text(liststud[index].abbreviatedName),
+        child: Text(
+          liststud[index].fullName,
+        ),
       ),
     );
   }
@@ -59,7 +61,9 @@ class TeacherTablePage extends StatelessWidget {
           future: liststud[index].curriculumMarks(currentcur),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Center(child: Utils.progressIndicator(),);
+              return Center(
+                child: Utils.progressIndicator(),
+              );
             }
             if (snapshot.data!.isEmpty) {
               return Container(
@@ -90,7 +94,9 @@ class TeacherTablePage extends StatelessWidget {
           future: currentcur.allStudents(aclass: aclass),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Center(child: Utils.progressIndicator(),);
+              return Center(
+                child: Utils.progressIndicator(),
+              );
             }
             var students = snapshot.data!;
             return Row(

@@ -25,16 +25,16 @@ class MAppBar extends StatelessWidget with PreferredSizeWidget {
             onPressed: _profile,
           ),
         if (showSendNotif)
-          IconButton(
-            icon: const Icon(Icons.notification_add),
-            onPressed: () async {
-              await Get.find<FStore>().sendNotif(
-                [
-                  PersonModel.currentUser!,
-                ],
-              );
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.notification_add),
+          //   onPressed: () async {
+          //     await Get.find<FStore>().sendNotif(
+          //       [
+          //         PersonModel.currentUser!,
+          //       ],
+          //     );
+          //   },
+          // ),
         if (actions != null) ...actions!,
       ],
       // bottom: tabs != null ? TabBar(tabs: tabs!) : null,

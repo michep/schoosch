@@ -30,15 +30,15 @@ class MDrawer extends StatelessWidget {
   List<Widget> _menuItems() {
     List<Widget> items = [];
     if (PersonModel.currentUser!.currentType == PersonType.student) {
-      items.add(
-        TextButton.icon(
-          onPressed: () {
-            Get.to(() => RatePage(PersonModel.currentStudent!.studentClass));
-          },
-          icon: const Icon(Icons.insert_emoticon_outlined),
-          label: const Text('Оценить учителей'),
-        ),
-      );
+      // items.add(
+      //   TextButton.icon(
+      //     onPressed: () {
+      //       Get.to(() => RatePage(PersonModel.currentStudent!.studentClass));
+      //     },
+      //     icon: const Icon(Icons.insert_emoticon_outlined),
+      //     label: const Text('Оценить учителей'),
+      //   ),
+      // );
       if (Get.find<BlueprintController>().canShow) {
         items.add(
           TextButton.icon(
@@ -109,15 +109,15 @@ class MDrawer extends StatelessWidget {
         label: const Text('общение'),
       ),
     );
-    items.add(
-      TextButton.icon(
-        onPressed: () {
-          Get.to(() => const AboutPage());
-        },
-        icon: const Icon(Icons.info_outline),
-        label: const Text('о приложении'),
-      ),
-    );
+    // items.add(
+    //   TextButton.icon(
+    //     onPressed: () {
+    //       Get.to(() => const AboutPage());
+    //     },
+    //     icon: const Icon(Icons.info_outline),
+    //     label: const Text('о приложении'),
+    //   ),
+    // );
 
     return items;
   }

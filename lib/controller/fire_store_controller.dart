@@ -486,6 +486,7 @@ class FStore extends GetxController {
   }
 
   Future<void> saveTeacherRating(TeacherModel teacher, PersonModel user, DateTime date, int rating, String comment) async {
+
     Map<String, dynamic> data = {};
     data['ratedate'] = Timestamp.fromDate(date);
     data['rater_id'] = user.id;
@@ -645,6 +646,11 @@ class FStore extends GetxController {
     }
     return sum / ratings.docs.length;
   }
+
+  // Future<bool> hasRatingInMonth(TeacherModel teacher) async {
+  //   var monthStart = DateTime.now();
+  //   var a = await _institutionRef.collection('teachersrates').where('teacher_id', isEqualTo: teacher.id).where('ratedate', isLessThan: DateTime.now().day)
+  // }
 
   Future<HomeworkModel?> getHomeworkForStudentBeforeDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
     var res = await _institutionRef
