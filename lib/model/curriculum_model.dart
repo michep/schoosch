@@ -81,10 +81,7 @@ class CurriculumModel {
   }
 
   Future<bool> isAvailableForStudent(StudentModel student) async {
-    if (_studentIds.isNotEmpty) return _studentIds.contains(student.id);
-    var curClasses = await classes();
-    var stuClass = await student.studentClass;
-    return curClasses.contains(stuClass);
+    return _studentIds.isEmpty || _studentIds.contains(student.id);
   }
 
   Map<String, dynamic> toMap() {
@@ -104,7 +101,7 @@ class CurriculumModel {
 
   @override
   operator ==(other) {
-    if (other is PersonModel) {
+    if (other is CurriculumModel) {
       return id == other.id;
     }
     return this == other;

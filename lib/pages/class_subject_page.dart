@@ -49,7 +49,7 @@ class SubjectList extends StatelessWidget {
     // );
     return FutureBuilder<List<CurriculumModel>>(
       // future: _class.getCurriculums(forceRefresh: false),
-      future: _class.getCurriculums(),
+      future: _class.curriculums(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Utils.progressIndicator();

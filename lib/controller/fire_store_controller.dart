@@ -647,8 +647,13 @@ class FStore extends GetxController {
   }
 
   Future<bool> hasRatingInMonth(TeacherModel teacher) async {
-    var a = await _institutionRef.collection('teachersrates').where('teacher_id', isEqualTo: teacher.id).where('ratedate', isLessThan: DateTime.now()).limit(1).get();
-    if(a.docs.isEmpty) return true;
+    var a = await _institutionRef
+        .collection('teachersrates')
+        .where('teacher_id', isEqualTo: teacher.id)
+        .where('ratedate', isLessThan: DateTime.now())
+        .limit(1)
+        .get();
+    if (a.docs.isEmpty) return true;
     var d = (a.docs[1].data()['ratedate'] as Timestamp).toDate();
     return (d.year == DateTime.now().year && d.month == DateTime.now().month);
   }
@@ -781,7 +786,8 @@ class FStore extends GetxController {
 
   Future<List<CurriculumModel>> getStudentCurriculums(StudentModel student) async {
     List<CurriculumModel> res = [];
-    var curs = await getAllCurriculums();
+    var aclass = await student.studentClass;
+    var curs = await getClassCurriculums(aclass!);
     for (var cur in curs) {
       if (await cur.isAvailableForStudent(student)) {
         res.add(cur);
@@ -790,11 +796,11 @@ class FStore extends GetxController {
     return res;
   }
 
-  Future<List<CurriculumModel>> getClassCurriculums(ClassModel clas) async {
+  Future<List<CurriculumModel>> getClassCurriculums(ClassModel aclass) async {
     List<CurriculumModel> res = [];
     var curs = await getAllCurriculums();
     for (var cur in curs) {
-      if ((await cur.classes()).contains(clas)) {
+      if ((await cur.classes()).contains(aclass)) {
         res.add(cur);
       }
     }
@@ -842,7 +848,24 @@ class FStore extends GetxController {
     var marks = await _institutionRef
         .collection('mark')
         .where('student_id', isEqualTo: student.id)
-        .where('teacher_id', isEqualTo: currentUser!.id)
+        // .where('teacher_id', isEqualTo: currentUser!.id)
+        .where('curriculum_id', isEqualTo: cur.id)
+        .get();
+    return marks.docs
+        .map(
+          (e) => MarkModel.fromMap(
+            e.id,
+            e.data(),
+          ),
+        )
+        .toList();
+  }
+
+  Future<List<MarkModel>> getStudentCurriculumTeacherMarks(StudentModel student, CurriculumModel cur, TeacherModel teacher) async {
+    var marks = await _institutionRef
+        .collection('mark')
+        .where('student_id', isEqualTo: student.id)
+        .where('teacher_id', isEqualTo: teacher.id)
         .where('curriculum_id', isEqualTo: cur.id)
         .get();
     return marks.docs

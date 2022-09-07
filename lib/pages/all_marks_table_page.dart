@@ -9,7 +9,10 @@ import 'package:schoosch/widgets/utils.dart';
 
 class StudentsTablePage extends StatelessWidget {
   final StudentModel student;
-  const StudentsTablePage({Key? key, required this.student,}) : super(key: key);
+  const StudentsTablePage({
+    Key? key,
+    required this.student,
+  }) : super(key: key);
 
   List<Widget> _buildMarkCells(List<MarkModel> listmark) {
     return List.generate(
@@ -87,7 +90,8 @@ class StudentsTablePage extends StatelessWidget {
     return List.generate(
       listcur.length,
       (index) => FutureBuilder<List<MarkModel>>(
-        future: Get.find<FStore>().getStudentCurriculumMarks(PersonModel.currentStudent!, listcur[index]),
+        // future: Get.find<FStore>().getStudentCurriculumMarks(PersonModel.currentStudent!, listcur[index]),
+        future: student.curriculumMarks(listcur[index]),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -121,7 +125,7 @@ class StudentsTablePage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder<List<CurriculumModel>>(
-          future: Get.find<FStore>().getStudentCurriculums(student),
+          future: student.curriculums(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(

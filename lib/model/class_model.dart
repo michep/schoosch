@@ -17,13 +17,16 @@ class ClassModel {
   final List<String> _studentIds = [];
   final List<StudentModel> _students = [];
   bool _studentsLoaded = false;
+  final Mutex _studentsMutex = Mutex();
   final List<LessontimeModel> _lessontimes = [];
   bool _lessontimesLoaded = false;
+  final Mutex __lessontimesMutex = Mutex();
   TeacherModel? _master;
   final Map<Week, List<StudentScheduleModel>> _weekSchedules = {};
   final Map<int, List<StudentScheduleModel>> _daySchedules = {};
-  final List<CurriculumModel> _listCurriculums = [];
-  final Mutex _mutex = Mutex();
+  final List<CurriculumModel> _curriculums = [];
+  bool _curriculumsLoaded = false;
+  final Mutex _curriculumsMutex = Mutex();
 
   String? get id => _id;
 
@@ -96,7 +99,7 @@ class ClassModel {
   // }
 
   Future<LessontimeModel> getLessontime(int n) async {
-    await _mutex.acquire();
+    await __lessontimesMutex.acquire();
     if (!_lessontimesLoaded) {
       _lessontimes.addAll(
         await Get.find<FStore>().getLessontimes(_dayLessontimeId),
@@ -104,7 +107,7 @@ class ClassModel {
       _lessontimes.sort((a, b) => a.order.compareTo(b.order));
       _lessontimesLoaded = true; //TODO: fallboack to default lessontimes?
     }
-    _mutex.release();
+    __lessontimesMutex.release();
     return _lessontimes[n - 1];
   }
 
@@ -119,10 +122,11 @@ class ClassModel {
 
   Future<List<StudentModel>> students({forceRefresh = false}) async {
     if (!_studentsLoaded || forceRefresh) {
-      _studentsLoaded = true;
+      _studentsMutex.acquire();
       _students.clear();
       _students.addAll((await Get.find<FStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
-      // _studentsLoaded = true;
+      _studentsLoaded = true;
+      _studentsMutex.release();
     }
     return _students;
   }
@@ -145,11 +149,15 @@ class ClassModel {
   //   return allCurriculums;
   // }
 
-  Future<List<CurriculumModel>> getCurriculums({bool forceRefresh = false}) async {
-    if (_listCurriculums.isEmpty || forceRefresh) {
-      _listCurriculums.addAll(await Get.find<FStore>().getClassCurriculums(this));
+  Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
+    if (!_curriculumsLoaded || forceRefresh) {
+      _curriculumsMutex.acquire();
+      _curriculums.clear();
+      _curriculums.addAll(await Get.find<FStore>().getClassCurriculums(this));
+      _curriculumsLoaded = true;
+      _curriculumsMutex.release();
     }
-    return _listCurriculums;
+    return _curriculums;
   }
 
   Map<String, dynamic> toMap() {
