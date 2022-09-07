@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/widgets/rateteachersheet.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -58,7 +60,14 @@ class _RatePageState extends State<RatePage> {
                                                 builder: (context, snapshot) {
                                                   return snapshot.hasData ? Text(snapshot.data!.toStringAsFixed(2)) : const Text('нет оценок');
                                                 }),
-                                            onTap: () {
+                                            onTap: () async {
+                                              var has = await Get.find<FStore>().hasRatingInMonth(teacher);
+                                              if(has) {
+                                                Get.showSnackbar(const GetSnackBar(
+                                                  message: 'этомц учителю ты уже ставил оценку в текущем месяце.',
+                                                ));
+                                                return;
+                                              }
                                               activateBottomSheet(context, teacher).then((_) => setState(() {}));
                                             },
                                           ),

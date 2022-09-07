@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:get/get.dart';
 
@@ -58,16 +59,16 @@ class RateSheetState extends State<RateSheet> {
           const SizedBox(
             height: 10,
           ),
-          ElevatedButton(onPressed: _rate, child: const Text('оценить')),
+          ElevatedButton(onPressed: (_rating > 2) || (_rating < 2 && _comment.text != '') ? _rate : null, child: const Text('оценить')),
         ],
       ),
     );
   }
 
-  void _rate() {
-    if ((_rating > 2) || (_rating < 2 && _comment.text != '')) {
-      widget._teacher.createRating(PersonModel.currentUser!, _rating, _comment.text);
-    }
+  void _rate() async {
+    var has = await Get.find<FStore>().hasRatingInMonth(widget._teacher);
+    if(has) return;
+    widget._teacher.createRating(PersonModel.currentUser!, _rating, _comment.text);
     _rating = 0;
     _comment.clear();
     Get.back();
