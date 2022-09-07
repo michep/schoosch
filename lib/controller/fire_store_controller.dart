@@ -240,7 +240,7 @@ class FStore extends GetxController {
 
     for (var l in less) {
       var cur = l.type == LessonType.empty ? null : await l.curriculum;
-      if ((cur != null && cur.isAvailableForStudent(student.id!)) || l.type == LessonType.empty) {
+      if ((cur != null && await cur.isAvailableForStudent(student)) || l.type == LessonType.empty) {
         res.add(l);
       }
     }
@@ -779,11 +779,11 @@ class FStore extends GetxController {
     return res;
   }
 
-  Future<List<CurriculumModel>> getStudentCurriculums(PersonModel student) async {
+  Future<List<CurriculumModel>> getStudentCurriculums(StudentModel student) async {
     List<CurriculumModel> res = [];
     var curs = await getAllCurriculums();
     for (var cur in curs) {
-      if (cur.isAvailableForStudent(student.id!)) {
+      if (await cur.isAvailableForStudent(student)) {
         res.add(cur);
       }
     }

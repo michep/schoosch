@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:mutex/mutex.dart';
@@ -54,7 +53,7 @@ class ClassModel {
   }
 
   @override
-  int get hashCode => hashValues(id, '');
+  int get hashCode => Object.hash(id, '');
 
   @override
   String toString() {
