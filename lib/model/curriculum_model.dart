@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/class_model.dart';
@@ -81,7 +80,12 @@ class CurriculumModel {
     return res;
   }
 
-  bool isAvailableForStudent(String studentId) => _studentIds.isEmpty || _studentIds.contains(studentId);
+  Future<bool> isAvailableForStudent(StudentModel student) async {
+    if (_studentIds.isNotEmpty) return _studentIds.contains(student.id);
+    var curClasses = await classes();
+    var stuClass = await student.studentClass;
+    return curClasses.contains(stuClass);
+  }
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> res = {};
@@ -107,5 +111,5 @@ class CurriculumModel {
   }
 
   @override
-  int get hashCode => hashValues(id, '');
+  int get hashCode => Object.hash(id, '');
 }

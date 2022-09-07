@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/profile_page.dart';
 
@@ -35,7 +34,7 @@ class MAppBar extends StatelessWidget with PreferredSizeWidget {
           //     );
           //   },
           // ),
-        if (actions != null) ...actions!,
+          if (actions != null) ...actions!,
       ],
       // bottom: tabs != null ? TabBar(tabs: tabs!) : null,
     );

@@ -7,9 +7,7 @@ import 'package:schoosch/pages/all_chats_page.dart';
 import 'package:schoosch/pages/all_marks_table_page.dart';
 import 'package:schoosch/pages/map/school_map_page.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
-import 'package:schoosch/pages/teacher_rate_page.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
-import 'package:schoosch/pages/about_page.dart';
 
 class MDrawer extends StatelessWidget {
   const MDrawer({Key? key}) : super(key: key);
