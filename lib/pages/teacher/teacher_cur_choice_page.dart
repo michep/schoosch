@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/teacher_marks_table_page.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -17,7 +17,7 @@ class CurriculumChoicePage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: FutureBuilder<List<CurriculumModel>>(
-          future: Get.find<FStore>().getTeacherCurriculums(),
+          future: PersonModel.currentTeacher!.curriculums(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Utils.progressIndicator();

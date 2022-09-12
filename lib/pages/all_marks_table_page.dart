@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:intl/intl.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
-import 'package:intl/intl.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -90,7 +88,6 @@ class StudentsTablePage extends StatelessWidget {
     return List.generate(
       listcur.length,
       (index) => FutureBuilder<List<MarkModel>>(
-        // future: Get.find<FStore>().getStudentCurriculumMarks(PersonModel.currentStudent!, listcur[index]),
         future: student.curriculumMarks(listcur[index]),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {

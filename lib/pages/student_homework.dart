@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -65,10 +66,9 @@ class _HomeworkCardState extends State<HomeworkCard> {
     );
   }
 
-  Future<void> onTap(CompletionFlagModel? c) => showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Padding(
+  Future<void> onTap(CompletionFlagModel? c) => Get.bottomSheet(
+        Card(
+          child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: ElevatedButton.icon(
               onPressed: () async {
@@ -78,7 +78,7 @@ class _HomeworkCardState extends State<HomeworkCard> {
                   await widget.homework.deleteCompletion(widget.student);
                 }
                 setState(() {});
-                Navigator.pop(context);
+                Get.back();
               },
               label: Text(c == null
                   ? 'сообщить о выполнении'
@@ -91,7 +91,7 @@ class _HomeworkCardState extends State<HomeworkCard> {
                       ? Icons.close
                       : Icons.check),
             ),
-          );
-        },
+          ),
+        ),
       );
 }

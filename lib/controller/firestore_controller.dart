@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
@@ -26,15 +24,15 @@ import 'package:http/http.dart' as http;
 
 class FStore extends GetxController {
   late final FirebaseFirestore _store;
-  late final FirebaseStorage _fstorage;
+  // late final FirebaseStorage _fstorage;
   late DocumentReference _institutionRef;
-  late Reference _fstorageRef;
-  late Uint8List? _logoImagData;
+  // late Reference _fstorageRef;
+  // late Uint8List? _logoImagData;
   PersonModel? _currentUser;
   InstitutionModel? _institution;
 
   FStore() {
-    _fstorage = FirebaseStorage.instance;
+    // _fstorage = FirebaseStorage.instance;
     _store = FirebaseFirestore.instance;
     _store.settings = const Settings(persistenceEnabled: false);
     _store.clearPersistence();
@@ -42,13 +40,13 @@ class FStore extends GetxController {
 
   PersonModel? get currentUser => _currentUser;
   InstitutionModel? get currentInstitution => _institution;
-  Uint8List? get logoImageData => _logoImagData;
+  // Uint8List? get logoImageData => _logoImagData;
 
   Future<void> init(String userEmail) async {
     _institution = await _geInstitutionIdByUserEmail(userEmail);
     _institutionRef = _store.collection('institution').doc(_institution!.id);
-    _fstorageRef = _fstorage.ref(_institutionRef.id);
-    _logoImagData = await _getLogoImageData();
+    // _fstorageRef = _fstorage.ref(_institutionRef.id);
+    // _logoImagData = await _getLogoImageData();
     _currentUser = await _getUserByEmail(userEmail);
   }
 
@@ -60,15 +58,15 @@ class FStore extends GetxController {
     _currentUser = null;
   }
 
-  Future<Uint8List?> _getLogoImageData() async {
-    Uint8List? data;
-    try {
-      data = await _fstorageRef.child('logo.png').getData();
-    } catch (error) {
-      return null;
-    }
-    return data;
-  }
+  // Future<Uint8List?> _getLogoImageData() async {
+  //   Uint8List? data;
+  //   try {
+  //     data = await _fstorageRef.child('logo.png').getData();
+  //   } catch (error) {
+  //     return null;
+  //   }
+  //   return data;
+  // }
 
   Future<List<LessontimeModel>> getLessontimes(String id) async {
     List<LessontimeModel> res = [];
@@ -807,8 +805,8 @@ class FStore extends GetxController {
     return res;
   }
 
-  Future<List<CurriculumModel>> getTeacherCurriculums() async {
-    var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: currentUser!.id).get();
+  Future<List<CurriculumModel>> getTeacherCurriculums(TeacherModel teacher) async {
+    var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: teacher.id).get();
     return curriculums.docs
         .map(
           (e) => CurriculumModel.fromMap(

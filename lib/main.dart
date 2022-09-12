@@ -7,7 +7,8 @@ import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/blueprint_controller.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/storage_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/firebase_options.dart';
 import 'package:schoosch/generated/l10n.dart';
@@ -31,15 +32,22 @@ Future<void> main() async {
   });
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var fauth = FAuth();
-  var fstore = FStore();
+  // var fstore = FStore();
+  var mstore = MStore();
+  var store = FStorage();
   var bcont = BlueprintController();
   Get.put<FAuth>(fauth);
-  Get.put<FStore>(fstore);
+  // Get.put<FStore>(fstore);
+  Get.put<MStore>(mstore);
+  Get.put<FStorage>(store);
   Get.put(CurrentWeek(Week.current()));
   Get.put<BlueprintController>(bcont);
   if (fauth.currentUser != null) {
-    await fstore.init(fauth.currentUser!.email!);
+    // await fstore.init(fauth.currentUser!.email!);
+    await mstore.init(fauth.currentUser!.email!);
     await bcont.init();
+    // await store.init(fstore.currentInstitution!.id);
+    await store.init(mstore.db);
   }
 
   runApp(const MyApp());

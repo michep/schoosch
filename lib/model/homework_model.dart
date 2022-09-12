@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/firestore_controller.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/person_model.dart';
 

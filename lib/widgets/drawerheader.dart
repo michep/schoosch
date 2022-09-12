@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/storage_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 
 Widget drawerHeader(BuildContext context) {
@@ -18,11 +18,11 @@ Widget drawerHeader(BuildContext context) {
           ),
         ),
         Expanded(
-          child: Get.find<FStore>().logoImageData != null
+          child: Get.find<FStorage>().logoImageData != null
               ? Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Image.memory(
-                    Get.find<FStore>().logoImageData!,
+                    Get.find<FStorage>().logoImageData!,
                   ),
                 )
               : const SizedBox.shrink(),

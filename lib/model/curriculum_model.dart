@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/firestore_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/person_model.dart';
 

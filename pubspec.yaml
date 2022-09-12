@@ -34,6 +34,7 @@ dependencies:
   onesignal_flutter: ^3.0.0
   http: ^0.13.5
   mutex: ^3.0.0
+  mongo_dart: ^0.7.4+1
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/firestore_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/widgets/rateteachersheet.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -16,11 +16,7 @@ class RatePage extends StatefulWidget {
 
 class _RatePageState extends State<RatePage> {
   Future<void> activateBottomSheet(BuildContext context, TeacherModel teach) async {
-    return await showModalBottomSheet(
-        context: context,
-        builder: (_) {
-          return RateSheet(teach);
-        });
+    return Get.bottomSheet(RateSheet(teach));
   }
 
   @override
@@ -62,7 +58,7 @@ class _RatePageState extends State<RatePage> {
                                                 }),
                                             onTap: () async {
                                               var has = await Get.find<FStore>().hasRatingInMonth(teacher);
-                                              if(has) {
+                                              if (has) {
                                                 Get.showSnackbar(const GetSnackBar(
                                                   message: 'этомц учителю ты уже ставил оценку в текущем месяце.',
                                                 ));

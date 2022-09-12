@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/firestore_controller.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 
 class DayLessontimeModel {

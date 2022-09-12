@@ -1,5 +1,5 @@
 import 'package:schoosch/controller/blueprint_controller.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/firestore_controller.dart';
 import 'package:schoosch/pages/map/qr_scanner_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -74,12 +74,16 @@ class FloorSelection extends StatelessWidget {
               Get.find<BlueprintController>().chosenFloor$.value = flors[i];
             },
             elevation: Get.find<BlueprintController>().chosenFloor$.value == flors[i] ? 0 : 2.0,
-            fillColor: Get.find<BlueprintController>().chosenFloor$.value == flors[i] ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.primary,
+            fillColor: Get.find<BlueprintController>().chosenFloor$.value == flors[i]
+                ? Theme.of(context).colorScheme.onPrimary
+                : Theme.of(context).colorScheme.primary,
             padding: const EdgeInsets.only(top: 15, bottom: 25, right: 15, left: 15),
             shape: const CircleBorder(),
             child: Text(
               "${flors[i]}",
-              style: TextStyle(fontSize: 30, color: Get.find<BlueprintController>().chosenFloor$.value == flors[i] ? Colors.black : Theme.of(context).colorScheme.onSecondaryContainer),
+              style: TextStyle(
+                  fontSize: 30,
+                  color: Get.find<BlueprintController>().chosenFloor$.value == flors[i] ? Colors.black : Theme.of(context).colorScheme.onSecondaryContainer),
             ),
           );
         }),

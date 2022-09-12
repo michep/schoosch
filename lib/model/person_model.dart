@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:mutex/mutex.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/firestore_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
@@ -202,10 +202,10 @@ class StudentModel extends PersonModel {
 
   Future<ClassModel?> get studentClass async {
     if (!_studentClassLoaded) {
-      _curriculumsMutex.acquire();
+      _studentClassMutex.acquire();
       _studentClass = await Get.find<FStore>().getClassForStudent(this);
       _studentClassLoaded = true;
-      _curriculumsMutex.release();
+      _studentClassMutex.release();
     }
     return _studentClass!;
   }
@@ -232,6 +232,9 @@ class StudentModel extends PersonModel {
 
 class TeacherModel extends PersonModel {
   final Map<Week, List<TeacherScheduleModel>> _schedule = {};
+  final List<CurriculumModel> _curriculums = [];
+  bool _curriculumsLoaded = false;
+  final Mutex _curriculumsMutex = Mutex();
 
   TeacherModel.empty()
       : super.fromMap(null, <String, dynamic>{
@@ -254,6 +257,17 @@ class TeacherModel extends PersonModel {
 
   Future<List<TeacherScheduleModel>> getSchedulesWeek(Week week) async {
     return _schedule[week] ??= await Get.find<FStore>().getTeacherWeekSchedule(this, week);
+  }
+
+  Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
+    if (!_curriculumsLoaded || forceRefresh) {
+      _curriculumsMutex.acquire();
+      _curriculums.clear();
+      _curriculums.addAll(await Get.find<FStore>().getTeacherCurriculums(this));
+      _curriculumsLoaded = true;
+      _curriculumsMutex.release;
+    }
+    return _curriculums;
   }
 
   // Future<void> confirmCompletion(HomeworkModel hw, CompletionFlagModel completion) async {

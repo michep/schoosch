@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/firestore_controller.dart';
 import 'package:schoosch/model/chat_model.dart';
 import 'package:schoosch/pages/chat_page.dart';
 import 'package:schoosch/pages/find_chat_page.dart';
