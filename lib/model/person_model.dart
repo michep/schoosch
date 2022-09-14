@@ -201,23 +201,23 @@ class StudentModel extends PersonModel {
   StudentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
   Future<ClassModel?> get studentClass async {
-    if (!_studentClassLoaded) {
-      _curriculumsMutex.acquire();
+    await _studentClassMutex.acquire();
+    if (!_studentClassLoaded) {   
       _studentClass = await Get.find<FStore>().getClassForStudent(this);
       _studentClassLoaded = true;
-      _curriculumsMutex.release();
     }
+    _studentClassMutex.release();
     return _studentClass!;
   }
 
   Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
+    await _curriculumsMutex.acquire();
     if (!_curriculumsLoaded || forceRefresh) {
-      _curriculumsMutex.acquire();
       _curriculums.clear();
       _curriculums.addAll(await Get.find<FStore>().getStudentCurriculums(this));
       _curriculumsLoaded = true;
-      _curriculumsMutex.release;
     }
+    _curriculumsMutex.release();
     return _curriculums;
   }
 

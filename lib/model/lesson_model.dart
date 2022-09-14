@@ -10,6 +10,7 @@ import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
+import 'package:mutex/mutex.dart';
 
 enum LessonType {
   normal,
@@ -50,6 +51,7 @@ class LessonModel {
   LessontimeModel? _lessontime;
   LessonModel? replaceLesson;
   LessonType? type;
+  final Mutex homeworkOnDateForClassAndAllStudentsMutex = Mutex();
 
   String? get id => _id;
 
@@ -167,6 +169,7 @@ class LessonModel {
   }
 
   Future<Map<String, HomeworkModel?>> homeworkOnDateForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
+    await homeworkOnDateForClassAndAllStudentsMutex.acquire();
     var studs = await aclass.students();
     for (StudentModel stud in studs) {
       if (_homeworksNextLesson[stud.id] == null || forceRefresh) {
@@ -176,6 +179,7 @@ class LessonModel {
     if (_homeworksNextLesson['class'] == null || forceRefresh) {
       _homeworksNextLesson['class'] = await Get.find<FStore>().getHomeworkForClassOnDate(aclass, (await curriculum)!, date);
     }
+    homeworkOnDateForClassAndAllStudentsMutex.release();
     return _homeworksNextLesson;
   }
 

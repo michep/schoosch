@@ -342,7 +342,11 @@ class FStore extends GetxController {
 
   Future<CurriculumModel> getCurriculum(String id) async {
     var res = await _institutionRef.collection('curriculum').doc(id).get();
-    return CurriculumModel.fromMap(res.id, res.data()!);
+    var r = CurriculumModel.fromMap(res.id, res.data()!);
+    if(res.data() == null) {
+      print(res.id + 'nulled data');
+    }
+    return r;
   }
 
   Future<String> saveCurriculum(CurriculumModel curriculum) async {
@@ -425,6 +429,9 @@ class FStore extends GetxController {
 
   Future<VenueModel> getVenue(String id) async {
     var res = await _institutionRef.collection('venue').doc(id).get();
+    if(res.data() == null) {
+      print(res.id + 'nulled data');
+    }
     return VenueModel.fromMap(res.id, res.data()!);
   }
 

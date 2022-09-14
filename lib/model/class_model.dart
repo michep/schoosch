@@ -121,13 +121,13 @@ class ClassModel {
   }
 
   Future<List<StudentModel>> students({forceRefresh = false}) async {
+    await _studentsMutex.acquire();
     if (!_studentsLoaded || forceRefresh) {
-      _studentsMutex.acquire();
       _students.clear();
       _students.addAll((await Get.find<FStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
       _studentsLoaded = true;
-      _studentsMutex.release();
     }
+    _studentsMutex.release();
     return _students;
   }
 
@@ -150,13 +150,13 @@ class ClassModel {
   // }
 
   Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
+    await _curriculumsMutex.acquire();
     if (!_curriculumsLoaded || forceRefresh) {
-      _curriculumsMutex.acquire();
       _curriculums.clear();
       _curriculums.addAll(await Get.find<FStore>().getClassCurriculums(this));
       _curriculumsLoaded = true;
-      _curriculumsMutex.release();
     }
+    _curriculumsMutex.release();
     return _curriculums;
   }
 
