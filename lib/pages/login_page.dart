@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:get/get.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
       body: const SignInScreen(
         providerConfigs: [
           EmailProviderConfiguration(),
-          GoogleProviderConfiguration(clientId: '245847143504-ipg09aij94ufg1msovph5cbvsesvnvhm.apps.googleusercontent.com'),
+          // GoogleProviderConfiguration(clientId: '245847143504-ipg09aij94ufg1msovph5cbvsesvnvhm.apps.googleusercontent.com'),
         ],
       ),
     );
@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null && store.currentUser == null) {
       await store.init(user.email!);
       // await bcont.init();
-      OneSignal.shared.setExternalUserId(PersonModel.currentUser!.id!);
+      // OneSignal.shared.setExternalUserId(PersonModel.currentUser!.id!);
       PersonModel.currentUser!.currentType == PersonType.admin ? Get.offAll(() => const AdminPage()) : Get.offAll(() => const HomePage());
     }
   }

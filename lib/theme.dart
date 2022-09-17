@@ -15,7 +15,7 @@ var darkTheme = FlexThemeData.dark(
     // useSubThemes: true,
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
     // To use playground font, add GoogleFonts package and uncomment:
-    // fontFamily: GoogleFonts.notoSans().fontFamily,
+    fontFamily: 'Lato',
     subThemesData: const FlexSubThemesData(
       useTextTheme: true,
       fabUseShape: true,
