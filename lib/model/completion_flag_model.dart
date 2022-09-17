@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:schoosch/controller/mongo_controller.dart';

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
@@ -103,7 +102,7 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
           null,
           {
             'class_id': widget._lesson.aclass.id,
-            'date': Timestamp.fromDate(widget._date),
+            'date': widget._date,
             'text': '',
             'teacher_id': widget._teacher!.id,
             'curriculum_id': widget._curriculum.id,

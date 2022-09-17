@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart' as isoweek;
 import 'package:mongo_dart/mongo_dart.dart';
@@ -34,9 +33,7 @@ extension EmptyObjectId on ObjectId {
 
 class MStore extends GetxController {
   late final Db _db;
-  late final firestore.FirebaseFirestore _store;
   // late final FirebaseStorage _fstorage;
-  late firestore.DocumentReference _institutionRef;
   // late Reference _fstorageRef;
   // late Uint8List? _logoImagData;
   PersonModel? _currentUser;
@@ -46,7 +43,6 @@ class MStore extends GetxController {
 
   MStore() {
     _db = Db('mongodb://mongo:1qsx!QSX@rc1b-ualxw106ib10l1e0.mdb.yandexcloud.net:27018/schoosch?replicaSet=rs01&authSource=schoosch');
-    _store = firestore.FirebaseFirestore.instance;
   }
 
   PersonModel? get currentUser => _currentUser;
@@ -55,7 +51,6 @@ class MStore extends GetxController {
   Future<void> init(String userEmail) async {
     await _db.open(secure: true, tlsAllowInvalidCertificates: true);
     _institution = await _geInstitutionIdByUserEmail(userEmail);
-    _institutionRef = _store.collection('institution').doc(_institution!.id.toHexString());
     _currentUser = await _getUserByEmail(userEmail);
   }
 

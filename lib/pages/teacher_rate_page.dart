@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/firestore_controller.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/widgets/rateteachersheet.dart';

@@ -1,5 +1,4 @@
 import 'package:directed_graph/directed_graph.dart';
-import 'package:schoosch/controller/firestore_controller.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/node_model.dart';

@@ -5,7 +5,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
-import 'package:schoosch/controller/blueprint_controller.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/controller/storage_controller.dart';

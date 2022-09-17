@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
@@ -130,7 +129,7 @@ class _HomeworkPageState extends State<HomeworkPage> {
     String? res;
     res = Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty);
     if (res != null) return res;
-    if (widget.studentIds.contains(_student?.id)) return S.of(context).errorHomeWorkExists;
+    if (_student != null && widget.studentIds.contains(_student!.id!.toHexString())) return S.of(context).errorHomeWorkExists;
     return null;
   }
 
@@ -139,7 +138,7 @@ class _HomeworkPageState extends State<HomeworkPage> {
       var nhw = HomeworkModel.fromMap(
         widget.homework.id,
         {
-          'date': Timestamp.fromDate(widget.homework.date),
+          'date': widget.homework.date,
           'text': _commentcont.value.text,
           'class_id': widget.homework.classId,
           'student_id': _student?.id,

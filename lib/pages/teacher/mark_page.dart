@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
@@ -129,7 +128,7 @@ class _MarkPageState extends State<MarkPage> {
         {
           'teacher_id': widget.mark.teacherId,
           'student_id': _student!.id,
-          'date': Timestamp.fromDate(widget.mark.date),
+          'date': widget.mark.date,
           'curriculum_id': widget.mark.curriculumId,
           'lesson_order': widget.mark.lessonOrder,
           'type': widget.mark.type,

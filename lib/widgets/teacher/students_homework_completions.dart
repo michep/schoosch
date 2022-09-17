@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
@@ -84,7 +83,7 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
           null,
           {
             'class_id': widget._lesson.aclass.id,
-            'date': Timestamp.fromDate(widget._date),
+            'date': widget._date,
             'text': '',
             'teacher_id': widget._teacher!.id,
             'curriculum_id': widget._curriculum.id,
@@ -100,7 +99,7 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
   }
 
   void editStudentHomework(HomeworkModel hw, List<String> studentIDs) async {
-    studentIDs.remove(hw.studentId);
+    studentIDs.remove(hw.studentId!.toHexString());
     var res = await Get.to(() => HomeworkPage(widget._lesson, hw, studentIDs, personalHomework: true));
     if (res is bool && res == true) {
       setState(() {});

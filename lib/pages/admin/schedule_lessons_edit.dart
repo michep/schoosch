@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_list_interface.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
@@ -232,8 +231,8 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> map = {
         'day': schedule.day,
-        'from': Timestamp.fromDate(_from!),
-        'till': _till != null ? Timestamp.fromDate(_till!) : null,
+        'from': _from!,
+        'till': _till,
       };
       var nschedule = DayScheduleModel.fromMap(widget._aclass, schedule.id, map);
       await nschedule.save();

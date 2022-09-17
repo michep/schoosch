@@ -6,7 +6,6 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:get/get.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
-import 'package:schoosch/controller/firestore_controller.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/controller/storage_controller.dart';
 import 'package:schoosch/generated/l10n.dart';

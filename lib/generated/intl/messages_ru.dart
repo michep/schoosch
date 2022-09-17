@@ -24,7 +24,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m1(type) => "Новый ${type}";
 
-  static String m2(order) => "${order} урок\'";
+  static String m2(order) => "${order} урок";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{

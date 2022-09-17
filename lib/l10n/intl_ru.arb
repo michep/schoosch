@@ -46,7 +46,7 @@
   "newPerson": "Новый {type}",
   "scheduleFromDate": "Начало действия расписания",
   "scheduleTillDate": "Окончание действия",
-  "scheduleLessonOrder": "{order} урок'",
+  "scheduleLessonOrder": "{order} урок",
   "scheduleNoLesson": "нет этого урока",
   "lesson": "Урок",
   "errorCurriculumEmpty": "Учебный предмет должен быть выбран",
