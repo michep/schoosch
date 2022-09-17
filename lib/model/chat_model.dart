@@ -1,25 +1,26 @@
 import 'package:get/get.dart';
-import 'package:schoosch/controller/firestore_controller.dart';
+import 'package:mongo_dart/mongo_dart.dart';
+import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/message_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class ChatModel {
-  late final String? id;
+  late final ObjectId? id;
   late final List<PersonModel>? users;
 
   ChatModel.fromMap(this.id, this.users);
 
-  Stream<List<MessageModel>> getAllMessages() {
-    return Get.find<FStore>().getChatroomMessages(this);
+  Future<List<MessageModel>> getAllMessages() {
+    return Get.find<MStore>().getChatroomMessages(this);
   }
 
   Future<void> addMessage(Map<String, dynamic> map) async {
-    Get.find<FStore>().addMessage(this, map);
+    Get.find<MStore>().addMessage(this, map);
   }
 
   PersonModel get other => users!
       .where(
-        (element) => element.id != Get.find<FStore>().currentUser!.id,
+        (element) => element.id != Get.find<MStore>().currentUser!.id,
       )
       .toList()[0];
 }

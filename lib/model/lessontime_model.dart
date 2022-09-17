@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/firestore_controller.dart';
+import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -30,12 +30,12 @@ class LessontimeModel {
   }
 
   Future<LessontimeModel> save(DayLessontimeModel daylessontime) async {
-    await Get.find<FStore>().saveLessontime(daylessontime, this);
+    await Get.find<MStore>().saveLessontime(daylessontime, this);
     return this;
   }
 
   Future<void> delete(DayLessontimeModel daylessontime) async {
-    return Get.find<FStore>().deleteLessontime(daylessontime, this);
+    return Get.find<MStore>().deleteLessontime(daylessontime, this);
   }
 
   String formatPeriod() {

@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
-import 'package:isoweek/isoweek.dart';
+import 'package:isoweek/isoweek.dart' as isoweek;
+import 'package:mongo_dart/mongo_dart.dart';
 import 'package:mutex/mutex.dart';
-import 'package:schoosch/controller/firestore_controller.dart';
+import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
@@ -9,12 +10,12 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 
 class ClassModel {
-  String? _id;
+  ObjectId? id;
   late final String name;
   late final int grade;
-  late final String _masterId;
-  late final String _dayLessontimeId;
-  final List<String> _studentIds = [];
+  late final ObjectId _masterId;
+  late final ObjectId _dayLessontimeId;
+  final List<ObjectId> _studentIds = [];
   final List<StudentModel> _students = [];
   bool _studentsLoaded = false;
   final Mutex _studentsMutex = Mutex();
@@ -22,29 +23,27 @@ class ClassModel {
   bool _lessontimesLoaded = false;
   final Mutex __lessontimesMutex = Mutex();
   TeacherModel? _master;
-  final Map<Week, List<StudentScheduleModel>> _weekSchedules = {};
+  final Map<isoweek.Week, List<StudentScheduleModel>> _weekSchedules = {};
   final Map<int, List<StudentScheduleModel>> _daySchedules = {};
   final List<CurriculumModel> _curriculums = [];
   bool _curriculumsLoaded = false;
   final Mutex _curriculumsMutex = Mutex();
 
-  String? get id => _id;
-
   ClassModel.empty()
       : this.fromMap(null, <String, dynamic>{
           'name': '',
           'grade': 0,
-          'master_id': '',
-          'lessontime_id': '',
-          'student_ids': <String>[],
+          'master_id': ObjectId().empty(),
+          'lessontime_id': ObjectId().empty(),
+          'student_ids': <ObjectId>[],
         });
 
-  ClassModel.fromMap(this._id, Map<String, dynamic> map) {
-    name = map['name'] != null ? map['name'] as String : throw 'need name key in class $_id';
-    grade = map['grade'] != null ? map['grade'] as int : throw 'need grade key in class $_id';
-    _dayLessontimeId = map['lessontime_id'] != null ? map['lessontime_id'] as String : throw 'need lessontime_id key in class $_id';
-    _masterId = map['master_id'] != null ? map['master_id'] as String : throw 'need master_id key in class $_id';
-    map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
+  ClassModel.fromMap(this.id, Map<String, dynamic> map) {
+    name = map['name'] != null ? map['name'] as String : throw 'need name key in class $id';
+    grade = map['grade'] != null ? map['grade'] as int : throw 'need grade key in class $id';
+    _dayLessontimeId = map['lessontime_id'] != null ? map['lessontime_id'] as ObjectId : throw 'need lessontime_id key in class $id';
+    _masterId = map['master_id'] != null ? map['master_id'] as ObjectId : throw 'need master_id key in class $id';
+    map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List).map((e) => e as ObjectId)) : null;
   }
 
   @override
@@ -66,23 +65,23 @@ class ClassModel {
   Future<TeacherModel?> get master async {
     if (_masterId.isEmpty) return null;
     if (_master == null) {
-      var store = Get.find<FStore>();
+      var store = Get.find<MStore>();
       _master = (await store.getPerson(_masterId)).asTeacher;
     }
     return _master!;
   }
 
-  Future<List<StudentScheduleModel>> getSchedulesWeek(Week week) async {
-    return _weekSchedules[week] ??= await Get.find<FStore>().getClassWeekSchedule(this, week);
+  Future<List<StudentScheduleModel>> getSchedulesWeek(isoweek.Week week) async {
+    return _weekSchedules[week] ??= await Get.find<MStore>().getClassWeekSchedule(this, week);
   }
 
   Future<void> createReplacement(Map<String, dynamic> map) async {
-    return await Get.find<FStore>().createReplacement(this, map);
+    return await Get.find<MStore>().createReplacement(this, map);
   }
 
   Future<List<StudentScheduleModel>> getSchedulesDay(int day, {bool forceRefresh = false}) async {
     if (_daySchedules[day] == null || forceRefresh) {
-      _daySchedules[day] = await Get.find<FStore>().getClassDaySchedule(this, day);
+      _daySchedules[day] = await Get.find<MStore>().getClassDaySchedule(this, day);
     }
     return _daySchedules[day]!;
   }
@@ -102,7 +101,7 @@ class ClassModel {
     await __lessontimesMutex.acquire();
     if (!_lessontimesLoaded) {
       _lessontimes.addAll(
-        await Get.find<FStore>().getLessontimes(_dayLessontimeId),
+        await Get.find<MStore>().getLessontimes(_dayLessontimeId),
       );
       _lessontimes.sort((a, b) => a.order.compareTo(b.order));
       _lessontimesLoaded = true; //TODO: fallboack to default lessontimes?
@@ -113,18 +112,18 @@ class ClassModel {
 
   Future<DayLessontimeModel?> getDayLessontime() async {
     if (_dayLessontimeId.isEmpty) return null;
-    return Get.find<FStore>().getDayLessontime(_dayLessontimeId);
+    return Get.find<MStore>().getDayLessontime(_dayLessontimeId);
   }
 
   Future<Map<TeacherModel, List<String>>> get teachers async {
-    return Get.find<FStore>().getClassTeachers(this);
+    return Get.find<MStore>().getClassTeachers(this);
   }
 
   Future<List<StudentModel>> students({forceRefresh = false}) async {
     if (!_studentsLoaded || forceRefresh) {
       _studentsMutex.acquire();
       _students.clear();
-      _students.addAll((await Get.find<FStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
+      _students.addAll((await Get.find<MStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
       _studentsLoaded = true;
       _studentsMutex.release();
     }
@@ -132,7 +131,7 @@ class ClassModel {
   }
 
   Future<List<int>> freeLessonsForDate(DateTime date) async {
-    return await Get.find<FStore>().getFreeLessonsOnDay(this, date);
+    return await Get.find<MStore>().getFreeLessonsOnDay(this, date);
   }
 
   // Future<Set<CurriculumModel>> getUniqueCurriculums({bool forceRefresh = false}) async {
@@ -153,7 +152,7 @@ class ClassModel {
     if (!_curriculumsLoaded || forceRefresh) {
       _curriculumsMutex.acquire();
       _curriculums.clear();
-      _curriculums.addAll(await Get.find<FStore>().getClassCurriculums(this));
+      _curriculums.addAll(await Get.find<MStore>().getClassCurriculums(this));
       _curriculumsLoaded = true;
       _curriculumsMutex.release();
     }
@@ -171,8 +170,8 @@ class ClassModel {
   }
 
   Future<ClassModel> save() async {
-    var id = await Get.find<FStore>().saveClass(this);
-    _id ??= id;
+    var nid = await Get.find<MStore>().saveClass(this);
+    id ??= nid;
     return this;
   }
 }

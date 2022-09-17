@@ -20,8 +20,8 @@ class _ChatPageState extends State<ChatPage> {
       appBar: AppBar(),
       body: Column(
         children: [
-          StreamBuilder<List<MessageModel>>(
-            stream: widget.chat.getAllMessages(),
+          FutureBuilder<List<MessageModel>>(
+            future: widget.chat.getAllMessages(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Expanded(

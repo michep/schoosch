@@ -1,37 +1,37 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/firestore_controller.dart';
+import 'package:mongo_dart/mongo_dart.dart';
+import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MarkModel {
-  String? id;
-  late String teacherId;
-  late String studentId;
+  ObjectId? id;
+  late ObjectId teacherId;
+  late ObjectId studentId;
   late DateTime date;
-  late String curriculumId;
+  late ObjectId curriculumId;
   late int lessonOrder;
   late String type;
   late String comment;
   late int mark;
 
-  MarkModel.empty(String teacherId, String curriculumId, int lessonOrder, DateTime date)
+  MarkModel.empty(ObjectId teacherId, ObjectId curriculumId, int lessonOrder, DateTime date)
       : this.fromMap(null, {
           'teacher_id': teacherId,
-          'date': Timestamp.fromDate(date),
+          'date': date,
           'curriculum_id': curriculumId,
           'lesson_order': lessonOrder,
-          'student_id': '',
+          'student_id': ObjectId().empty(),
           'type': 'regular',
           'comment': '',
           'mark': 0,
         });
 
   MarkModel.fromMap(this.id, Map<String, dynamic> map) {
-    teacherId = map['teacher_id'] != null ? map['teacher_id'] as String : throw 'need teacher_id key in mark $id';
-    studentId = map['student_id'] != null ? map['student_id'] as String : throw 'need student_id key in mark $id';
-    date = map['date'] != null ? DateTime.fromMillisecondsSinceEpoch((map['date'] as Timestamp).millisecondsSinceEpoch) : throw 'need date key in mark $id';
-    curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in mark $id';
+    teacherId = map['teacher_id'] != null ? map['teacher_id'] as ObjectId : throw 'need teacher_id key in mark $id';
+    studentId = map['student_id'] != null ? map['student_id'] as ObjectId : throw 'need student_id key in mark $id';
+    date = map['date'] != null ? map['date'] as DateTime : throw 'need date key in mark $id';
+    curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as ObjectId : throw 'need curriculum_id key in mark $id';
     lessonOrder = map['lesson_order'] != null ? map['lesson_order'] as int : throw 'need lesson_order key in mark $id';
     type = map['type'] != null ? map['type'] as String : throw 'need type key in mark $id';
     if (!['regular', 'test', 'exam'].contains(type)) throw 'incorrect type in mark $id';
@@ -53,18 +53,18 @@ class MarkModel {
   }
 
   Future<PersonModel> get teacher async {
-    return Get.find<FStore>().getPerson(teacherId);
+    return Get.find<MStore>().getPerson(teacherId);
   }
 
   Future<PersonModel> get student async {
-    return Get.find<FStore>().getPerson(studentId);
+    return Get.find<MStore>().getPerson(studentId);
   }
 
   Future<void> save() async {
-    id = await Get.find<FStore>().saveMark(this);
+    id = await Get.find<MStore>().saveMark(this);
   }
 
   Future<void> delete() async {
-    Get.find<FStore>().deleteMark(this);
+    Get.find<MStore>().deleteMark(this);
   }
 }

@@ -61,7 +61,7 @@ class SubjectList extends StatelessWidget {
           itemBuilder: (context, index) {
             return ListTile(
               title: Text(snapshot.data!.elementAt(index).aliasOrName),
-              subtitle: Text(snapshot.data!.elementAt(index).id!),
+              subtitle: Text(snapshot.data!.elementAt(index).id!.toHexString()),
               onTap: () {
                 Get.to(
                   TeacherTablePage(

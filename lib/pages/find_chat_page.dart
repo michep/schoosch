@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/firestore_controller.dart';
+import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -31,7 +31,7 @@ class _FindChatState extends State<FindChat> {
                 ),
               ),
               FutureBuilder<List<PersonModel>>(
-                future: Get.find<FStore>().currentInstitution!.people(),
+                future: Get.find<MStore>().currentInstitution!.people(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Expanded(
@@ -111,7 +111,7 @@ class _DialogState extends State<Dialog> {
                     setState(() {
                       isloading = true;
                     });
-                    Get.find<FStore>().currentInstitution!.createChatRoom(widget.person).whenComplete(() {
+                    Get.find<MStore>().currentInstitution!.createChatRoom(widget.person).whenComplete(() {
                       setState(() {
                         isloading = false;
                       });

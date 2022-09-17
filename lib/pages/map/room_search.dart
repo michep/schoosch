@@ -3,7 +3,7 @@ import 'package:schoosch/controller/blueprint_controller.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/firestore_controller.dart';
+import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
@@ -282,7 +282,7 @@ class _RoomSearchState extends State<RoomSearch> {
           title: Text('${teacher.firstname} ${teacher.middlename}'),
           content: SingleChildScrollView(
             child: FutureBuilder<List<TeacherScheduleModel>>(
-                future: Get.find<FStore>().getTeacherWeekSchedule(teacher, Week.current()),
+                future: Get.find<MStore>().getTeacherWeekSchedule(teacher, Week.current()),
                 builder: (context, snapshota) {
                   if (!snapshota.hasData) {
                     return Utils.progressIndicator();

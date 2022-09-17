@@ -17,16 +17,16 @@ Widget drawerHeader(BuildContext context) {
             fontSize: 20,
           ),
         ),
-        Expanded(
-          child: Get.find<FStorage>().logoImageData != null
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Image.memory(
-                    Get.find<FStorage>().logoImageData!,
-                  ),
-                )
-              : const SizedBox.shrink(),
-        ),
+        // Expanded(
+        //   child: Get.find<FStorage>().logoImageData != null
+        //       ? Padding(
+        //           padding: const EdgeInsets.only(top: 10),
+        //           child: Image.memory(
+        //             Get.find<FStorage>().logoImageData!,
+        //           ),
+        //         )
+        //       : const SizedBox.shrink(),
+        // ),
       ],
     ),
   );

@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
       await mstore.init(user.email!);
       await store.init(mstore.db);
 
-      OneSignal.shared.setExternalUserId(PersonModel.currentUser!.id!);
+      OneSignal.shared.setExternalUserId(PersonModel.currentUser!.id!.toHexString());
       PersonModel.currentUser!.currentType == PersonType.admin ? Get.offAll(() => const AdminPage()) : Get.offAll(() => const HomePage());
     }
   }

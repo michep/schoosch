@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/firestore_controller.dart';
+import 'package:mongo_dart/mongo_dart.dart';
+import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class CompletionFlagModel {
-  late final String? id;
-  late final String? completedById;
-  late final String? confirmedById;
+  late final ObjectId? id;
+  late final ObjectId? completedById;
+  late final ObjectId? confirmedById;
   late final DateTime? completedTime;
   late final DateTime? confirmedTime;
   late final Status? status;
@@ -16,10 +17,10 @@ class CompletionFlagModel {
   bool confirmerLoaded = false;
 
   CompletionFlagModel.fromMap(this.id, Map<String, dynamic> map) {
-    completedById = map['completed_by'] != null ? map['completed_by'] as String : null;
-    confirmedById = map['confirmed_by'] != null ? map['confirmed_by'] as String : null;
-    completedTime = map['completed_time'] != null ? DateTime.fromMillisecondsSinceEpoch((map['completed_time'] as Timestamp).millisecondsSinceEpoch) : null;
-    confirmedTime = map['confirmed_time'] != null ? DateTime.fromMillisecondsSinceEpoch((map['confirmed_time'] as Timestamp).millisecondsSinceEpoch) : null;
+    completedById = map['completedby_id'] != null ? map['completedby_id'] as ObjectId : null;
+    confirmedById = map['confirmedby_id'] != null ? map['confirmedby_id'] as ObjectId : null;
+    completedTime = map['completed_time'] != null ? map['completed_time'] as DateTime : null;
+    confirmedTime = map['confirmed_time'] != null ? map['confirmed_time'] as DateTime : null;
     if (map['status'] != null) {
       if (map['status'].runtimeType == int) {
         status = stat(map['status'] as int);
@@ -46,7 +47,7 @@ class CompletionFlagModel {
 
   Future<StudentModel> get student async {
     if (!completerLoaded) {
-      _completer = await Get.find<FStore>().getPerson(completedById!);
+      _completer = await Get.find<MStore>().getPerson(completedById!);
       completerLoaded = true;
     }
     return _completer!.asStudent!;
@@ -54,7 +55,7 @@ class CompletionFlagModel {
 
   Future<TeacherModel?> get teacher async {
     if (confirmedById != null && !confirmerLoaded) {
-      _confirmer = await Get.find<FStore>().getPerson(confirmedById!);
+      _confirmer = await Get.find<MStore>().getPerson(confirmedById!);
       confirmerLoaded = true;
     }
     return _confirmer?.asTeacher;

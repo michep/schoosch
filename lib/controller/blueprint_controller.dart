@@ -1,5 +1,6 @@
 import 'package:directed_graph/directed_graph.dart';
 import 'package:schoosch/controller/firestore_controller.dart';
+import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/node_model.dart';
 import 'package:schoosch/model/venue_model.dart';
@@ -38,8 +39,8 @@ class BlueprintController extends GetxController {
 
   Future<void> init() async {
     _allBluePrints = await InstitutionModel.currentInstitution.venues;
-    _allNodes = await Get.find<FStore>().getAllNodes();
-    _connections = await Get.find<FStore>().getAllNodeConnections();
+    _allNodes = await Get.find<MStore>().getAllNodes();
+    _connections = await Get.find<MStore>().getAllNodeConnections();
     // bg = getGraph(_allNodes, _connections);
     if (_allNodes.isNotEmpty && _connections.isNotEmpty) {
       bg = getGraph();

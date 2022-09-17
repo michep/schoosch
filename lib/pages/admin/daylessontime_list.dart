@@ -100,5 +100,7 @@ class _DayLessontimeListPageState extends State<DayLessontimeListPage> {
     }
   }
 
-  Future<void> _newDayLessontime() async {}
+  Future<void> _newDayLessontime() async {
+    ///TODO:
+  }
 }

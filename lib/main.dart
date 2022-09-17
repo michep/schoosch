@@ -35,17 +35,17 @@ Future<void> main() async {
   // var fstore = FStore();
   var mstore = MStore();
   var store = FStorage();
-  var bcont = BlueprintController();
+  // var bcont = BlueprintController();
   Get.put<FAuth>(fauth);
   // Get.put<FStore>(fstore);
   Get.put<MStore>(mstore);
   Get.put<FStorage>(store);
   Get.put(CurrentWeek(Week.current()));
-  Get.put<BlueprintController>(bcont);
+  // Get.put<BlueprintController>(bcont);
   if (fauth.currentUser != null) {
     // await fstore.init(fauth.currentUser!.email!);
     await mstore.init(fauth.currentUser!.email!);
-    await bcont.init();
+    // await bcont.init();
     // await store.init(fstore.currentInstitution!.id);
     await store.init(mstore.db);
   }

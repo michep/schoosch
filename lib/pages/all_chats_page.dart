@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/firestore_controller.dart';
+import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/chat_model.dart';
 import 'package:schoosch/pages/chat_page.dart';
 import 'package:schoosch/pages/find_chat_page.dart';
@@ -20,8 +21,8 @@ class _AllChatsPageState extends State<AllChatsPage> {
       appBar: AppBar(
         title: const Text('чаты'),
       ),
-      body: StreamBuilder<List<ChatModel>>(
-        stream: Get.find<FStore>().getUserChatRooms(),
+      body: FutureBuilder<List<ChatModel>>(
+        future: Get.find<MStore>().getUserChatRooms(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(

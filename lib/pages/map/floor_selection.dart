@@ -1,5 +1,5 @@
 import 'package:schoosch/controller/blueprint_controller.dart';
-import 'package:schoosch/controller/firestore_controller.dart';
+import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/pages/map/qr_scanner_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,7 +28,7 @@ class FloorSelection extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 100, left: 10, right: 10, top: 10),
           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           child: FutureBuilder<List<int>>(
-              future: Get.find<FStore>().getAllFloors(),
+              future: Get.find<MStore>().getAllFloors(),
               builder: (context, flors) {
                 if (!flors.hasData) {
                   return Container(
