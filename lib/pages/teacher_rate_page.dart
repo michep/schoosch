@@ -15,10 +15,6 @@ class RatePage extends StatefulWidget {
 }
 
 class _RatePageState extends State<RatePage> {
-  Future<void> activateBottomSheet(BuildContext context, TeacherModel teach) async {
-    return Get.bottomSheet(RateSheet(teach));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,11 +56,11 @@ class _RatePageState extends State<RatePage> {
                                               var has = await Get.find<MStore>().hasRatingInMonth(teacher);
                                               if (has) {
                                                 Get.showSnackbar(const GetSnackBar(
-                                                  message: 'этомц учителю ты уже ставил оценку в текущем месяце.',
+                                                  message: 'этому учителю ты уже ставил оценку в текущем месяце.',
                                                 ));
                                                 return;
                                               }
-                                              activateBottomSheet(context, teacher).then((_) => setState(() {}));
+                                              Get.bottomSheet(RateSheet(teacher)).then((_) => setState(() {}));
                                             },
                                           ),
                                         );

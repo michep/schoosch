@@ -410,7 +410,6 @@ class MStore extends GetxController {
         }
       }
     }
-
     return teachers;
   }
 
@@ -576,7 +575,7 @@ class MStore extends GetxController {
     await _db.collection('homework').updateOne(where.eq('_id', homework.id), modify.set('text', newText));
   }
 
-  ///TODO: !!!
+  ///TODO: to be implemented, probably with mongodb lookup optimization
   Future<List<TeacherScheduleModel>> getTeacherWeekSchedule(TeacherModel teacher, isoweek.Week week) async {
     return <TeacherScheduleModel>[];
 
@@ -644,26 +643,69 @@ class MStore extends GetxController {
   }
 
   Future<List<CurriculumModel>> getStudentCurriculums(StudentModel student) async {
-    List<CurriculumModel> res = [];
-    var aclass = await student.studentClass;
-    var curs = await getClassCurriculums(aclass!);
-    for (var cur in curs) {
-      if (await cur.isAvailableForStudent(student)) {
-        res.add(cur);
-      }
-    }
-    return res;
+    var aggr = AggregationPipelineBuilder()
+        .addStage(Lookup(from: 'lesson', localField: '_id', foreignField: 'curriculum_id', as: 'lesson'))
+        .addStage(Unwind(const Field('lesson')))
+        .addStage(Lookup(from: 'schedule', localField: 'lesson.schedule_id', foreignField: '_id', as: 'schedule'))
+        .addStage(Unwind(const Field('schedule')))
+        .addStage(
+            Match(where.lt('schedule.from', DateTime.now()).and(where.eq('schedule.till', null).or(where.gte('schedule.till', DateTime.now()))).map['\$query']))
+        .addStage(Lookup(from: 'class', localField: 'lesson.class_id', foreignField: '_id', as: 'class'))
+        .addStage(Unwind(const Field('class')))
+        .addStage(Match(where.eq('class.student_ids', student.id).map['\$query']))
+        .addStage(Group(id: {
+          'curriculum_id': const Field('_id'),
+          'alias': const Field('alias'),
+          'master_id': const Field('master_id'),
+          'lessontime_id': const Field('lessontime_id'),
+          'name': const Field('name'),
+          'institution_id': const Field('institution_id'),
+        }))
+        .addStage(Sort({'_id.name': 1}))
+        .build();
+    return _db.collection('curriculum').aggregateToStream(aggr).map((data) => CurriculumModel.fromMap(data['_id']['curriculum_id'], data['_id'])).toList();
+
+    // List<CurriculumModel> res = [];
+    // var aclass = await student.studentClass;
+    // var curs = await getClassCurriculums(aclass!);
+    // for (var cur in curs) {
+    //   if (await cur.isAvailableForStudent(student)) {
+    //     res.add(cur);
+    //   }
+    // }
+    // return res;
   }
 
   Future<List<CurriculumModel>> getClassCurriculums(ClassModel aclass) async {
-    List<CurriculumModel> res = [];
-    var curs = await getAllCurriculums();
-    for (var cur in curs) {
-      if ((await cur.classes()).contains(aclass)) {
-        res.add(cur);
-      }
-    }
-    return res;
+    var aggr = AggregationPipelineBuilder()
+        .addStage(Lookup(from: 'lesson', localField: '_id', foreignField: 'curriculum_id', as: 'lesson'))
+        .addStage(Unwind(const Field('lesson')))
+        .addStage(Lookup(from: 'schedule', localField: 'lesson.schedule_id', foreignField: '_id', as: 'schedule'))
+        .addStage(Unwind(const Field('schedule')))
+        .addStage(
+            Match(where.lt('schedule.from', DateTime.now()).and(where.eq('schedule.till', null).or(where.gte('schedule.till', DateTime.now()))).map['\$query']))
+        .addStage(Lookup(from: 'class', localField: 'lesson.class_id', foreignField: '_id', as: 'class'))
+        .addStage(Match(where.eq('class._id', aclass.id).map['\$query']))
+        .addStage(Group(id: {
+          'curriculum_id': const Field('_id'),
+          'alias': const Field('alias'),
+          'master_id': const Field('master_id'),
+          'lessontime_id': const Field('lessontime_id'),
+          'name': const Field('name'),
+          'institution_id': const Field('institution_id'),
+        }))
+        .addStage(Sort({'_id.name': 1}))
+        .build();
+    return _db.collection('curriculum').aggregateToStream(aggr).map((data) => CurriculumModel.fromMap(data['_id']['curriculum_id'], data['_id'])).toList();
+
+    // List<CurriculumModel> res = [];
+    // var curs = await getAllCurriculums();
+    // for (var cur in curs) {
+    //   if ((await cur.classes()).contains(aclass)) {
+    //     res.add(cur);
+    //   }
+    // }
+    // return res;
   }
 
   Future<List<CurriculumModel>> getTeacherCurriculums(TeacherModel teacher) async {
@@ -734,11 +776,43 @@ class MStore extends GetxController {
   }
 
   Future<List<ClassModel>> getCurriculumClasses(CurriculumModel curriculum) async {
-    var classes = (await (_db.collection('lesson').find(where.eq('curriculum_id', curriculum.id)).asyncMap((data) async {
-      var aclass = await _db.collection('class').findOne(where.eq('_id', data['class_id'] as ObjectId));
-      return ClassModel.fromMap(aclass!['_id'], aclass);
-    }).toSet()));
-    return classes.toList();
+    var aggr = AggregationPipelineBuilder()
+        .addStage(Match(where.eq('_id', curriculum.id).map['\$query']))
+        .addStage(Lookup(from: 'lesson', localField: '_id', foreignField: 'curriculum_id', as: 'lesson'))
+        .addStage(Unwind(const Field('lesson')))
+        .addStage(Lookup(from: 'schedule', localField: 'lesson.schedule_id', foreignField: '_id', as: 'schedule'))
+        .addStage(Unwind(const Field('schedule')))
+        .addStage(
+            Match(where.lt('schedule.from', DateTime.now()).and(where.eq('schedule.till', null).or(where.gte('schedule.till', DateTime.now()))).map['\$query']))
+        .addStage(Lookup(from: 'class', localField: 'lesson.class_id', foreignField: '_id', as: 'class'))
+        .addStage(Unwind(const Field('class')))
+        .addStage(Project({
+          'class_id': const Field('class._id'),
+          'name': const Field('class.name'),
+          'grade': const Field('class.grade'),
+          'lessontime_id': const Field('class.lessontime_id'),
+          'master_id': const Field('class.master_id'),
+          'institution_id': const Field('class.institution_id'),
+          'student_ids': const Field('class.student_ids'),
+        }))
+        .addStage(Group(id: {
+          'class_id': const Field('class_id'),
+          'name': const Field('name'),
+          'grade': const Field('grade'),
+          'lessontime_id': const Field('lessontime_id'),
+          'master_id': const Field('master_id'),
+          'institution_id': const Field('institution_id'),
+          'student_ids': const Field('student_ids'),
+        }))
+        .addStage(Sort({'_id.order': 1}))
+        .build();
+    return _db.collection('curriculum').aggregateToStream(aggr).map((data) => ClassModel.fromMap(data['_id']['class_id'], data['_id'])).toList();
+
+    // var classes = (await (_db.collection('lesson').find(where.eq('curriculum_id', curriculum.id)).asyncMap((data) async {
+    //   var aclass = await _db.collection('class').findOne(where.eq('_id', data['class_id'] as ObjectId));
+    //   return ClassModel.fromMap(aclass!['_id'], aclass);
+    // }).toSet()));
+    // return classes.toList();
   }
 
   Future<List<ChatModel>> getUserChatRooms() {
