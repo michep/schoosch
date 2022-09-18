@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart' as isoweek;
 import 'package:mongo_dart/mongo_dart.dart';
@@ -532,7 +533,6 @@ class MStore extends GetxController {
     await _db.collection('homework').updateOne(where.eq('_id', homework.id), modify.set('text', newText));
   }
 
-  ///TODO: to be implemented, probably with mongodb lookup optimization
   Future<List<TeacherScheduleModel>> getTeacherWeekSchedule(TeacherModel teacher, isoweek.Week week) async {
     var aggr = AggregationPipelineBuilder()
         .addStage(Match(where.eq('master_id', teacher.id).map['\$query']))
@@ -542,89 +542,71 @@ class MStore extends GetxController {
         .addStage(
             Match(where.lt('schedule.from', DateTime.now()).and(where.eq('schedule.till', null).or(where.gte('schedule.till', DateTime.now()))).map['\$query']))
         .addStage(Unwind(const Field('schedule')))
-        .addStage(Project({
-          'schedule_id': const Field('schedule._id'),
-          'day': const Field('schedule.day'),
-          'from': const Field('schedule.from'),
-          'till': const Field('schedule.till'),
-          'class_id': const Field('schedule.class_id'),
-          'institution_id': const Field('schedule.institution_id'),
-        }))
         .addStage(Group(id: {
-          'schedule_id': const Field('schedule_id'),
-          'day': const Field('day'),
-          'from': const Field('from'),
-          'till': const Field('till'),
-          'class_id': const Field('class_id'),
-          'institution_id': const Field('institution_id'),
+          'day': const Field('schedule.day'),
+        }, fields: {
+          'schedule': AddToSet(const Field('schedule')),
+          'class_id': AddToSet(const Field('schedule.class_id')),
+          'institution_id': First(const Field('institution_id')),
+          'lesson': AddToSet(const Field('lesson')),
         }))
         .build();
 
-    await _db.collection('curriculum').aggregateToStream(aggr).map((data) => ClassModel.fromMap(data['_id']['schedule_id'], data['_id'])).toList();
+    var rawData = await _db.collection('curriculum').aggregateToStream(aggr).toList();
 
-    return <TeacherScheduleModel>[];
+    List<ObjectId> curriculumIds = (await _db
+            .collection('curriculum')
+            .find(
+              where.eq(
+                'master_id',
+                teacher.id,
+              ),
+            )
+            .toList())
+        .map(
+          (e) => e['_id'] as ObjectId,
+        )
+        .toList();
+    var res = <TeacherScheduleModel>[];
+    for (var data in rawData) {
+      var schedule = TeacherScheduleModel.fromMap(
+        await getClass(data['class_id'][0] as ObjectId),
+        data['schedule'][0]['_id'] as ObjectId,
+        data['schedule'][0],
+      );
+      List<LessonModel> lessonsList = [];
+      List<ReplacementModel> repsList = [];
+      repsList = await getAllReplacementsOnDate(
+        schedule,
+        week.day(schedule.day - 1),
+      );
+      for (var lesson in data['lesson']) {
+        var lessonmodel = LessonModel.fromMap(
+          await getClass(
+            lesson['class_id'] as ObjectId,
+          ),
+          schedule,
+          lesson['_id'],
+          lesson,
+        );
+        LessonModel? nl;
+        for (var replace in repsList) {
+          if (replace.order == lessonmodel.order) {
+            lessonmodel.setReplacedType();
+            nl = replace;
+            if (curriculumIds.contains((await nl.curriculum)!.id)) {
+              lessonsList.add(nl);
+            }
+          }
+        }
+        lessonsList.add(lessonmodel);
+      }
+      schedule.addLessons(lessonsList);
+      res.add(schedule);
+    }
+    res.sort((a, b) => a.day.compareTo(b.day));
 
-    // var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: teacher.id).get();
-
-    // if (curriculums.docs.isEmpty) return [];
-
-    // List<String> curriculumIds = [];
-    // for (var curr in curriculums.docs) {
-    //   curriculumIds.add(curr.id);
-    // }
-    // var lessons = await _store.collectionGroup('lesson').where('curriculum_id', whereIn: curriculumIds).get();
-    // Map<String, List<firestore.QueryDocumentSnapshot<Map<String, dynamic>>>> schedulesMap = {};
-    // for (var lesson in lessons.docs) {
-    //   var schedule = lesson.reference.parent.parent!;
-    //   if (schedulesMap[schedule.path] == null) schedulesMap[schedule.path] = [];
-    //   schedulesMap[schedule.path]!.add(lesson);
-    // }
-    // Map<int, TeacherScheduleModel> days = {};
-    // for (var schedulePath in schedulesMap.keys) {
-    //   var schedule = await _store.doc(schedulePath).get();
-    //   var fr = schedule.get('from') != null
-    //       ? DateTime.fromMillisecondsSinceEpoch((schedule.get('from') as firestore.Timestamp).millisecondsSinceEpoch)
-    //       : DateTime(2000);
-    //   var ti = schedule.get('till') != null
-    //       ? DateTime.fromMillisecondsSinceEpoch((schedule.get('till') as firestore.Timestamp).millisecondsSinceEpoch)
-    //       : DateTime(3000);
-    //   if (fr.isBefore(week.day(5)) && ti.isAfter(week.day(4))) {
-    //     var day = schedule.get('day');
-    //     var aclass = await schedule.reference.parent.parent!.get();
-    //     var classmodel = ClassModel.fromMap(aclass.id, aclass.data()!);
-    //     if (days[day] == null) {
-    //       var schedulemodel = TeacherScheduleModel.fromMap(classmodel, schedule.id, schedule.data()!);
-    //       days[day] = schedulemodel;
-    //     }
-    //     var schedulemodel = days[day]!;
-    //     List<LessonModel> lessonsList = [];
-    //     List<ReplacementModel> repsList = [];
-    //     // Map<ClassModel, List<ReplacementModel>> repsList = {};
-    //     repsList = await getAllReplacementsOnDate(
-    //       curriculumIds,
-    //       schedulemodel,
-    //       week.day(schedulemodel.day - 1),
-    //     );
-    //     for (var lesson in schedulesMap[schedulePath]!) {
-    //       var lessonmodel = LessonModel.fromMap(classmodel, schedulemodel, lesson.id, lesson.data());
-    //       LessonModel? nl;
-    //       for (var replace in repsList) {
-    //         if (replace.order == lessonmodel.order) {
-    //           lessonmodel.setReplacedType();
-    //           nl = replace;
-    //           if (curriculumIds.contains((await nl.curriculum)!.id)) {
-    //             lessonsList.add(nl);
-    //           }
-    //         }
-    //       }
-    //       lessonsList.add(lessonmodel);
-    //     }
-    //     schedulemodel.addLessons(lessonsList);
-    //   }
-    // }
-    // var res = days.values.toList();
-    // res.sort((a, b) => a.day.compareTo(b.day));
-    // return res;
+    return res;
   }
 
   Future<List<CurriculumModel>> getStudentCurriculums(StudentModel student) async {
@@ -837,7 +819,7 @@ class MStore extends GetxController {
         .toList();
   }
 
-  Future<List<ReplacementModel>> getAllReplacementsOnDate(List<String> curriculumIds, DayScheduleModel schedule, DateTime date) async {
+  Future<List<ReplacementModel>> getAllReplacementsOnDate(DayScheduleModel schedule, DateTime date) async {
     return _db.collection('replace').find(where.gte('date', date).lt('date', date.add(const Duration(hours: 24)))).asyncMap((data) async {
       var aclass = await getClass(data['class_id'] as ObjectId);
       return ReplacementModel.fromMap(aclass, schedule, data['_id'] as ObjectId, data);

@@ -731,65 +731,65 @@
 //     });
 //   }
 
-//   Future<List<TeacherScheduleModel>> getTeacherWeekSchedule(TeacherModel teacher, Week week) async {
-//     var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: teacher.id).get();
+  // Future<List<TeacherScheduleModel>> getTeacherWeekSchedule(TeacherModel teacher, Week week) async {
+  //   var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: teacher.id).get();
 
-//     if (curriculums.docs.isEmpty) return [];
+  //   if (curriculums.docs.isEmpty) return [];
 
-//     List<String> curriculumIds = [];
-//     for (var curr in curriculums.docs) {
-//       curriculumIds.add(curr.id);
-//     }
-//     var lessons = await _store.collectionGroup('lesson').where('curriculum_id', whereIn: curriculumIds).get();
-//     Map<String, List<QueryDocumentSnapshot<Map<String, dynamic>>>> schedulesMap = {};
-//     for (var lesson in lessons.docs) {
-//       var schedule = lesson.reference.parent.parent!;
-//       if (schedulesMap[schedule.path] == null) schedulesMap[schedule.path] = [];
-//       schedulesMap[schedule.path]!.add(lesson);
-//     }
-//     Map<int, TeacherScheduleModel> days = {};
-//     for (var schedulePath in schedulesMap.keys) {
-//       var schedule = await _store.doc(schedulePath).get();
-//       var fr = schedule.get('from') != null ? DateTime.fromMillisecondsSinceEpoch((schedule.get('from') as Timestamp).millisecondsSinceEpoch) : DateTime(2000);
-//       var ti = schedule.get('till') != null ? DateTime.fromMillisecondsSinceEpoch((schedule.get('till') as Timestamp).millisecondsSinceEpoch) : DateTime(3000);
-//       if (fr.isBefore(week.day(5)) && ti.isAfter(week.day(4))) {
-//         var day = schedule.get('day');
-//         var aclass = await schedule.reference.parent.parent!.get();
-//         var classmodel = ClassModel.fromMap(aclass.id, aclass.data()!);
-//         if (days[day] == null) {
-//           var schedulemodel = TeacherScheduleModel.fromMap(classmodel, schedule.id, schedule.data()!);
-//           days[day] = schedulemodel;
-//         }
-//         var schedulemodel = days[day]!;
-//         List<LessonModel> lessonsList = [];
-//         List<ReplacementModel> repsList = [];
-//         // Map<ClassModel, List<ReplacementModel>> repsList = {};
-//         repsList = await getAllReplacementsOnDate(
-//           curriculumIds,
-//           schedulemodel,
-//           week.day(schedulemodel.day - 1),
-//         );
-//         for (var lesson in schedulesMap[schedulePath]!) {
-//           var lessonmodel = LessonModel.fromMap(classmodel, schedulemodel, lesson.id, lesson.data());
-//           LessonModel? nl;
-//           for (var replace in repsList) {
-//             if (replace.order == lessonmodel.order) {
-//               lessonmodel.setReplacedType();
-//               nl = replace;
-//               if (curriculumIds.contains((await nl.curriculum)!.id)) {
-//                 lessonsList.add(nl);
-//               }
-//             }
-//           }
-//           lessonsList.add(lessonmodel);
-//         }
-//         schedulemodel.addLessons(lessonsList);
-//       }
-//     }
-//     var res = days.values.toList();
-//     res.sort((a, b) => a.day.compareTo(b.day));
-//     return res;
-//   }
+  //   List<String> curriculumIds = [];
+  //   for (var curr in curriculums.docs) {
+  //     curriculumIds.add(curr.id);
+  //   }
+  //   var lessons = await _store.collectionGroup('lesson').where('curriculum_id', whereIn: curriculumIds).get();
+  //   Map<String, List<QueryDocumentSnapshot<Map<String, dynamic>>>> schedulesMap = {};
+  //   for (var lesson in lessons.docs) {
+  //     var schedule = lesson.reference.parent.parent!;
+  //     if (schedulesMap[schedule.path] == null) schedulesMap[schedule.path] = [];
+  //     schedulesMap[schedule.path]!.add(lesson);
+  //   }
+  //   Map<int, TeacherScheduleModel> days = {};
+  //   for (var schedulePath in schedulesMap.keys) {
+  //     var schedule = await _store.doc(schedulePath).get();
+  //     var fr = schedule.get('from') != null ? DateTime.fromMillisecondsSinceEpoch((schedule.get('from') as Timestamp).millisecondsSinceEpoch) : DateTime(2000);
+  //     var ti = schedule.get('till') != null ? DateTime.fromMillisecondsSinceEpoch((schedule.get('till') as Timestamp).millisecondsSinceEpoch) : DateTime(3000);
+  //     if (fr.isBefore(week.day(5)) && ti.isAfter(week.day(4))) {
+  //       var day = schedule.get('day');
+  //       var aclass = await schedule.reference.parent.parent!.get();
+  //       var classmodel = ClassModel.fromMap(aclass.id, aclass.data()!);
+  //       if (days[day] == null) {
+  //         var schedulemodel = TeacherScheduleModel.fromMap(classmodel, schedule.id, schedule.data()!);
+  //         days[day] = schedulemodel;
+  //       }
+  //       var schedulemodel = days[day]!;
+  //       List<LessonModel> lessonsList = [];
+  //       List<ReplacementModel> repsList = [];
+  //       // Map<ClassModel, List<ReplacementModel>> repsList = {};
+  //       repsList = await getAllReplacementsOnDate(
+  //         curriculumIds,
+  //         schedulemodel,
+  //         week.day(schedulemodel.day - 1),
+  //       );
+  //       for (var lesson in schedulesMap[schedulePath]!) {
+  //         var lessonmodel = LessonModel.fromMap(classmodel, schedulemodel, lesson.id, lesson.data());
+  //         LessonModel? nl;
+  //         for (var replace in repsList) {
+  //           if (replace.order == lessonmodel.order) {
+  //             lessonmodel.setReplacedType();
+  //             nl = replace;
+  //             if (curriculumIds.contains((await nl.curriculum)!.id)) {
+  //               lessonsList.add(nl);
+  //             }
+  //           }
+  //         }
+  //         lessonsList.add(lessonmodel);
+  //       }
+  //       schedulemodel.addLessons(lessonsList);
+  //     }
+  //   }
+  //   var res = days.values.toList();
+  //   res.sort((a, b) => a.day.compareTo(b.day));
+  //   return res;
+  // }
 
 //   Future<List<CurriculumModel>> getStudentCurriculums(StudentModel student) async {
 //     List<CurriculumModel> res = [];
