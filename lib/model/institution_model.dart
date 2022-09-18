@@ -12,6 +12,8 @@ class InstitutionModel {
   late final String name;
   late final String address;
   final Map<String, String> attributes = {};
+  final List<CurriculumModel> _curriculums = [];
+  bool _curriculumsLoaded = false;
 
   InstitutionModel.fromMap(this.id, Map<String, dynamic> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in institution $id';
@@ -37,7 +39,12 @@ class InstitutionModel {
   }
 
   Future<List<CurriculumModel>> get curriculums async {
-    return Get.find<MStore>().getAllCurriculums();
+    if (!_curriculumsLoaded) {
+      var curs = await Get.find<MStore>().getAllCurriculums();
+      _curriculums.addAll(curs);
+      _curriculumsLoaded = true;
+    }
+    return _curriculums;
   }
 
   Future<List<DayLessontimeModel>> get daylessontimes async {

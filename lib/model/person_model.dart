@@ -201,23 +201,23 @@ class StudentModel extends PersonModel {
   StudentModel.fromMap(ObjectId? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
   Future<ClassModel?> get studentClass async {
+    await _studentClassMutex.acquire();
     if (!_studentClassLoaded) {
-      _studentClassMutex.acquire();
       _studentClass = await Get.find<MStore>().getClassForStudent(this);
       _studentClassLoaded = true;
-      _studentClassMutex.release();
     }
+    _studentClassMutex.release();
     return _studentClass!;
   }
 
   Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
+    await _curriculumsMutex.acquire();
     if (!_curriculumsLoaded || forceRefresh) {
-      _curriculumsMutex.acquire();
       _curriculums.clear();
       _curriculums.addAll(await Get.find<MStore>().getStudentCurriculums(this));
       _curriculumsLoaded = true;
-      _curriculumsMutex.release;
     }
+    _curriculumsMutex.release();
     return _curriculums;
   }
 
@@ -260,13 +260,13 @@ class TeacherModel extends PersonModel {
   }
 
   Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
+    await _curriculumsMutex.acquire();
     if (!_curriculumsLoaded || forceRefresh) {
-      _curriculumsMutex.acquire();
       _curriculums.clear();
       _curriculums.addAll(await Get.find<MStore>().getTeacherCurriculums(this));
       _curriculumsLoaded = true;
-      _curriculumsMutex.release;
     }
+    _curriculumsMutex.release();
     return _curriculums;
   }
 

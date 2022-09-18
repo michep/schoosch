@@ -11,6 +11,7 @@ import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
+import 'package:mutex/mutex.dart';
 
 enum LessonType {
   normal,
@@ -51,6 +52,7 @@ class LessonModel {
   LessontimeModel? _lessontime;
   LessonModel? replaceLesson;
   LessonType? type;
+  final Mutex homeworkOnDateForClassAndAllStudentsMutex = Mutex();
 
   LessonModel.empty(ClassModel aclass, DayScheduleModel schedule, int order)
       : this.fromMap(aclass, schedule, null, <String, dynamic>{
@@ -115,7 +117,7 @@ class LessonModel {
     }
 
     return {
-      'student': _homeworksThisLesson[student.id],
+      'student': _homeworksThisLesson[student.id!.toHexString()],
       'class': _homeworksThisLesson['class'],
     };
   }
@@ -162,6 +164,7 @@ class LessonModel {
   }
 
   Future<Map<String, HomeworkModel?>> homeworkOnDateForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
+    await homeworkOnDateForClassAndAllStudentsMutex.acquire();
     var studs = await aclass.students();
     for (StudentModel stud in studs) {
       if (_homeworksNextLesson[stud.id!.toHexString()] == null || forceRefresh) {
@@ -171,6 +174,7 @@ class LessonModel {
     if (_homeworksNextLesson['class'] == null || forceRefresh) {
       _homeworksNextLesson['class'] = await Get.find<MStore>().getHomeworkForClassOnDate(aclass, (await curriculum)!, date);
     }
+    homeworkOnDateForClassAndAllStudentsMutex.release();
     return _homeworksNextLesson;
   }
 
@@ -192,7 +196,7 @@ class LessonModel {
       marks[student.id!.toHexString()] = await Get.find<MStore>().getStudentLessonMarks(this, student, date);
     }
 
-    return marks[student.id!]!;
+    return marks[student.id!.toHexString()]!;
   }
 
   Future<void> saveMark(MarkModel mark) async {

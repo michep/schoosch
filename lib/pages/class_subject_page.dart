@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/teacher_marks_table_page.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -59,18 +60,28 @@ class SubjectList extends StatelessWidget {
         }
         return ListView.builder(
           itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(snapshot.data!.elementAt(index).aliasOrName),
-              subtitle: Text(snapshot.data!.elementAt(index).id!.toHexString()),
-              onTap: () {
-                Get.to(
-                  TeacherTablePage(
-                    currentcur: snapshot.data!.elementAt(index),
-                    aclass: _class,
-                  ),
-                );
-              },
-            );
+            var cur = snapshot.data!.elementAt(index);
+            return FutureBuilder<TeacherModel?>(
+                future: cur.master,
+                builder: (context, teachersnap) {
+                  if (!teachersnap.hasData) {
+                    return const SizedBox.shrink();
+                  }
+                  var teacher = teachersnap.data!;
+                  return ListTile(
+                    title: Text(cur.aliasOrName),
+                    subtitle: Text(teacher.abbreviatedName),
+                    onTap: () {
+                      Get.to(
+                        TeacherTablePage(
+                          currentcur: cur,
+                          aclass: _class,
+                          teacher: teacher,
+                        ),
+                      );
+                    },
+                  );
+                });
           },
           itemCount: snapshot.data!.length,
         );

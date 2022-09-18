@@ -539,14 +539,14 @@ class MStore extends GetxController {
   Future<HomeworkModel?> getHomeworkForStudentBeforeDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
     var data = await _db
         .collection('homework')
-        .findOne(where.eq('curriculum_id', curriculum.id).eq('class)id', aclass.id).eq('student_id', student.id).lt('date', date).sortBy('date'));
+        .findOne(where.eq('curriculum_id', curriculum.id).eq('class_id', aclass.id).eq('student_id', student.id).lt('date', date).sortBy('date'));
     return data == null ? null : HomeworkModel.fromMap(data['_id'] as ObjectId, data);
   }
 
   Future<HomeworkModel?> getHomeworkForClassBeforeDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
     var data = await _db
         .collection('homework')
-        .findOne(where.eq('curriculum_id', curriculum.id).eq('class)id', aclass.id).eq('student_id', null).lt('date', date).sortBy('date'));
+        .findOne(where.eq('curriculum_id', curriculum.id).eq('class_id', aclass.id).eq('student_id', null).lt('date', date).sortBy('date'));
     return data == null ? null : HomeworkModel.fromMap(data['_id'] as ObjectId, data);
   }
 

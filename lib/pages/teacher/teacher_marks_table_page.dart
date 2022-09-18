@@ -9,9 +9,16 @@ import 'package:schoosch/widgets/utils.dart';
 class TeacherTablePage extends StatelessWidget {
   final CurriculumModel currentcur;
   final ClassModel? aclass;
-  const TeacherTablePage({Key? key, required this.currentcur, this.aclass}) : super(key: key);
+  final TeacherModel? teacher;
+  const TeacherTablePage({
+    Key? key,
+    required this.currentcur,
+    this.aclass,
+    this.teacher,
+  }) : super(key: key);
 
   List<Widget> _buildMarkCells(List<MarkModel> listmark) {
+    listmark.sort((a, b) => a.date.compareTo(b.date));
     return List.generate(
       listmark.length,
       (index) => Container(
@@ -58,7 +65,7 @@ class TeacherTablePage extends StatelessWidget {
     return List.generate(
       liststud.length,
       (index) => FutureBuilder<List<MarkModel>>(
-          future: liststud[index].curriculumTeacherMarks(currentcur, PersonModel.currentTeacher!),
+          future: liststud[index].curriculumTeacherMarks(currentcur, aclass == null ? PersonModel.currentTeacher! : teacher!),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(
