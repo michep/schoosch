@@ -86,17 +86,6 @@ class ClassModel {
     return _daySchedules[day]!;
   }
 
-  // Future<List<LessontimeModel>> getLessontimes() async {
-  //   if (!_lessontimesLoaded) {
-  //     _lessontimes.addAll(
-  //       await Get.find<FStore>().getLessontimes(_dayLessontimeId),
-  //     );
-  //     _lessontimes.sort((a, b) => a.order.compareTo(b.order));
-  //     _lessontimesLoaded = true; //TODO: fallboack to default lessontimes?
-  //   }
-  //   return _lessontimes;
-  // }
-
   Future<LessontimeModel> getLessontime(int n) async {
     await __lessontimesMutex.acquire();
     if (!_lessontimesLoaded) {

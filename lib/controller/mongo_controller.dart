@@ -63,23 +63,23 @@ class MStore extends GetxController {
   }
 
   Future<List<LessontimeModel>> getLessontimes(ObjectId id) async {
-    return _db.collection('time').find({'lessontime_id': id}).map((lessontime) => LessontimeModel.fromMap(lessontime['_id'], lessontime)).toList();
+    return _db.collection('time').find(where.eq('lessontime_id', id)).map((lessontime) => LessontimeModel.fromMap(lessontime['_id'], lessontime)).toList();
   }
 
   Future<String> saveLessontime(DayLessontimeModel daylessontime, LessontimeModel lessontime) async {
     var data = lessontime.toMap();
     data['institution_id'] = _institution!.id;
     data['lessontime_id'] = daylessontime.id!;
-    var ret = await _db.collection('time').updateOne({'_id': lessontime.id}, data, upsert: true);
+    var ret = await _db.collection('time').updateOne(where.eq('_id', lessontime.id), data, upsert: true);
     return (ret.document!['_id'] as ObjectId).toHexString();
   }
 
   Future<void> deleteLessontime(DayLessontimeModel daylessontime, LessontimeModel lessontime) async {
-    await _db.collection('lessontime').deleteOne({'_id': ObjectId.fromHexString(lessontime.id)});
+    await _db.collection('lessontime').deleteOne(where.eq('_id', ObjectId.fromHexString(lessontime.id)));
   }
 
   Future<DayLessontimeModel> getDayLessontime(ObjectId id) async {
-    var data = await _db.collection('lessontime').findOne({'_id': id});
+    var data = await _db.collection('lessontime').findOne(where.eq('_id', id));
     return DayLessontimeModel.fromMap(data!['_id'] as ObjectId, data);
   }
 
@@ -94,7 +94,7 @@ class MStore extends GetxController {
       return (await _db.collection('lessontime').insertOne(data)).id as ObjectId;
     } else {
       data['_id'] = dayLessontime.id!;
-      await _db.collection('lessontime').replaceOne({'_id': dayLessontime.id!}, data);
+      await _db.collection('lessontime').replaceOne(where.eq('_id', dayLessontime.id!), data);
       return dayLessontime.id!;
     }
   }
@@ -117,7 +117,7 @@ class MStore extends GetxController {
       return (await _db.collection('class').insertOne(data)).id as ObjectId;
     } else {
       data['_id'] = aclass.id!;
-      await _db.collection('class').replaceOne({'_id': aclass.id!}, data);
+      await _db.collection('class').replaceOne(where.eq('_id', aclass.id!), data);
       return aclass.id!;
     }
   }
@@ -125,7 +125,6 @@ class MStore extends GetxController {
   Future<List<StudentScheduleModel>> getClassWeekSchedule(ClassModel aclass, isoweek.Week currentWeek) async {
     return _db
         .collection('schedule')
-        // .find({'class_id': aclass.id!})
         .find(where.eq('class_id', aclass.id!).sortBy('day'))
         .map((data) => StudentScheduleModel.fromMap(aclass, data['_id'] as ObjectId, data))
         .where((data) => data.from!.isBefore(currentWeek.day(5)) && (data.till == null || data.till!.isAfter(currentWeek.day(4))))
@@ -135,7 +134,7 @@ class MStore extends GetxController {
   Future<List<StudentScheduleModel>> getClassDaySchedule(ClassModel aclass, int day) async {
     return _db
         .collection('schedule')
-        .find({'class_id': aclass.id})
+        .find(where.eq('class_id', aclass.id))
         .map((data) => StudentScheduleModel.fromMap(
               aclass,
               data['_id'] as ObjectId,
@@ -153,7 +152,7 @@ class MStore extends GetxController {
       return (await _db.collection('schedule').insertOne(data)).id as ObjectId;
     } else {
       data['_id'] = schedule.id!;
-      await _db.collection('schedule').replaceOne({'_id': schedule.id!}, data);
+      await _db.collection('schedule').replaceOne(where.eq('_id', schedule.id!), data);
       return schedule.id!;
     }
   }
@@ -162,7 +161,7 @@ class MStore extends GetxController {
     List<LessonModel> res = [];
     var less = await _db
         .collection('lesson')
-        .find({'class_id': aclass.id, 'schedule_id': schedule.id})
+        .find(where.eq('class_id', aclass.id).eq('schedule_id', schedule.id))
         .map((data) => LessonModel.fromMap(aclass, schedule, data['_id'] as ObjectId, data))
         .toList();
 
@@ -234,19 +233,19 @@ class MStore extends GetxController {
       return (await _db.collection('lesson').insertOne(data)).id as ObjectId;
     } else {
       data['_id'] = lesson.id!;
-      await _db.collection('lesson').replaceOne({'_id': lesson.id!}, data);
+      await _db.collection('lesson').replaceOne(where.eq('_id', lesson.id!), data);
       return lesson.id!;
     }
   }
 
   Future<void> deleteLesson(LessonModel lesson) async {
     if (lesson.id != null) {
-      _db.collection('lesson').deleteOne({'_id': lesson.id!});
+      _db.collection('lesson').deleteOne(where.eq('_id', lesson.id!));
     }
   }
 
   Future<PersonModel> getPerson(ObjectId id) async {
-    var res = await _db.collection('people').findOne({'_id': id});
+    var res = await _db.collection('people').findOne(where.eq('_id', id));
     return PersonModel.fromMap(res!['_id'] as ObjectId, res);
   }
 
@@ -272,7 +271,7 @@ class MStore extends GetxController {
       return (await _db.collection('people').insertOne(data)).id as ObjectId;
     } else {
       data['_id'] = person.id!;
-      await _db.collection('people').replaceOne({'_id': person.id!}, data);
+      await _db.collection('people').replaceOne(where.eq('_id', person.id!), data);
       return person.id!;
     }
   }
@@ -282,7 +281,7 @@ class MStore extends GetxController {
   }
 
   Future<CurriculumModel> getCurriculum(ObjectId id) async {
-    var data = await _db.collection('curriculum').findOne({'_id': id});
+    var data = await _db.collection('curriculum').findOne(where.eq('_id', id));
     return CurriculumModel.fromMap(data!['_id'] as ObjectId, data);
   }
 
@@ -293,7 +292,7 @@ class MStore extends GetxController {
       return ((await _db.collection('curriculum').insertOne(data)).id as ObjectId);
     } else {
       data['_id'] = curriculum.id;
-      await _db.collection('curriculum').replaceOne({'_id': curriculum.id}, data);
+      await _db.collection('curriculum').replaceOne(where.eq('_id', curriculum.id), data);
       return curriculum.id!;
     }
   }
@@ -339,42 +338,36 @@ class MStore extends GetxController {
       return (await _db.collection('venue').insertOne(data)).id as ObjectId;
     } else {
       data['_id'] = venue.id;
-      await _db.collection('venue').replaceOne({'_id': venue.id}, data);
+      await _db.collection('venue').replaceOne(where.eq('_id', venue.id), data);
       return venue.id!;
     }
   }
 
   Future<VenueModel> getVenue(ObjectId id) async {
-    var res = await _db.collection('venue').findOne({'_id': id});
+    var res = await _db.collection('venue').findOne(where.eq('_id', id));
     return VenueModel.fromMap(res!['_id'] as ObjectId, res);
   }
 
+  Future<void> deleteVenue(VenueModel venue) async {
+    if (venue.id != null) {
+      await _db.collection('venue').deleteOne(where.eq('_id', venue.id));
+    }
+  }
+
   Future<InstitutionModel> _geInstitutionIdByUserEmail(String email) async {
-    var res = await _db.collection('people').findOne({'email': email});
+    var res = await _db.collection('people').findOne(where.eq('email', email));
     if (res == null) {
       throw 'User with provided email was not found in any Institution';
     }
-    res = await _db.collection('institution').findOne({'_id': res['institution_id']});
+    res = await _db.collection('institution').findOne(where.eq('_id', res['institution_id']));
     if (res == null) {
       throw 'Institution was not found';
     }
     return InstitutionModel.fromMap(res['_id'] as ObjectId, res);
   }
 
-  // Future<InstitutionModel> __geInstitutionIdByUserEmail(String email) async {
-  //   var res = await _store.collectionGroup('people').where('email', isEqualTo: email).limit(1).get();
-  //   if (res.docs.isEmpty) {
-  //     throw 'User with provided email was not found in any Institution';
-  //   }
-  //   var inst = await res.docs[0].reference.parent.parent!.get();
-  //   if (!inst.exists) {
-  //     throw 'Institution was not found';
-  //   }
-  //   return InstitutionModel.fromMap(inst.id, inst.data()!);
-  // }
-
   Future<PersonModel> _getUserByEmail(String email) async {
-    var res = await _db.collection('people').findOne({'email': email});
+    var res = await _db.collection('people').findOne(where.eq('email', email));
     if (res == null) {
       throw 'User with provided email was not found in current Institution';
     }
@@ -382,7 +375,7 @@ class MStore extends GetxController {
   }
 
   Future<ClassModel?> getClassForStudent(PersonModel student) async {
-    var res = await _db.collection('class').findOne({'student_ids': student.id});
+    var res = await _db.collection('class').findOne(where.eq('student_ids', student.id));
     return res == null ? null : ClassModel.fromMap(res['_id'] as ObjectId, res);
   }
 
@@ -430,50 +423,10 @@ class MStore extends GetxController {
       return (await _db.collection('homework').insertOne(data)).id as ObjectId;
     } else {
       data['_id'] = homework.id;
-      await _db.collection('venue').replaceOne({'_id': homework.id}, data);
+      await _db.collection('venue').replaceOne(where.eq('_id', homework.id), data);
       return homework.id!;
     }
   }
-
-  // Future updateHomeworkCompletion(HomeworkModel homework, StudentModel student) async {
-  //   var compl = await _db.collection('completion').findOne({'homework_id': homework.id, 'completedby_id': student.id});
-  //   if (compl == null) {
-  //     return await _db.collection('completion').insert({
-  //       'completedby_id': currentUser!.id,
-  //       'confirmedby_id': null,
-  //       'completed_time': DateTime.now(),
-  //       'confirmed_time': DateTime.now(),
-  //       'status': 1,
-  //     });
-  //   } else {
-  //     if (compl['status'] == 1) {
-  //       compl['status'] == 0;
-  //       return _db.collection('completion').replaceOne({'_id': compl['_id'] as ObjectId}, compl);
-  //     } else if (compl['status'] == 0) {
-  //       compl['status'] == 1;
-  //       compl['completed_time'] = DateTime.now();
-  //       return _db.collection('completion').replaceOne({'_id': compl['_id'] as ObjectId}, compl);
-  //     }
-  //   }
-  // }
-
-  // Future<CompletionFlagModel?> hasMyCompletion(HomeworkModel homework, StudentModel student) async {
-  //   var compl = await _db.collection('completion').findOne({'homework_id': homework.id, 'completedby_id': student.id});
-  //   if (compl == null) return null;
-  //   return CompletionFlagModel.fromMap(compl['_id'] as ObjectId, compl);
-  // }
-
-  // Future<void> confirmHomework(HomeworkModel homework) async {
-  //   var a = _institutionRef.collection('homework').doc(homework.id).collection('completion');
-  //   var b = await a.where('completed_by', isEqualTo: currentUser!.id).limit(1).get();
-  //   if (b.docs.isNotEmpty) {
-  //     if ((await a.doc(b.docs[0].id).get()).data()!['status'] == 1) {
-  //       return await a.doc(b.docs[0].id).update({
-  //         'status': 2,
-  //       });
-  //     }
-  //   }
-  // }
 
   Future<void> createCompletion(HomeworkModel homework, StudentModel student) async {
     var data = {
@@ -489,15 +442,15 @@ class MStore extends GetxController {
   }
 
   Future<void> deleteCompletion(HomeworkModel homework, StudentModel student) async {
-    await _db.collection('completion').deleteOne({'homework_id': homework.id, 'completedby_id': student.id});
+    await _db.collection('completion').deleteOne(where.eq('homework_id', homework.id).eq('completedby_id', student.id));
   }
 
   Future<void> confirmCompletion(HomeworkModel homework, CompletionFlagModel completion, PersonModel person) async {
-    var data = await _db.collection('completion').findOne({'_id': completion.id});
+    var data = await _db.collection('completion').findOne(where.eq('_id', completion.id));
     data!['status'] = 2;
     data['confirmedby_id'] = person.id;
     data['confirmed_time'] = DateTime.now();
-    await _db.collection('completion').replaceOne({'_id': completion.id}, data);
+    await _db.collection('completion').replaceOne(where.eq('_id', completion.id), data);
     return;
   }
 
@@ -506,7 +459,7 @@ class MStore extends GetxController {
     data!['status'] = 1;
     data['confirmedby_id'] = person.id;
     data['confirmed_time'] = null;
-    await _db.collection('completion').replaceOne({'_id': completion.id}, data);
+    await _db.collection('completion').replaceOne(where.eq('_id', completion.id), data);
     return;
   }
 
@@ -516,7 +469,11 @@ class MStore extends GetxController {
   }
 
   Future<List<CompletionFlagModel>> getAllHomeworkCompletions(HomeworkModel homework) async {
-    return _db.collection('completion').find({'homework_id': homework.id}).map((data) => CompletionFlagModel.fromMap(data['_id'] as ObjectId, data)).toList();
+    return _db
+        .collection('completion')
+        .find(where.eq('homework_id', homework.id))
+        .map((data) => CompletionFlagModel.fromMap(data['_id'] as ObjectId, data))
+        .toList();
   }
 
   Future<double> getAverageTeacherRating(TeacherModel teacher) async {
@@ -577,6 +534,34 @@ class MStore extends GetxController {
 
   ///TODO: to be implemented, probably with mongodb lookup optimization
   Future<List<TeacherScheduleModel>> getTeacherWeekSchedule(TeacherModel teacher, isoweek.Week week) async {
+    var aggr = AggregationPipelineBuilder()
+        .addStage(Match(where.eq('master_id', teacher.id).map['\$query']))
+        .addStage(Lookup(from: 'lesson', localField: '_id', foreignField: 'curriculum_id', as: 'lesson'))
+        .addStage(Unwind(const Field('lesson')))
+        .addStage(Lookup(from: 'schedule', localField: 'lesson.schedule_id', foreignField: '_id', as: 'schedule'))
+        .addStage(
+            Match(where.lt('schedule.from', DateTime.now()).and(where.eq('schedule.till', null).or(where.gte('schedule.till', DateTime.now()))).map['\$query']))
+        .addStage(Unwind(const Field('schedule')))
+        .addStage(Project({
+          'schedule_id': const Field('schedule._id'),
+          'day': const Field('schedule.day'),
+          'from': const Field('schedule.from'),
+          'till': const Field('schedule.till'),
+          'class_id': const Field('schedule.class_id'),
+          'institution_id': const Field('schedule.institution_id'),
+        }))
+        .addStage(Group(id: {
+          'schedule_id': const Field('schedule_id'),
+          'day': const Field('day'),
+          'from': const Field('from'),
+          'till': const Field('till'),
+          'class_id': const Field('class_id'),
+          'institution_id': const Field('institution_id'),
+        }))
+        .build();
+
+    await _db.collection('curriculum').aggregateToStream(aggr).map((data) => ClassModel.fromMap(data['_id']['schedule_id'], data['_id'])).toList();
+
     return <TeacherScheduleModel>[];
 
     // var curriculums = await _institutionRef.collection('curriculum').where('master_id', isEqualTo: teacher.id).get();
@@ -664,16 +649,6 @@ class MStore extends GetxController {
         .addStage(Sort({'_id.name': 1}))
         .build();
     return _db.collection('curriculum').aggregateToStream(aggr).map((data) => CurriculumModel.fromMap(data['_id']['curriculum_id'], data['_id'])).toList();
-
-    // List<CurriculumModel> res = [];
-    // var aclass = await student.studentClass;
-    // var curs = await getClassCurriculums(aclass!);
-    // for (var cur in curs) {
-    //   if (await cur.isAvailableForStudent(student)) {
-    //     res.add(cur);
-    //   }
-    // }
-    // return res;
   }
 
   Future<List<CurriculumModel>> getClassCurriculums(ClassModel aclass) async {
@@ -697,15 +672,6 @@ class MStore extends GetxController {
         .addStage(Sort({'_id.name': 1}))
         .build();
     return _db.collection('curriculum').aggregateToStream(aggr).map((data) => CurriculumModel.fromMap(data['_id']['curriculum_id'], data['_id'])).toList();
-
-    // List<CurriculumModel> res = [];
-    // var curs = await getAllCurriculums();
-    // for (var cur in curs) {
-    //   if ((await cur.classes()).contains(aclass)) {
-    //     res.add(cur);
-    //   }
-    // }
-    // return res;
   }
 
   Future<List<CurriculumModel>> getTeacherCurriculums(TeacherModel teacher) async {
@@ -764,14 +730,14 @@ class MStore extends GetxController {
       return (await _db.collection('mark').insertOne(data)).id as ObjectId;
     } else {
       data['_id'] = mark.id!;
-      await _db.collection('mark').replaceOne({'_id': mark.id!}, data);
+      await _db.collection('mark').replaceOne(where.eq('_id', mark.id!), data);
       return mark.id!;
     }
   }
 
   Future<void> deleteMark(MarkModel mark) async {
     if (mark.id != null) {
-      await _db.collection('mark').deleteOne({'_id': mark.id});
+      await _db.collection('mark').deleteOne(where.eq('_id', mark.id));
     }
   }
 
@@ -807,12 +773,6 @@ class MStore extends GetxController {
         .addStage(Sort({'_id.order': 1}))
         .build();
     return _db.collection('curriculum').aggregateToStream(aggr).map((data) => ClassModel.fromMap(data['_id']['class_id'], data['_id'])).toList();
-
-    // var classes = (await (_db.collection('lesson').find(where.eq('curriculum_id', curriculum.id)).asyncMap((data) async {
-    //   var aclass = await _db.collection('class').findOne(where.eq('_id', data['class_id'] as ObjectId));
-    //   return ClassModel.fromMap(aclass!['_id'], aclass);
-    // }).toSet()));
-    // return classes.toList();
   }
 
   Future<List<ChatModel>> getUserChatRooms() {
@@ -957,7 +917,6 @@ class MStore extends GetxController {
   Future<void> deleteAbsence(LessonModel lesson, AbsenceModel absence) async {
     if (absence.id != null) {
       await _db.collection('absence').deleteOne(where.eq('_id', absence.id));
-      // await _institutionRef.collection('class').doc(lesson.aclass.id).collection('absence').doc(absence.id).delete();
     }
   }
 

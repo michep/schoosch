@@ -61,6 +61,10 @@ class VenueModel {
     return this;
   }
 
+  Future<void> delete() async {
+    Get.find<MStore>().deleteVenue(this);
+  }
+
   void _initPath() {
     path.moveTo(coords[0].dx, coords[0].dy);
     for (int i = 1; i <= coords.length; i++) {
