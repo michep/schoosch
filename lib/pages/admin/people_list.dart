@@ -81,6 +81,10 @@ class _PeopleListPageState extends State<PeopleListPage> {
                             child: Text(loc.personTypeTeacher),
                           ),
                           DropdownMenuItem(
+                            value: 'observer',
+                            child: Text(loc.personTypeObserver),
+                          ),
+                          DropdownMenuItem(
                             value: 'parent',
                             child: Text(loc.personTypeParent),
                           ),

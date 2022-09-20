@@ -36,7 +36,7 @@ class CurriculumChoicePage extends StatelessWidget {
                     );
                   },
                   title: Text(snapshot.data![index].aliasOrName),
-                  subtitle: Text(snapshot.data![index].id!.toHexString()),
+                  subtitle: Text(snapshot.data![index].id!),
                 );
               },
               itemCount: snapshot.data!.length,

@@ -129,7 +129,7 @@ class _HomeworkPageState extends State<HomeworkPage> {
     String? res;
     res = Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty);
     if (res != null) return res;
-    if (_student != null && widget.studentIds.contains(_student!.id!.toHexString())) return S.of(context).errorHomeWorkExists;
+    if (_student != null && widget.studentIds.contains(_student!.id!)) return S.of(context).errorHomeWorkExists;
     return null;
   }
 

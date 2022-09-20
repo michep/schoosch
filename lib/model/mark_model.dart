@@ -1,37 +1,37 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MarkModel {
-  ObjectId? id;
-  late ObjectId teacherId;
-  late ObjectId studentId;
+  String? id;
+  late String teacherId;
+  late String studentId;
   late DateTime date;
-  late ObjectId curriculumId;
+  late String curriculumId;
   late int lessonOrder;
   late String type;
   late String comment;
   late int mark;
 
-  MarkModel.empty(ObjectId teacherId, ObjectId curriculumId, int lessonOrder, DateTime date)
+  MarkModel.empty(String teacherId, String curriculumId, int lessonOrder, DateTime date)
       : this.fromMap(null, {
           'teacher_id': teacherId,
-          'date': date,
+          'date': Timestamp.fromDate(date),
           'curriculum_id': curriculumId,
           'lesson_order': lessonOrder,
-          'student_id': ObjectId().empty(),
+          'student_id': '',
           'type': 'regular',
           'comment': '',
           'mark': 0,
         });
 
   MarkModel.fromMap(this.id, Map<String, dynamic> map) {
-    teacherId = map['teacher_id'] != null ? map['teacher_id'] as ObjectId : throw 'need teacher_id key in mark $id';
-    studentId = map['student_id'] != null ? map['student_id'] as ObjectId : throw 'need student_id key in mark $id';
+    teacherId = map['teacher_id'] != null ? map['teacher_id'] as String : throw 'need teacher_id key in mark $id';
+    studentId = map['student_id'] != null ? map['student_id'] as String : throw 'need student_id key in mark $id';
     date = map['date'] != null ? map['date'] as DateTime : throw 'need date key in mark $id';
-    curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as ObjectId : throw 'need curriculum_id key in mark $id';
+    curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in mark $id';
     lessonOrder = map['lesson_order'] != null ? map['lesson_order'] as int : throw 'need lesson_order key in mark $id';
     type = map['type'] != null ? map['type'] as String : throw 'need type key in mark $id';
     if (!['regular', 'test', 'exam'].contains(type)) throw 'incorrect type in mark $id';

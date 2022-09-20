@@ -1,17 +1,18 @@
-import 'package:mongo_dart/mongo_dart.dart';
-import 'package:schoosch/model/person_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'package:schoosch/controller/mongo_controller.dart';
 
 class MessageModel {
-  late final ObjectId? id;
+  late final String? id;
   late final String? message;
-  late final ObjectId? sentById;
+  late final String? sentById;
   late final DateTime? timeSent;
 
   MessageModel.fromMap(this.id, Map<String, dynamic> map) {
     message = map['message'] != null ? map['message'] as String : throw '';
-    sentById = map['sentby_id'] != null ? map['sentby_id'] as ObjectId : throw '';
+    sentById = map['sent_by'] != null ? map['sent_by'] as String : throw '';
     timeSent = map['timestamp'] != null ? map['timestamp'] as DateTime : throw '';
   }
 
-  bool get sentByMe => sentById! == PersonModel.currentUser!.id;
+  bool get sentByMe => sentById! == Get.find<MStore>().currentUser!.id;
 }

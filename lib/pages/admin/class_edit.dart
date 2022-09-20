@@ -259,5 +259,8 @@ class _ClassPageState extends State<ClassPage> {
     }
   }
 
-  Future<void> _delete(ClassModel aclass) async {}
+  Future<void> _delete(ClassModel aclass) async {
+    await aclass.delete();
+    Get.back<ClassModel>(result: aclass);
+  }
 }

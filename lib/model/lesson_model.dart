@@ -1,7 +1,7 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
@@ -40,10 +40,10 @@ extension LessonTypeExt on LessonType {
 class LessonModel {
   final ClassModel aclass;
   final DayScheduleModel schedule;
-  ObjectId? id;
+  String? _id;
   late int order;
-  late final ObjectId? curriculumId;
-  late final ObjectId? venueId;
+  late final String? curriculumId;
+  late final String? venueId;
   final Map<String, HomeworkModel?> _homeworksThisLesson = {};
   final Map<String, HomeworkModel?> _homeworksNextLesson = {};
   final Map<String, List<MarkModel>> marks = {};
@@ -54,6 +54,8 @@ class LessonModel {
   LessonType? type;
   final Mutex homeworkOnDateForClassAndAllStudentsMutex = Mutex();
 
+  String? get id => _id;
+
   LessonModel.empty(ClassModel aclass, DayScheduleModel schedule, int order)
       : this.fromMap(aclass, schedule, null, <String, dynamic>{
           'order': order,
@@ -61,19 +63,19 @@ class LessonModel {
           'venue_id': '',
         });
 
-  LessonModel.fromMap(this.aclass, this.schedule, this.id, Map<String, Object?> map) {
+  LessonModel.fromMap(this.aclass, this.schedule, this._id, Map<String, Object?> map) {
     type = map['type'] != null ? LessonTypeExt.getType((map['type'] as int)) : LessonType.normal;
-    order = map['order'] != null ? map['order'] as int : throw 'need order key in lesson $id';
+    order = map['order'] != null ? map['order'] as int : throw 'need order key in lesson $_id';
     curriculumId = map['curriculum_id'] != null
-        ? map['curriculum_id'] as ObjectId
+        ? map['curriculum_id'] as String
         : type == LessonType.empty
             ? null
-            : throw 'need curriculum_id key in lesson $id';
+            : throw 'need curriculum_id key in lesson $_id';
     venueId = map['venue_id'] != null
-        ? map['venue_id'] as ObjectId
+        ? map['venue_id'] as String
         : type == LessonType.empty
             ? null
-            : throw 'need venue_id key in lesson $id';
+            : throw 'need venue_id key in lesson $_id';
   }
 
   void setReplacedType() {
@@ -81,13 +83,17 @@ class LessonModel {
   }
 
   Future<CurriculumModel?> get curriculum async {
-    if (curriculumId == null) return null;
-    return _curriculum ??= await Get.find<MStore>().getCurriculum(curriculumId!);
+    if (curriculumId!.isNotEmpty) {
+      return _curriculum ??= await Get.find<MStore>().getCurriculum(curriculumId!);
+    }
+    return null;
   }
 
   Future<VenueModel?> get venue async {
-    if (venueId == null) return null;
-    return _venue ??= await Get.find<MStore>().getVenue(venueId!);
+    if (venueId!.isNotEmpty) {
+      return _venue ??= await Get.find<ProxyStore>().getVenue(venueId!);
+    }
+    return null;
   }
 
   Future<LessontimeModel> get lessontime async {
@@ -102,22 +108,22 @@ class LessonModel {
   }
 
   Future<HomeworkModel?> homeworkThisLessonForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
-    if (_homeworksThisLesson[student.id!.toHexString()] == null || forceRefresh) {
-      _homeworksThisLesson[student.id!.toHexString()] = await Get.find<MStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, student, date);
+    if (_homeworksThisLesson[student.id] == null || forceRefresh) {
+      _homeworksThisLesson[student.id!] = await Get.find<MStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, student, date);
     }
     return _homeworksThisLesson[student.id!];
   }
 
   Future<Map<String, HomeworkModel?>> homeworkThisLessonForClassAndStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
-    if (_homeworksThisLesson[student.id!.toHexString()] == null || forceRefresh) {
-      _homeworksThisLesson[student.id!.toHexString()] = await Get.find<MStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, student, date);
+    if (_homeworksThisLesson[student.id] == null || forceRefresh) {
+      _homeworksThisLesson[student.id!] = await Get.find<MStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, student, date);
     }
     if (_homeworksThisLesson['class'] == null || forceRefresh) {
       _homeworksThisLesson['class'] = await Get.find<MStore>().getHomeworkForClassBeforeDate(aclass, (await curriculum)!, date);
     }
 
     return {
-      'student': _homeworksThisLesson[student.id!.toHexString()],
+      'student': _homeworksThisLesson[student.id],
       'class': _homeworksThisLesson['class'],
     };
   }
@@ -125,8 +131,8 @@ class LessonModel {
   Future<Map<String, HomeworkModel?>> homeworkThisLessonForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
     var studs = await aclass.students();
     for (StudentModel stud in studs) {
-      if (_homeworksThisLesson[stud.id!.toHexString()] == null || forceRefresh) {
-        _homeworksThisLesson[stud.id!.toHexString()] = await Get.find<MStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, stud, date);
+      if (_homeworksThisLesson[stud.id] == null || forceRefresh) {
+        _homeworksThisLesson[stud.id!] = await Get.find<MStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, stud, date);
       }
     }
     if (_homeworksThisLesson['class'] == null || forceRefresh) {
@@ -150,8 +156,8 @@ class LessonModel {
   }
 
   Future<Map<String, HomeworkModel?>> homeworkOnDateForClassAndStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
-    if (_homeworksNextLesson[student.id!.toHexString()] == null || forceRefresh) {
-      _homeworksNextLesson[student.id!.toHexString()] = await Get.find<MStore>().getHomeworkForStudentOnDate(aclass, (await curriculum)!, student, date);
+    if (_homeworksNextLesson[student.id] == null || forceRefresh) {
+      _homeworksNextLesson[student.id!] = await Get.find<MStore>().getHomeworkForStudentOnDate(aclass, (await curriculum)!, student, date);
     }
     if (_homeworksNextLesson['class'] == null || forceRefresh) {
       _homeworksNextLesson['class'] = await Get.find<MStore>().getHomeworkForClassOnDate(aclass, (await curriculum)!, date);
@@ -167,8 +173,8 @@ class LessonModel {
     await homeworkOnDateForClassAndAllStudentsMutex.acquire();
     var studs = await aclass.students();
     for (StudentModel stud in studs) {
-      if (_homeworksNextLesson[stud.id!.toHexString()] == null || forceRefresh) {
-        _homeworksNextLesson[stud.id!.toHexString()] = await Get.find<MStore>().getHomeworkForStudentOnDate(aclass, (await curriculum)!, stud, date);
+      if (_homeworksNextLesson[stud.id] == null || forceRefresh) {
+        _homeworksNextLesson[stud.id!] = await Get.find<MStore>().getHomeworkForStudentOnDate(aclass, (await curriculum)!, stud, date);
       }
     }
     if (_homeworksNextLesson['class'] == null || forceRefresh) {
@@ -182,21 +188,21 @@ class LessonModel {
     Map<String, List<MarkModel>> res = {};
     var mrks = await Get.find<MStore>().getAllLessonMarks(this, date);
     for (var mrk in mrks) {
-      if (res[mrk.studentId.toHexString()] == null) {
-        res[mrk.studentId.toHexString()] = [mrk];
+      if (res[mrk.studentId] == null) {
+        res[mrk.studentId] = [mrk];
       } else {
-        res[mrk.studentId.toHexString()]!.add(mrk);
+        res[mrk.studentId]!.add(mrk);
       }
     }
     return res;
   }
 
   Future<List<MarkModel>> marksForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
-    if (marks[student.id!.toHexString()] == null || forceRefresh) {
-      marks[student.id!.toHexString()] = await Get.find<MStore>().getStudentLessonMarks(this, student, date);
+    if (marks[student.id] == null || forceRefresh) {
+      marks[student.id!] = await Get.find<MStore>().getStudentLessonMarks(this, student, date);
     }
 
-    return marks[student.id!.toHexString()]!;
+    return marks[student.id!]!;
   }
 
   Future<void> saveMark(MarkModel mark) async {
@@ -225,8 +231,8 @@ class LessonModel {
   }
 
   Future<LessonModel> save() async {
-    var nid = await Get.find<MStore>().saveLesson(this);
-    id ??= nid;
+    var id = await Get.find<MStore>().saveLesson(this);
+    _id ??= id;
     return this;
   }
 
@@ -236,13 +242,13 @@ class LessonModel {
 }
 
 class ReplacementModel extends LessonModel {
-  ReplacementModel.fromMap(ClassModel aclass, DayScheduleModel schedule, ObjectId? id, Map<String, dynamic> map) : super.fromMap(aclass, schedule, id, map) {
+  ReplacementModel.fromMap(ClassModel aclass, DayScheduleModel schedule, String? id, Map<String, dynamic> map) : super.fromMap(aclass, schedule, id, map) {
     type = LessonType.replacment;
   }
 }
 
 class EmptyLesson extends LessonModel {
-  EmptyLesson.fromMap(ClassModel aclass, DayScheduleModel schedule, ObjectId? id, int order)
+  EmptyLesson.fromMap(ClassModel aclass, DayScheduleModel schedule, String? id, int order)
       : super.fromMap(aclass, schedule, id, {
           'order': order,
           'curriculum_id': null,

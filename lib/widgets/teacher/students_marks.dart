@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mongo_dart/mongo_dart.dart' as mongo;
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
@@ -111,7 +110,7 @@ class _MarkListTileState extends State<MarkListTile> {
   @override
   void initState() {
     super.initState();
-    InstitutionModel.currentInstitution.getPerson(mongo.ObjectId.fromHexString(widget.studentId)).then((value) {
+    InstitutionModel.currentInstitution.getPerson(widget.studentId).then((value) {
       if (mounted) {
         setState(() {
           student = value.asStudent;

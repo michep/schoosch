@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 
 class NodeModel {
-  final ObjectId id;
+  final String id;
   late final String? name;
   late final int floor;
   late final Offset position;

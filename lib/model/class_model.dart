@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:isoweek/isoweek.dart' as isoweek;
-import 'package:mongo_dart/mongo_dart.dart';
+import 'package:isoweek/isoweek.dart';
 import 'package:mutex/mutex.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
@@ -10,12 +10,12 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 
 class ClassModel {
-  ObjectId? id;
+  String? _id;
   late final String name;
   late final int grade;
-  late final ObjectId _masterId;
-  late final ObjectId _dayLessontimeId;
-  final List<ObjectId> _studentIds = [];
+  late final String _masterId;
+  late final String _dayLessontimeId;
+  final List<String> _studentIds = [];
   final List<StudentModel> _students = [];
   bool _studentsLoaded = false;
   final Mutex _studentsMutex = Mutex();
@@ -23,27 +23,29 @@ class ClassModel {
   bool _lessontimesLoaded = false;
   final Mutex __lessontimesMutex = Mutex();
   TeacherModel? _master;
-  final Map<isoweek.Week, List<StudentScheduleModel>> _weekSchedules = {};
+  final Map<Week, List<StudentScheduleModel>> _weekSchedules = {};
   final Map<int, List<StudentScheduleModel>> _daySchedules = {};
   final List<CurriculumModel> _curriculums = [];
   bool _curriculumsLoaded = false;
   final Mutex _curriculumsMutex = Mutex();
 
+  String? get id => _id;
+
   ClassModel.empty()
       : this.fromMap(null, <String, dynamic>{
           'name': '',
           'grade': 0,
-          'master_id': ObjectId().empty(),
-          'lessontime_id': ObjectId().empty(),
-          'student_ids': <ObjectId>[],
+          'master_id': '',
+          'lessontime_id': '',
+          'student_ids': <String>[],
         });
 
-  ClassModel.fromMap(this.id, Map<String, dynamic> map) {
-    name = map['name'] != null ? map['name'] as String : throw 'need name key in class $id';
-    grade = map['grade'] != null ? map['grade'] as int : throw 'need grade key in class $id';
-    _dayLessontimeId = map['lessontime_id'] != null ? map['lessontime_id'] as ObjectId : throw 'need lessontime_id key in class $id';
-    _masterId = map['master_id'] != null ? map['master_id'] as ObjectId : throw 'need master_id key in class $id';
-    map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List).map((e) => e as ObjectId)) : null;
+  ClassModel.fromMap(this._id, Map<String, dynamic> map) {
+    name = map['name'] != null ? map['name'] as String : throw 'need name key in class $_id';
+    grade = map['grade'] != null ? map['grade'] as int : throw 'need grade key in class $_id';
+    _dayLessontimeId = map['lessontime_id'] != null ? map['lessontime_id'] as String : throw 'need lessontime_id key in class $_id';
+    _masterId = map['master_id'] != null ? map['master_id'] as String : throw 'need master_id key in class $_id';
+    map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
   }
 
   @override
@@ -71,7 +73,7 @@ class ClassModel {
     return _master!;
   }
 
-  Future<List<StudentScheduleModel>> getSchedulesWeek(isoweek.Week week) async {
+  Future<List<StudentScheduleModel>> getSchedulesWeek(Week week) async {
     return _weekSchedules[week] ??= await Get.find<MStore>().getClassWeekSchedule(this, week);
   }
 
@@ -86,11 +88,22 @@ class ClassModel {
     return _daySchedules[day]!;
   }
 
+  // Future<List<LessontimeModel>> getLessontimes() async {
+  //   if (!_lessontimesLoaded) {
+  //     _lessontimes.addAll(
+  //       await Get.find<MStore>().getLessontimes(_dayLessontimeId),
+  //     );
+  //     _lessontimes.sort((a, b) => a.order.compareTo(b.order));
+  //     _lessontimesLoaded = true; //TODO: fallboack to default lessontimes?
+  //   }
+  //   return _lessontimes;
+  // }
+
   Future<LessontimeModel> getLessontime(int n) async {
     await __lessontimesMutex.acquire();
     if (!_lessontimesLoaded) {
       _lessontimes.addAll(
-        await Get.find<MStore>().getLessontimes(_dayLessontimeId),
+        await Get.find<ProxyStore>().getLessontimes(_dayLessontimeId),
       );
       _lessontimes.sort((a, b) => a.order.compareTo(b.order));
       _lessontimesLoaded = true; //TODO: fallboack to default lessontimes?
@@ -101,7 +114,7 @@ class ClassModel {
 
   Future<DayLessontimeModel?> getDayLessontime() async {
     if (_dayLessontimeId.isEmpty) return null;
-    return Get.find<MStore>().getDayLessontime(_dayLessontimeId);
+    return Get.find<ProxyStore>().getDayLessontime(_dayLessontimeId);
   }
 
   Future<Map<TeacherModel, List<String>>> get teachers async {
@@ -148,8 +161,9 @@ class ClassModel {
     return _curriculums;
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool withId = false}) {
     Map<String, dynamic> res = {};
+    if (withId) res['_id'] = id;
     res['name'] = name;
     res['grade'] = grade;
     res['master_id'] = _masterId;
@@ -159,8 +173,13 @@ class ClassModel {
   }
 
   Future<ClassModel> save() async {
-    var nid = await Get.find<MStore>().saveClass(this);
-    id ??= nid;
+    var id = await Get.find<ProxyStore>().saveClass(this);
+    _id ??= id;
     return this;
+  }
+
+  Future<void> delete() async {
+    // await Get.find<ProxyStore>().deleteClass(this);
+    throw UnsupportedError;
   }
 }

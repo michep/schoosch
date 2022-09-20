@@ -4,6 +4,7 @@ import 'package:isoweek/isoweek.dart' as isoweek;
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:mutex/mutex.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
@@ -73,7 +74,7 @@ extension PersonTypeList on List<PersonType> {
 }
 
 class PersonModel {
-  late ObjectId? _id;
+  late String? _id;
   late final String firstname;
   late final String? middlename;
   late final String lastname;
@@ -87,7 +88,7 @@ class PersonModel {
   ObserverModel? _asObserver;
   PersonModel? up;
 
-  ObjectId? get id => _id;
+  String? get id => _id;
 
   PersonModel.fromMap(this._id, Map<String, dynamic> map, [bool recursive = true]) {
     firstname = map['firstname'] != null ? map['firstname'] as String : throw 'need firstname key in people $id';
@@ -95,7 +96,7 @@ class PersonModel {
     lastname = map['lastname'] != null ? map['lastname'] as String : throw 'need lastname key in people $id';
     birthday = map['birthday'] != null ? map['birthday'] as DateTime : null;
     email = map['email'] != null ? map['email'] as String : throw 'need email key in people $id';
-    map['type'] != null ? types.addAll((map['type'] as List<dynamic>).map((e) => PersonTypeExt._parse(e))) : throw 'need type key in people $id';
+    map['type'] != null ? types.addAll((map['type'] as List).map((e) => PersonTypeExt._parse(e))) : throw 'need type key in people $id';
     if (recursive) {
       for (var t in types) {
         switch (t) {
@@ -198,7 +199,7 @@ class StudentModel extends PersonModel {
           'type': <String>[PersonType.student._nameString],
         });
 
-  StudentModel.fromMap(ObjectId? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
+  StudentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
   Future<ClassModel?> get studentClass async {
     await _studentClassMutex.acquire();
@@ -245,7 +246,7 @@ class TeacherModel extends PersonModel {
           'type': <String>[PersonType.teacher._nameString],
         });
 
-  TeacherModel.fromMap(ObjectId? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
+  TeacherModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
   Future<double> get averageRating async {
     return Get.find<MStore>().getAverageTeacherRating(this);
@@ -269,14 +270,13 @@ class TeacherModel extends PersonModel {
     _curriculumsMutex.release();
     return _curriculums;
   }
-
   // Future<void> confirmCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
   //   return await Get.find<MStore>().confirmCompletion(hw, completion);
   // }
 }
 
 class ParentModel extends PersonModel {
-  final List<ObjectId> studentIds = [];
+  final List<String> studentIds = [];
   final List<StudentModel> _students = [];
   bool _studentsLoaded = false;
   StudentModel? _selectedChild;
@@ -291,9 +291,9 @@ class ParentModel extends PersonModel {
           'student_ids': <String>[],
         });
 
-  ParentModel.fromMap(ObjectId? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
+  ParentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
     map['student_ids'] != null
-        ? studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as ObjectId))
+        ? studentIds.addAll((map['student_ids'] as List).map<String>((e) => e.runtimeType == String ? e : (e as ObjectId).toHexString()))
         : throw 'need student_ids key in people for parent $id';
   }
 
@@ -328,7 +328,7 @@ class ParentModel extends PersonModel {
 }
 
 class ObserverModel extends PersonModel {
-  final List<ObjectId> classIds = [];
+  final List<String> classIds = [];
   final List<ClassModel> _classes = [];
   bool _classesLoaded = false;
 
@@ -341,16 +341,16 @@ class ObserverModel extends PersonModel {
           'type': <String>[PersonType.observer._nameString],
         });
 
-  ObserverModel.fromMap(ObjectId? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
+  ObserverModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
     map['class_ids'] != null
-        ? classIds.addAll((map['class_ids'] as List<dynamic>).map((e) => e as ObjectId))
+        ? classIds.addAll((map['class_ids'] as List).map<String>((e) => e.runtimeType == String ? e : (e as ObjectId).toHexString()))
         : throw 'need class_ids key in people for observer $id';
   }
 
   Future<List<ClassModel>> classes({forceRefresh = false}) async {
     if (!_classesLoaded || forceRefresh) {
       _classes.clear();
-      var store = Get.find<MStore>();
+      var store = Get.find<ProxyStore>();
       for (var id in classIds) {
         var cl = await store.getClass(id);
         _classes.add(cl);

@@ -1,20 +1,21 @@
 import 'package:get/get.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class CurriculumModel {
-  ObjectId? id;
+  String? _id;
   late final String name;
   late final String? alias;
-  late final ObjectId _masterId;
-  final List<ObjectId> _studentIds = [];
+  late final String _masterId;
+  final List<String> _studentIds = [];
   final List<StudentModel> _students = [];
   final List<ClassModel> _classes = [];
   bool _studentsLoaded = false;
   bool _classesLoaded = false;
   TeacherModel? _master;
+
+  String? get id => _id;
 
   @override
   String toString() {
@@ -25,15 +26,15 @@ class CurriculumModel {
       : this.fromMap(null, <String, dynamic>{
           'name': '',
           'alias': '',
-          'master_id': ObjectId().empty(),
-          'student_ids': <ObjectId>[],
+          'master_id': '',
+          'student_ids': <String>[],
         });
 
-  CurriculumModel.fromMap(this.id, Map<String, dynamic> map) {
+  CurriculumModel.fromMap(this._id, Map<String, dynamic> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in curriculum $id';
     alias = map['alias'] != null ? map['alias'] as String : null;
-    _masterId = map['master_id'] != null ? map['master_id'] as ObjectId : throw 'need master_id key in curriculum $id';
-    map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List).map((e) => e as ObjectId)) : null;
+    _masterId = map['master_id'] != null ? map['master_id'] as String : throw 'need master_id key in curriculum $id';
+    map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
   }
 
   String get aliasOrName => alias ?? name;
@@ -93,8 +94,8 @@ class CurriculumModel {
   }
 
   Future<CurriculumModel> save() async {
-    var nid = await Get.find<MStore>().saveCurriculum(this);
-    id ??= nid;
+    var id = await Get.find<MStore>().saveCurriculum(this);
+    _id ??= id;
     return this;
   }
 

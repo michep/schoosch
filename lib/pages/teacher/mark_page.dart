@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
@@ -98,7 +97,7 @@ class _MarkPageState extends State<MarkPage> {
   }
 
   Future<PersonModel?> _initStudent() async {
-    if (!widget.mark.studentId.isEmpty) {
+    if (widget.mark.studentId.isNotEmpty) {
       _student = (await widget.mark.student).asStudent;
       _studentcont.text = _student!.fullName;
       return _student;

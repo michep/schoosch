@@ -1,16 +1,18 @@
 import 'package:get/get.dart';
-import 'package:mongo_dart/mongo_dart.dart';
-import 'package:flutter/material.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 
 class VenueModel {
-  late ObjectId? id;
+  late String? _id;
   late String name;
   late int? floor;
   late String? type;
   List<Offset> coords = [];
   late Offset _labelOffset;
   late var path = Path();
+
+  String? get id => _id;
 
   @override
   String toString() {
@@ -22,7 +24,7 @@ class VenueModel {
           'name': '',
         });
 
-  VenueModel.fromMap(this.id, Map<String, Object?> map) {
+  VenueModel.fromMap(this._id, Map<String, Object?> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in venue $id';
     // floor = map['floor'] != null
     //     ? map['floor'] as int
@@ -49,20 +51,21 @@ class VenueModel {
     // _initPath();
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool withId = false}) {
     Map<String, dynamic> res = {};
+    if (withId) res['_id'] = id;
     res['name'] = name;
     return res;
   }
 
   Future<VenueModel> save() async {
-    var nid = await Get.find<MStore>().saveVenue(this);
-    id ??= nid;
+    var id = await Get.find<ProxyStore>().saveVenue(this);
+    _id ??= id;
     return this;
   }
 
   Future<void> delete() async {
-    Get.find<MStore>().deleteVenue(this);
+    if (_id != null) return Get.find<ProxyStore>().deleteVenue(this);
   }
 
   void _initPath() {

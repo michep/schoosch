@@ -1,11 +1,10 @@
 import 'package:get/get.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/message_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class ChatModel {
-  late final ObjectId? id;
+  late final String? id;
   late final List<PersonModel>? users;
 
   ChatModel.fromMap(this.id, this.users);

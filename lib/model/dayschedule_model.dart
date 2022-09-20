@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:isoweek/isoweek.dart' as isoweek;
-import 'package:mongo_dart/mongo_dart.dart';
+import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
@@ -9,20 +9,20 @@ import 'package:schoosch/widgets/utils.dart';
 
 class DayScheduleModel {
   final ClassModel _class;
-  ObjectId? _id;
+  String? _id;
   late int day;
   late final DateTime? from;
   late final DateTime? till;
   final List<LessonModel> _lessons = [];
   bool _lessonsLoaded = false;
 
-  ObjectId? get id => _id;
+  String? get id => _id;
   ClassModel get aclass => _class;
 
   DayScheduleModel.empty(ClassModel aclass, int day)
       : this.fromMap(aclass, null, <String, dynamic>{
           'day': day,
-          'from': DateTime(1900),
+          'from': Timestamp.fromDate(DateTime(1900)),
           'till': null,
         });
 
@@ -60,8 +60,8 @@ class DayScheduleModel {
   }
 
   Future<DayScheduleModel> save() async {
-    var nid = await Get.find<MStore>().saveDaySchedule(this);
-    _id ??= nid;
+    var id = await Get.find<MStore>().saveDaySchedule(this);
+    _id ??= id;
     return this;
   }
 }
@@ -70,7 +70,7 @@ class StudentScheduleModel extends DayScheduleModel {
   final List<LessonModel> _studentLessons = [];
   bool _studentLessonsLoaded = false;
 
-  StudentScheduleModel.fromMap(ClassModel aclass, ObjectId id, Map<String, Object?> map) : super.fromMap(aclass, id, map);
+  StudentScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map);
 
   Future<List<LessonModel>> lessonsForStudent(StudentModel student, {DateTime? date}) async {
     if (!_studentLessonsLoaded) {
@@ -84,14 +84,14 @@ class StudentScheduleModel extends DayScheduleModel {
 class TeacherScheduleModel extends DayScheduleModel {
   late final List<LessonModel> _teacherLessons = [];
 
-  TeacherScheduleModel.fromMap(ClassModel aclass, ObjectId id, Map<String, Object?> map) : super.fromMap(aclass, id, map);
+  TeacherScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map);
 
   void addLessons(List<LessonModel> lessons) {
     _teacherLessons.addAll(lessons);
     _teacherLessons.sort((a, b) => a.order.compareTo(b.order));
   }
 
-  Future<List<LessonModel>> lessonsForTeacher(TeacherModel teacher, isoweek.Week week) async {
+  Future<List<LessonModel>> lessonsForTeacher(TeacherModel teacher, Week week) async {
     return _teacherLessons;
   }
 

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
@@ -8,7 +8,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 
 class InstitutionModel {
-  final ObjectId id;
+  final String id;
   late final String name;
   late final String address;
   final Map<String, String> attributes = {};
@@ -23,19 +23,19 @@ class InstitutionModel {
   static InstitutionModel get currentInstitution => Get.find<MStore>().currentInstitution!;
 
   Future<List<VenueModel>> get venues async {
-    return Get.find<MStore>().getAllVenues();
+    return Get.find<ProxyStore>().getAllVenues();
   }
 
   Future<List<PersonModel>> people() async {
     return Get.find<MStore>().getAllPeople();
   }
 
-  Future<PersonModel> getPerson(ObjectId id) async {
+  Future<PersonModel> getPerson(String id) async {
     return Get.find<MStore>().getPerson(id);
   }
 
   Future<List<ClassModel>> get classes async {
-    return Get.find<MStore>().getAllClasses();
+    return Get.find<ProxyStore>().getAllClasses();
   }
 
   Future<List<CurriculumModel>> get curriculums async {
@@ -48,7 +48,7 @@ class InstitutionModel {
   }
 
   Future<List<DayLessontimeModel>> get daylessontimes async {
-    return Get.find<MStore>().getAllDayLessontime();
+    return Get.find<ProxyStore>().getAllDayLessontime();
   }
 
   Future<void> createChatRoom(PersonModel other) async {

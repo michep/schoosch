@@ -1,12 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class CompletionFlagModel {
-  late final ObjectId? id;
-  late final ObjectId? completedById;
-  late final ObjectId? confirmedById;
+  late final String? id;
+  late final String? completedById;
+  late final String? confirmedById;
   late final DateTime? completedTime;
   late final DateTime? confirmedTime;
   late final Status? status;
@@ -16,8 +16,8 @@ class CompletionFlagModel {
   bool confirmerLoaded = false;
 
   CompletionFlagModel.fromMap(this.id, Map<String, dynamic> map) {
-    completedById = map['completedby_id'] != null ? map['completedby_id'] as ObjectId : null;
-    confirmedById = map['confirmedby_id'] != null ? map['confirmedby_id'] as ObjectId : null;
+    completedById = map['completedby_id'] != null ? map['completedby_id'] as String : null;
+    confirmedById = map['confirmedby_id'] != null ? map['confirmedby_id'] as String : null;
     completedTime = map['completed_time'] != null ? map['completed_time'] as DateTime : null;
     confirmedTime = map['confirmed_time'] != null ? map['confirmed_time'] as DateTime : null;
     if (map['status'] != null) {
@@ -61,7 +61,7 @@ class CompletionFlagModel {
   }
 
   // Future<CompletionFlagModel?> refresh(HomeworkModel homework) async {
-  //   var refr = await Get.find<FStore>().refreshCompletion(homework, this);
+  //   var refr = await Get.find<MStore>().refreshCompletion(homework, this);
   //   completedTime = refr!.completedTime;
   //   confirmedById = refr.confirmedById;
   //   completedById = refr.completedById;
@@ -81,7 +81,7 @@ class CompletionFlagModel {
   // }
 
   // Future<String> save() async {
-  //   Get.find<FStore>().saveCompletionFlag(this);
+  //   Get.find<MStore>().saveCompletionFlag(this);
   // }
 }
 
