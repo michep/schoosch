@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
@@ -41,17 +42,14 @@ class CurriculumModel {
 
   Future<TeacherModel?> get master async {
     if (_masterId.isEmpty) return null;
-    if (_master == null) {
-      var store = Get.find<MStore>();
-      _master = (await store.getPerson(_masterId)).asTeacher;
-    }
+    _master ??= (await Get.find<ProxyStore>().getPerson(_masterId)).asTeacher;
     return _master;
   }
 
   Future<List<StudentModel>> students({bool forceRefresh = false}) async {
     if (!_studentsLoaded || forceRefresh) {
       _students.clear();
-      _students.addAll((await Get.find<MStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
+      _students.addAll((await Get.find<ProxyStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
       _studentsLoaded = true;
     }
     return _students;

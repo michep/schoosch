@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
@@ -34,6 +34,6 @@ class AbsenceModel {
   }
 
   Future<StudentModel> get student async {
-    return (await Get.find<MStore>().getPerson(personId)).asStudent!;
+    return (await Get.find<ProxyStore>().getPerson(personId)).asStudent!;
   }
 }

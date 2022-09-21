@@ -27,11 +27,11 @@ class InstitutionModel {
   }
 
   Future<List<PersonModel>> people() async {
-    return Get.find<MStore>().getAllPeople();
+    return Get.find<ProxyStore>().getAllPeople();
   }
 
   Future<PersonModel> getPerson(String id) async {
-    return Get.find<MStore>().getPerson(id);
+    return Get.find<ProxyStore>().getPerson(id);
   }
 
   Future<List<ClassModel>> get classes async {

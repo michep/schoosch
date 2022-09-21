@@ -1,6 +1,7 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -53,11 +54,11 @@ class MarkModel {
   }
 
   Future<PersonModel> get teacher async {
-    return Get.find<MStore>().getPerson(teacherId);
+    return Get.find<ProxyStore>().getPerson(teacherId);
   }
 
   Future<PersonModel> get student async {
-    return Get.find<MStore>().getPerson(studentId);
+    return Get.find<ProxyStore>().getPerson(studentId);
   }
 
   Future<void> save() async {

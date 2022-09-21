@@ -127,4 +127,29 @@ class ProxyStore extends GetxController {
     var data = lessontime.toMap(withId: true);
     await http.delete(Uri.http(host, '/lessontime/${daylessontime.id!}/time'), headers: {'Content-Type': 'application/json'}, body: jsonEncode(data));
   }
+
+  Future<List<PersonModel>> getAllPeople() async {
+    var res = await http.get(Uri.http(host, '/person'));
+    var js = jsonDecode(res.body) as List;
+    return js.map((data) => PersonModel.fromMap(data['_id'], data)).toList();
+  }
+
+  Future<PersonModel> getPerson(String id) async {
+    var res = await http.get(Uri.http(host, '/person/$id'));
+    var js = jsonDecode(res.body) as Map<String, dynamic>;
+    return PersonModel.fromMap(js['_id'], js);
+  }
+
+  Future<List<PersonModel>> getPeopleByIds(List<String> ids) async {
+    var res = await http.post(Uri.http(host, '/person'), headers: {'Content-Type': 'application/json'}, body: jsonEncode(ids));
+    var js = jsonDecode(res.body) as List;
+    return js.map((data) => PersonModel.fromMap(data['_id'], data)).toList();
+  }
+
+  Future<String> savePerson(PersonModel person) async {
+    var data = person.toMap(withId: true);
+    data['institution_id'] = institution.id;
+    var res = await http.put(Uri.http(host, '/person'), headers: {'Content-Type': 'application/json'}, body: jsonEncode(data));
+    return jsonDecode(res.body)['id'];
+  }
 }

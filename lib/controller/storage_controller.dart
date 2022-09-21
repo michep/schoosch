@@ -16,8 +16,6 @@ class FStorage extends GetxController {
   Uint8List? get logoImageData => _logoImagData;
 
   Future<void> init(Db db) async {
-    ;
-
     var fs = GridFS(db);
     var file = await fs.getFile('logo.png');
   }

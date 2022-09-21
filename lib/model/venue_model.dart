@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 

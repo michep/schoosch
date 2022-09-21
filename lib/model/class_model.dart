@@ -66,10 +66,7 @@ class ClassModel {
 
   Future<TeacherModel?> get master async {
     if (_masterId.isEmpty) return null;
-    if (_master == null) {
-      var store = Get.find<MStore>();
-      _master = (await store.getPerson(_masterId)).asTeacher;
-    }
+    _master ??= (await Get.find<ProxyStore>().getPerson(_masterId)).asTeacher;
     return _master!;
   }
 
@@ -125,7 +122,7 @@ class ClassModel {
     await _studentsMutex.acquire();
     if (!_studentsLoaded || forceRefresh) {
       _students.clear();
-      _students.addAll((await Get.find<MStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
+      _students.addAll((await Get.find<ProxyStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
       _studentsLoaded = true;
     }
     _studentsMutex.release();

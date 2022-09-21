@@ -12,14 +12,11 @@ import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
-import 'package:schoosch/model/lessontime_model.dart';
-import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/message_model.dart';
 import 'package:schoosch/model/node_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
-import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -249,38 +246,38 @@ class MStore extends GetxController {
     }
   }
 
-  Future<PersonModel> getPerson(String id) async {
-    var mid = ObjectId.fromHexString(id);
-    var res = await _db.collection('people').findOne(where.eq('_id', mid));
-    return PersonModel.fromMap((res!['_id'] as ObjectId).toHexString(), res);
-  }
+  // Future<PersonModel> getPerson(String id) async {
+  //   var mid = ObjectId.fromHexString(id);
+  //   var res = await _db.collection('people').findOne(where.eq('_id', mid));
+  //   return PersonModel.fromMap((res!['_id'] as ObjectId).toHexString(), res);
+  // }
 
-  Future<List<PersonModel>> getAllPeople() async {
-    return _db.collection('people').find().map((data) => PersonModel.fromMap((data['_id'] as ObjectId).toHexString(), data)).toList();
-  }
+  // Future<List<PersonModel>> getAllPeople() async {
+  //   return _db.collection('people').find().map((data) => PersonModel.fromMap((data['_id'] as ObjectId).toHexString(), data)).toList();
+  // }
 
-  Future<List<PersonModel>> getPeopleByIds(List<String> ids) async {
-    List<PersonModel> res = [];
-    for (var id in ids) {
-      var p = await getPerson(id);
-      res.add(p);
-    }
-    return res;
-  }
+  // Future<List<PersonModel>> getPeopleByIds(List<String> ids) async {
+  //   List<PersonModel> res = [];
+  //   for (var id in ids) {
+  //     var p = await getPerson(id);
+  //     res.add(p);
+  //   }
+  //   return res;
+  // }
 
-  Future<String> savePerson(PersonModel person) async {
-    var data = person.toMap();
-    if (person.asParent != null) data.addAll(person.asParent!.toMap());
-    if (person.asObserver != null) data.addAll(person.asObserver!.toMap());
-    data['institution_id'] = ObjectId.fromHexString(_institution!.id);
-    if (person.id == null) {
-      return ((await _db.collection('people').insertOne(data)).id as ObjectId).toHexString();
-    } else {
-      data['_id'] = ObjectId.fromHexString(person.id!);
-      await _db.collection('people').replaceOne(where.eq('_id', data['_id']), data);
-      return person.id!;
-    }
-  }
+  // Future<String> savePerson(PersonModel person) async {
+  //   var data = person.toMap();
+  //   if (person.asParent != null) data.addAll(person.asParent!.toMap());
+  //   if (person.asObserver != null) data.addAll(person.asObserver!.toMap());
+  //   data['institution_id'] = ObjectId.fromHexString(_institution!.id);
+  //   if (person.id == null) {
+  //     return ((await _db.collection('people').insertOne(data)).id as ObjectId).toHexString();
+  //   } else {
+  //     data['_id'] = ObjectId.fromHexString(person.id!);
+  //     await _db.collection('people').replaceOne(where.eq('_id', data['_id']), data);
+  //     return person.id!;
+  //   }
+  // }
 
   Future<List<CurriculumModel>> getAllCurriculums() async {
     return _db.collection('curriculum').find().map((curriculum) => CurriculumModel.fromMap((curriculum['_id'] as ObjectId).toHexString(), curriculum)).toList();
@@ -774,7 +771,7 @@ class MStore extends GetxController {
     return _db.collection('chats').find(where.eq('people_ids', currentUser!.id)).asyncMap((data) async {
       List<PersonModel> users = [];
       for (var pid in data['people_ids'] as List) {
-        var p = await getPerson((pid as ObjectId).toHexString());
+        var p = await Get.find<ProxyStore>().getPerson((pid as ObjectId).toHexString());
         users.add(p);
       }
       return ChatModel.fromMap((data['_id'] as ObjectId).toHexString(), users);

@@ -159,8 +159,9 @@ class PersonModel {
   String get fullName => middlename != null ? '$lastname $firstname $middlename' : '$lastname $firstname';
   String get abbreviatedName => middlename != null ? '$lastname ${firstname[0]}. ${middlename![0]}.' : '$lastname ${firstname[0]}.';
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool withId = false}) {
     Map<String, dynamic> res = {};
+    if (withId) res['_id'] = id;
     res['firstname'] = firstname;
     res['middlename'] = middlename;
     res['lastname'] = lastname;
@@ -171,7 +172,7 @@ class PersonModel {
   }
 
   Future<PersonModel> save() async {
-    var id = await Get.find<MStore>().savePerson(this);
+    var id = await Get.find<ProxyStore>().savePerson(this);
     _id ??= id;
     return this;
   }
@@ -300,9 +301,8 @@ class ParentModel extends PersonModel {
   Future<List<StudentModel>> children({forceRefresh = false}) async {
     if (!_studentsLoaded || forceRefresh) {
       _students.clear();
-      var store = Get.find<MStore>();
       for (var id in studentIds) {
-        var p = await store.getPerson(id);
+        var p = await Get.find<ProxyStore>().getPerson(id);
         if (p.types.contains(PersonType.student)) {
           p.asStudent!.parent = this;
           _students.add(p.asStudent!);
@@ -320,8 +320,8 @@ class ParentModel extends PersonModel {
   void setChild(StudentModel val) => _selectedChild = val;
 
   @override
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> res = super.toMap();
+  Map<String, dynamic> toMap({bool withId = false}) {
+    Map<String, dynamic> res = super.toMap(withId: withId);
     res['student_ids'] = studentIds;
     return res;
   }
@@ -361,8 +361,8 @@ class ObserverModel extends PersonModel {
   }
 
   @override
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> res = super.toMap();
+  Map<String, dynamic> toMap({bool withId = false}) {
+    Map<String, dynamic> res = super.toMap(withId: withId);
     res['class_ids'] = classIds;
     return res;
   }

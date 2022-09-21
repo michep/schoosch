@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
@@ -22,7 +22,7 @@ class HomeworkModel {
     teacherId = map['teacher_id'] != null ? map['teacher_id'] as String : throw 'need teacher_id key in homework  $id';
   }
 
-  Future<StudentModel?> get student async => studentId != null ? (await Get.find<MStore>().getPerson(studentId!)).asStudent! : null;
+  Future<StudentModel?> get student async => studentId != null ? (await Get.find<ProxyStore>().getPerson(studentId!)).asStudent! : null;
 
   Future<CompletionFlagModel?> getCompletion(StudentModel student) async {
     return await Get.find<MStore>().getHomeworkCompletion(this, student);

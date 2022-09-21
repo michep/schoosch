@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class CompletionFlagModel {
@@ -46,7 +45,7 @@ class CompletionFlagModel {
 
   Future<StudentModel> get student async {
     if (!completerLoaded) {
-      _completer = await Get.find<MStore>().getPerson(completedById!);
+      _completer = await Get.find<ProxyStore>().getPerson(completedById!);
       completerLoaded = true;
     }
     return _completer!.asStudent!;
@@ -54,7 +53,7 @@ class CompletionFlagModel {
 
   Future<TeacherModel?> get teacher async {
     if (confirmedById != null && !confirmerLoaded) {
-      _confirmer = await Get.find<MStore>().getPerson(confirmedById!);
+      _confirmer = await Get.find<ProxyStore>().getPerson(confirmedById!);
       confirmerLoaded = true;
     }
     return _confirmer?.asTeacher;
