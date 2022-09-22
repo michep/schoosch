@@ -14,7 +14,7 @@ class AbsenceModel {
   String? get id => _id;
 
   AbsenceModel.fromMap(this._id, Map<String, dynamic> map) {
-    date = map['date'] != null ? map['date'] as DateTime : throw 'need date key in attendance $_id';
+    date = map['date'] != null ? DateTime.tryParse(map['date'])! : throw 'need date key in attendance $_id';
     personId = map['person_id'] != null ? map['person_id'] as String : throw 'need person_id key in attendance $_id';
     lessonOrder = map['lesson_order'] != null ? map['lesson_order'] as int : throw 'need lesson_order key in attendance $_id';
     // status = map['status'] != null ? map['status'] as String : throw 'need status key in attendance $_id'; //TODO: status should be a emun with extensions

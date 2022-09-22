@@ -94,7 +94,7 @@ class PersonModel {
     firstname = map['firstname'] != null ? map['firstname'] as String : throw 'need firstname key in people $id';
     middlename = map['middlename'] != null ? map['middlename'] as String : null;
     lastname = map['lastname'] != null ? map['lastname'] as String : throw 'need lastname key in people $id';
-    birthday = map['birthday'] != null ? map['birthday'] as DateTime : null;
+    birthday = map['birthday'] != null ? DateTime.tryParse(map['birthday']) : null;
     email = map['email'] != null ? map['email'] as String : throw 'need email key in people $id';
     map['type'] != null ? types.addAll((map['type'] as List).map((e) => PersonTypeExt._parse(e))) : throw 'need type key in people $id';
     if (recursive) {
@@ -294,7 +294,8 @@ class ParentModel extends PersonModel {
 
   ParentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
     map['student_ids'] != null
-        ? studentIds.addAll((map['student_ids'] as List).map<String>((e) => e.runtimeType == String ? e : (e as ObjectId).toHexString()))
+        // ? studentIds.addAll((map['student_ids'] as List).map<String>((e) => e.runtimeType == String ? e : (e as ObjectId).toHexString()))
+        ? studentIds.addAll((map['student_ids'] as List).map<String>((e) => e as String))
         : throw 'need student_ids key in people for parent $id';
   }
 
@@ -343,7 +344,8 @@ class ObserverModel extends PersonModel {
 
   ObserverModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
     map['class_ids'] != null
-        ? classIds.addAll((map['class_ids'] as List).map<String>((e) => e.runtimeType == String ? e : (e as ObjectId).toHexString()))
+        // ? classIds.addAll((map['class_ids'] as List).map<String>((e) => e.runtimeType == String ? e : (e as ObjectId).toHexString()))
+        ? classIds.addAll((map['class_ids'] as List).map<String>((e) => e as String))
         : throw 'need class_ids key in people for observer $id';
   }
 

@@ -31,7 +31,7 @@ class MarkModel {
   MarkModel.fromMap(this.id, Map<String, dynamic> map) {
     teacherId = map['teacher_id'] != null ? map['teacher_id'] as String : throw 'need teacher_id key in mark $id';
     studentId = map['student_id'] != null ? map['student_id'] as String : throw 'need student_id key in mark $id';
-    date = map['date'] != null ? map['date'] as DateTime : throw 'need date key in mark $id';
+    date = map['date'] != null ? DateTime.tryParse(map['date'])! : throw 'need date key in mark $id';
     curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in mark $id';
     lessonOrder = map['lesson_order'] != null ? map['lesson_order'] as int : throw 'need lesson_order key in mark $id';
     type = map['type'] != null ? map['type'] as String : throw 'need type key in mark $id';

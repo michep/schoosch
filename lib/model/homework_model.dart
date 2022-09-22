@@ -16,7 +16,7 @@ class HomeworkModel {
   HomeworkModel.fromMap(this.id, Map<String, dynamic> map) {
     text = map['text'] != null ? map['text'] as String : throw 'need text key in homework  $id';
     classId = map['class_id'] != null ? map['class_id'] as String : throw 'need class key in homework  $id';
-    date = map['date'] != null ? map['date'] as DateTime : DateTime(2000);
+    date = map['date'] != null ? DateTime.tryParse(map['date'])! : throw 'need date key in homework $id';
     curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in homework  $id';
     studentId = map['student_id'] != null ? map['student_id'] as String : null;
     teacherId = map['teacher_id'] != null ? map['teacher_id'] as String : throw 'need teacher_id key in homework  $id';

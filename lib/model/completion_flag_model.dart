@@ -17,8 +17,8 @@ class CompletionFlagModel {
   CompletionFlagModel.fromMap(this.id, Map<String, dynamic> map) {
     completedById = map['completedby_id'] != null ? map['completedby_id'] as String : null;
     confirmedById = map['confirmedby_id'] != null ? map['confirmedby_id'] as String : null;
-    completedTime = map['completed_time'] != null ? map['completed_time'] as DateTime : null;
-    confirmedTime = map['confirmed_time'] != null ? map['confirmed_time'] as DateTime : null;
+    completedTime = map['completed_time'] != null ? DateTime.tryParse(map['completed_time']) : null;
+    confirmedTime = map['confirmed_time'] != null ? DateTime.tryParse(map['confirmed_time']) : null;
     if (map['status'] != null) {
       if (map['status'].runtimeType == int) {
         status = stat(map['status'] as int);

@@ -222,8 +222,9 @@ class LessonModel {
     return Get.find<MStore>().createAbsence(this, absence);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool withId = false}) {
     Map<String, dynamic> res = {};
+    if (withId) res['_id'] = id;
     res['order'] = order;
     res['curriculum_id'] = curriculumId;
     res['venue_id'] = venueId;
@@ -231,13 +232,13 @@ class LessonModel {
   }
 
   Future<LessonModel> save() async {
-    var id = await Get.find<MStore>().saveLesson(this);
+    var id = await Get.find<ProxyStore>().saveLesson(this);
     _id ??= id;
     return this;
   }
 
   Future<void> delete() async {
-    return Get.find<MStore>().deleteLesson(this);
+    return Get.find<ProxyStore>().deleteLesson(this);
   }
 }
 

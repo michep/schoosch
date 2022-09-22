@@ -124,127 +124,127 @@ class MStore extends GetxController {
   //   }
   // }
 
-  Future<List<StudentScheduleModel>> getClassWeekSchedule(ClassModel aclass, isoweek.Week currentWeek) async {
-    return _db
-        .collection('schedule')
-        .find(where.eq('class_id', aclass.id!).sortBy('day'))
-        .map((data) => StudentScheduleModel.fromMap(aclass, (data['_id'] as ObjectId).toHexString(), data))
-        .where((data) => data.from!.isBefore(currentWeek.day(5)) && (data.till == null || data.till!.isAfter(currentWeek.day(4))))
-        .toList();
-  }
+  // Future<List<StudentScheduleModel>> getClassWeekSchedule(ClassModel aclass, isoweek.Week currentWeek) async {
+  //   return _db
+  //       .collection('schedule')
+  //       .find(where.eq('class_id', aclass.id!).sortBy('day'))
+  //       .map((data) => StudentScheduleModel.fromMap(aclass, (data['_id'] as ObjectId).toHexString(), data))
+  //       .where((data) => data.from!.isBefore(currentWeek.day(5)) && (data.till == null || data.till!.isAfter(currentWeek.day(4))))
+  //       .toList();
+  // }
 
-  Future<List<StudentScheduleModel>> getClassDaySchedule(ClassModel aclass, int day) async {
-    return _db
-        .collection('schedule')
-        .find(where.eq('class_id', aclass.id))
-        .map((data) => StudentScheduleModel.fromMap(
-              aclass,
-              (data['_id'] as ObjectId).toHexString(),
-              data,
-            ))
-        .where((data) => data.day == day)
-        .toList();
-  }
+  // Future<List<StudentScheduleModel>> getClassDaySchedule(ClassModel aclass, int day) async {
+  //   return _db
+  //       .collection('schedule')
+  //       .find(where.eq('class_id', aclass.id))
+  //       .map((data) => StudentScheduleModel.fromMap(
+  //             aclass,
+  //             (data['_id'] as ObjectId).toHexString(),
+  //             data,
+  //           ))
+  //       .where((data) => data.day == day)
+  //       .toList();
+  // }
 
-  Future<String> saveDaySchedule(DayScheduleModel schedule) async {
-    var data = schedule.toMap();
-    data['institution_id'] = ObjectId.fromHexString(_institution!.id);
-    data['class_id'] = ObjectId.fromHexString(schedule.aclass.id!);
-    if (schedule.id == null) {
-      return ((await _db.collection('schedule').insertOne(data)).id as ObjectId).toHexString();
-    } else {
-      data['_id'] = ObjectId.fromHexString(schedule.id!);
-      await _db.collection('schedule').replaceOne(where.eq('_id', data['_id']), data);
-      return schedule.id!;
-    }
-  }
+  // Future<String> saveDaySchedule(DayScheduleModel schedule) async {
+  //   var data = schedule.toMap();
+  //   data['institution_id'] = ObjectId.fromHexString(_institution!.id);
+  //   data['class_id'] = ObjectId.fromHexString(schedule.aclass.id!);
+  //   if (schedule.id == null) {
+  //     return ((await _db.collection('schedule').insertOne(data)).id as ObjectId).toHexString();
+  //   } else {
+  //     data['_id'] = ObjectId.fromHexString(schedule.id!);
+  //     await _db.collection('schedule').replaceOne(where.eq('_id', data['_id']), data);
+  //     return schedule.id!;
+  //   }
+  // }
 
-  Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule, {DateTime? date, bool needsEmpty = false}) async {
-    List<LessonModel> res = [];
-    var less = await _db
-        .collection('lesson')
-        .find(where.eq('class_id', aclass.id).eq('schedule_id', schedule.id))
-        .map((data) => LessonModel.fromMap(aclass, schedule, (data['_id'] as ObjectId).toHexString(), data))
-        .toList();
+  // Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule, {DateTime? date, bool needsEmpty = false}) async {
+  //   List<LessonModel> res = [];
+  //   var less = await _db
+  //       .collection('lesson')
+  //       .find(where.eq('class_id', aclass.id).eq('schedule_id', schedule.id))
+  //       .map((data) => LessonModel.fromMap(aclass, schedule, (data['_id'] as ObjectId).toHexString(), data))
+  //       .toList();
 
-    List<ReplacementModel> reps = [];
-    if (date != null) {
-      reps.addAll((await getReplacementsOnDate(aclass, schedule, date)).toList());
-    }
+  //   List<ReplacementModel> reps = [];
+  //   if (date != null) {
+  //     reps.addAll((await getReplacementsOnDate(aclass, schedule, date)).toList());
+  //   }
 
-    if (needsEmpty) {
-      int maxOrder = 1;
-      for (var l in less) {
-        if (l.order > maxOrder) {
-          maxOrder = l.order;
-        }
-      }
+  //   if (needsEmpty) {
+  //     int maxOrder = 1;
+  //     for (var l in less) {
+  //       if (l.order > maxOrder) {
+  //         maxOrder = l.order;
+  //       }
+  //     }
 
-      List<int> empt = List.generate(maxOrder, (index) => index + 1);
-      empt.removeWhere((element) {
-        for (var l in less) {
-          if (l.order == element) {
-            return true;
-          }
-        }
-        return false;
-      });
+  //     List<int> empt = List.generate(maxOrder, (index) => index + 1);
+  //     empt.removeWhere((element) {
+  //       for (var l in less) {
+  //         if (l.order == element) {
+  //           return true;
+  //         }
+  //       }
+  //       return false;
+  //     });
 
-      for (var i in empt) {
-        var nl = EmptyLesson.fromMap(aclass, schedule, null, i);
-        nl.setAsEmpty();
-        less.add(nl);
-      }
-    }
+  //     for (var i in empt) {
+  //       var nl = EmptyLesson.fromMap(aclass, schedule, null, i);
+  //       nl.setAsEmpty();
+  //       less.add(nl);
+  //     }
+  //   }
 
-    for (var l in less) {
-      LessonModel? nl;
-      for (var r in reps) {
-        if (l.order == r.order) {
-          l.setReplacedType();
-          nl = r;
-        }
-      }
-      res.add(nl ?? l);
-    }
-    res.sort(
-      (a, b) => a.order.compareTo(b.order),
-    );
-    return res;
-  }
+  //   for (var l in less) {
+  //     LessonModel? nl;
+  //     for (var r in reps) {
+  //       if (l.order == r.order) {
+  //         l.setReplacedType();
+  //         nl = r;
+  //       }
+  //     }
+  //     res.add(nl ?? l);
+  //   }
+  //   res.sort(
+  //     (a, b) => a.order.compareTo(b.order),
+  //   );
+  //   return res;
+  // }
 
-  Future<List<LessonModel>> getScheduleLessonsForStudent(ClassModel aclass, StudentScheduleModel schedule, StudentModel student, DateTime? date) async {
-    List<LessonModel> res = [];
-    var less = await getScheduleLessons(aclass, schedule, date: date, needsEmpty: true);
+  // Future<List<LessonModel>> getScheduleLessonsForStudent(ClassModel aclass, StudentScheduleModel schedule, StudentModel student, DateTime? date) async {
+  //   List<LessonModel> res = [];
+  //   var less = await getScheduleLessons(aclass, schedule, date: date, needsEmpty: true);
 
-    for (var l in less) {
-      var cur = l.type == LessonType.empty ? null : await l.curriculum;
-      if ((cur != null && await cur.isAvailableForStudent(student)) || l.type == LessonType.empty) {
-        res.add(l);
-      }
-    }
-    return res;
-  }
+  //   for (var l in less) {
+  //     var cur = l.type == LessonType.empty ? null : await l.curriculum;
+  //     if ((cur != null && await cur.isAvailableForStudent(student)) || l.type == LessonType.empty) {
+  //       res.add(l);
+  //     }
+  //   }
+  //   return res;
+  // }
 
-  Future<String> saveLesson(LessonModel lesson) async {
-    var data = lesson.toMap();
-    data['institution_id'] = ObjectId.fromHexString(_institution!.id);
-    data['class_id'] = ObjectId.fromHexString(lesson.aclass.id!);
-    data['schedule_id'] = ObjectId.fromHexString(lesson.schedule.id!);
-    if (lesson.id == null) {
-      return ((await _db.collection('lesson').insertOne(data)).id as ObjectId).toHexString();
-    } else {
-      data['_id'] = ObjectId.fromHexString(lesson.id!);
-      await _db.collection('lesson').replaceOne(where.eq('_id', data['_id']), data);
-      return lesson.id!;
-    }
-  }
+  // Future<String> saveLesson(LessonModel lesson) async {
+  //   var data = lesson.toMap();
+  //   data['institution_id'] = ObjectId.fromHexString(_institution!.id);
+  //   data['class_id'] = ObjectId.fromHexString(lesson.aclass.id!);
+  //   data['schedule_id'] = ObjectId.fromHexString(lesson.schedule.id!);
+  //   if (lesson.id == null) {
+  //     return ((await _db.collection('lesson').insertOne(data)).id as ObjectId).toHexString();
+  //   } else {
+  //     data['_id'] = ObjectId.fromHexString(lesson.id!);
+  //     await _db.collection('lesson').replaceOne(where.eq('_id', data['_id']), data);
+  //     return lesson.id!;
+  //   }
+  // }
 
-  Future<void> deleteLesson(LessonModel lesson) async {
-    if (lesson.id != null) {
-      _db.collection('lesson').deleteOne(where.eq('_id', lesson.id!));
-    }
-  }
+  // Future<void> deleteLesson(LessonModel lesson) async {
+  //   if (lesson.id != null) {
+  //     _db.collection('lesson').deleteOne(where.eq('_id', lesson.id!));
+  //   }
+  // }
 
   // Future<PersonModel> getPerson(String id) async {
   //   var mid = ObjectId.fromHexString(id);
@@ -380,7 +380,7 @@ class MStore extends GetxController {
   }
 
   Future<ClassModel?> getClassForStudent(PersonModel student) async {
-    var res = await _db.collection('class').findOne(where.eq('student_ids', student.id));
+    var res = await _db.collection('class').findOne(where.eq('student_ids', ObjectId.fromHexString(student.id!)));
     return res == null ? null : ClassModel.fromMap((res['_id'] as ObjectId).toHexString(), res);
   }
 
@@ -867,8 +867,8 @@ class MStore extends GetxController {
 
   Future<List<int>> getFreeLessonsOnDay(ClassModel aclass, DateTime date) async {
     List<int> res = [];
-    var a = (await getClassDaySchedule(aclass, date.weekday)).where((element) => element.till == null).first;
-    var b = await getScheduleLessons(aclass, a, needsEmpty: true, date: date);
+    var a = (await Get.find<ProxyStore>().getClassDaySchedule(aclass, date.weekday)).where((element) => element.till == null).first;
+    var b = await Get.find<ProxyStore>().getScheduleLessons(aclass, a, needsEmpty: true, date: date);
     for (var l in b) {
       if (l.type == LessonType.empty) {
         res.add(l.order);
