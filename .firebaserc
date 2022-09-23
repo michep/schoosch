@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "schoosch-8e6d4"
+  },
+  "targets": {
+    "schoosch-8e6d4": {
+      "hosting": {
+        "default": [
+          "schoosch-8e6d4"
+        ],
+        "pasternak": [
+          "schoosch-pasternak"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
