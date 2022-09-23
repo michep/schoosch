@@ -51,3 +51,4 @@ app.*.map.json
 firebase.json
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
+functions/node_modules
