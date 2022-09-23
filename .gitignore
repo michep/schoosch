@@ -46,9 +46,5 @@ app.*.map.json
 /android/app/release
 
 #Firebase
-.firebase
-.firebaserc
-firebase.json
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
-functions/node_modules
