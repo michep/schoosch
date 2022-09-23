@@ -511,27 +511,27 @@ class MStore extends GetxController {
   //   return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
   // }
 
-  Future<HomeworkModel?> getHomeworkForStudentOnDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
-    var data = await _db.collection('homework').findOne(where
-        .eq('curriculum_id', curriculum.id)
-        .eq('class)id', aclass.id)
-        .eq('student_id', student.id)
-        .gte('date', date)
-        .lt('date', date.add(const Duration(hours: 24)))
-        .sortBy('date'));
-    return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
-  }
+  // Future<HomeworkModel?> getHomeworkForStudentOnDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
+  //   var data = await _db.collection('homework').findOne(where
+  //       .eq('curriculum_id', curriculum.id)
+  //       .eq('class)id', aclass.id)
+  //       .eq('student_id', student.id)
+  //       .gte('date', date)
+  //       .lt('date', date.add(const Duration(hours: 24)))
+  //       .sortBy('date'));
+  //   return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
+  // }
 
-  Future<HomeworkModel?> getHomeworkForClassOnDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
-    var data = await _db.collection('homework').findOne(where
-        .eq('curriculum_id', curriculum.id)
-        .eq('class)id', aclass.id)
-        .eq('student_id', null)
-        .gte('date', date)
-        .lt('date', date.add(const Duration(hours: 24)))
-        .sortBy('date'));
-    return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
-  }
+  // Future<HomeworkModel?> getHomeworkForClassOnDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
+  //   var data = await _db.collection('homework').findOne(where
+  //       .eq('curriculum_id', curriculum.id)
+  //       .eq('class)id', aclass.id)
+  //       .eq('student_id', null)
+  //       .gte('date', date)
+  //       .lt('date', date.add(const Duration(hours: 24)))
+  //       .sortBy('date'));
+  //   return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
+  // }
 
   Future<void> updateHomework(HomeworkModel homework, String newText) async {
     await _db.collection('homework').updateOne(where.eq('_id', homework.id), modify.set('text', newText));

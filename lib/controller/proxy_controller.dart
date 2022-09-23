@@ -41,7 +41,6 @@ class ProxyStore extends getx.GetxController {
   PersonModel? get currentUser => _currentUser;
   InstitutionModel? get currentInstitution => institution;
 
-
   Future<InstitutionModel> _geInstitutionIdByUserEmail(String email) async {
     var res = await dio.getUri<Map<String, dynamic>>(Uri.http(host, '/institution/email/$email'));
     var js = res.data!;
@@ -357,6 +356,41 @@ class ProxyStore extends getx.GetxController {
     // var data = await _db
     //     .collection('homework')
     //     .findOne(where.eq('curriculum_id', curriculum.id).eq('class_id', aclass.id).eq('student_id', null).lt('date', date).sortBy('date'));
+    // return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
+  }
+
+  Future<HomeworkModel?> getHomeworkForStudentOnDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
+    var res = await dio.postUri<Map<String, dynamic>>(
+      Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/student/${student.id}/onDate'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {'date': date.toIso8601String()},
+    );
+    var js = res.data!;
+    return HomeworkModel.fromMap(js['_id'], js);
+
+    // var data = await _db.collection('homework').findOne(where
+    //     .eq('curriculum_id', curriculum.id)
+    //     .eq('class)id', aclass.id)
+    //     .eq('student_id', student.id)
+    //     .gte('date', date)
+    //     .lt('date', date.add(const Duration(hours: 24)))
+    //     .sortBy('date'));
+    // return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
+  }
+
+  Future<HomeworkModel?> getHomeworkForClassOnDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
+    var res = await dio.postUri<Map<String, dynamic>>(Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/student/null/onDate'),
+        options: Options(headers: {'Content-Type': 'application/json'}), data: {'date': date.toIso8601String()});
+    var js = res.data!;
+    return HomeworkModel.fromMap(js['_id'], js);
+
+    // var data = await _db.collection('homework').findOne(where
+    //     .eq('curriculum_id', curriculum.id)
+    //     .eq('class)id', aclass.id)
+    //     .eq('student_id', null)
+    //     .gte('date', date)
+    //     .lt('date', date.add(const Duration(hours: 24)))
+    //     .sortBy('date'));
     // return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
   }
 }
