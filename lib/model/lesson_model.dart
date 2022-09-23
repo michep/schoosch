@@ -102,24 +102,24 @@ class LessonModel {
 
   Future<HomeworkModel?> homeworkThisLessonForClass(DateTime date, {bool forceRefresh = false}) async {
     if (_homeworksThisLesson['class'] == null || forceRefresh) {
-      _homeworksThisLesson['class'] = await Get.find<MStore>().getHomeworkForClassBeforeDate(aclass, (await curriculum)!, date);
+      _homeworksThisLesson['class'] = await Get.find<ProxyStore>().getHomeworkForClassBeforeDate(aclass, (await curriculum)!, date);
     }
     return _homeworksThisLesson['class'];
   }
 
   Future<HomeworkModel?> homeworkThisLessonForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
     if (_homeworksThisLesson[student.id] == null || forceRefresh) {
-      _homeworksThisLesson[student.id!] = await Get.find<MStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, student, date);
+      _homeworksThisLesson[student.id!] = await Get.find<ProxyStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, student, date);
     }
     return _homeworksThisLesson[student.id!];
   }
 
   Future<Map<String, HomeworkModel?>> homeworkThisLessonForClassAndStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
     if (_homeworksThisLesson[student.id] == null || forceRefresh) {
-      _homeworksThisLesson[student.id!] = await Get.find<MStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, student, date);
+      _homeworksThisLesson[student.id!] = await Get.find<ProxyStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, student, date);
     }
     if (_homeworksThisLesson['class'] == null || forceRefresh) {
-      _homeworksThisLesson['class'] = await Get.find<MStore>().getHomeworkForClassBeforeDate(aclass, (await curriculum)!, date);
+      _homeworksThisLesson['class'] = await Get.find<ProxyStore>().getHomeworkForClassBeforeDate(aclass, (await curriculum)!, date);
     }
 
     return {
@@ -132,11 +132,11 @@ class LessonModel {
     var studs = await aclass.students();
     for (StudentModel stud in studs) {
       if (_homeworksThisLesson[stud.id] == null || forceRefresh) {
-        _homeworksThisLesson[stud.id!] = await Get.find<MStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, stud, date);
+        _homeworksThisLesson[stud.id!] = await Get.find<ProxyStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, stud, date);
       }
     }
     if (_homeworksThisLesson['class'] == null || forceRefresh) {
-      _homeworksThisLesson['class'] = await Get.find<MStore>().getHomeworkForClassBeforeDate(aclass, (await curriculum)!, date);
+      _homeworksThisLesson['class'] = await Get.find<ProxyStore>().getHomeworkForClassBeforeDate(aclass, (await curriculum)!, date);
     }
     return _homeworksThisLesson;
   }

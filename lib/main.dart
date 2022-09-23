@@ -35,7 +35,7 @@ Future<void> main() async {
   // var fstore = FStore();
   var mstore = MStore();
   var store = FStorage();
-  var proxy = ProxyStore('83.219.247.121:8182');
+  var proxy = ProxyStore('83.219.247.178:8182');
   // var bcont = BlueprintController();
   Get.put<FAuth>(fauth);
   // Get.put<FStore>(fstore);

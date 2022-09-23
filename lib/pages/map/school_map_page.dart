@@ -1,5 +1,6 @@
 import 'package:schoosch/controller/blueprint_controller.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/map/floor.dart';
@@ -24,7 +25,7 @@ class _SchoolMapPageState extends State<SchoolMapPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          Get.find<MStore>().currentInstitution!.name,
+          Get.find<ProxyStore>().currentInstitution!.name,
           overflow: TextOverflow.ellipsis,
         ),
         actions: [

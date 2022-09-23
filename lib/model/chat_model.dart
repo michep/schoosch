@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/message_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
@@ -19,7 +20,7 @@ class ChatModel {
 
   PersonModel get other => users!
       .where(
-        (element) => element.id != Get.find<MStore>().currentUser!.id,
+        (element) => element.id != Get.find<ProxyStore>().currentUser!.id,
       )
       .toList()[0];
 }

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 // import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/controller/storage_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -61,16 +62,18 @@ class _LoginPageState extends State<LoginPage> {
     // var bcont = Get.find<BlueprintController>();
     var mstore = Get.find<MStore>();
     var store = Get.find<FStorage>();
+    var proxy = Get.find<ProxyStore>();
 
     if (user == null) {
       mstore.resetCurrentUser();
     }
-    if (user != null && mstore.currentUser == null) {
+    if (user != null && proxy.currentUser == null) {
       // await fstore.init(user.email!);
       // await store.init(fstore.currentInstitution!.id);
       // await bcont.init();
       await mstore.init(user.email!);
       await store.init(mstore.db);
+      await proxy.init(user.email!);
 
       // OneSignal.shared.setExternalUserId(PersonModel.currentUser!.id!.toHexString());
       PersonModel.currentUser!.currentType == PersonType.admin ? Get.offAll(() => const AdminPage()) : Get.offAll(() => const HomePage());

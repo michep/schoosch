@@ -2,8 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/model/class_model.dart';
+import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
+import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
@@ -37,6 +39,8 @@ class ProxyStore extends getx.GetxController {
   }
 
   PersonModel? get currentUser => _currentUser;
+  InstitutionModel? get currentInstitution => institution;
+
 
   Future<InstitutionModel> _geInstitutionIdByUserEmail(String email) async {
     var res = await dio.getUri<Map<String, dynamic>>(Uri.http(host, '/institution/email/$email'));
@@ -331,5 +335,28 @@ class ProxyStore extends getx.GetxController {
         options: Options(headers: {'Content-Type': 'application/json'}), data: {'date': date.toIso8601String()});
     var js = res.data!;
     return js.map((data) => ReplacementModel.fromMap(aclass, schedule, data['_id'], data)).toList();
+  }
+
+  Future<HomeworkModel?> getHomeworkForStudentBeforeDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
+    var res = await dio.postUri<Map<String, dynamic>>(Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/student/${student.id}'),
+        options: Options(headers: {'Content-Type': 'application/json'}), data: {'date': date.toIso8601String()});
+    var js = res.data!;
+    return HomeworkModel.fromMap(js['_id'], js);
+    // var data = await _db
+    //     .collection('homework')
+    //     .findOne(where.eq('curriculum_id', curriculum.id).eq('class_id', aclass.id).eq('student_id', student.id).lt('date', date).sortBy('date'));
+    // return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
+  }
+
+  Future<HomeworkModel?> getHomeworkForClassBeforeDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
+    var res = await dio.postUri<Map<String, dynamic>>(Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/student/null'),
+        options: Options(headers: {'Content-Type': 'application/json'}), data: {'date': date.toIso8601String()});
+    var js = res.data!;
+    return HomeworkModel.fromMap(js['_id'], js);
+
+    // var data = await _db
+    //     .collection('homework')
+    //     .findOne(where.eq('curriculum_id', curriculum.id).eq('class_id', aclass.id).eq('student_id', null).lt('date', date).sortBy('date'));
+    // return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
   }
 }

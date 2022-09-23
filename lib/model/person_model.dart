@@ -126,7 +126,7 @@ class PersonModel {
     }
   }
 
-  static PersonModel? get currentUser => Get.find<MStore>().currentUser;
+  static PersonModel? get currentUser => Get.find<ProxyStore>().currentUser;
   static StudentModel? get currentStudent => currentUser?._asStudent;
   static TeacherModel? get currentTeacher => currentUser?._asTeacher;
   static ParentModel? get currentParent => currentUser?._asParent;

@@ -20,7 +20,7 @@ class InstitutionModel {
     address = map['address'] != null ? map['address'] as String : '';
   }
 
-  static InstitutionModel get currentInstitution => Get.find<MStore>().currentInstitution!;
+  static InstitutionModel get currentInstitution => Get.find<ProxyStore>().currentInstitution!;
 
   Future<List<VenueModel>> get venues async {
     return Get.find<ProxyStore>().getAllVenues();

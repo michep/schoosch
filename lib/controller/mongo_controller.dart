@@ -49,8 +49,8 @@ class MStore extends GetxController {
 
   Future<void> init(String userEmail) async {
     if (db.state == State.INIT) await _db.open(secure: true, tlsAllowInvalidCertificates: true);
-    _institution = await _geInstitutionIdByUserEmail(userEmail);
-    _currentUser = await _getUserByEmail(userEmail);
+    // _institution = await _geInstitutionIdByUserEmail(userEmail);
+    // _currentUser = await _getUserByEmail(userEmail);
   }
 
   Future<void> reset() async {
@@ -497,19 +497,19 @@ class MStore extends GetxController {
     return (d.year == DateTime.now().year && d.month == DateTime.now().month);
   }
 
-  Future<HomeworkModel?> getHomeworkForStudentBeforeDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
-    var data = await _db
-        .collection('homework')
-        .findOne(where.eq('curriculum_id', curriculum.id).eq('class_id', aclass.id).eq('student_id', student.id).lt('date', date).sortBy('date'));
-    return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
-  }
+  // Future<HomeworkModel?> getHomeworkForStudentBeforeDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
+  //   var data = await _db
+  //       .collection('homework')
+  //       .findOne(where.eq('curriculum_id', curriculum.id).eq('class_id', aclass.id).eq('student_id', student.id).lt('date', date).sortBy('date'));
+  //   return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
+  // }
 
-  Future<HomeworkModel?> getHomeworkForClassBeforeDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
-    var data = await _db
-        .collection('homework')
-        .findOne(where.eq('curriculum_id', curriculum.id).eq('class_id', aclass.id).eq('student_id', null).lt('date', date).sortBy('date'));
-    return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
-  }
+  // Future<HomeworkModel?> getHomeworkForClassBeforeDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
+  //   var data = await _db
+  //       .collection('homework')
+  //       .findOne(where.eq('curriculum_id', curriculum.id).eq('class_id', aclass.id).eq('student_id', null).lt('date', date).sortBy('date'));
+  //   return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
+  // }
 
   Future<HomeworkModel?> getHomeworkForStudentOnDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
     var data = await _db.collection('homework').findOne(where

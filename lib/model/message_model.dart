@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 
 class MessageModel {
   late final String? id;
@@ -13,5 +14,5 @@ class MessageModel {
     timeSent = map['timestamp'] != null ? DateTime.tryParse(map['timestamp']) : throw '';
   }
 
-  bool get sentByMe => sentById! == Get.find<MStore>().currentUser!.id;
+  bool get sentByMe => sentById! == Get.find<ProxyStore>().currentUser!.id;
 }
