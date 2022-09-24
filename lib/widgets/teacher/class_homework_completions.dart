@@ -78,7 +78,7 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
                       );
                     },
                   )
-                : const SizedBox.shrink(),
+                : const Center(child: Text('Вы еще не задали ДЗ.'),),
             Visibility(
               visible: buttonVisible,
               child: Align(
