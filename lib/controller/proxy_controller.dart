@@ -330,15 +330,17 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<ReplacementModel>> getReplacementsOnDate(ClassModel aclass, DayScheduleModel schedule, DateTime date) async {
-    var res = await dio.postUri<List>(Uri.http(host, '/class/${aclass.id}/replace'),
+    var res = await dio.postUri<List>(Uri.http(host, '/class/${aclass.id}/replace/ondate'),
         options: Options(headers: {'Content-Type': 'application/json'}), data: {'date': date.toIso8601String()});
     var js = res.data!;
     return js.map((data) => ReplacementModel.fromMap(aclass, schedule, data['_id'], data)).toList();
   }
 
   Future<HomeworkModel?> getHomeworkForStudentBeforeDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
-    var res = await dio.postUri<Map<String, dynamic>>(Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/student/${student.id}'),
-        options: Options(headers: {'Content-Type': 'application/json'}), data: {'date': date.toIso8601String()});
+    var res = await dio.postUri<Map<String, dynamic>>(
+        Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/student/${student.id}/homework/beforedate'),
+        options: Options(headers: {'Content-Type': 'application/json'}),
+        data: {'date': date.toIso8601String()});
     var js = res.data!;
     return HomeworkModel.fromMap(js['_id'], js);
     // var data = await _db
@@ -348,7 +350,7 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<HomeworkModel?> getHomeworkForClassBeforeDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
-    var res = await dio.postUri<Map<String, dynamic>>(Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/student/null'),
+    var res = await dio.postUri<Map<String, dynamic>>(Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/homework/beforedate'),
         options: Options(headers: {'Content-Type': 'application/json'}), data: {'date': date.toIso8601String()});
     var js = res.data!;
     return HomeworkModel.fromMap(js['_id'], js);
@@ -361,7 +363,7 @@ class ProxyStore extends getx.GetxController {
 
   Future<HomeworkModel?> getHomeworkForStudentOnDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
     var res = await dio.postUri<Map<String, dynamic>>(
-      Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/student/${student.id}/onDate'),
+      Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/student/${student.id}/homework/ondate'),
       options: Options(headers: {'Content-Type': 'application/json'}),
       data: {'date': date.toIso8601String()},
     );
@@ -379,7 +381,7 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<HomeworkModel?> getHomeworkForClassOnDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
-    var res = await dio.postUri<Map<String, dynamic>>(Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/student/null/onDate'),
+    var res = await dio.postUri<Map<String, dynamic>>(Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/homework/ondate'),
         options: Options(headers: {'Content-Type': 'application/json'}), data: {'date': date.toIso8601String()});
     var js = res.data!;
     return HomeworkModel.fromMap(js['_id'], js);
