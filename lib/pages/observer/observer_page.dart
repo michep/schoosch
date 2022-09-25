@@ -4,6 +4,7 @@ import 'package:schoosch/pages/class_subject_page.dart';
 import 'package:schoosch/pages/observer/observer_schedule_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/drawer.dart';
+import 'package:schoosch/widgets/tab_chip.dart';
 // import 'package:schoosch/widgets/week_selector.dart';
 
 class ObserverPage extends StatefulWidget {
@@ -54,13 +55,9 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
                     currenSelection = i;
                   });
                 },
-                tabs: const [
-                  Tab(
-                    text: 'расписание/ДЗ',
-                  ),
-                  Tab(
-                    text: 'успеваемость',
-                  )
+                tabs: [
+                  TabChip(current: currenSelection, pos: 0, text: 'расписание/ДЗ'),
+                  TabChip(current: currenSelection, pos: 1, text: 'успеваемость')
                 ],
               ),
             ),

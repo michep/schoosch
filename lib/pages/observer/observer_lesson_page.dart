@@ -7,13 +7,14 @@ import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/tab_chip.dart';
 import 'package:schoosch/widgets/teacher/class_homework_completions.dart';
 import 'package:schoosch/widgets/teacher/students_absences.dart';
 import 'package:schoosch/widgets/teacher/students_homework_completions.dart';
 import 'package:schoosch/widgets/teacher/students_marks.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class ObserverLessonPage extends StatelessWidget {
+class ObserverLessonPage extends StatefulWidget {
   final LessonModel lesson;
   final CurriculumModel curriculum;
   final VenueModel venue;
@@ -26,11 +27,17 @@ class ObserverLessonPage extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<ObserverLessonPage> createState() => _ObserverLessonPageState();
+}
+
+class _ObserverLessonPageState extends State<ObserverLessonPage> {
+  int current = 0;
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 6,
       child: Scaffold(
-        appBar: MAppBar(curriculum.aliasOrName),
+        appBar: MAppBar(widget.curriculum.aliasOrName),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(8),
@@ -38,27 +45,30 @@ class ObserverLessonPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(lesson.aclass.name),
-                Text(Utils.formatDatetime(date)),
-                Text('${lesson.order} ${S.of(context).lesson}'),
-                Text(time.formatPeriod()),
+                Text(widget.lesson.aclass.name),
+                Text(Utils.formatDatetime(widget.date)),
+                Text('${widget.lesson.order} ${S.of(context).lesson}'),
+                Text(widget.time.formatPeriod()),
                 FutureBuilder<TeacherModel?>(
-                  future: curriculum.master,
+                  future: widget.curriculum.master,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData || snapshot.data == null) return const SizedBox.shrink();
                     return Text(snapshot.data!.fullName);
                   },
                 ),
                 TabBar(
-                  labelPadding: const EdgeInsets.all(16),
+                  labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                   isScrollable: true,
+                  onTap: (i) => setState(() {
+                    current = i;
+                  }),
                   tabs: [
-                    Text(S.of(context).currentLessonClassHomework),
-                    Text(S.of(context).currentLessonPersonalHomeworks),
-                    Text(S.of(context).currentLessonAbsences),
-                    Text(S.of(context).currentLessonMarks),
-                    Text(S.of(context).nextLessonClassHomework),
-                    Text(S.of(context).nextLessonPersonalHomeworks),
+                    TabChip(text: S.of(context).currentLessonClassHomework, pos: 0, current: current),
+                    TabChip(text: S.of(context).currentLessonPersonalHomeworks, pos: 1, current: current),
+                    TabChip(text: S.of(context).currentLessonAbsences, pos: 2, current: current),
+                    TabChip(text: S.of(context).currentLessonMarks, pos: 3, current: current),
+                    TabChip(text: S.of(context).nextLessonClassHomework, pos: 4, current: current),
+                    TabChip(text: S.of(context).nextLessonPersonalHomeworks, pos: 5, current: current),
                   ],
                 ),
                 Expanded(
@@ -66,44 +76,44 @@ class ObserverLessonPage extends StatelessWidget {
                     children: [
                       ClassTaskWithCompetionsPage(
                         null,
-                        curriculum,
-                        date,
-                        lesson,
-                        (d, f) => lesson.homeworkThisLessonForClass(d, forceRefresh: f),
+                        widget.curriculum,
+                        widget.date,
+                        widget.lesson,
+                        (d, f) => widget.lesson.homeworkThisLessonForClass(d, forceRefresh: f),
                         readOnly: true,
                       ),
                       StudentsTasksWithCompetionsPage(
                         null,
-                        curriculum,
-                        date,
-                        lesson,
-                        (d, f) => lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
+                        widget.curriculum,
+                        widget.date,
+                        widget.lesson,
+                        (d, f) => widget.lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
                         readOnly: true,
                       ),
                       StudentsAbsencePage(
-                        date,
-                        lesson,
+                        widget.date,
+                        widget.lesson,
                         readOnly: true,
                       ),
                       StudentsMarksPage(
-                        date,
-                        lesson,
+                        widget.date,
+                        widget.lesson,
                         readOnly: true,
                       ),
                       ClassTaskWithCompetionsPage(
                         null,
-                        curriculum,
-                        date,
-                        lesson,
-                        (d, f) => lesson.homeworOnDateForClass(d, forceRefresh: f),
+                        widget.curriculum,
+                        widget.date,
+                        widget.lesson,
+                        (d, f) => widget.lesson.homeworOnDateForClass(d, forceRefresh: f),
                         readOnly: true,
                       ),
                       StudentsTasksWithCompetionsPage(
                         null,
-                        curriculum,
-                        date,
-                        lesson,
-                        (d, f) => lesson.homeworkOnDateForClassAndAllStudents(d, forceRefresh: f),
+                        widget.curriculum,
+                        widget.date,
+                        widget.lesson,
+                        (d, f) => widget.lesson.homeworkOnDateForClassAndAllStudents(d, forceRefresh: f),
                         readOnly: true,
                       ),
                     ],

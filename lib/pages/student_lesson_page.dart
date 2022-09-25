@@ -8,9 +8,10 @@ import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/student/homeworks_page.dart';
 import 'package:schoosch/widgets/student/marks_page.dart';
+import 'package:schoosch/widgets/tab_chip.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class StudentLessonPage extends StatelessWidget {
+class StudentLessonPage extends StatefulWidget {
   final StudentModel _student;
   final DateTime _date;
   final LessonModel _lesson;
@@ -19,6 +20,12 @@ class StudentLessonPage extends StatelessWidget {
   final LessontimeModel _time;
   const StudentLessonPage(this._student, this._lesson, this._curriculum, this._venue, this._time, this._date, {Key? key}) : super(key: key);
 
+  @override
+  State<StudentLessonPage> createState() => _StudentLessonPageState();
+}
+
+class _StudentLessonPageState extends State<StudentLessonPage> {
+  int current = 0;
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -33,29 +40,35 @@ class StudentLessonPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${_curriculum.aliasOrName} ${_lesson.type == LessonType.replacment ? '(замена)' : ''}',
+                  '${widget._curriculum.aliasOrName} ${widget._lesson.type == LessonType.replacment ? '(замена)' : ''}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Text(Utils.formatDatetime(_date)),
-                Text('${_lesson.order} урок'),
-                Text(_time.formatPeriod()),
+                Text(Utils.formatDatetime(widget._date)),
+                Text('${widget._lesson.order} урок'),
+                Text(widget._time.formatPeriod()),
                 FutureBuilder<TeacherModel?>(
-                  future: _curriculum.master,
+                  future: widget._curriculum.master,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData || snapshot.data == null) return const SizedBox.shrink();
                     return Text(snapshot.data!.fullName);
                   },
                 ),
-                const TabBar(
+                TabBar(
                   isScrollable: false,
-                  labelPadding: EdgeInsets.all(16),
-                  tabs: [Text('ДЗ на этот урок'), Text('Оценки')],
+                  labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  onTap: (i) => setState(() {
+                    current = i;
+                  }),
+                  tabs: [
+                    TabChip(current: current, pos: 0, text: 'ДЗ на этот урок'),
+                    TabChip(current: current, pos: 1, text: 'Оценки')
+                  ],
                 ),
                 Expanded(
                   child: TabBarView(
                     children: [
-                      HomeworksForStudentPage(_lesson, _date, _student),
-                      MarksForStudentPage(_lesson, _date, _student),
+                      HomeworksForStudentPage(widget._lesson, widget._date, widget._student),
+                      MarksForStudentPage(widget._lesson, widget._date, widget._student),
                     ],
                   ),
                 ),

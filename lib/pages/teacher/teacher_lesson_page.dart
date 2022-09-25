@@ -6,6 +6,7 @@ import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/tab_chip.dart';
 import 'package:schoosch/widgets/teacher/class_homework_completions.dart';
 import 'package:schoosch/widgets/teacher/students_absences.dart';
 import 'package:schoosch/widgets/teacher/students_homework_completions.dart';
@@ -77,12 +78,12 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
                     });
                   },
                   tabs: [
-                    tabChip(context: context, text: S.of(context).currentLessonClassHomework, pos: 0),
-                    tabChip(context: context, text: S.of(context).currentLessonPersonalHomeworks, pos: 1),
-                    tabChip(context: context, text: S.of(context).currentLessonAbsences, pos: 2),
-                    tabChip(context: context, text: S.of(context).currentLessonMarks, pos: 3),
-                    tabChip(context: context, text: S.of(context).nextLessonClassHomework, pos: 4),
-                    tabChip(context: context, text: S.of(context).nextLessonPersonalHomeworks, pos: 5),
+                    TabChip(text: S.of(context).currentLessonClassHomework, pos: 0, current: current),
+                    TabChip(text: S.of(context).currentLessonPersonalHomeworks, pos: 1, current: current),
+                    TabChip(text: S.of(context).currentLessonAbsences, pos: 2, current: current),
+                    TabChip(text: S.of(context).currentLessonMarks, pos: 3, current: current),
+                    TabChip(text: S.of(context).nextLessonClassHomework, pos: 4, current: current),
+                    TabChip(text: S.of(context).nextLessonPersonalHomeworks, pos: 5, current: current),
                     // Text(S.of(context).currentLessonClassHomework),
                     // Text(S.of(context).currentLessonPersonalHomeworks),
                     // Text(S.of(context).currentLessonAbsences),
@@ -142,17 +143,4 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
       ),
     );
   }
-
-  Widget tabChip({required BuildContext context, required String text, required int pos}) => Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          border: Border.all(
-            color: current == pos ? Theme.of(context).colorScheme.onBackground : Colors.transparent,
-            width: 1.3,
-          ),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(text),
-      );
 }
