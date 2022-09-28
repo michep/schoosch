@@ -59,9 +59,12 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
                 TabBar(
                   labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                   isScrollable: true,
-                  onTap: (i) => setState(() {
-                    current = i;
-                  }),
+                  indicatorWeight: 0.001,
+                  onTap: (i) {
+                    setState(() {
+                      current = i;
+                    });
+                  },
                   tabs: [
                     TabChip(text: S.of(context).currentLessonClassHomework, pos: 0, current: current),
                     TabChip(text: S.of(context).currentLessonPersonalHomeworks, pos: 1, current: current),

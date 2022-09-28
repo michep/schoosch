@@ -72,9 +72,9 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
                   labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                   isScrollable: true,
                   indicatorWeight: 0.001,
-                  onTap: (value) {
+                  onTap: (i) {
                     setState(() {
-                      current = value;
+                      current = i;
                     });
                   },
                   tabs: [

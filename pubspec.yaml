@@ -34,6 +34,8 @@ dependencies:
   onesignal_flutter: ^3.0.0
   http: ^0.13.5
   mutex: ^3.0.0
+  flutter_linkify: ^5.0.2
+  url_launcher: ^6.1.5
 
 dev_dependencies:
   flutter_test:
