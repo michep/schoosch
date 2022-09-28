@@ -18,7 +18,7 @@ class ObserverPage extends StatefulWidget {
 
 class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderStateMixin {
   late TabController tabcont;
-  int currenSelection = 0;
+  int current = 0;
 
   late final List<Widget> _pages;
 
@@ -50,21 +50,22 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
               height: 60,
               child: TabBar(
                 controller: tabcont,
+                indicatorWeight: 0.001,
                 onTap: (i) {
                   setState(() {
-                    currenSelection = i;
+                    current = i;
                   });
                 },
                 tabs: [
-                  TabChip(current: currenSelection, pos: 0, text: 'расписание/ДЗ'),
-                  TabChip(current: currenSelection, pos: 1, text: 'успеваемость')
+                  TabChip(current: current, pos: 0, text: 'расписание/ДЗ'),
+                  TabChip(current: current, pos: 1, text: 'успеваемость')
                 ],
               ),
             ),
             // WeekSelector(
             //   key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber),
             // ),
-            _pages[currenSelection],
+            _pages[current],
           ],
         ),
       ),

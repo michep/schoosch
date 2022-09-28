@@ -56,13 +56,13 @@ class _StudentLessonPageState extends State<StudentLessonPage> {
                 TabBar(
                   isScrollable: false,
                   labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                  onTap: (i) => setState(() {
-                    current = i;
-                  }),
-                  tabs: [
-                    TabChip(current: current, pos: 0, text: 'ДЗ на этот урок'),
-                    TabChip(current: current, pos: 1, text: 'Оценки')
-                  ],
+                  indicatorWeight: 0.001,
+                  onTap: (i) {
+                    setState(() {
+                      current = i;
+                    });
+                  },
+                  tabs: [TabChip(current: current, pos: 0, text: 'ДЗ на этот урок'), TabChip(current: current, pos: 1, text: 'Оценки')],
                 ),
                 Expanded(
                   child: TabBarView(
