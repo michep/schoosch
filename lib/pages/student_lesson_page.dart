@@ -9,6 +9,7 @@ import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/student/homeworks_page.dart';
 import 'package:schoosch/widgets/student/marks_page.dart';
 import 'package:schoosch/widgets/tab_chip.dart';
+import 'package:schoosch/widgets/tabs_widget.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class StudentLessonPage extends StatefulWidget {
@@ -24,56 +25,77 @@ class StudentLessonPage extends StatefulWidget {
   State<StudentLessonPage> createState() => _StudentLessonPageState();
 }
 
-class _StudentLessonPageState extends State<StudentLessonPage> {
+class _StudentLessonPageState extends State<StudentLessonPage> with SingleTickerProviderStateMixin {
+  late TabController tabcont;
+
+  @override
+  void initState() {
+    tabcont = TabController(length: 2, vsync: this);
+    super.initState();
+  }
+
   int current = 0;
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: MAppBar(S.of(context).lessonTitle),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${widget._curriculum.aliasOrName} ${widget._lesson.type == LessonType.replacment ? '(замена)' : ''}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(Utils.formatDatetime(widget._date)),
-                Text('${widget._lesson.order} урок'),
-                Text(widget._time.formatPeriod()),
-                FutureBuilder<TeacherModel?>(
-                  future: widget._curriculum.master,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData || snapshot.data == null) return const SizedBox.shrink();
-                    return Text(snapshot.data!.fullName);
-                  },
-                ),
-                TabBar(
-                  isScrollable: false,
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                  indicatorWeight: 0.001,
-                  onTap: (i) {
-                    setState(() {
-                      current = i;
-                    });
-                  },
-                  tabs: [TabChip(current: current, pos: 0, text: 'ДЗ на этот урок'), TabChip(current: current, pos: 1, text: 'Оценки')],
-                ),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      HomeworksForStudentPage(widget._lesson, widget._date, widget._student),
-                      MarksForStudentPage(widget._lesson, widget._date, widget._student),
-                    ],
+    return Scaffold(
+      appBar: MAppBar(S.of(context).lessonTitle),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${widget._curriculum.aliasOrName} ${widget._lesson.type == LessonType.replacment ? '(замена)' : ''}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(Utils.formatDatetime(widget._date)),
+              Text('${widget._lesson.order} урок'),
+              Text(widget._time.formatPeriod()),
+              FutureBuilder<TeacherModel?>(
+                future: widget._curriculum.master,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData || snapshot.data == null) return const SizedBox.shrink();
+                  return Text(snapshot.data!.fullName);
+                },
+              ),
+              // TabBar(
+              //   controller: tabcont,
+              //   isScrollable: false,
+              //   labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              //   indicatorWeight: 0.001,
+              //   onTap: (i) {
+              //     setState(() {
+              //       current = i;
+              //     });
+              //   },
+              //   tabs: [TabChip(current: current, pos: 0, text: 'ДЗ на этот урок'), TabChip(current: current, pos: 1, text: 'Оценки')],
+              // ),
+              // Expanded(
+              //   child: TabBarView(
+              //     children: [
+              //       HomeworksForStudentPage(widget._lesson, widget._date, widget._student),
+              //       MarksForStudentPage(widget._lesson, widget._date, widget._student),
+              //     ],
+              //   ),
+              // ),
+              TabsWidget(
+                pages: {
+                  'Дз на этот урок': HomeworksForStudentPage(
+                    widget._lesson,
+                    widget._date,
+                    widget._student,
                   ),
-                ),
-              ],
-            ),
+                  'Оценки': MarksForStudentPage(
+                    widget._lesson,
+                    widget._date,
+                    widget._student,
+                  ),
+                },
+                isScrollable: false,
+              ),
+            ],
           ),
         ),
       ),

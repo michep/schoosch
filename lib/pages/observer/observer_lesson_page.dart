@@ -8,6 +8,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/tab_chip.dart';
+import 'package:schoosch/widgets/tabs_widget.dart';
 import 'package:schoosch/widgets/teacher/class_homework_completions.dart';
 import 'package:schoosch/widgets/teacher/students_absences.dart';
 import 'package:schoosch/widgets/teacher/students_homework_completions.dart';
@@ -56,72 +57,115 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
                     return Text(snapshot.data!.fullName);
                   },
                 ),
-                TabBar(
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                  isScrollable: true,
-                  indicatorWeight: 0.001,
-                  onTap: (i) {
-                    setState(() {
-                      current = i;
-                    });
+                // TabBar(
+                //   labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                //   isScrollable: true,
+                //   indicatorWeight: 0.001,
+                //   onTap: (i) {
+                //     setState(() {
+                //       current = i;
+                //     });
+                //   },
+                //   tabs: [
+                //     TabChip(text: S.of(context).currentLessonClassHomework, pos: 0, current: current),
+                //     TabChip(text: S.of(context).currentLessonPersonalHomeworks, pos: 1, current: current),
+                //     TabChip(text: S.of(context).currentLessonAbsences, pos: 2, current: current),
+                //     TabChip(text: S.of(context).currentLessonMarks, pos: 3, current: current),
+                //     TabChip(text: S.of(context).nextLessonClassHomework, pos: 4, current: current),
+                //     TabChip(text: S.of(context).nextLessonPersonalHomeworks, pos: 5, current: current),
+                //   ],
+                // ),
+                // Expanded(
+                //   child: TabBarView(
+                //     children: [
+                //       ClassTaskWithCompetionsPage(
+                //         null,
+                //         widget.curriculum,
+                //         widget.date,
+                //         widget.lesson,
+                //         (d, f) => widget.lesson.homeworkThisLessonForClass(d, forceRefresh: f),
+                //         readOnly: true,
+                //       ),
+                //       StudentsTasksWithCompetionsPage(
+                //         null,
+                //         widget.curriculum,
+                //         widget.date,
+                //         widget.lesson,
+                //         (d, f) => widget.lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
+                //         readOnly: true,
+                //       ),
+                //       StudentsAbsencePage(
+                //         widget.date,
+                //         widget.lesson,
+                //         readOnly: true,
+                //       ),
+                //       StudentsMarksPage(
+                //         widget.date,
+                //         widget.lesson,
+                //         readOnly: true,
+                //       ),
+                //       ClassTaskWithCompetionsPage(
+                //         null,
+                //         widget.curriculum,
+                //         widget.date,
+                //         widget.lesson,
+                //         (d, f) => widget.lesson.homeworOnDateForClass(d, forceRefresh: f),
+                //         readOnly: true,
+                //       ),
+                //       StudentsTasksWithCompetionsPage(
+                //         null,
+                //         widget.curriculum,
+                //         widget.date,
+                //         widget.lesson,
+                //         (d, f) => widget.lesson.homeworkOnDateForClassAndAllStudents(d, forceRefresh: f),
+                //         readOnly: true,
+                //       ),
+                //     ],
+                //   ),
+                // )
+                TabsWidget(
+                  pages: {
+                    S.of(context).currentLessonClassHomework: ClassTaskWithCompetionsPage(
+                      null,
+                      widget.curriculum,
+                      widget.date,
+                      widget.lesson,
+                      (d, f) => widget.lesson.homeworkThisLessonForClass(d, forceRefresh: f),
+                      readOnly: true,
+                    ),
+                    S.of(context).currentLessonPersonalHomeworks: StudentsTasksWithCompetionsPage(
+                      null,
+                      widget.curriculum,
+                      widget.date,
+                      widget.lesson,
+                      (d, f) => widget.lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
+                      readOnly: true,
+                    ),
+                    S.of(context).currentLessonAbsences: StudentsAbsencePage(
+                      widget.date,
+                      widget.lesson,
+                    ),
+                    S.of(context).currentLessonMarks: StudentsMarksPage(
+                      widget.date,
+                      widget.lesson,
+                    ),
+                    S.of(context).nextLessonClassHomework: ClassTaskWithCompetionsPage(
+                      null,
+                      widget.curriculum,
+                      widget.date,
+                      widget.lesson,
+                      (d, f) => widget.lesson.homeworOnDateForClass(d, forceRefresh: f),
+                    ),
+                    S.of(context).nextLessonPersonalHomeworks: StudentsTasksWithCompetionsPage(
+                      null,
+                      widget.curriculum,
+                      widget.date,
+                      widget.lesson,
+                      (d, f) => widget.lesson.homeworkOnDateForClassAndAllStudents(d, forceRefresh: f),
+                    ),
                   },
-                  tabs: [
-                    TabChip(text: S.of(context).currentLessonClassHomework, pos: 0, current: current),
-                    TabChip(text: S.of(context).currentLessonPersonalHomeworks, pos: 1, current: current),
-                    TabChip(text: S.of(context).currentLessonAbsences, pos: 2, current: current),
-                    TabChip(text: S.of(context).currentLessonMarks, pos: 3, current: current),
-                    TabChip(text: S.of(context).nextLessonClassHomework, pos: 4, current: current),
-                    TabChip(text: S.of(context).nextLessonPersonalHomeworks, pos: 5, current: current),
-                  ],
+                  isScrollable: true,
                 ),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      ClassTaskWithCompetionsPage(
-                        null,
-                        widget.curriculum,
-                        widget.date,
-                        widget.lesson,
-                        (d, f) => widget.lesson.homeworkThisLessonForClass(d, forceRefresh: f),
-                        readOnly: true,
-                      ),
-                      StudentsTasksWithCompetionsPage(
-                        null,
-                        widget.curriculum,
-                        widget.date,
-                        widget.lesson,
-                        (d, f) => widget.lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
-                        readOnly: true,
-                      ),
-                      StudentsAbsencePage(
-                        widget.date,
-                        widget.lesson,
-                        readOnly: true,
-                      ),
-                      StudentsMarksPage(
-                        widget.date,
-                        widget.lesson,
-                        readOnly: true,
-                      ),
-                      ClassTaskWithCompetionsPage(
-                        null,
-                        widget.curriculum,
-                        widget.date,
-                        widget.lesson,
-                        (d, f) => widget.lesson.homeworOnDateForClass(d, forceRefresh: f),
-                        readOnly: true,
-                      ),
-                      StudentsTasksWithCompetionsPage(
-                        null,
-                        widget.curriculum,
-                        widget.date,
-                        widget.lesson,
-                        (d, f) => widget.lesson.homeworkOnDateForClassAndAllStudents(d, forceRefresh: f),
-                        readOnly: true,
-                      ),
-                    ],
-                  ),
-                )
               ],
             ),
           ),
