@@ -17,6 +17,18 @@ class _TabsWidgetState extends State<TabsWidget> with SingleTickerProviderStateM
   void initState() {
     tabcont = TabController(length: widget.pages.length, vsync: this);
     super.initState();
+    tabcont.addListener(() {
+      setState(() {
+        current = tabcont.index;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    tabcont.removeListener(() {});
+    tabcont.dispose();
+    super.dispose();
   }
 
   int current = 0;
@@ -24,17 +36,18 @@ class _TabsWidgetState extends State<TabsWidget> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Column(
+      // mainAxisSize: MainAxisSize.min,
       children: [
         TabBar(
           controller: tabcont,
           isScrollable: widget.isScrollable,
           labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           indicatorWeight: 0.001,
-          onTap: (i) {
-            setState(() {
-              current = i;
-            });
-          },
+          // onTap: (i) {
+          //   // setState(() {
+              
+          //   // });
+          // },
           tabs: [
             ...widget.pages.keys.toList().map(
                   (e) => TabChip(current: current, pos: widget.pages.keys.toList().indexOf(e), text: e),
@@ -43,6 +56,7 @@ class _TabsWidgetState extends State<TabsWidget> with SingleTickerProviderStateM
         ),
         Expanded(
           child: TabBarView(
+            controller: tabcont,
             children: [
               ...widget.pages.values,
             ],

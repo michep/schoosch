@@ -23,7 +23,10 @@ class _MarksForStudentPageState extends State<MarksForStudentPage> {
           return const Text('');
         }
         if (snapshot.data!.isEmpty) {
-          return const SizedBox.shrink();
+          // return const SizedBox.shrink(child: Text('Нет оценок.'),);
+          return const Center(
+            child: Text('Нет оценок.'),
+          );
         }
         // return ListView.builder(
         //   itemCount: snapshot.data!.length,

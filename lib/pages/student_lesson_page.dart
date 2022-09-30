@@ -8,9 +8,9 @@ import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/student/homeworks_page.dart';
 import 'package:schoosch/widgets/student/marks_page.dart';
-import 'package:schoosch/widgets/tab_chip.dart';
 import 'package:schoosch/widgets/tabs_widget.dart';
 import 'package:schoosch/widgets/utils.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 class StudentLessonPage extends StatefulWidget {
   final StudentModel _student;
@@ -28,9 +28,23 @@ class StudentLessonPage extends StatefulWidget {
 class _StudentLessonPageState extends State<StudentLessonPage> with SingleTickerProviderStateMixin {
   late TabController tabcont;
 
+  late List<Widget> pages;
+
   @override
   void initState() {
-    tabcont = TabController(length: 2, vsync: this);
+    // tabcont = TabController(length: 2, vsync: this);
+    pages = [
+      HomeworksForStudentPage(
+        widget._lesson,
+        widget._date,
+        widget._student,
+      ),
+      MarksForStudentPage(
+        widget._lesson,
+        widget._date,
+        widget._student,
+      ),
+    ];
     super.initState();
   }
 
@@ -72,6 +86,14 @@ class _StudentLessonPageState extends State<StudentLessonPage> with SingleTicker
               //   },
               //   tabs: [TabChip(current: current, pos: 0, text: 'ДЗ на этот урок'), TabChip(current: current, pos: 1, text: 'Оценки')],
               // ),
+              const Divider(
+                indent: 50,
+                endIndent: 50,
+                thickness: 3,
+              ),
+              Expanded(
+                child: pages[current],
+              ),
               // Expanded(
               //   child: TabBarView(
               //     children: [
@@ -80,23 +102,52 @@ class _StudentLessonPageState extends State<StudentLessonPage> with SingleTicker
               //     ],
               //   ),
               // ),
-              TabsWidget(
-                pages: {
-                  'Дз на этот урок': HomeworksForStudentPage(
-                    widget._lesson,
-                    widget._date,
-                    widget._student,
-                  ),
-                  'Оценки': MarksForStudentPage(
-                    widget._lesson,
-                    widget._date,
-                    widget._student,
-                  ),
-                },
-                isScrollable: false,
-              ),
+              // Expanded(
+              //   child: TabsWidget(
+              //     pages: {
+              //       'Дз на этот урок': HomeworksForStudentPage(
+              //         widget._lesson,
+              //         widget._date,
+              //         widget._student,
+              //       ),
+              //       'Оценки': MarksForStudentPage(
+              //         widget._lesson,
+              //         widget._date,
+              //         widget._student,
+              //       ),
+              //     },
+              //     isScrollable: false,
+              //   ),
+              // ),
             ],
           ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        color: Theme.of(context).colorScheme.primary,
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+        child: GNav(
+          onTabChange: (i) => setState(() {
+            current = i;
+          }),
+          gap: 8,
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+          activeColor: Theme.of(context).colorScheme.onBackground,
+          tabActiveBorder: Border.all(
+            color: Theme.of(context).colorScheme.onBackground,
+          ),
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          tabs: const [
+            GButton(
+              icon: Icons.menu_book_rounded,
+              text: 'ДЗ на урок',
+            ),
+            GButton(
+              icon: Icons.thumb_up_alt_rounded,
+              text: 'Оценки',
+            ),
+          ],
         ),
       ),
     );
