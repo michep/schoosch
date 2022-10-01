@@ -28,7 +28,7 @@ class StudentLessonPage extends StatefulWidget {
 class _StudentLessonPageState extends State<StudentLessonPage> with SingleTickerProviderStateMixin {
   late TabController tabcont;
 
-  late List<Widget> pages;
+  late final List<Widget> pages;
 
   @override
   void initState() {
@@ -62,16 +62,28 @@ class _StudentLessonPageState extends State<StudentLessonPage> with SingleTicker
             children: [
               Text(
                 '${widget._curriculum.aliasOrName} ${widget._lesson.type == LessonType.replacment ? '(замена)' : ''}',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
-              Text(Utils.formatDatetime(widget._date)),
-              Text('${widget._lesson.order} урок'),
-              Text(widget._time.formatPeriod()),
+              Text(
+                Utils.formatDatetime(widget._date),
+                style: const TextStyle(fontSize: 17),
+              ),
+              Text(
+                '${widget._lesson.order} урок',
+                style: const TextStyle(fontSize: 17),
+              ),
+              Text(
+                widget._time.formatPeriod(),
+                style: const TextStyle(fontSize: 17),
+              ),
               FutureBuilder<TeacherModel?>(
                 future: widget._curriculum.master,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData || snapshot.data == null) return const SizedBox.shrink();
-                  return Text(snapshot.data!.fullName);
+                  return Text(
+                    snapshot.data!.fullName,
+                    style: const TextStyle(fontSize: 17),
+                  );
                 },
               ),
               // TabBar(

@@ -42,7 +42,12 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
       children: [
         ListView(
           children: [
-            const Text('ДЗ классу'),
+            const Text(
+              'ДЗ классу',
+              style: TextStyle(
+                fontSize: 17,
+              ),
+            ),
             FutureBuilder<HomeworkModel?>(
               future: widget._hwFuture(widget._date, true),
               builder: (context, snapHW) {
@@ -109,22 +114,39 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
                         children: [
                           const Align(
                             alignment: Alignment.centerLeft,
-                            child: Text('ДЗ личные'),
+                            child: Text(
+                              'ДЗ личные',
+                              style: TextStyle(
+                                fontSize: 17,
+                              ),
+                            ),
                           ),
-                          ...hws.values.map(
-                            (e) {
-                              return FutureBuilder<List<CompletionFlagModel>>(
-                                future: e!.getAllCompletions(),
-                                builder: (context, snapcompl) {
-                                  if (!snapcompl.hasData) return const SizedBox.shrink();
-                                  var compl = snapcompl.data!.isNotEmpty ? snapcompl.data![0] : null;
-                                  return StudentHomeworkCompetionTile(
-                                      e, widget._lesson, compl, (hws) => editStudentHomework(hws, studentsIdsWithHW), toggleHomeworkCompletion,
-                                      readOnly: widget.readOnly);
-                                },
-                              );
-                            },
-                          ),
+                          if (hws.isEmpty)
+                            const Center(
+                              child: Text(
+                                'Вы еще не задавали личных ДЗ.',
+                              ),
+                            )
+                          else
+                            ...hws.values.map(
+                              (e) {
+                                return FutureBuilder<List<CompletionFlagModel>>(
+                                  future: e!.getAllCompletions(),
+                                  builder: (context, snapcompl) {
+                                    if (!snapcompl.hasData) return const SizedBox.shrink();
+                                    var compl = snapcompl.data!.isNotEmpty ? snapcompl.data![0] : null;
+                                    return StudentHomeworkCompetionTile(
+                                      e,
+                                      widget._lesson,
+                                      compl,
+                                      (hws) => editStudentHomework(hws, studentsIdsWithHW),
+                                      toggleHomeworkCompletion,
+                                      readOnly: widget.readOnly,
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                         ],
                       )
                     : const SizedBox.shrink();

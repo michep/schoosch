@@ -71,8 +71,9 @@ class _HomeworkPageState extends State<HomeworkPage> {
                     listFunc: () => PeopleListPage(widget.lesson.aclass.students, selectionMode: true, type: 'student', title: loc.classStudentsTitle),
                     detailsFunc: () => PersonPage(_student!, _student!.fullName),
                     // validatorFunc: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty),
-                    validatorFunc: validateStudent,
+                    // validatorFunc: validateStudent,
                     callback: (value) => _setStudent(value),
+                    isUnneccesary: true,
                   ),
                 Scrollbar(
                   controller: _scrollcon,

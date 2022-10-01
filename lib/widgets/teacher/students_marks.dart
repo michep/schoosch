@@ -27,9 +27,8 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
           future: widget._lesson.getAllMarks(widget._date),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const SizedBox.shrink();
-            return ListView(
-              children: [
-                ...snapshot.data!.keys.map(
+            return snapshot.data!.isEmpty ? const Center(child: Text('Вы еще не ставили оценок.')) : ListView(
+              children: [...snapshot.data!.keys.map(
                   (e) => MarkListTile(
                     e,
                     widget._lesson,
