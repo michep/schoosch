@@ -48,20 +48,20 @@ class _HomeworkCardState extends State<HomeworkCard> {
                   text: widget.homework.text,
                   onOpen: (link) => _openLink(link.url),
                 ),
+                onTap: () async {
+                  var completion = await widget.homework.getCompletion(widget.student);
+                  onTap(completion).whenComplete(() {
+                    setState(() {});
+                  });
+                },
                 trailing: PersonModel.currentUser!.currentType == PersonType.parent
                     ? null
-                    : IconButton(
-                        onPressed: () async {
-                          var completion = await widget.homework.getCompletion(widget.student);
-                          onTap(completion).whenComplete(() {
-                            setState(() {});
-                          });
-                        },
-                        icon: Icon(isConfirmed
+                    : Icon(
+                        isConfirmed
                             ? Icons.check_circle_outline_rounded
                             : isChecked
                                 ? Icons.circle_outlined
-                                : Icons.add_circle_outline),
+                                : Icons.add_circle_outline,
                       ),
               ),
             ],
