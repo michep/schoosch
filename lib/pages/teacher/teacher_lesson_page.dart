@@ -160,14 +160,14 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
               // Expanded(
               //   child: TabBarView(
               //     children: [
-              //       ClassTaskWithCompetionsPage(
-              //         widget.teacher,
-              //         widget.curriculum,
-              //         widget.date,
-              //         widget.lesson,
-              //         (d, f) => widget.lesson.homeworkThisLessonForClass(d, forceRefresh: f),
-              //         readOnly: true,
-              //       ),
+                    // ClassTaskWithCompetionsPage(
+                    //   widget.teacher,
+                    //   widget.curriculum,
+                    //   widget.date,
+                    //   widget.lesson,
+                    //   (d, f) => widget.lesson.homeworkThisLessonForClass(d, forceRefresh: f),
+                    //   readOnly: true,
+                    // ),
               //       StudentsTasksWithCompetionsPage(
               //         widget.teacher,
               //         widget.curriculum,
