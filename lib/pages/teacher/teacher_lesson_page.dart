@@ -7,12 +7,8 @@ import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
-import 'package:schoosch/widgets/tab_chip.dart';
-import 'package:schoosch/widgets/tabs_widget.dart';
 import 'package:schoosch/widgets/teacher/class_homework_combined.dart';
-import 'package:schoosch/widgets/teacher/class_homework_completions.dart';
 import 'package:schoosch/widgets/teacher/students_absences.dart';
-import 'package:schoosch/widgets/teacher/students_homework_completions.dart';
 import 'package:schoosch/widgets/teacher/students_marks.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -160,14 +156,14 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
               // Expanded(
               //   child: TabBarView(
               //     children: [
-                    // ClassTaskWithCompetionsPage(
-                    //   widget.teacher,
-                    //   widget.curriculum,
-                    //   widget.date,
-                    //   widget.lesson,
-                    //   (d, f) => widget.lesson.homeworkThisLessonForClass(d, forceRefresh: f),
-                    //   readOnly: true,
-                    // ),
+              // ClassTaskWithCompetionsPage(
+              //   widget.teacher,
+              //   widget.curriculum,
+              //   widget.date,
+              //   widget.lesson,
+              //   (d, f) => widget.lesson.homeworkThisLessonForClass(d, forceRefresh: f),
+              //   readOnly: true,
+              // ),
               //       StudentsTasksWithCompetionsPage(
               //         widget.teacher,
               //         widget.curriculum,

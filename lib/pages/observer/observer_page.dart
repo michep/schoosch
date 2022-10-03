@@ -5,7 +5,6 @@ import 'package:schoosch/pages/class_subject_page.dart';
 import 'package:schoosch/pages/observer/observer_schedule_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/drawer.dart';
-import 'package:schoosch/widgets/tab_chip.dart';
 // import 'package:schoosch/widgets/week_selector.dart';
 
 class ObserverPage extends StatefulWidget {

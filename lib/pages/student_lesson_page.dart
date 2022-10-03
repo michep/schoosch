@@ -8,7 +8,6 @@ import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/student/homeworks_page.dart';
 import 'package:schoosch/widgets/student/marks_page.dart';
-import 'package:schoosch/widgets/tabs_widget.dart';
 import 'package:schoosch/widgets/utils.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
