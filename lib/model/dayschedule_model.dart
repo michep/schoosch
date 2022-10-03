@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
+import 'package:mutex/mutex.dart';
 import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
@@ -16,6 +17,7 @@ class DayScheduleModel {
   late final DateTime? till;
   final List<LessonModel> _lessons = [];
   bool _lessonsLoaded = false;
+  final Mutex _lessonsMutex = Mutex();
 
   String? get id => _id;
   ClassModel get aclass => _class;
@@ -32,8 +34,6 @@ class DayScheduleModel {
     if (day < 1 || day > 7) throw 'incorrect day in schedule $id';
     from = map['from'] != null ? DateTime.tryParse(map['from']) : throw 'need from key in schedule $_id';
     till = map['till'] != null ? DateTime.tryParse(map['till']) : null;
-    // from = map['from'] != null ? map['from'] as DateTime : throw 'need from key in schedule $_id';
-    // till = map['till'] != null ? map['till'] as DateTime : null;
   }
 
   String get formatPeriod {
@@ -41,6 +41,7 @@ class DayScheduleModel {
   }
 
   Future<List<LessonModel>> allLessons({bool forceRefresh = false, DateTime? date, bool needsEmpty = false}) async {
+    await _lessonsMutex.acquire();
     if (!_lessonsLoaded || forceRefresh) {
       _lessons.clear();
       _lessons.addAll(await Get.find<ProxyStore>().getScheduleLessons(
@@ -51,6 +52,7 @@ class DayScheduleModel {
       ));
       _lessonsLoaded = true;
     }
+    _lessonsMutex.release();
     return _lessons;
   }
 
@@ -72,14 +74,24 @@ class DayScheduleModel {
 class StudentScheduleModel extends DayScheduleModel {
   final List<LessonModel> _studentLessons = [];
   bool _studentLessonsLoaded = false;
+  final Mutex _studentLessonsMutex = Mutex();
 
-  StudentScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map);
+  StudentScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map) {
+    if (map.containsKey('lesson') && map['lesson'].runtimeType == List) {
+      for (var l in map['lesson'] as List) {
+        _studentLessons.add(LessonModel.fromMap(aclass, this, l['_id'], l));
+      }
+      _studentLessonsLoaded = true;
+    }
+  }
 
   Future<List<LessonModel>> lessonsForStudent(StudentModel student, {DateTime? date}) async {
+    await _studentLessonsMutex.acquire();
     if (!_studentLessonsLoaded) {
       _studentLessons.addAll(await Get.find<ProxyStore>().getScheduleLessonsForStudent(_class, this, student, date));
       _studentLessonsLoaded = true;
     }
+    _studentLessonsMutex.release();
     return _studentLessons;
   }
 }

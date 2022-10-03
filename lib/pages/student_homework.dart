@@ -47,7 +47,8 @@ class _HomeworkCardState extends State<HomeworkCard> {
                     ? null
                     : IconButton(
                         onPressed: () async {
-                          var completion = await widget.homework.getCompletion(widget.student);
+                          // var completion = await widget.homework.getCompletion(widget.student);
+                          var completion = snapshot.data;
                           onTap(completion).whenComplete(() {
                             setState(() {});
                           });
@@ -75,7 +76,7 @@ class _HomeworkCardState extends State<HomeworkCard> {
                 if (c == null) {
                   await widget.homework.createCompletion(widget.student);
                 } else if (c.status == Status.completed) {
-                  await widget.homework.deleteCompletion(widget.student);
+                  await widget.homework.deleteCompletion(c, widget.student);
                 }
                 setState(() {});
                 Get.back();

@@ -40,7 +40,7 @@ class InstitutionModel {
 
   Future<List<CurriculumModel>> get curriculums async {
     if (!_curriculumsLoaded) {
-      var curs = await Get.find<MStore>().getAllCurriculums();
+      var curs = await Get.find<ProxyStore>().getAllCurriculums();
       _curriculums.addAll(curs);
       _curriculumsLoaded = true;
     }

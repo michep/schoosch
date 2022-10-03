@@ -43,7 +43,7 @@ class _ObserverScheduleState extends State<ObserverSchedule> {
       onPageChanged: _cw.setIdx,
       childrenDelegate: SliverChildBuilderDelegate(
         (context, idx) {
-          return FutureBuilder<List<StudentScheduleModel>>(
+          return FutureBuilder<List<DayScheduleModel>>(
             future: widget._class.getSchedulesWeek(
               Week(year: idx ~/ 100, weekNumber: idx % 100),
             ),

@@ -205,7 +205,7 @@ class StudentModel extends PersonModel {
   Future<ClassModel?> get studentClass async {
     await _studentClassMutex.acquire();
     if (!_studentClassLoaded) {
-      _studentClass = await Get.find<MStore>().getClassForStudent(this);
+      _studentClass = await Get.find<ProxyStore>().getClassByStudent(this);
       _studentClassLoaded = true;
     }
     _studentClassMutex.release();
@@ -224,11 +224,11 @@ class StudentModel extends PersonModel {
   }
 
   Future<List<MarkModel>> curriculumMarks(CurriculumModel cur) async {
-    return Get.find<MStore>().getStudentCurriculumMarks(this, cur);
+    return Get.find<ProxyStore>().getStudentCurriculumMarks(this, cur);
   }
 
   Future<List<MarkModel>> curriculumTeacherMarks(CurriculumModel cur, TeacherModel teacher) async {
-    return Get.find<MStore>().getStudentCurriculumTeacherMarks(this, cur, teacher);
+    return Get.find<ProxyStore>().getStudentCurriculumTeacherMarks(this, cur, teacher);
   }
 }
 
@@ -250,11 +250,11 @@ class TeacherModel extends PersonModel {
   TeacherModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
   Future<double> get averageRating async {
-    return Get.find<MStore>().getAverageTeacherRating(this);
+    return Get.find<ProxyStore>().getAverageTeacherRating(this);
   }
 
   Future<void> createRating(PersonModel user, int rating, String comment) async {
-    return Get.find<MStore>().saveTeacherRating(this, user, DateTime.now(), rating, comment);
+    return Get.find<ProxyStore>().saveTeacherRating(this, user, DateTime.now(), rating, comment);
   }
 
   Future<List<TeacherScheduleModel>> getSchedulesWeek(isoweek.Week week) async {

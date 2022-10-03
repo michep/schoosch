@@ -69,15 +69,17 @@ class CompletionFlagModel {
   //   return refr;
   // }
 
-  // Map<String, dynamic> toMap() {
-  //   return {
-  //     'completed_by': completedById,
-  //     'completed_time': completedTime,
-  //     'confirmed_by': confirmedById,
-  //     'confirmed_time': confirmedTime,
-  //     'status': status,
-  //   };
-  // }
+  Map<String, dynamic> toMap({bool withId = false}) {
+    var data = <String, dynamic>{
+      'completedby_id': completedById,
+      'completed_time': completedTime,
+      'confirmedby_id': confirmedById,
+      'confirmed_time': confirmedTime,
+      'status': status,
+    };
+    if (withId) data['_id'] = id;
+    return data;
+  }
 
   // Future<String> save() async {
   //   Get.find<MStore>().saveCompletionFlag(this);

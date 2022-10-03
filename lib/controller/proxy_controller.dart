@@ -1,7 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import 'package:isoweek/isoweek.dart';
+import 'package:mutex/mutex.dart';
+import 'package:schoosch/controller/week_controller.dart';
+import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/class_model.dart';
+import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
@@ -9,6 +13,7 @@ import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
+import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 
@@ -17,6 +22,7 @@ class ProxyStore extends getx.GetxController {
   late final InstitutionModel institution;
   PersonModel? _currentUser;
   late Dio dio = Dio();
+  final Mutex scheduleLessonsMutex = Mutex();
 
   ProxyStore(this.host);
 
@@ -65,6 +71,12 @@ class ProxyStore extends getx.GetxController {
     return ClassModel.fromMap(js['_id'], js);
   }
 
+  Future<ClassModel?> getClassByStudent(PersonModel student) async {
+    var res = await dio.getUri<Map<String, dynamic>>(Uri.http(host, '/class/student/${student.id}'));
+    var js = res.data!;
+    return ClassModel.fromMap(js['_id'], js);
+  }
+
   Future<String> saveClass(ClassModel aclass) async {
     var data = aclass.toMap(withId: true);
     data['institution_id'] = institution.id;
@@ -80,7 +92,7 @@ class ProxyStore extends getx.GetxController {
   Future<void> deleteClass(ClassModel aclass) async {
     var data = aclass.toMap(withId: true);
     await dio.deleteUri(
-      Uri.http(host, '/class'),
+      Uri.http(host, '/class/${aclass.id}'),
       options: Options(headers: {'Content-Type': 'application/json'}),
       data: data,
     );
@@ -113,7 +125,7 @@ class ProxyStore extends getx.GetxController {
   Future<void> deleteVenue(VenueModel venue) async {
     var data = venue.toMap(withId: true);
     await dio.deleteUri(
-      Uri.http(host, '/venue'),
+      Uri.http(host, '/venue/${venue.id}'),
       options: Options(headers: {'Content-Type': 'application/json'}),
       data: data,
     );
@@ -165,7 +177,7 @@ class ProxyStore extends getx.GetxController {
   Future<void> deleteLessontime(DayLessontimeModel daylessontime, LessontimeModel lessontime) async {
     var data = lessontime.toMap(withId: true);
     await dio.deleteUri(
-      Uri.http(host, '//lessontime/${daylessontime.id!}/time'),
+      Uri.http(host, '//lessontime/${daylessontime.id!}/time/${lessontime.id}'),
       options: Options(headers: {'Content-Type': 'application/json'}),
       data: data,
     );
@@ -201,14 +213,38 @@ class ProxyStore extends getx.GetxController {
     return js['id'];
   }
 
-  Future<List<StudentScheduleModel>> getClassWeekSchedule(ClassModel aclass, Week currentWeek) async {
-    var res = await dio.getUri<List>(Uri.http(host, '/class/${aclass.id}/schedule'));
+  Future<List<CurriculumModel>> getAllCurriculums() async {
+    var res = await dio.getUri<List>(Uri.http(host, '/curriculum'));
     var js = res.data!;
-    return js
-        .map((data) => StudentScheduleModel.fromMap(aclass, data['_id'], data))
-        .where((data) => data.from!.isBefore(currentWeek.day(5)) && (data.till == null || data.till!.isAfter(currentWeek.day(4))))
-        .toList();
+    return js.map((data) => CurriculumModel.fromMap(data['_id'], data)).toList();
   }
+
+  Future<CurriculumModel> getCurriculum(String id) async {
+    var res = await dio.getUri<Map<String, dynamic>>(Uri.http(host, '/curriculum/$id'));
+    var js = res.data!;
+    return CurriculumModel.fromMap(js['_id'], js);
+  }
+
+  Future<String> saveCurriculum(CurriculumModel curriculum) async {
+    var data = curriculum.toMap(withId: true);
+    data['institution_id'] = institution.id;
+    var res = await dio.putUri<Map<String, dynamic>>(
+      Uri.http(host, '/curriculum'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: data,
+    );
+    var js = res.data!;
+    return js['id'];
+  }
+
+  // Future<List<StudentScheduleModel>> getClassWeekSchedule(ClassModel aclass, Week currentWeek) async {
+  //   var res = await dio.getUri<List>(Uri.http(host, '/class/${aclass.id}/schedule/${currentWeek.days[0]}'));
+  //   var js = res.data!;
+  //   return js
+  //       .map((data) => StudentScheduleModel.fromMap(aclass, data['_id'], data))
+  //       // .where((data) => data.from!.isBefore(currentWeek.day(5)) && (data.till == null || data.till!.isAfter(currentWeek.day(4))))
+  //       .toList();
+  // }
 
   Future<List<StudentScheduleModel>> getClassDaySchedule(ClassModel aclass, int day) async {
     var res = await dio.getUri<List>(Uri.http(host, '/class/${aclass.id}/schedule/day/$day'));
@@ -230,10 +266,11 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule, {DateTime? date, bool needsEmpty = false}) async {
-    List<LessonModel> less = [];
+    // await scheduleLessonsMutex.acquire();
+    List<LessonModel> result = [];
     var res = await dio.getUri<List>(Uri.http(host, '/class/${aclass.id}/schedule/${schedule.id}/lesson'));
     var js = res.data!;
-    less = js.map((data) => LessonModel.fromMap(aclass, schedule, data['_id'], data)).toList();
+    var less = js.map((data) => LessonModel.fromMap(aclass, schedule, data['_id'], data)).toList();
 
     List<ReplacementModel> reps = [];
     if (date != null) {
@@ -273,12 +310,13 @@ class ProxyStore extends getx.GetxController {
           nl = r;
         }
       }
-      less.add(nl ?? l);
+      result.add(nl ?? l);
     }
-    less.sort(
+    result.sort(
       (a, b) => a.order.compareTo(b.order),
     );
-    return less;
+    // scheduleLessonsMutex.release();
+    return result;
   }
 
   Future<List<LessonModel>> getScheduleLessonsForStudent(ClassModel aclass, StudentScheduleModel schedule, StudentModel student, DateTime? date) async {
@@ -306,14 +344,6 @@ class ProxyStore extends getx.GetxController {
     );
     var js = res.data!;
     return js['id'];
-
-    // if (lesson.id == null) {
-    //   return ((await _db.collection('lesson').insertOne(data)).id as ObjectId).toHexString();
-    // } else {
-    //   data['_id'] = ObjectId.fromHexString(lesson.id!);
-    //   await _db.collection('lesson').replaceOne(where.eq('_id', data['_id']), data);
-    //   return lesson.id!;
-    // }
   }
 
   Future<void> deleteLesson(LessonModel lesson) async {
@@ -323,42 +353,64 @@ class ProxyStore extends getx.GetxController {
       options: Options(headers: {'Content-Type': 'application/json'}),
       data: data,
     );
-
-    // if (lesson.id != null) {
-    //   _db.collection('lesson').deleteOne(where.eq('_id', lesson.id!));
-    // }
   }
 
   Future<List<ReplacementModel>> getReplacementsOnDate(ClassModel aclass, DayScheduleModel schedule, DateTime date) async {
-    var res = await dio.postUri<List>(Uri.http(host, '/class/${aclass.id}/replace/ondate'),
-        options: Options(headers: {'Content-Type': 'application/json'}), data: {'date': date.toIso8601String()});
+    var res = await dio.getUri<List>(
+      Uri.http(host, '/class/${aclass.id}/replace/${date.toIso8601String()}'),
+    );
     var js = res.data!;
     return js.map((data) => ReplacementModel.fromMap(aclass, schedule, data['_id'], data)).toList();
   }
 
+  Future<List<ReplacementModel>> getAllReplacementsOnDate(DayScheduleModel schedule, DateTime date) async {
+    List<ReplacementModel> repl = [];
+    var res = await dio.getUri<List>(
+      Uri.http(host, '/replace/${date.toIso8601String()}'),
+    );
+    var js = res.data!;
+    for (var i in js) {
+      var aclass = await getClass(i['class_id']);
+      repl.add(ReplacementModel.fromMap(aclass, schedule, i['_id'], i));
+    }
+    return repl;
+  }
+
+  Future<void> createReplacement(ClassModel aclass, Map<String, dynamic> map) async {
+    var data = {
+      'institution_id': institution.id,
+      'class_id': aclass.id,
+      'order': map['order'],
+      'curriculum_id': map['curriculum_id'],
+      'teacher_id': map['teacher_id'],
+      'venue_id': map['venue_id'],
+      'date': map['date'],
+    };
+    await dio.putUri<Map<String, dynamic>>(
+      Uri.http(host, '/class/${aclass.id}/replace'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: data,
+    );
+  }
+
   Future<HomeworkModel?> getHomeworkForStudentBeforeDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
     var res = await dio.postUri<Map<String, dynamic>>(
-        Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/student/${student.id}/homework/beforedate'),
-        options: Options(headers: {'Content-Type': 'application/json'}),
-        data: {'date': date.toIso8601String()});
+      Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/student/${student.id}/homework/beforedate'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {'date': date.toIso8601String()},
+    );
     var js = res.data!;
     return HomeworkModel.fromMap(js['_id'], js);
-    // var data = await _db
-    //     .collection('homework')
-    //     .findOne(where.eq('curriculum_id', curriculum.id).eq('class_id', aclass.id).eq('student_id', student.id).lt('date', date).sortBy('date'));
-    // return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
   }
 
   Future<HomeworkModel?> getHomeworkForClassBeforeDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
-    var res = await dio.postUri<Map<String, dynamic>>(Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/homework/beforedate'),
-        options: Options(headers: {'Content-Type': 'application/json'}), data: {'date': date.toIso8601String()});
+    var res = await dio.postUri<Map<String, dynamic>>(
+      Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/homework/beforedate'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {'date': date.toIso8601String()},
+    );
     var js = res.data!;
     return HomeworkModel.fromMap(js['_id'], js);
-
-    // var data = await _db
-    //     .collection('homework')
-    //     .findOne(where.eq('curriculum_id', curriculum.id).eq('class_id', aclass.id).eq('student_id', null).lt('date', date).sortBy('date'));
-    // return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
   }
 
   Future<HomeworkModel?> getHomeworkForStudentOnDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
@@ -369,30 +421,271 @@ class ProxyStore extends getx.GetxController {
     );
     var js = res.data!;
     return HomeworkModel.fromMap(js['_id'], js);
-
-    // var data = await _db.collection('homework').findOne(where
-    //     .eq('curriculum_id', curriculum.id)
-    //     .eq('class)id', aclass.id)
-    //     .eq('student_id', student.id)
-    //     .gte('date', date)
-    //     .lt('date', date.add(const Duration(hours: 24)))
-    //     .sortBy('date'));
-    // return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
   }
 
   Future<HomeworkModel?> getHomeworkForClassOnDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
-    var res = await dio.postUri<Map<String, dynamic>>(Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/homework/ondate'),
-        options: Options(headers: {'Content-Type': 'application/json'}), data: {'date': date.toIso8601String()});
+    var res = await dio.postUri<Map<String, dynamic>>(
+      Uri.http(host, '/class/${aclass.id}/curriculum/${curriculum.id}/homework/ondate'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {'date': date.toIso8601String()},
+    );
     var js = res.data!;
     return HomeworkModel.fromMap(js['_id'], js);
+  }
 
-    // var data = await _db.collection('homework').findOne(where
-    //     .eq('curriculum_id', curriculum.id)
-    //     .eq('class)id', aclass.id)
-    //     .eq('student_id', null)
-    //     .gte('date', date)
-    //     .lt('date', date.add(const Duration(hours: 24)))
-    //     .sortBy('date'));
-    // return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
+  Future<String> saveHomework(HomeworkModel homework) async {
+    var data = homework.toMap();
+    data['institution_id'] = institution.id;
+    var res = await dio.putUri<Map<String, dynamic>>(
+      Uri.http(host, '/homework'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: data,
+    );
+    var js = res.data!;
+    return js['id'];
+  }
+
+  Future<void> createCompletion(HomeworkModel homework, StudentModel student) async {
+    var data = {
+      'completedby_id': student.id,
+      'completed_time': DateTime.now(),
+      'confirmedby_id': null,
+      'confirmed_time': null,
+      'status': 1,
+      'homework_id': homework.id,
+      'institution_id': institution.id,
+    };
+    // await _db.collection('completion').insertOne(data);
+  }
+
+  Future<void> deleteCompletion(HomeworkModel homework, CompletionFlagModel completion, StudentModel student) async {
+    var data = completion.toMap(withId: true);
+    await dio.deleteUri(
+      Uri.http(host, '/homework/${homework.id}/student/${student.id}/competion/${completion.id}'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: data,
+    );
+  }
+
+  Future<void> confirmCompletion(HomeworkModel homework, CompletionFlagModel completion, PersonModel person) async {
+    await dio.putUri<Map<String, dynamic>>(Uri.http(host, '/homework/${homework.id}/competion/${completion.id}'),
+        options: Options(headers: {'Content-Type': 'application/json'}),
+        data: {
+          'status': 2,
+          'confirmedby_id': person.id,
+          'confirmed_time': DateTime.now().toIso8601String(),
+        });
+  }
+
+  Future<void> unconfirmCompletion(HomeworkModel homework, CompletionFlagModel completion, PersonModel person) async {
+    await dio.putUri<Map<String, dynamic>>(Uri.http(host, '/homework/${homework.id}/competion/${completion.id}'),
+        options: Options(headers: {'Content-Type': 'application/json'}),
+        data: {
+          'status': 1,
+          'confirmedby_id': person.id,
+          'confirmed_time': null,
+        });
+  }
+
+  Future<CompletionFlagModel?> getHomeworkCompletion(HomeworkModel homework, StudentModel student) async {
+    var res = await dio.getUri<Map<String, dynamic>>(Uri.http(host, '/homework/${homework.id}/student/${student.id}/competion'));
+    var js = res.data!;
+    return CompletionFlagModel.fromMap(js['_id'], js);
+  }
+
+  Future<List<CompletionFlagModel>> getAllHomeworkCompletions(HomeworkModel homework) async {
+    var res = await dio.getUri<List>(Uri.http(host, '/homework/${homework.id}/completion'));
+    var js = res.data!;
+    return js.map((data) => CompletionFlagModel.fromMap(data['_id'], data)).toList();
+  }
+
+  Future<void> updateHomeworkText(HomeworkModel homework, String newText) async {
+    await dio.putUri<Map<String, dynamic>>(
+      Uri.http(host, '/homework/${homework.id}'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {'text': newText},
+    );
+  }
+
+  Future<Map<TeacherModel, List<String>>> getClassTeachers(ClassModel aclass) async {
+    var teachers = <TeacherModel, List<String>>{};
+    var mast = await aclass.master;
+    if (mast != null) {
+      teachers[mast] = [
+        'Классный руководитель',
+      ];
+    }
+    var cw = getx.Get.find<CurrentWeek>().currentWeek; //TODO: currentWeek should be parameter
+    var days = await aclass.getSchedulesWeek(cw);
+    for (var day in days) {
+      var dayles = await day.allLessons();
+      for (var les in dayles) {
+        var cur = await les.curriculum;
+        var teach = await cur!.master;
+        if (teach != null) {
+          if (teachers[teach] == null) {
+            teachers[teach] = [cur.aliasOrName];
+          } else if (!teachers[teach]!.contains(cur.aliasOrName)) {
+            teachers[teach]!.add(cur.aliasOrName);
+          }
+        }
+      }
+    }
+    return teachers;
+  }
+
+  Future<void> saveTeacherRating(TeacherModel teacher, PersonModel user, DateTime date, int rating, String comment) async {
+    Map<String, dynamic> data = {};
+    data['ratedate'] = date;
+    data['rater_id'] = user.id;
+    data['rating'] = rating;
+    data['teacher_id'] = teacher.id;
+    data['commentary'] = comment;
+    await dio.putUri<Map<String, dynamic>>(
+      Uri.http(host, '/teacherraiting'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: data,
+    );
+  }
+
+  Future<double> getAverageTeacherRating(TeacherModel teacher) async {
+    var res = await dio.getUri<List>(Uri.http(host, '/teacherraiting/${teacher.id}'));
+    double sum = 0;
+    var js = res.data!;
+    for (int i in js) {
+      sum += i;
+    }
+    return sum / js.length;
+  }
+
+  Future<bool> hasRatingInMonth(TeacherModel teacher) async {
+    var res = await dio.getUri<Map<String, dynamic>>(
+      Uri.http(host, '/teacherraiting/${teacher.id}/lastdate'),
+    );
+    var js = res.data!;
+    var d = js['lastdate'] as DateTime;
+    return (d.year == DateTime.now().year && d.month == DateTime.now().month);
+  }
+
+  Future<List<AbsenceModel>> getAllAbsences(LessonModel lesson, DateTime date) async {
+    var res = await dio.postUri<List>(
+      Uri.http(host, '/class/${lesson.aclass.id}/absence'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {'date': date.toIso8601String()},
+    );
+    var js = res.data!;
+    return js.map((data) => AbsenceModel.fromMap(data['_id'], data)).toList();
+  }
+
+  Future<AbsenceModel?> getAbsence(LessonModel lesson, String studentId, DateTime date) async {
+    var res = await dio.postUri<Map<String, dynamic>>(
+      Uri.http(host, '/class/${lesson.aclass.id}/'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {'date': date.toIso8601String()},
+    );
+
+    return res.data == null ? null : AbsenceModel.fromMap((res.data!['_id']), res.data!);
+  }
+
+  Future<void> createAbsence(LessonModel lesson, AbsenceModel absence) async {
+    if (await getAbsence(lesson, absence.personId, absence.date) == null) {
+      var data = absence.toMap();
+      data['institution_id'] = institution.id;
+      data['class_id'] = lesson.aclass.id;
+      await dio.putUri<Map<String, dynamic>>(
+        Uri.http(host, '/teacherraiting'),
+        options: Options(headers: {'Content-Type': 'application/json'}),
+        data: data,
+      );
+      //   _db.collection('absence').insertOne(data);
+    }
+  }
+
+  Future<void> deleteAbsence(LessonModel lesson, AbsenceModel absence) async {
+    var data = absence.toMap(withId: true);
+    await dio.deleteUri(
+      Uri.http(host, '/class/${lesson.aclass.id}/absence/${absence.id}'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: data,
+    );
+  }
+
+  Future<List<MarkModel>> getAllLessonMarks(LessonModel lesson, DateTime date) async {
+    var res = await dio.postUri<List>(
+      Uri.http(host, '/class/${lesson.aclass.id}/curriculum/${lesson.curriculumId}/mark'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {'date': date.toIso8601String()},
+    );
+    var js = res.data!;
+    return js.map((e) => MarkModel.fromMap(e['_id'], e)).toList();
+  }
+
+  Future<List<MarkModel>> getStudentLessonMarks(LessonModel lesson, StudentModel student, DateTime date) async {
+    var res = await dio.getUri<List>(
+      Uri.http(host, '/curriculum/${lesson.curriculumId}/student/${student.id}/mark/${date.toIso8601String()}/${lesson.order}'),
+    );
+    var js = res.data!;
+    return js.map((e) => MarkModel.fromMap(e['_id'], e)).toList();
+  }
+
+  Future<List<MarkModel>> getStudentCurriculumMarks(StudentModel student, CurriculumModel curriculum) async {
+    var res = await dio.getUri<List>(
+      Uri.http(host, '/curriculum/${curriculum.id}/student/${student.id}/mark'),
+    );
+    var js = res.data!;
+    return js.map((e) => MarkModel.fromMap(e['_id'], e)).toList();
+  }
+
+  Future<List<MarkModel>> getStudentCurriculumTeacherMarks(StudentModel student, CurriculumModel curriculum, TeacherModel teacher) async {
+    var res = await dio.getUri<List>(
+      Uri.http(host, '/curriculum/${curriculum.id}/student/${student.id}/teacher/${teacher.id}/mark'),
+    );
+    var js = res.data!;
+    return js.map((e) => MarkModel.fromMap(e['_id'], e)).toList();
+  }
+
+  Future<void> updateMark(String docId, int newMark) async {
+    await dio.putUri<Map<String, dynamic>>(
+      Uri.http(host, '/mark/$docId'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {'mark': newMark},
+    );
+  }
+
+  Future<String> saveMark(MarkModel mark) async {
+    var data = mark.toMap(withId: true);
+    data['institution_id'] = institution.id;
+    var res = await dio.putUri<Map<String, dynamic>>(
+      Uri.http(host, '/mark'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: data,
+    );
+    var js = res.data!;
+    return js['id'];
+  }
+
+  Future<void> deleteMark(MarkModel mark) async {
+    if (mark.id != null) {
+      var data = mark.toMap(withId: true);
+      await dio.deleteUri(
+        Uri.http(host, '/mark/${mark.id}'),
+        options: Options(headers: {'Content-Type': 'application/json'}),
+        data: data,
+      );
+    }
+  }
+
+  Future<List<DayScheduleModel>> getClassWeekSchedule(ClassModel aclass, Week currentWeek) async {
+    var res = await dio.getUri<List>(
+      Uri.http(host, '/class/${aclass.id}/weekschedule/${currentWeek.day(0).toIso8601String()}'),
+    );
+    return res.data!.map((e) => DayScheduleModel.fromMap(aclass, e['_id'], e)).toList();
+  }
+
+  Future<List<StudentScheduleModel>> getClassStudentWeekSchedule(ClassModel aclass, Week currentWeek, StudentModel student) async {
+    var res = await dio.getUri<List>(
+      Uri.http(host, '/class/${aclass.id}/weekschedule/${currentWeek.day(0).toIso8601String()}/student/${student.id}'),
+    );
+    return res.data!.map((e) => StudentScheduleModel.fromMap(aclass, e['_id'], e)).toList();
   }
 }

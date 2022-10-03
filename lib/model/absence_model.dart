@@ -20,8 +20,9 @@ class AbsenceModel {
     // status = map['status'] != null ? map['status'] as String : throw 'need status key in attendance $_id'; //TODO: status should be a emun with extensions
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool withId = false}) {
     Map<String, dynamic> res = {};
+    if (withId) res['_id'] = id;
     res['date'] = date;
     res['person_id'] = personId;
     res['lesson_order'] = lessonOrder;
@@ -30,7 +31,7 @@ class AbsenceModel {
   }
 
   Future<void> delete(LessonModel lesson) async {
-    Get.find<MStore>().deleteAbsence(lesson, this);
+    Get.find<ProxyStore>().deleteAbsence(lesson, this);
   }
 
   Future<StudentModel> get student async {

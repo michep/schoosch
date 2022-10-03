@@ -82,8 +82,9 @@ class CurriculumModel {
     return _studentIds.isEmpty || _studentIds.contains(student.id);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool withId = false}) {
     Map<String, dynamic> res = {};
+    if (withId) res['_id'] = id;
     res['name'] = name;
     res['alias'] = alias;
     res['master_id'] = _masterId;
@@ -92,7 +93,7 @@ class CurriculumModel {
   }
 
   Future<CurriculumModel> save() async {
-    var id = await Get.find<MStore>().saveCurriculum(this);
+    var id = await Get.find<ProxyStore>().saveCurriculum(this);
     _id ??= id;
     return this;
   }

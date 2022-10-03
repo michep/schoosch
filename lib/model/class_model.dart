@@ -23,7 +23,8 @@ class ClassModel {
   bool _lessontimesLoaded = false;
   final Mutex __lessontimesMutex = Mutex();
   TeacherModel? _master;
-  final Map<Week, List<StudentScheduleModel>> _weekSchedules = {};
+  final Map<Week, List<DayScheduleModel>> _weekClassSchedules = {};
+  final Map<Week, List<StudentScheduleModel>> _weekStudentSchedules = {};
   final Map<int, List<StudentScheduleModel>> _daySchedules = {};
   final List<CurriculumModel> _curriculums = [];
   bool _curriculumsLoaded = false;
@@ -70,12 +71,19 @@ class ClassModel {
     return _master!;
   }
 
-  Future<List<StudentScheduleModel>> getSchedulesWeek(Week week) async {
-    return _weekSchedules[week] ??= await Get.find<ProxyStore>().getClassWeekSchedule(this, week);
+  Future<List<DayScheduleModel>> getSchedulesWeek(Week week) async {
+    return _weekClassSchedules[week] ??= await Get.find<ProxyStore>().getClassWeekSchedule(this, week);
+  }
+
+  Future<List<StudentScheduleModel>> getStudentSchedulesWeek(Week week, StudentModel student, {bool forceRefresh = false}) async {
+    if (_weekStudentSchedules[week] == null || forceRefresh) {
+      _weekStudentSchedules[week] = await Get.find<ProxyStore>().getClassStudentWeekSchedule(this, week, student);
+    }
+    return _weekStudentSchedules[week]!;
   }
 
   Future<void> createReplacement(Map<String, dynamic> map) async {
-    return await Get.find<MStore>().createReplacement(this, map);
+    return await Get.find<ProxyStore>().createReplacement(this, map);
   }
 
   Future<List<StudentScheduleModel>> getSchedulesDay(int day, {bool forceRefresh = false}) async {
@@ -115,7 +123,7 @@ class ClassModel {
   }
 
   Future<Map<TeacherModel, List<String>>> get teachers async {
-    return Get.find<MStore>().getClassTeachers(this);
+    return Get.find<ProxyStore>().getClassTeachers(this);
   }
 
   Future<List<StudentModel>> students({forceRefresh = false}) async {

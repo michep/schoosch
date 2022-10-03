@@ -40,8 +40,8 @@ class MarkModel {
     mark = map['mark'] != null ? map['mark'] as int : throw 'need mark key in mark $id';
   }
 
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap({bool withId = false}) {
+    var data = <String, dynamic>{
       'teacher_id': teacherId,
       'student_id': studentId,
       'date': date,
@@ -51,6 +51,8 @@ class MarkModel {
       'comment': comment,
       'mark': mark,
     };
+    if (withId) data['_id'] = id;
+    return data;
   }
 
   Future<PersonModel> get teacher async {
@@ -62,10 +64,10 @@ class MarkModel {
   }
 
   Future<void> save() async {
-    id = await Get.find<MStore>().saveMark(this);
+    id = await Get.find<ProxyStore>().saveMark(this);
   }
 
   Future<void> delete() async {
-    Get.find<MStore>().deleteMark(this);
+    Get.find<ProxyStore>().deleteMark(this);
   }
 }

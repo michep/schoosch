@@ -152,7 +152,7 @@ class _CreateReplacementState extends State<CreateReplacement> {
         'curriculum_id': newCurriculum!.id,
         'venue_id': newVenue!.id,
         'teacher_id': newTeacher!.id,
-        'date': date,
+        'date': date!.toIso8601String(),
       }).whenComplete(() {
         setState(() {
           isLoading = false;

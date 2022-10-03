@@ -46,10 +46,14 @@ class LessonModel {
   late final String? venueId;
   final Map<String, HomeworkModel?> _homeworksThisLesson = {};
   final Map<String, HomeworkModel?> _homeworksNextLesson = {};
-  final Map<String, List<MarkModel>> marks = {};
+  final Map<String, List<MarkModel>> _marks = {};
+  bool _marksLoaded = false;
   CurriculumModel? _curriculum;
+  bool _curriculumLoaded = false;
   VenueModel? _venue;
+  bool _venueLoaded = false;
   LessontimeModel? _lessontime;
+  bool _lessontimeLoaded = false;
   LessonModel? replaceLesson;
   LessonType? type;
   final Mutex homeworkOnDateForClassAndAllStudentsMutex = Mutex();
@@ -76,6 +80,26 @@ class LessonModel {
         : type == LessonType.empty
             ? null
             : throw 'need venue_id key in lesson $_id';
+    if (map.containsKey('curriculum') && map['curriculum'] is Map) {
+      _curriculum = CurriculumModel.fromMap((map['curriculum'] as Map<String, dynamic>)['_id'] as String, map['curriculum'] as Map<String, dynamic>);
+      _curriculumLoaded = true;
+    }
+    if (map.containsKey('venue') && map['venue'] is Map) {
+      _venue = VenueModel.fromMap((map['venue'] as Map<String, dynamic>)['_id'] as String, map['venue'] as Map<String, dynamic>);
+      _venueLoaded = true;
+    }
+    if (map.containsKey('time') && map['time'] is Map) {
+      _lessontime = LessontimeModel.fromMap((map['time'] as Map<String, dynamic>)['_id'] as String, map['time'] as Map<String, dynamic>);
+      _lessontimeLoaded = true;
+    }
+    if (map.containsKey('mark') && map['mark'] is List) {
+      var m = (map['mark'] as List).map<MarkModel>((e) {
+        var data = e as Map<String, dynamic>;
+        return MarkModel.fromMap(data['_id'], data);
+      }).toList();
+      _marks.addAll(_splitMarksByStudent(m));
+      _marksLoaded = true;
+    }
   }
 
   void setReplacedType() {
@@ -83,21 +107,24 @@ class LessonModel {
   }
 
   Future<CurriculumModel?> get curriculum async {
-    if (curriculumId!.isNotEmpty) {
-      return _curriculum ??= await Get.find<MStore>().getCurriculum(curriculumId!);
+    if (!_curriculumLoaded) {
+      _curriculum = await Get.find<ProxyStore>().getCurriculum(curriculumId!);
     }
-    return null;
+    return _curriculum;
   }
 
   Future<VenueModel?> get venue async {
-    if (venueId!.isNotEmpty) {
-      return _venue ??= await Get.find<ProxyStore>().getVenue(venueId!);
+    if (!_venueLoaded) {
+      _venue = await Get.find<ProxyStore>().getVenue(venueId!);
     }
-    return null;
+    return _venue;
   }
 
-  Future<LessontimeModel> get lessontime async {
-    return _lessontime ??= await aclass.getLessontime(order);
+  Future<LessontimeModel?> get lessontime async {
+    if (!_lessontimeLoaded) {
+      _lessontime = await aclass.getLessontime(order);
+    }
+    return _lessontime;
   }
 
   Future<HomeworkModel?> homeworkThisLessonForClass(DateTime date, {bool forceRefresh = false}) async {
@@ -184,25 +211,40 @@ class LessonModel {
     return _homeworksNextLesson;
   }
 
-  Future<Map<String, List<MarkModel>>> getAllMarks(DateTime date) async {
-    Map<String, List<MarkModel>> res = {};
-    var mrks = await Get.find<MStore>().getAllLessonMarks(this, date);
-    for (var mrk in mrks) {
-      if (res[mrk.studentId] == null) {
-        res[mrk.studentId] = [mrk];
-      } else {
-        res[mrk.studentId]!.add(mrk);
-      }
+  Future<Map<String, List<MarkModel>>> getAllMarks(DateTime date, {bool forceRefresh = false}) async {
+    if (!_marksLoaded || forceRefresh) {
+      var m = await Get.find<ProxyStore>().getAllLessonMarks(this, date);
+      _marks.clear();
+      _marks.addAll(_splitMarksByStudent(m));
+      _marksLoaded = true;
     }
-    return res;
+    return _marks;
+    // Map<String, List<MarkModel>> res = {};
+    // var mrks = await Get.find<ProxyStore>().getAllLessonMarks(this, date);
+    // for (var mrk in mrks) {
+    //   if (res[mrk.studentId] == null) {
+    //     res[mrk.studentId] = [mrk];
+    //   } else {
+    //     res[mrk.studentId]!.add(mrk);
+    //   }
+    // }
+    // return res;
   }
 
   Future<List<MarkModel>> marksForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
-    if (marks[student.id] == null || forceRefresh) {
-      marks[student.id!] = await Get.find<MStore>().getStudentLessonMarks(this, student, date);
+    if (!_marksLoaded && forceRefresh) {
+      getAllMarks(date, forceRefresh: forceRefresh);
     }
+    return _marks[student.id!] == null ? [] : _marks[student.id!]!;
+  }
 
-    return marks[student.id!]!;
+  Map<String, List<MarkModel>> _splitMarksByStudent(List<MarkModel> marks) {
+    Map<String, List<MarkModel>> res = {};
+    for (var m in marks) {
+      if (res[m.studentId] == null) res[m.studentId] = [];
+      res[m.studentId]!.add(m);
+    }
+    return res;
   }
 
   Future<void> saveMark(MarkModel mark) async {
@@ -215,11 +257,11 @@ class LessonModel {
   }
 
   Future<List<AbsenceModel>> getAllAbsences(DateTime date, {bool forceUpdate = false}) async {
-    return Get.find<MStore>().getAllAbsences(this, date);
+    return Get.find<ProxyStore>().getAllAbsences(this, date);
   }
 
   Future<void> createAbsence(AbsenceModel absence) async {
-    return Get.find<MStore>().createAbsence(this, absence);
+    return Get.find<ProxyStore>().createAbsence(this, absence);
   }
 
   Map<String, dynamic> toMap({bool withId = false}) {

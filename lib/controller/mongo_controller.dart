@@ -279,27 +279,27 @@ class MStore extends GetxController {
   //   }
   // }
 
-  Future<List<CurriculumModel>> getAllCurriculums() async {
-    return _db.collection('curriculum').find().map((curriculum) => CurriculumModel.fromMap((curriculum['_id'] as ObjectId).toHexString(), curriculum)).toList();
-  }
+  // Future<List<CurriculumModel>> getAllCurriculums() async {
+  //   return _db.collection('curriculum').find().map((curriculum) => CurriculumModel.fromMap((curriculum['_id'] as ObjectId).toHexString(), curriculum)).toList();
+  // }
 
-  Future<CurriculumModel> getCurriculum(String id) async {
-    var mid = ObjectId.fromHexString(id);
-    var data = await _db.collection('curriculum').findOne(where.eq('_id', mid));
-    return CurriculumModel.fromMap((data!['_id'] as ObjectId).toHexString(), data);
-  }
+  // Future<CurriculumModel> getCurriculum(String id) async {
+  //   var mid = ObjectId.fromHexString(id);
+  //   var data = await _db.collection('curriculum').findOne(where.eq('_id', mid));
+  //   return CurriculumModel.fromMap((data!['_id'] as ObjectId).toHexString(), data);
+  // }
 
-  Future<String> saveCurriculum(CurriculumModel curriculum) async {
-    var data = curriculum.toMap();
-    data['institution_id'] = ObjectId.fromHexString(_institution!.id);
-    if (curriculum.id == null) {
-      return ((await _db.collection('curriculum').insertOne(data)).id as ObjectId).toHexString();
-    } else {
-      data['_id'] = ObjectId.fromHexString(curriculum.id!);
-      await _db.collection('curriculum').replaceOne(where.eq('_id', data['_id']), data);
-      return curriculum.id!;
-    }
-  }
+  // Future<String> saveCurriculum(CurriculumModel curriculum) async {
+  //   var data = curriculum.toMap();
+  //   data['institution_id'] = ObjectId.fromHexString(_institution!.id);
+  //   if (curriculum.id == null) {
+  //     return ((await _db.collection('curriculum').insertOne(data)).id as ObjectId).toHexString();
+  //   } else {
+  //     data['_id'] = ObjectId.fromHexString(curriculum.id!);
+  //     await _db.collection('curriculum').replaceOne(where.eq('_id', data['_id']), data);
+  //     return curriculum.id!;
+  //   }
+  // }
 
   // Future<List<VenueModel>> getAllVenues() async {
   //   return _db.collection('venue').find().map((venue) => VenueModel.fromMap((venue['_id'] as ObjectId).toHexString(), venue)).toList();
@@ -359,143 +359,143 @@ class MStore extends GetxController {
   //   }
   // }
 
-  Future<InstitutionModel> _geInstitutionIdByUserEmail(String email) async {
-    var res = await _db.collection('people').findOne(where.eq('email', email));
-    if (res == null) {
-      throw 'User with provided email was not found in any Institution';
-    }
-    res = await _db.collection('institution').findOne(where.eq('_id', res['institution_id']));
-    if (res == null) {
-      throw 'Institution was not found';
-    }
-    return InstitutionModel.fromMap((res['_id'] as ObjectId).toHexString(), res);
-  }
+  // Future<InstitutionModel> _geInstitutionIdByUserEmail(String email) async {
+  //   var res = await _db.collection('people').findOne(where.eq('email', email));
+  //   if (res == null) {
+  //     throw 'User with provided email was not found in any Institution';
+  //   }
+  //   res = await _db.collection('institution').findOne(where.eq('_id', res['institution_id']));
+  //   if (res == null) {
+  //     throw 'Institution was not found';
+  //   }
+  //   return InstitutionModel.fromMap((res['_id'] as ObjectId).toHexString(), res);
+  // }
 
-  Future<PersonModel> _getUserByEmail(String email) async {
-    var res = await _db.collection('people').findOne(where.eq('email', email));
-    if (res == null) {
-      throw 'User with provided email was not found in current Institution';
-    }
-    return PersonModel.fromMap((res['_id'] as ObjectId).toHexString(), res);
-  }
+  // Future<PersonModel> _getUserByEmail(String email) async {
+  //   var res = await _db.collection('people').findOne(where.eq('email', email));
+  //   if (res == null) {
+  //     throw 'User with provided email was not found in current Institution';
+  //   }
+  //   return PersonModel.fromMap((res['_id'] as ObjectId).toHexString(), res);
+  // }
 
-  Future<ClassModel?> getClassForStudent(PersonModel student) async {
-    var res = await _db.collection('class').findOne(where.eq('student_ids', ObjectId.fromHexString(student.id!)));
-    return res == null ? null : ClassModel.fromMap((res['_id'] as ObjectId).toHexString(), res);
-  }
+  // Future<ClassModel?> getClassForStudent(PersonModel student) async {
+  //   var res = await _db.collection('class').findOne(where.eq('student_ids', ObjectId.fromHexString(student.id!)));
+  //   return res == null ? null : ClassModel.fromMap((res['_id'] as ObjectId).toHexString(), res);
+  // }
 
-  Future<Map<TeacherModel, List<String>>> getClassTeachers(ClassModel aclass) async {
-    var teachers = <TeacherModel, List<String>>{};
-    var mast = await aclass.master;
-    if (mast != null) {
-      teachers[mast] = [
-        'Классный руководитель',
-      ];
-    }
-    var cw = Get.find<CurrentWeek>().currentWeek; //TODO: currentWeek should be parameter
-    var days = await aclass.getSchedulesWeek(cw);
-    for (var day in days) {
-      var dayles = await day.lessonsForStudent(PersonModel.currentStudent!);
-      for (var les in dayles) {
-        var cur = await les.curriculum;
-        var teach = await cur!.master;
-        if (teach != null) {
-          if (teachers[teach] == null) {
-            teachers[teach] = [cur.aliasOrName];
-          } else if (!teachers[teach]!.contains(cur.aliasOrName)) {
-            teachers[teach]!.add(cur.aliasOrName);
-          }
-        }
-      }
-    }
-    return teachers;
-  }
+  // Future<Map<TeacherModel, List<String>>> getClassTeachers(ClassModel aclass) async {
+  //   var teachers = <TeacherModel, List<String>>{};
+  //   var mast = await aclass.master;
+  //   if (mast != null) {
+  //     teachers[mast] = [
+  //       'Классный руководитель',
+  //     ];
+  //   }
+  //   var cw = Get.find<CurrentWeek>().currentWeek; //TODO: currentWeek should be parameter
+  //   var days = await aclass.getSchedulesWeek(cw);
+  //   for (var day in days) {
+  //     var dayles = await day.lessonsForStudent(PersonModel.currentStudent!);
+  //     for (var les in dayles) {
+  //       var cur = await les.curriculum;
+  //       var teach = await cur!.master;
+  //       if (teach != null) {
+  //         if (teachers[teach] == null) {
+  //           teachers[teach] = [cur.aliasOrName];
+  //         } else if (!teachers[teach]!.contains(cur.aliasOrName)) {
+  //           teachers[teach]!.add(cur.aliasOrName);
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return teachers;
+  // }
 
-  Future<void> saveTeacherRating(TeacherModel teacher, PersonModel user, DateTime date, int rating, String comment) async {
-    Map<String, dynamic> data = {};
-    data['ratedate'] = date;
-    data['rater_id'] = user.id;
-    data['rating'] = rating;
-    data['teacher_id'] = teacher.id;
-    data['commentary'] = comment;
-    await _db.collection('teachersrates').insert(data);
-  }
+  // Future<void> saveTeacherRating(TeacherModel teacher, PersonModel user, DateTime date, int rating, String comment) async {
+  //   Map<String, dynamic> data = {};
+  //   data['ratedate'] = date;
+  //   data['rater_id'] = user.id;
+  //   data['rating'] = rating;
+  //   data['teacher_id'] = teacher.id;
+  //   data['commentary'] = comment;
+  //   await _db.collection('teachersrates').insert(data);
+  // }
 
-  Future<String> saveHomework(HomeworkModel homework) async {
-    var data = homework.toMap();
-    data['institution_id'] = ObjectId.fromHexString(_institution!.id);
-    if (homework.id == null) {
-      return ((await _db.collection('homework').insertOne(data)).id as ObjectId).toHexString();
-    } else {
-      data['_id'] = ObjectId.fromHexString(homework.id!);
-      await _db.collection('venue').replaceOne(where.eq('_id', data['_id']), data);
-      return homework.id!;
-    }
-  }
+  // Future<String> saveHomework(HomeworkModel homework) async {
+  //   var data = homework.toMap();
+  //   data['institution_id'] = ObjectId.fromHexString(_institution!.id);
+  //   if (homework.id == null) {
+  //     return ((await _db.collection('homework').insertOne(data)).id as ObjectId).toHexString();
+  //   } else {
+  //     data['_id'] = ObjectId.fromHexString(homework.id!);
+  //     await _db.collection('venue').replaceOne(where.eq('_id', data['_id']), data);
+  //     return homework.id!;
+  //   }
+  // }
 
-  Future<void> createCompletion(HomeworkModel homework, StudentModel student) async {
-    var data = {
-      'completedby_id': student.id,
-      'completed_time': DateTime.now(),
-      'confirmedby_id': null,
-      'confirmed_time': null,
-      'status': 1,
-      'homework_id': homework.id,
-      'institution_id': _institution!.id,
-    };
-    await _db.collection('completion').insertOne(data);
-  }
+  // Future<void> createCompletion(HomeworkModel homework, StudentModel student) async {
+  //   var data = {
+  //     'completedby_id': student.id,
+  //     'completed_time': DateTime.now(),
+  //     'confirmedby_id': null,
+  //     'confirmed_time': null,
+  //     'status': 1,
+  //     'homework_id': homework.id,
+  //     'institution_id': _institution!.id,
+  //   };
+  //   await _db.collection('completion').insertOne(data);
+  // }
 
-  Future<void> deleteCompletion(HomeworkModel homework, StudentModel student) async {
-    await _db.collection('completion').deleteOne(where.eq('homework_id', homework.id).eq('completedby_id', student.id));
-  }
+  // Future<void> deleteCompletion(HomeworkModel homework, StudentModel student) async {
+  //   await _db.collection('completion').deleteOne(where.eq('homework_id', homework.id).eq('completedby_id', student.id));
+  // }
 
-  Future<void> confirmCompletion(HomeworkModel homework, CompletionFlagModel completion, PersonModel person) async {
-    var data = await _db.collection('completion').findOne(where.eq('_id', completion.id));
-    data!['status'] = 2;
-    data['confirmedby_id'] = person.id;
-    data['confirmed_time'] = DateTime.now();
-    await _db.collection('completion').replaceOne(where.eq('_id', completion.id), data);
-    return;
-  }
+  // Future<void> confirmCompletion(HomeworkModel homework, CompletionFlagModel completion, PersonModel person) async {
+  //   var data = await _db.collection('completion').findOne(where.eq('_id', completion.id));
+  //   data!['status'] = 2;
+  //   data['confirmedby_id'] = person.id;
+  //   data['confirmed_time'] = DateTime.now();
+  //   await _db.collection('completion').replaceOne(where.eq('_id', completion.id), data);
+  //   return;
+  // }
 
-  Future<void> unconfirmCompletion(HomeworkModel homework, CompletionFlagModel completion, PersonModel person) async {
-    var data = await _db.collection('completion').findOne(where.eq('_id', completion.id));
-    data!['status'] = 1;
-    data['confirmedby_id'] = person.id;
-    data['confirmed_time'] = null;
-    await _db.collection('completion').replaceOne(where.eq('_id', completion.id), data);
-    return;
-  }
+  // Future<void> unconfirmCompletion(HomeworkModel homework, CompletionFlagModel completion, PersonModel person) async {
+  //   var data = await _db.collection('completion').findOne(where.eq('_id', completion.id));
+  //   data!['status'] = 1;
+  //   data['confirmedby_id'] = person.id;
+  //   data['confirmed_time'] = null;
+  //   await _db.collection('completion').replaceOne(where.eq('_id', completion.id), data);
+  //   return;
+  // }
 
-  Future<CompletionFlagModel?> getHomeworkCompletion(HomeworkModel homework, StudentModel student) async {
-    var data = await _db.collection('completion').findOne(where.eq('homework_id', homework.id).eq('completedby_id', student.id));
-    return data == null ? null : CompletionFlagModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
-  }
+  // Future<CompletionFlagModel?> getHomeworkCompletion(HomeworkModel homework, StudentModel student) async {
+  //   var data = await _db.collection('completion').findOne(where.eq('homework_id', homework.id).eq('completedby_id', student.id));
+  //   return data == null ? null : CompletionFlagModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
+  // }
 
-  Future<List<CompletionFlagModel>> getAllHomeworkCompletions(HomeworkModel homework) async {
-    return _db
-        .collection('completion')
-        .find(where.eq('homework_id', homework.id))
-        .map((data) => CompletionFlagModel.fromMap((data['_id'] as ObjectId).toHexString(), data))
-        .toList();
-  }
+  // Future<List<CompletionFlagModel>> getAllHomeworkCompletions(HomeworkModel homework) async {
+  //   return _db
+  //       .collection('completion')
+  //       .find(where.eq('homework_id', homework.id))
+  //       .map((data) => CompletionFlagModel.fromMap((data['_id'] as ObjectId).toHexString(), data))
+  //       .toList();
+  // }
 
-  Future<double> getAverageTeacherRating(TeacherModel teacher) async {
-    double sum = 0;
-    var ratings = await _db.collection('teachersrates').find().toList();
-    for (var i in ratings) {
-      sum += i['rating'];
-    }
-    return sum / ratings.length;
-  }
+  // Future<double> getAverageTeacherRating(TeacherModel teacher) async {
+  //   double sum = 0;
+  //   var ratings = await _db.collection('teachersrates').find().toList();
+  //   for (var i in ratings) {
+  //     sum += i['rating'];
+  //   }
+  //   return sum / ratings.length;
+  // }
 
-  Future<bool> hasRatingInMonth(TeacherModel teacher) async {
-    var data = await _db.collection('teacherrates').findOne(where.eq('teacher_id', teacher.id).lt('ratedate', DateTime.now()));
-    if (data == null) return true;
-    var d = data['ratedate'] as DateTime;
-    return (d.year == DateTime.now().year && d.month == DateTime.now().month);
-  }
+  // Future<bool> hasRatingInMonth(TeacherModel teacher) async {
+  //   var data = await _db.collection('teacherrates').findOne(where.eq('teacher_id', teacher.id).lt('ratedate', DateTime.now()));
+  //   if (data == null) return true;
+  //   var d = data['ratedate'] as DateTime;
+  //   return (d.year == DateTime.now().year && d.month == DateTime.now().month);
+  // }
 
   // Future<HomeworkModel?> getHomeworkForStudentBeforeDate(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
   //   var data = await _db
@@ -533,9 +533,9 @@ class MStore extends GetxController {
   //   return data == null ? null : HomeworkModel.fromMap((data['_id'] as ObjectId).toHexString(), data);
   // }
 
-  Future<void> updateHomework(HomeworkModel homework, String newText) async {
-    await _db.collection('homework').updateOne(where.eq('_id', homework.id), modify.set('text', newText));
-  }
+  // Future<void> updateHomework(HomeworkModel homework, String newText) async {
+  //   await _db.collection('homework').updateOne(where.eq('_id', homework.id), modify.set('text', newText));
+  // }
 
   Future<List<TeacherScheduleModel>> getTeacherWeekSchedule(TeacherModel teacher, isoweek.Week week) async {
     var aggr = AggregationPipelineBuilder()
@@ -580,7 +580,7 @@ class MStore extends GetxController {
       );
       List<LessonModel> lessonsList = [];
       List<ReplacementModel> repsList = [];
-      repsList = await getAllReplacementsOnDate(
+      repsList = await Get.find<ProxyStore>().getAllReplacementsOnDate(
         schedule,
         week.day(schedule.day - 1),
       );
@@ -670,68 +670,68 @@ class MStore extends GetxController {
         .toList();
   }
 
-  Future<List<MarkModel>> getAllLessonMarks(LessonModel lesson, DateTime date) async {
-    return _db
-        .collection('mark')
-        .find(where
-            .eq('curriculum_id', (await lesson.curriculum)!.id)
-            .eq('lesson_order', lesson.order)
-            .gte('date', date)
-            .lt('date', date.add(const Duration(hours: 24))))
-        .map((data) => MarkModel.fromMap((data['_id'] as ObjectId).toHexString(), data))
-        .toList();
-  }
+  // Future<List<MarkModel>> getAllLessonMarks(LessonModel lesson, DateTime date) async {
+  //   return _db
+  //       .collection('mark')
+  //       .find(where
+  //           .eq('curriculum_id', (await lesson.curriculum)!.id)
+  //           .eq('lesson_order', lesson.order)
+  //           .gte('date', date)
+  //           .lt('date', date.add(const Duration(hours: 24))))
+  //       .map((data) => MarkModel.fromMap((data['_id'] as ObjectId).toHexString(), data))
+  //       .toList();
+  // }
 
-  Future<List<MarkModel>> getStudentLessonMarks(LessonModel lesson, StudentModel student, DateTime date) async {
-    return _db
-        .collection('mark')
-        .find(where
-            .eq('curriculum_id', (await lesson.curriculum)!.id)
-            .eq('lesson_order', lesson.order)
-            .eq('student_id', student.id)
-            .gte('date', date)
-            .lt('date', date.add(const Duration(hours: 24))))
-        .map((data) => MarkModel.fromMap((data['_id'] as ObjectId).toHexString(), data))
-        .toList();
-  }
+  // Future<List<MarkModel>> getStudentLessonMarks(LessonModel lesson, StudentModel student, DateTime date) async {
+  //   return _db
+  //       .collection('mark')
+  //       .find(where
+  //           .eq('curriculum_id', (await lesson.curriculum)!.id)
+  //           .eq('lesson_order', lesson.order)
+  //           .eq('student_id', student.id)
+  //           .gte('date', date)
+  //           .lt('date', date.add(const Duration(hours: 24))))
+  //       .map((data) => MarkModel.fromMap((data['_id'] as ObjectId).toHexString(), data))
+  //       .toList();
+  // }
 
-  Future<List<MarkModel>> getStudentCurriculumMarks(StudentModel student, CurriculumModel curriculum) async {
-    return _db
-        .collection('mark')
-        .find(where.eq('curriculum_id', curriculum.id).eq('student_id', student.id))
-        .map((data) => MarkModel.fromMap((data['_id'] as ObjectId).toHexString(), data))
-        .toList();
-  }
+  // Future<List<MarkModel>> getStudentCurriculumMarks(StudentModel student, CurriculumModel curriculum) async {
+  //   return _db
+  //       .collection('mark')
+  //       .find(where.eq('curriculum_id', curriculum.id).eq('student_id', student.id))
+  //       .map((data) => MarkModel.fromMap((data['_id'] as ObjectId).toHexString(), data))
+  //       .toList();
+  // }
 
-  Future<List<MarkModel>> getStudentCurriculumTeacherMarks(StudentModel student, CurriculumModel curriculum, TeacherModel teacher) async {
-    return _db
-        .collection('mark')
-        .find(where.eq('curriculum_id', curriculum.id).eq('student_id', student.id).eq('teacher_id', teacher.id))
-        .map((data) => MarkModel.fromMap((data['_id'] as ObjectId).toHexString(), data))
-        .toList();
-  }
+  // Future<List<MarkModel>> getStudentCurriculumTeacherMarks(StudentModel student, CurriculumModel curriculum, TeacherModel teacher) async {
+  //   return _db
+  //       .collection('mark')
+  //       .find(where.eq('curriculum_id', curriculum.id).eq('student_id', student.id).eq('teacher_id', teacher.id))
+  //       .map((data) => MarkModel.fromMap((data['_id'] as ObjectId).toHexString(), data))
+  //       .toList();
+  // }
 
-  Future<void> updateMark(String docId, int newMark) async {
-    await _db.collection('mark').updateOne(where.eq('_id', ObjectId.fromHexString(docId)), modify.set('mark', newMark));
-  }
+  // Future<void> updateMark(String docId, int newMark) async {
+  //   await _db.collection('mark').updateOne(where.eq('_id', ObjectId.fromHexString(docId)), modify.set('mark', newMark));
+  // }
 
-  Future<String> saveMark(MarkModel mark) async {
-    var data = mark.toMap();
-    data['institution_id'] = ObjectId.fromHexString(_institution!.id);
-    if (mark.id == null) {
-      return ((await _db.collection('mark').insertOne(data)).id as ObjectId).toHexString();
-    } else {
-      data['_id'] = ObjectId.fromHexString(mark.id!);
-      await _db.collection('mark').replaceOne(where.eq('_id', data['_id']), data);
-      return mark.id!;
-    }
-  }
+  // Future<String> saveMark(MarkModel mark) async {
+  //   var data = mark.toMap();
+  //   data['institution_id'] = ObjectId.fromHexString(_institution!.id);
+  //   if (mark.id == null) {
+  //     return ((await _db.collection('mark').insertOne(data)).id as ObjectId).toHexString();
+  //   } else {
+  //     data['_id'] = ObjectId.fromHexString(mark.id!);
+  //     await _db.collection('mark').replaceOne(where.eq('_id', data['_id']), data);
+  //     return mark.id!;
+  //   }
+  // }
 
-  Future<void> deleteMark(MarkModel mark) async {
-    if (mark.id != null) {
-      await _db.collection('mark').deleteOne(where.eq('_id', mark.id));
-    }
-  }
+  // Future<void> deleteMark(MarkModel mark) async {
+  //   if (mark.id != null) {
+  //     await _db.collection('mark').deleteOne(where.eq('_id', mark.id));
+  //   }
+  // }
 
   Future<List<ClassModel>> getCurriculumClasses(CurriculumModel curriculum) async {
     var aggr = AggregationPipelineBuilder()
@@ -813,36 +813,36 @@ class MStore extends GetxController {
     });
   }
 
-  Future<void> createReplacement(ClassModel aclass, Map<String, dynamic> map) async {
-    await _db.collection('replace').insertOne({
-      'institution_id': _institution!.id,
-      'class_id': aclass.id,
-      'order': map['order'],
-      'curriculum_id': map['curriculum_id'],
-      'teacher_id': map['teacher_id'],
-      'venue_id': map['venue_id'],
-      'date': map['date'],
-    });
-  }
+  // Future<void> createReplacement(ClassModel aclass, Map<String, dynamic> map) async {
+  //   await _db.collection('replace').insertOne({
+  //     'institution_id': _institution!.id,
+  //     'class_id': aclass.id,
+  //     'order': map['order'],
+  //     'curriculum_id': map['curriculum_id'],
+  //     'teacher_id': map['teacher_id'],
+  //     'venue_id': map['venue_id'],
+  //     'date': map['date'],
+  //   });
+  // }
 
-  Future<List<ReplacementModel>> getReplacementsOnDate(ClassModel aclass, DayScheduleModel schedule, DateTime date) async {
-    return _db
-        .collection('replace')
-        .find(where.eq('class_id', aclass.id).gte('date', date).lt('date', date.add(const Duration(hours: 24))))
-        .map((data) => ReplacementModel.fromMap(aclass, schedule, (data['_id'] as ObjectId).toHexString(), data))
-        .toList();
-  }
+  // Future<List<ReplacementModel>> getReplacementsOnDate(ClassModel aclass, DayScheduleModel schedule, DateTime date) async {
+  //   return _db
+  //       .collection('replace')
+  //       .find(where.eq('class_id', aclass.id).gte('date', date).lt('date', date.add(const Duration(hours: 24))))
+  //       .map((data) => ReplacementModel.fromMap(aclass, schedule, (data['_id'] as ObjectId).toHexString(), data))
+  //       .toList();
+  // }
 
-  Future<List<ReplacementModel>> getAllReplacementsOnDate(DayScheduleModel schedule, DateTime date) async {
-    return _db.collection('replace').find(where.gte('date', date).lt('date', date.add(const Duration(hours: 24)))).asyncMap((data) async {
-      var aclass = await Get.find<ProxyStore>().getClass((data['class_id'] as ObjectId).toHexString());
-      return ReplacementModel.fromMap(aclass, schedule, (data['_id'] as ObjectId).toHexString(), data);
-    }).toList();
-  }
+  // Future<List<ReplacementModel>> getAllReplacementsOnDate(DayScheduleModel schedule, DateTime date) async {
+  //   return _db.collection('replace').find(where.gte('date', date).lt('date', date.add(const Duration(hours: 24)))).asyncMap((data) async {
+  //     var aclass = await Get.find<ProxyStore>().getClass((data['class_id'] as ObjectId).toHexString());
+  //     return ReplacementModel.fromMap(aclass, schedule, (data['_id'] as ObjectId).toHexString(), data);
+  //   }).toList();
+  // }
 
   Future<List<PersonModel>> getFreeTeachersOnLesson(DateTime date, int order) async {
     List<PersonModel> res = [];
-    var a = await getAllCurriculums();
+    var a = await Get.find<ProxyStore>().getAllCurriculums();
     // var a = await aclass.getCurriculums();
     for (var cur in a) {
       var mast = await cur.master;
@@ -877,62 +877,62 @@ class MStore extends GetxController {
     return res;
   }
 
-  Future<List<AbsenceModel>> getAllAbsences(LessonModel lesson, DateTime date) async {
-    return _db
-        .collection('absence')
-        .find(where
-            .eq('class_id', lesson.aclass.id)
-            .eq('lesson_order', lesson.order)
-            .gte('date', date)
-            .lt('date', date.add(const Duration(hours: 23, minutes: 59))))
-        .map((data) => AbsenceModel.fromMap((data['_id'] as ObjectId).toHexString(), data))
-        .toList();
-  }
+  // Future<List<AbsenceModel>> getAllAbsences(LessonModel lesson, DateTime date) async {
+  //   return _db
+  //       .collection('absence')
+  //       .find(where
+  //           .eq('class_id', lesson.aclass.id)
+  //           .eq('lesson_order', lesson.order)
+  //           .gte('date', date)
+  //           .lt('date', date.add(const Duration(hours: 23, minutes: 59))))
+  //       .map((data) => AbsenceModel.fromMap((data['_id'] as ObjectId).toHexString(), data))
+  //       .toList();
+  // }
 
-  Future<AbsenceModel?> getAbsence(LessonModel lesson, String studentId, DateTime date) async {
-    var res = await _db.collection('absence').findOne(
-          where
-              .eq('class_id', ObjectId.fromHexString(lesson.aclass.id!))
-              .eq('lesson_order', lesson.order)
-              .eq('person_id', ObjectId.fromHexString(studentId))
-              .gte('date', date)
-              .lt('date', date.add(const Duration(hours: 23, minutes: 59))),
-        );
-    return res == null ? null : AbsenceModel.fromMap((res['_id'] as ObjectId).toHexString(), res);
-  }
+  // Future<AbsenceModel?> getAbsence(LessonModel lesson, String studentId, DateTime date) async {
+  //   var res = await _db.collection('absence').findOne(
+  //         where
+  //             .eq('class_id', ObjectId.fromHexString(lesson.aclass.id!))
+  //             .eq('lesson_order', lesson.order)
+  //             .eq('person_id', ObjectId.fromHexString(studentId))
+  //             .gte('date', date)
+  //             .lt('date', date.add(const Duration(hours: 23, minutes: 59))),
+  //       );
+  //   return res == null ? null : AbsenceModel.fromMap((res['_id'] as ObjectId).toHexString(), res);
+  // }
 
-  Future<void> createAbsence(LessonModel lesson, AbsenceModel absence) async {
-    if (await getAbsence(lesson, absence.personId, absence.date) == null) {
-      var data = absence.toMap();
-      data['institution_id'] = ObjectId.fromHexString(_institution!.id);
-      data['class_id'] = ObjectId.fromHexString(lesson.aclass.id!);
-      _db.collection('absence').insertOne(data);
-    }
-  }
+  // Future<void> createAbsence(LessonModel lesson, AbsenceModel absence) async {
+  //   if (await getAbsence(lesson, absence.personId, absence.date) == null) {
+  //     var data = absence.toMap();
+  //     data['institution_id'] = ObjectId.fromHexString(_institution!.id);
+  //     data['class_id'] = ObjectId.fromHexString(lesson.aclass.id!);
+  //     _db.collection('absence').insertOne(data);
+  //   }
+  // }
 
-  Future<void> deleteAbsence(LessonModel lesson, AbsenceModel absence) async {
-    if (absence.id != null) {
-      await _db.collection('absence').deleteOne(where.eq('_id', ObjectId.fromHexString(absence.id!)));
-    }
-  }
+  // Future<void> deleteAbsence(LessonModel lesson, AbsenceModel absence) async {
+  //   if (absence.id != null) {
+  //     await _db.collection('absence').deleteOne(where.eq('_id', ObjectId.fromHexString(absence.id!)));
+  //   }
+  // }
 
-  Future<void> sendNotif(List<PersonModel> targets) async {
-    await http.post(
-      Uri.parse("https://onesignal.com/api/v1/notifications"),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic NDQ4M2EyODUtZmRiNS00OGE0LWE1ZDEtYmZjOTI3ZTVlZTUz',
-      },
-      body: json.encode(
-        {
-          "app_id": "0725282a-b87a-4ea8-97ab-165108deee94",
-          "include_external_user_ids": targets.map((e) => e.id).toList(),
-          "channel_for_external_user_ids": "push",
-          "data": {"foo": "bar"},
-          "contents": {"en": 'рабочее уведомление'}
-        },
-      ),
-    );
-  }
+  // Future<void> sendNotif(List<PersonModel> targets) async {
+  //   await http.post(
+  //     Uri.parse("https://onesignal.com/api/v1/notifications"),
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'Basic NDQ4M2EyODUtZmRiNS00OGE0LWE1ZDEtYmZjOTI3ZTVlZTUz',
+  //     },
+  //     body: json.encode(
+  //       {
+  //         "app_id": "0725282a-b87a-4ea8-97ab-165108deee94",
+  //         "include_external_user_ids": targets.map((e) => e.id).toList(),
+  //         "channel_for_external_user_ids": "push",
+  //         "data": {"foo": "bar"},
+  //         "contents": {"en": 'рабочее уведомление'}
+  //       },
+  //     ),
+  //   );
+  // }
 }

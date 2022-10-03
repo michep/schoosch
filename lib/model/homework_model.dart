@@ -25,27 +25,27 @@ class HomeworkModel {
   Future<StudentModel?> get student async => studentId != null ? (await Get.find<ProxyStore>().getPerson(studentId!)).asStudent! : null;
 
   Future<CompletionFlagModel?> getCompletion(StudentModel student) async {
-    return await Get.find<MStore>().getHomeworkCompletion(this, student);
+    return await Get.find<ProxyStore>().getHomeworkCompletion(this, student);
   }
 
   Future<List<CompletionFlagModel>> getAllCompletions() async {
-    return await Get.find<MStore>().getAllHomeworkCompletions(this);
+    return await Get.find<ProxyStore>().getAllHomeworkCompletions(this);
   }
 
   Future<void> createCompletion(StudentModel student) async {
-    return await Get.find<MStore>().createCompletion(this, student);
+    return await Get.find<ProxyStore>().createCompletion(this, student);
   }
 
-  Future<void> deleteCompletion(StudentModel student) async {
-    return await Get.find<MStore>().deleteCompletion(this, student);
+  Future<void> deleteCompletion(CompletionFlagModel completion, StudentModel student) async {
+    return await Get.find<ProxyStore>().deleteCompletion(this, completion, student);
   }
 
   Future<void> confirmCompletion(CompletionFlagModel completion, PersonModel person) async {
-    return await Get.find<MStore>().confirmCompletion(this, completion, person);
+    return await Get.find<ProxyStore>().confirmCompletion(this, completion, person);
   }
 
   Future<void> unconfirmCompletion(CompletionFlagModel completion, PersonModel person) async {
-    return await Get.find<MStore>().unconfirmCompletion(this, completion, person);
+    return await Get.find<ProxyStore>().unconfirmCompletion(this, completion, person);
   }
 
   // Future<void> completeCompletion(CompletionFlagModel c, TeacherModel teacher) async {
@@ -76,6 +76,6 @@ class HomeworkModel {
   }
 
   Future<String> save() {
-    return Get.find<MStore>().saveHomework(this);
+    return Get.find<ProxyStore>().saveHomework(this);
   }
 }
