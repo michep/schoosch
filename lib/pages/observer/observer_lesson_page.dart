@@ -52,10 +52,12 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
       StudentsAbsencePage(
         widget.date,
         widget.lesson,
+        readOnly: true,
       ),
       StudentsMarksPage(
         widget.date,
         widget.lesson,
+        readOnly: true,
       ),
       ClassTasksCombinedPage(
         null,
@@ -64,6 +66,7 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
         widget.lesson,
         (d, f) => widget.lesson.homeworkOnDateForClassAndAllStudents(d, forceRefresh: f),
         (d, f) => widget.lesson.homeworOnDateForClass(d, forceRefresh: f),
+        readOnly: true,
       ),
     ];
     super.initState();
