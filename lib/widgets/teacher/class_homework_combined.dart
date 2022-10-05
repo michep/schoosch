@@ -139,7 +139,7 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
                                       e,
                                       widget._lesson,
                                       compl,
-                                      (hws) => editStudentHomework(hws, studentsIdsWithHW),
+                                      (hws) => editStudentHomework(hws, studentsIdsWithHW, hw != null),
                                       toggleHomeworkCompletion,
                                       readOnly: widget.readOnly,
                                     );
@@ -183,7 +183,8 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
           },
         ),
         studentIDs,
-        personalHomework: true,
+        hw != null,
+        isPersonalHomework: true,
       ),
     );
     if (res is bool && res == true) {
@@ -191,9 +192,9 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
     }
   }
 
-  void editStudentHomework(HomeworkModel hw, List<String> studentIDs) async {
+  void editStudentHomework(HomeworkModel hw, List<String> studentIDs, bool classHwExists) async {
     studentIDs.remove(hw.studentId);
-    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, studentIDs, personalHomework: true));
+    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, studentIDs, classHwExists, isPersonalHomework: true));
     if (res is bool && res == true) {
       setState(() {});
     }
@@ -213,7 +214,7 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
   }
 
   void editClassHomework(HomeworkModel hw) async {
-    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, const [], personalHomework: false));
+    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, const [], true, isPersonalHomework: false));
     if (res is bool && res == true) {
       setState(() {});
     }

@@ -91,7 +91,8 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
           },
         ),
         studentIDs,
-        personalHomework: true,
+        true,
+        isPersonalHomework: true,
       ),
     );
     if (res is bool && res == true) {
@@ -101,7 +102,7 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
 
   void editStudentHomework(HomeworkModel hw, List<String> studentIDs) async {
     studentIDs.remove(hw.studentId);
-    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, studentIDs, personalHomework: true));
+    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, studentIDs, true, isPersonalHomework: true));
     if (res is bool && res == true) {
       setState(() {});
     }

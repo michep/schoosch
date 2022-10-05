@@ -115,7 +115,8 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
           },
         ),
         const [],
-        personalHomework: false,
+        hw != null,
+        isPersonalHomework: false,
       ),
     );
     if (res is bool && res == true) {
@@ -124,7 +125,7 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
   }
 
   void editClassHomework(HomeworkModel hw) async {
-    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, const [], personalHomework: false));
+    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, const [], true, isPersonalHomework: false));
     if (res is bool && res == true) {
       setState(() {});
     }

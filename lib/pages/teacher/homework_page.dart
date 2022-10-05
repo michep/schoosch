@@ -16,10 +16,11 @@ class HomeworkPage extends StatefulWidget {
   final LessonModel lesson;
   final HomeworkModel homework;
   final StudentModel? student = null;
-  final bool personalHomework;
+  final bool isPersonalHomework;
+  final bool doErrorOnEmptyStudent;
   final List<String> studentIds;
 
-  const HomeworkPage(this.lesson, this.homework, this.studentIds, {Key? key, this.personalHomework = true}) : super(key: key);
+  const HomeworkPage(this.lesson, this.homework, this.studentIds, this.doErrorOnEmptyStudent, {Key? key, this.isPersonalHomework = true}) : super(key: key);
 
   @override
   State<HomeworkPage> createState() => _HomeworkPageState();
@@ -61,7 +62,7 @@ class _HomeworkPageState extends State<HomeworkPage> {
                     return Text(snapshot.data!.aliasOrName);
                   }),
                 ),
-                if (widget.personalHomework)
+                if (widget.isPersonalHomework)
                   SelectableValueDropdownFormField<PersonModel>(
                     key: _studentFieldKey,
                     title: loc.studentTitle,
@@ -71,7 +72,7 @@ class _HomeworkPageState extends State<HomeworkPage> {
                     listFunc: () => PeopleListPage(widget.lesson.aclass.students, selectionMode: true, type: 'student', title: loc.classStudentsTitle),
                     detailsFunc: () => PersonPage(_student!, _student!.fullName),
                     // validatorFunc: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty),
-                    // validatorFunc: validateStudent,
+                    validatorFunc: validateStudent,
                     callback: (value) => _setStudent(value),
                     isUnneccesary: true,
                   ),
@@ -129,6 +130,7 @@ class _HomeworkPageState extends State<HomeworkPage> {
 
   String? validateStudent(String? value) {
     String? res;
+    if (widget.doErrorOnEmptyStudent && _student == null) return 'Задание для класса уже существует, выберите ученика';
     res = Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty);
     if (res != null) return res;
     if (widget.studentIds.contains(_student?.id)) return S.of(context).errorHomeWorkExists;
