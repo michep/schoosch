@@ -8,6 +8,7 @@ import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/homework_page.dart';
+import 'package:schoosch/widgets/fab_menu.dart';
 import 'package:schoosch/widgets/teacher/class_homework_completion_tile.dart';
 import 'package:schoosch/widgets/teacher/students_homework_completion_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -163,34 +164,43 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
             //   onPressed: () => addStudentHomework(hws.keys.toList()),
             //   child: const Icon(Icons.add),
             // ),
-            child: SpeedDial(
-              renderOverlay: false,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              animatedIcon: AnimatedIcons.add_event,
-              spaceBetweenChildren: 15,
-              spacing: 10,
-              childPadding: const EdgeInsets.all(2),
-              children: [
-                SpeedDialChild(
-                  child: const Icon(Icons.groups_rounded, size: 25,),
-                  label: 'классу',
-                  onTap: () => addHomework(
-                    isPersonal: false,
-                  ),
-                  labelStyle: const TextStyle(fontSize: 16,)
-                ),
-                SpeedDialChild(
-                  child: const Icon(Icons.person, size: 25,),
-                  label: 'личное',
-                  onTap: () => addHomework(
-                    isPersonal: true,
-                    studentIDs: hws.keys.toList(),
-                  ),
-                  labelStyle: const TextStyle(fontSize: 16,)
-                ),
-              ],
+            // child: SpeedDial(
+            //   renderOverlay: false,
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(16),
+            //   ),
+            //   animatedIcon: AnimatedIcons.add_event,
+            //   spaceBetweenChildren: 15,
+            //   spacing: 10,
+            //   childPadding: const EdgeInsets.all(2),
+            //   children: [
+            //     SpeedDialChild(
+            //       child: const Icon(Icons.groups_rounded, size: 25,),
+            //       label: 'классу',
+            //       onTap: () => addHomework(
+            //         isPersonal: false,
+            //       ),
+            //       labelStyle: const TextStyle(fontSize: 16,)
+            //     ),
+            //     SpeedDialChild(
+            //       child: const Icon(Icons.person, size: 25,),
+            //       label: 'личное',
+            //       onTap: () => addHomework(
+            //         isPersonal: true,
+            //         studentIDs: hws.keys.toList(),
+            //       ),
+            //       labelStyle: const TextStyle(fontSize: 16,)
+            //     ),
+            //   ],
+            // ),
+            child: FABMenu(
+              childCount: 2,
+              children: {
+                Icons.groups_rounded: () => addHomework(isPersonal: false),
+                Icons.person_rounded: () => addHomework(isPersonal: true),
+              },
+              colorClosed: Theme.of(context).colorScheme.secondary,
+              colorOpen: Theme.of(context).colorScheme.background,
             ),
           ),
         ),
