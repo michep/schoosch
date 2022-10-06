@@ -19,7 +19,7 @@ import 'package:schoosch/model/venue_model.dart';
 
 class ProxyStore extends getx.GetxController {
   final String host;
-  late final InstitutionModel institution;
+  late InstitutionModel institution;
   PersonModel? _currentUser;
   late Dio dio = Dio();
   final Mutex scheduleLessonsMutex = Mutex();
@@ -252,7 +252,7 @@ class ProxyStore extends getx.GetxController {
     return js.map((data) => StudentScheduleModel.fromMap(aclass, data['_id'], data)).toList();
   }
 
-  Future<String> saveDaySchedule(DayScheduleModel schedule) async {
+  Future<String> saveDaySchedule(ClassScheduleModel schedule) async {
     var data = schedule.toMap();
     data['institution_id'] = institution.id;
     data['class_id'] = schedule.aclass.id;
@@ -265,7 +265,7 @@ class ProxyStore extends getx.GetxController {
     return js['id'];
   }
 
-  Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, DayScheduleModel schedule, {DateTime? date, bool needsEmpty = false}) async {
+  Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, ClassScheduleModel schedule, {DateTime? date, bool needsEmpty = false}) async {
     // await scheduleLessonsMutex.acquire();
     List<LessonModel> result = [];
     var res = await dio.getUri<List>(Uri.http(host, '/class/${aclass.id}/schedule/${schedule.id}/lesson'));
@@ -355,7 +355,7 @@ class ProxyStore extends getx.GetxController {
     );
   }
 
-  Future<List<ReplacementModel>> getReplacementsOnDate(ClassModel aclass, DayScheduleModel schedule, DateTime date) async {
+  Future<List<ReplacementModel>> getReplacementsOnDate(ClassModel aclass, ClassScheduleModel schedule, DateTime date) async {
     var res = await dio.getUri<List>(
       Uri.http(host, '/class/${aclass.id}/replace/${date.toIso8601String()}'),
     );
@@ -363,7 +363,7 @@ class ProxyStore extends getx.GetxController {
     return js.map((data) => ReplacementModel.fromMap(aclass, schedule, data['_id'], data)).toList();
   }
 
-  Future<List<ReplacementModel>> getAllReplacementsOnDate(DayScheduleModel schedule, DateTime date) async {
+  Future<List<ReplacementModel>> getAllReplacementsOnDate(ClassScheduleModel schedule, DateTime date) async {
     List<ReplacementModel> repl = [];
     var res = await dio.getUri<List>(
       Uri.http(host, '/replace/${date.toIso8601String()}'),
@@ -516,9 +516,9 @@ class ProxyStore extends getx.GetxController {
       ];
     }
     var cw = getx.Get.find<CurrentWeek>().currentWeek; //TODO: currentWeek should be parameter
-    var days = await aclass.getSchedulesWeek(cw);
+    var days = await aclass.getClassSchedulesWeek(cw);
     for (var day in days) {
-      var dayles = await day.allLessons();
+      var dayles = await day.lessons();
       for (var les in dayles) {
         var cur = await les.curriculum;
         var teach = await cur!.master;
@@ -675,11 +675,11 @@ class ProxyStore extends getx.GetxController {
     }
   }
 
-  Future<List<DayScheduleModel>> getClassWeekSchedule(ClassModel aclass, Week currentWeek) async {
+  Future<List<ClassScheduleModel>> getClassWeekSchedule(ClassModel aclass, Week currentWeek) async {
     var res = await dio.getUri<List>(
       Uri.http(host, '/class/${aclass.id}/weekschedule/${currentWeek.day(0).toIso8601String()}'),
     );
-    return res.data!.map((e) => DayScheduleModel.fromMap(aclass, e['_id'], e)).toList();
+    return res.data!.map((e) => ClassScheduleModel.fromMap(aclass, e['_id'], e)).toList();
   }
 
   Future<List<StudentScheduleModel>> getClassStudentWeekSchedule(ClassModel aclass, Week currentWeek, StudentModel student) async {
@@ -687,5 +687,40 @@ class ProxyStore extends getx.GetxController {
       Uri.http(host, '/class/${aclass.id}/weekschedule/${currentWeek.day(0).toIso8601String()}/student/${student.id}'),
     );
     return res.data!.map((e) => StudentScheduleModel.fromMap(aclass, e['_id'], e)).toList();
+  }
+
+  Future<List<TeacherScheduleModel>> getTeacherWeekSchedule(TeacherModel teacher, Week currentWeek) async {
+    var res = await dio.getUri<List>(
+      Uri.http(host, '/person/${teacher.id}/teacher/weekschedule/${currentWeek.day(0).toIso8601String()}'),
+    );
+    return res.data!.map((e) => TeacherScheduleModel.fromMap(e['schedule_id'], e)).toList();
+  }
+
+  Future<List<ClassModel>> getCurriculumClasses(CurriculumModel curriculum) async {
+    var res = await dio.getUri<List>(
+      Uri.http(host, '/curriculum/${curriculum.id}/class'),
+    );
+    return res.data!.map((e) => ClassModel.fromMap(e['_id'], e)).toList();
+  }
+
+  Future<List<CurriculumModel>> getClassCurriculums(ClassModel aclass) async {
+    var res = await dio.getUri<List>(
+      Uri.http(host, '/class/${aclass.id}/curriculum'),
+    );
+    return res.data!.map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
+  }
+
+  Future<List<CurriculumModel>> getStudentCurriculums(StudentModel student) async {
+    var res = await dio.getUri<List>(
+      Uri.http(host, '/person/${student.id}/student/curriculum'),
+    );
+    return res.data!.map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
+  }
+
+  Future<List<CurriculumModel>> getTeacherCurriculums(TeacherModel teacher) async {
+    var res = await dio.getUri<List>(
+      Uri.http(host, '/person/${teacher.id}/teacher/curriculum'),
+    );
+    return res.data!.map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
   }
 }

@@ -17,6 +17,13 @@ class DayLessontimeModel {
 
   DayLessontimeModel.fromMap(this._id, Map<String, Object?> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in daylessontime $_id';
+
+    if (map.containsKey('time') && map['time'].runtimeType == List) {
+      for (var t in map['time'] as List) {
+        _lessontimes.add(LessontimeModel.fromMap(t['_id'], t));
+      }
+      _lessontimesLoaded = true;
+    }
   }
 
   Future<List<LessontimeModel>> get lessontimes async {
@@ -26,6 +33,10 @@ class DayLessontimeModel {
       _lessontimesLoaded = true;
     }
     return _lessontimes;
+  }
+
+  List<LessontimeModel>? get lessontimes_sync {
+    return _lessontimesLoaded ? _lessontimes : null;
   }
 
   Map<String, dynamic> toMap({bool withId = false}) {

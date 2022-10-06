@@ -16,7 +16,7 @@ import 'package:schoosch/widgets/utils.dart';
 
 class ScheduleLessonsPage extends StatefulWidget {
   final ClassModel _aclass;
-  final DayScheduleModel _schedule;
+  final ClassScheduleModel _schedule;
   final String _title;
 
   const ScheduleLessonsPage(this._aclass, this._schedule, this._title, {Key? key}) : super(key: key);
@@ -37,7 +37,7 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
   void initState() {
     _from = widget._schedule.from;
     _till = widget._schedule.till;
-    widget._schedule.allLessons(forceRefresh: true).then(
+    widget._schedule.lessons(forceRefresh: true).then(
           (lessons) => setState(
             () {
               for (var lesson in lessons) {
@@ -105,18 +105,15 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
                   },
                 ),
                 Expanded(
-                  child: Scrollbar(
-                    thumbVisibility: true,
-                    child: DragAndDropLists(
-                      axis: Axis.vertical,
-                      itemDragHandle: const DragHandle(
-                        onLeft: true,
-                        child: Icon(Icons.drag_handle),
-                      ),
-                      onItemReorder: _itemsReorder,
-                      onListReorder: (i, j) {},
-                      children: _generateListItems(),
+                  child: DragAndDropLists(
+                    axis: Axis.vertical,
+                    itemDragHandle: const DragHandle(
+                      onLeft: true,
+                      child: Icon(Icons.drag_handle),
                     ),
+                    onItemReorder: _itemsReorder,
+                    onListReorder: (i, j) {},
+                    children: _generateListItems(),
                   ),
                 ),
                 Row(
@@ -227,22 +224,22 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
     });
   }
 
-  Future<void> _save(DayScheduleModel schedule) async {
+  Future<void> _save(ClassScheduleModel schedule) async {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> map = {
         'day': schedule.day,
         'from': _from!,
         'till': _till,
       };
-      var nschedule = DayScheduleModel.fromMap(widget._aclass, schedule.id, map);
+      var nschedule = ClassScheduleModel.fromMap(widget._aclass, schedule.id, map);
       await nschedule.save();
       await _saveLessons(nschedule);
       await _deleteLessons();
-      Get.back<DayScheduleModel>(result: nschedule);
+      Get.back<ClassScheduleModel>(result: nschedule);
     }
   }
 
-  Future<void> _saveLessons(DayScheduleModel schedule) async {
+  Future<void> _saveLessons(ClassScheduleModel schedule) async {
     for (var i = 0; i < _lessons.length; i++) {
       var lesss = _lessons[i + 1]!;
       for (var less in lesss) {

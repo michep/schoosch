@@ -73,18 +73,14 @@ class _HomeworkPageState extends State<HomeworkPage> {
                     validatorFunc: validateStudent,
                     callback: (value) => _setStudent(value),
                   ),
-                Scrollbar(
-                  controller: _scrollcon,
-                  thumbVisibility: true,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      label: Text(S.of(context).homeworkTextTitle),
-                    ),
-                    controller: _commentcont,
-                    maxLines: 3,
-                    scrollController: _scrollcon,
-                    validator: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty),
+                TextFormField(
+                  decoration: InputDecoration(
+                    label: Text(S.of(context).homeworkTextTitle),
                   ),
+                  controller: _commentcont,
+                  maxLines: 3,
+                  scrollController: _scrollcon,
+                  validator: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),

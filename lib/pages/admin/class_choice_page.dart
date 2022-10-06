@@ -56,20 +56,17 @@ class _ClassChoicePageState extends State<ClassChoicePage> {
                     if (!snapshot.hasData) return Utils.progressIndicator();
                     var sorted = snapshot.data!;
                     sorted.sort((a, b) => a.name.compareTo(b.name));
-                    return Scrollbar(
-                      thumbVisibility: true,
-                      child: ListView(
-                        children: [
-                          ...sorted.where(_filter).map(
-                                (v) => ListTile(
-                                  onTap: () => _onTapClass(v),
-                                  title: Text(v.name),
-                                  subtitle: Text(v.grade.toString()),
-                                  trailing: const Icon(Icons.chevron_right),
-                                ),
+                    return ListView(
+                      children: [
+                        ...sorted.where(_filter).map(
+                              (v) => ListTile(
+                                onTap: () => _onTapClass(v),
+                                title: Text(v.name),
+                                subtitle: Text(v.grade.toString()),
+                                trailing: const Icon(Icons.chevron_right),
                               ),
-                        ],
-                      ),
+                            ),
+                      ],
                     );
                   }),
             ),
@@ -89,14 +86,16 @@ class _ClassChoicePageState extends State<ClassChoicePage> {
 
   Future<void> _onTapClass(ClassModel aclass) async {
     Navigator.push(
-      context,
-      widget.forReplacements
-          ? MaterialPageRoute(
-              builder: (context) => CreateReplacement(aclass),
-            )
-          : MaterialPageRoute(
-              builder: (context) => FreeLessonsPage(aclass),
-            ),
-    );
+        context,
+        // widget.forReplacements
+        //     ? MaterialPageRoute(
+        //         builder: (context) => CreateReplacement(aclass),
+        //       )
+        //     : MaterialPageRoute(
+        //         builder: (context) => FreeLessonsPage(aclass),
+        //       ),
+        MaterialPageRoute(
+          builder: (context) => CreateReplacement(aclass),
+        ));
   }
 }

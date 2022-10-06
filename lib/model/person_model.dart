@@ -177,9 +177,9 @@ class PersonModel {
     return this;
   }
 
-  Future<bool> alreadyHasChat() async {
-    return await Get.find<MStore>().checkChatExistence(this);
-  }
+  // Future<bool> alreadyHasChat() async {
+  //   return await Get.find<MStore>().checkChatExistence(this);
+  // }
 }
 
 class StudentModel extends PersonModel {
@@ -216,7 +216,7 @@ class StudentModel extends PersonModel {
     await _curriculumsMutex.acquire();
     if (!_curriculumsLoaded || forceRefresh) {
       _curriculums.clear();
-      _curriculums.addAll(await Get.find<MStore>().getStudentCurriculums(this));
+      _curriculums.addAll(await Get.find<ProxyStore>().getStudentCurriculums(this));
       _curriculumsLoaded = true;
     }
     _curriculumsMutex.release();
@@ -233,7 +233,7 @@ class StudentModel extends PersonModel {
 }
 
 class TeacherModel extends PersonModel {
-  final Map<isoweek.Week, List<TeacherScheduleModel>> _schedule = {};
+  final Map<isoweek.Week, List<TeacherScheduleModel>> _weekTeccherSchedules = {};
   final List<CurriculumModel> _curriculums = [];
   bool _curriculumsLoaded = false;
   final Mutex _curriculumsMutex = Mutex();
@@ -258,14 +258,14 @@ class TeacherModel extends PersonModel {
   }
 
   Future<List<TeacherScheduleModel>> getSchedulesWeek(isoweek.Week week) async {
-    return _schedule[week] ??= await Get.find<MStore>().getTeacherWeekSchedule(this, week);
+    return _weekTeccherSchedules[week] ??= await Get.find<ProxyStore>().getTeacherWeekSchedule(this, week);
   }
 
   Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
     await _curriculumsMutex.acquire();
     if (!_curriculumsLoaded || forceRefresh) {
       _curriculums.clear();
-      _curriculums.addAll(await Get.find<MStore>().getTeacherCurriculums(this));
+      _curriculums.addAll(await Get.find<ProxyStore>().getTeacherCurriculums(this));
       _curriculumsLoaded = true;
     }
     _curriculumsMutex.release();

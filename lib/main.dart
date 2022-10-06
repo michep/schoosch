@@ -17,40 +17,40 @@ import 'package:schoosch/pages/class_selection_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';
 import 'package:schoosch/theme.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'model/person_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+  // OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
 
-  OneSignal.shared.setAppId("0725282a-b87a-4ea8-97ab-165108deee94");
+  // OneSignal.shared.setAppId("0725282a-b87a-4ea8-97ab-165108deee94");
 
-  OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
-    print("Accepted permission: $accepted");
-  });
+  // OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
+  //   print("Accepted permission: $accepted");
+  // });
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var fauth = FAuth();
   // var fstore = FStore();
-  var mstore = MStore();
+  // var mstore = MStore();
   var store = FStorage();
   var proxy = ProxyStore('83.219.247.178:8182');
   // var bcont = BlueprintController();
   Get.put<FAuth>(fauth);
   // Get.put<FStore>(fstore);
-  Get.put<MStore>(mstore);
+  // Get.put<MStore>(mstore);
   Get.put<FStorage>(store);
   Get.put<ProxyStore>(proxy);
   Get.put(CurrentWeek(Week.current()));
   // Get.put<BlueprintController>(bcont);
   if (fauth.currentUser != null) {
     // await fstore.init(fauth.currentUser!.email!);
-    await mstore.init(fauth.currentUser!.email!);
+    // await mstore.init(fauth.currentUser!.email!);
     await proxy.init(fauth.currentUser!.email!);
     // await bcont.init();
     // await store.init(fstore.currentInstitution!.id);
-    await store.init(mstore.db);
+    // await store.init(mstore.db);
   }
 
   runApp(const MyApp());

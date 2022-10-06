@@ -62,21 +62,18 @@ class _ClassListPageState extends State<ClassListPage> {
                     if (!snapshot.hasData) return Utils.progressIndicator();
                     var sorted = snapshot.data!;
                     sorted.sort((a, b) => a.name.compareTo(b.name));
-                    return Scrollbar(
-                      thumbVisibility: true,
-                      child: ListView(
-                        children: [
-                          ...sorted.where(_filter).map(
-                                (v) => ListTile(
-                                  onTap: () => widget.listMode == ClassListMode.classes ? _onTapClass(v) : _onTapSchedule(v),
-                                  title: Text(v.name),
-                                  subtitle: Text(v.grade.toString()),
-                                  leading: widget.selectionMode ? const Icon(Icons.chevron_left) : null,
-                                  trailing: widget.selectionMode ? null : const Icon(Icons.chevron_right),
-                                ),
+                    return ListView(
+                      children: [
+                        ...sorted.where(_filter).map(
+                              (v) => ListTile(
+                                onTap: () => widget.listMode == ClassListMode.classes ? _onTapClass(v) : _onTapSchedule(v),
+                                title: Text(v.name),
+                                subtitle: Text(v.grade.toString()),
+                                leading: widget.selectionMode ? const Icon(Icons.chevron_left) : null,
+                                trailing: widget.selectionMode ? null : const Icon(Icons.chevron_right),
                               ),
-                        ],
-                      ),
+                            ),
+                      ],
                     );
                   }),
             ),

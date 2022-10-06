@@ -65,17 +65,14 @@ class _MarkPageState extends State<MarkPage> {
                   onSaved: setMark,
                   validator: (value) => Utils.validateMark(value, S.of(context).errorMarkError),
                 ),
-                Scrollbar(
-                  controller: _scrollcon,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      label: Text(S.of(context).commentTitle),
-                    ),
-                    controller: _commentcont,
-                    scrollController: _scrollcon,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 3,
+                TextFormField(
+                  decoration: InputDecoration(
+                    label: Text(S.of(context).commentTitle),
                   ),
+                  controller: _commentcont,
+                  scrollController: _scrollcon,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 3,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),

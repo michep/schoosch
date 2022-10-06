@@ -23,7 +23,7 @@ class ClassModel {
   bool _lessontimesLoaded = false;
   final Mutex __lessontimesMutex = Mutex();
   TeacherModel? _master;
-  final Map<Week, List<DayScheduleModel>> _weekClassSchedules = {};
+  final Map<Week, List<ClassScheduleModel>> _weekClassSchedules = {};
   final Map<Week, List<StudentScheduleModel>> _weekStudentSchedules = {};
   final Map<int, List<StudentScheduleModel>> _daySchedules = {};
   final List<CurriculumModel> _curriculums = [];
@@ -47,6 +47,24 @@ class ClassModel {
     _dayLessontimeId = map['lessontime_id'] != null ? map['lessontime_id'] as String : throw 'need lessontime_id key in class $_id';
     _masterId = map['master_id'] != null ? map['master_id'] as String : throw 'need master_id key in class $_id';
     map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
+
+    if (map.containsKey('master') && map['master'] is Map) {
+      _master = TeacherModel.fromMap((map['master'] as Map<String, dynamic>)['_id'] as String, map['master'] as Map<String, dynamic>);
+    }
+
+    if (map.containsKey('lessontime') && map['lessontime'] is Map) {
+      var times = DayLessontimeModel.fromMap((map['lessontime'] as Map<String, dynamic>)['_id'] as String, map['lessontime'] as Map<String, dynamic>);
+      _lessontimes.addAll(times.lessontimes_sync!);
+    }
+
+    if (map.containsKey('student') && map['student'] is List) {
+      var s = (map['student'] as List).map<StudentModel>((e) {
+        var data = e as Map<String, dynamic>;
+        return StudentModel.fromMap(data['_id'], data);
+      }).toList();
+      _students.addAll(s);
+      _studentsLoaded = true;
+    }
   }
 
   @override
@@ -71,7 +89,7 @@ class ClassModel {
     return _master!;
   }
 
-  Future<List<DayScheduleModel>> getSchedulesWeek(Week week) async {
+  Future<List<ClassScheduleModel>> getClassSchedulesWeek(Week week) async {
     return _weekClassSchedules[week] ??= await Get.find<ProxyStore>().getClassWeekSchedule(this, week);
   }
 
@@ -137,9 +155,9 @@ class ClassModel {
     return _students;
   }
 
-  Future<List<int>> freeLessonsForDate(DateTime date) async {
-    return await Get.find<MStore>().getFreeLessonsOnDay(this, date);
-  }
+  // Future<List<int>> freeLessonsForDate(DateTime date) async {
+  //   return await Get.find<MStore>().getFreeLessonsOnDay(this, date);
+  // }
 
   // Future<Set<CurriculumModel>> getUniqueCurriculums({bool forceRefresh = false}) async {
   //   if(allCurriculums.isEmpty || forceRefresh) {
@@ -159,7 +177,7 @@ class ClassModel {
     await _curriculumsMutex.acquire();
     if (!_curriculumsLoaded || forceRefresh) {
       _curriculums.clear();
-      _curriculums.addAll(await Get.find<MStore>().getClassCurriculums(this));
+      _curriculums.addAll(await Get.find<ProxyStore>().getClassCurriculums(this));
       _curriculumsLoaded = true;
     }
     _curriculumsMutex.release();

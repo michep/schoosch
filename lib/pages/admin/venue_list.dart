@@ -18,6 +18,7 @@ class VenueListPage extends StatefulWidget {
 
 class _VenueListPageState extends State<VenueListPage> {
   final TextEditingController _name = TextEditingController();
+  final ScrollController _scrollCtl = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -58,20 +59,18 @@ class _VenueListPageState extends State<VenueListPage> {
                     if (!snapshot.hasData) return Utils.progressIndicator();
                     var sorted = snapshot.data!;
                     sorted.sort((a, b) => a.name.compareTo(b.name));
-                    return Scrollbar(
-                      thumbVisibility: true,
-                      child: ListView(
-                        children: [
-                          ...sorted.where(_filter).map(
-                                (v) => ListTile(
-                                  onTap: () => _onTap(v),
-                                  title: Text(v.name),
-                                  leading: widget.selectionMode ? const Icon(Icons.chevron_left) : null,
-                                  trailing: widget.selectionMode ? null : const Icon(Icons.chevron_right),
-                                ),
+                    return ListView(
+                      controller: _scrollCtl,
+                      children: [
+                        ...sorted.where(_filter).map(
+                              (v) => ListTile(
+                                onTap: () => _onTap(v),
+                                title: Text(v.name),
+                                leading: widget.selectionMode ? const Icon(Icons.chevron_left) : null,
+                                trailing: widget.selectionMode ? null : const Icon(Icons.chevron_right),
                               ),
-                        ],
-                      ),
+                            ),
+                      ],
                     );
                   }),
             ),

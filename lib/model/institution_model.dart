@@ -38,8 +38,8 @@ class InstitutionModel {
     return Get.find<ProxyStore>().getAllClasses();
   }
 
-  Future<List<CurriculumModel>> get curriculums async {
-    if (!_curriculumsLoaded) {
+  Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
+    if (!_curriculumsLoaded || forceRefresh) {
       var curs = await Get.find<ProxyStore>().getAllCurriculums();
       _curriculums.addAll(curs);
       _curriculumsLoaded = true;
@@ -51,13 +51,13 @@ class InstitutionModel {
     return Get.find<ProxyStore>().getAllDayLessontime();
   }
 
-  Future<void> createChatRoom(PersonModel other) async {
-    return await Get.find<MStore>().createChatRoom(other);
-  }
+  // Future<void> createChatRoom(PersonModel other) async {
+  //   return await Get.find<MStore>().createChatRoom(other);
+  // }
 
-  Future<List<PersonModel>> findFreeTeachers(DateTime date, int order) async {
-    return await Get.find<MStore>().getFreeTeachersOnLesson(date, order);
-  }
+  // Future<List<PersonModel>> findFreeTeachers(DateTime date, int order) async {
+  //   return await Get.find<MStore>().getFreeTeachersOnLesson(date, order);
+  // }
 
   // Future<List<PersonModel>> getUsersByName(String query) async {
   //   return Get.find<MStore>().getPeopleByName(query);

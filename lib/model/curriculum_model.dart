@@ -58,7 +58,7 @@ class CurriculumModel {
   Future<List<ClassModel>> classes({bool forceRefresh = false}) async {
     if (!_classesLoaded || forceRefresh) {
       _classes.clear();
-      _classes.addAll((await Get.find<MStore>().getCurriculumClasses(this)));
+      _classes.addAll((await Get.find<ProxyStore>().getCurriculumClasses(this)));
       _classesLoaded = true;
     }
     return _classes;

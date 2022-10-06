@@ -60,19 +60,20 @@ class _LoginPageState extends State<LoginPage> {
     // var fstore = Get.find<FStore>();
     // var store = Get.find<FStorage>();
     // var bcont = Get.find<BlueprintController>();
-    var mstore = Get.find<MStore>();
-    var store = Get.find<FStorage>();
+    // var mstore = Get.find<MStore>();
+    // var store = Get.find<FStorage>();
     var proxy = Get.find<ProxyStore>();
 
     if (user == null) {
-      mstore.resetCurrentUser();
+      // mstore.resetCurrentUser();
+      proxy.resetCurrentUser();
     }
     if (user != null && proxy.currentUser == null) {
       // await fstore.init(user.email!);
       // await store.init(fstore.currentInstitution!.id);
       // await bcont.init();
-      await mstore.init(user.email!);
-      await store.init(mstore.db);
+      // await mstore.init(user.email!);
+      // await store.init(mstore.db);
       await proxy.init(user.email!);
 
       // OneSignal.shared.setExternalUserId(PersonModel.currentUser!.id!.toHexString());

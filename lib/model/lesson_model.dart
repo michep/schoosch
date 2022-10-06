@@ -1,6 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/class_model.dart';
@@ -60,7 +59,7 @@ class LessonModel {
 
   String? get id => _id;
 
-  LessonModel.empty(ClassModel aclass, DayScheduleModel schedule, int order)
+  LessonModel.empty(ClassModel aclass, ClassScheduleModel schedule, int order)
       : this.fromMap(aclass, schedule, null, <String, dynamic>{
           'order': order,
           'curriculum_id': '',
@@ -285,13 +284,13 @@ class LessonModel {
 }
 
 class ReplacementModel extends LessonModel {
-  ReplacementModel.fromMap(ClassModel aclass, DayScheduleModel schedule, String? id, Map<String, dynamic> map) : super.fromMap(aclass, schedule, id, map) {
+  ReplacementModel.fromMap(ClassModel aclass, ClassScheduleModel schedule, String? id, Map<String, dynamic> map) : super.fromMap(aclass, schedule, id, map) {
     type = LessonType.replacment;
   }
 }
 
 class EmptyLesson extends LessonModel {
-  EmptyLesson.fromMap(ClassModel aclass, DayScheduleModel schedule, String? id, int order)
+  EmptyLesson.fromMap(ClassModel aclass, ClassScheduleModel schedule, String? id, int order)
       : super.fromMap(aclass, schedule, id, {
           'order': order,
           'curriculum_id': null,

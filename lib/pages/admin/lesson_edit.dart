@@ -101,7 +101,7 @@ class _LessonPageState extends State<LessonPage> {
   }
 
   Future<List<CurriculumModel>> _initCurriculumOptions() {
-    return InstitutionModel.currentInstitution.curriculums;
+    return InstitutionModel.currentInstitution.curriculums();
   }
 
   bool _setCurriculum(CurriculumModel? value) {

@@ -57,10 +57,10 @@ class AdminDrawer extends StatelessWidget {
               onPressed: _openReplacementsPage,
               child: Text(loc.replacementsTitle),
             ),
-            TextButton(
-              onPressed: _openFreeTeachersPage,
-              child: Text(loc.freeTeachersTitle),
-            ),
+            // TextButton(
+            //   onPressed: _openFreeTeachersPage,
+            //   child: Text(loc.freeTeachersTitle),
+            // ),
             TextButton(
               onPressed: _openFreeLessonsPage,
               child: Text(loc.freeLessonsTitle),
@@ -95,10 +95,10 @@ class AdminDrawer extends StatelessWidget {
     Get.to(() => CurriculumListPage(InstitutionModel.currentInstitution));
   }
 
-  Future<void> _openFreeTeachersPage() async {
-    // Get.back();
-    Get.to(() => FreeTeachersPage(InstitutionModel.currentInstitution));
-  }
+  // Future<void> _openFreeTeachersPage() async {
+  //   // Get.back();
+  //   Get.to(() => FreeTeachersPage(InstitutionModel.currentInstitution));
+  // }
 
   Future<void> _openFreeLessonsPage() async {
     // Get.back();

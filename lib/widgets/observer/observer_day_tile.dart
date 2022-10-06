@@ -10,7 +10,7 @@ import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/pages/observer/observer_lesson_page.dart';
 
 class ObserverDayTile extends StatelessWidget {
-  final DayScheduleModel _schedule;
+  final ClassScheduleModel _schedule;
   final DateTime _date;
   const ObserverDayTile(this._schedule, this._date, {Key? key}) : super(key: key);
 
@@ -30,7 +30,7 @@ class ObserverDayTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<LessonModel>>(
-      future: _schedule.allLessons(
+      future: _schedule.lessons(
         date: _date,
         needsEmpty: true,
       ),
