@@ -34,12 +34,21 @@ class ClassTasksCombinedPage extends StatefulWidget {
 
 class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
   HomeworkModel? hw;
+  late bool eXITINFINITELOOPNOW = false;
+  late bool buttonVisible = false;
+
+  // @override
+  // void initState() {
+  //   eXITINFINITELOOPNOW = false;
+  //   buttonVisible = false;
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
     List<String> studentsIdsWithHW = [];
     Map<String, dynamic> hws = {};
-    var buttonNotVisible = false;
+    // var buttonVisible = false;
     return Stack(
       children: [
         ListView(
@@ -51,11 +60,19 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
               ),
             ),
             FutureBuilder<HomeworkModel?>(
-              future: widget._hwFuture(widget._date, true),
-              builder: (context, snapHW) {
-                if (snapHW.connectionState == ConnectionState.done) {
-                  buttonNotVisible = (widget.readOnly || snapHW.data != null);
+              future: widget._hwFuture(widget._date, true).then((v) {
+                if (!eXITINFINITELOOPNOW) {
+                  setState(() {
+                    buttonVisible = !(widget.readOnly || v != null);
+                  });
+                  eXITINFINITELOOPNOW = true;
                 }
+                return v;
+              }),
+              builder: (context, snapHW) {
+                // if (snapHW.connectionState == ConnectionState.done) {
+
+                // }
                 hw = snapHW.data;
                 return snapHW.hasData
                     ? FutureBuilder<List<CompletionFlagModel>>(
@@ -157,7 +174,7 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
           ],
         ),
         Visibility(
-          visible: !(widget.readOnly || buttonNotVisible),
+          visible: !widget.readOnly,
           child: Align(
             alignment: Alignment.bottomRight,
             // child: FloatingActionButton(
@@ -194,11 +211,23 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
             //   ],
             // ),
             child: FABMenu(
-              childCount: 2,
-              children: {
-                Icons.groups_rounded: () => addHomework(isPersonal: false),
-                Icons.person_rounded: () => addHomework(isPersonal: true),
-              },
+              children: [
+                FABmenuchild(
+                  icon: Icons.groups_rounded,
+                  onPressed: () => addHomework(
+                    isPersonal: false,
+                  ),
+                  isVisible: buttonVisible,
+                ),
+                FABmenuchild(
+                  icon: Icons.person_rounded,
+                  onPressed: () => addHomework(
+                    isPersonal: true,
+                    studentIDs: hws.keys.toList(),
+                  ),
+                  isVisible: !widget.readOnly,
+                ),
+              ],
               colorClosed: Theme.of(context).colorScheme.secondary,
               colorOpen: Theme.of(context).colorScheme.background,
             ),
@@ -248,12 +277,14 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
             'curriculum_id': widget._curriculum.id,
           },
         ),
-        isPersonal ? const [] : studentIDs,
+        !isPersonal ? const [] : studentIDs,
         personalHomework: isPersonal,
       ),
     );
     if (res is bool && res == true) {
-      setState(() {});
+      setState(() {
+        eXITINFINITELOOPNOW = false;
+      });
     }
   }
 
