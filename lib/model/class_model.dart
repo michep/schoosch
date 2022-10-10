@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:mutex/mutex.dart';
-import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
@@ -95,7 +94,7 @@ class ClassModel {
 
   Future<List<StudentScheduleModel>> getStudentSchedulesWeek(Week week, StudentModel student, {bool forceRefresh = false}) async {
     if (_weekStudentSchedules[week] == null || forceRefresh) {
-      _weekStudentSchedules[week] = await Get.find<ProxyStore>().getClassStudentWeekSchedule(this, week, student);
+      _weekStudentSchedules[week] = await Get.find<ProxyStore>().getStudentWeekSchedule(this, week, student);
     }
     return _weekStudentSchedules[week]!;
   }

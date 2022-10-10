@@ -16,7 +16,7 @@ class ClassDayScheduleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<LessonModel>>(
-      future: _schedule.lessonsForStudent(_student, date: _date),
+      future: _schedule.studentLessons(_student, date: _date),
       builder: (context, snap) {
         if (!snap.hasData) {
           return const SizedBox.shrink();

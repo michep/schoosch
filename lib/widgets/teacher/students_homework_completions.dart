@@ -13,7 +13,7 @@ class StudentsTasksWithCompetionsPage extends StatefulWidget {
   final CurriculumModel _curriculum;
   final TeacherModel? _teacher;
   final LessonModel _lesson;
-  final Future<Map<String, HomeworkModel?>> Function(DateTime, bool) _hwsFuture;
+  final Future<Map<String, List<HomeworkModel?>>> Function(DateTime, bool) _hwsFuture;
 
   final bool readOnly;
 
@@ -29,7 +29,7 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
   Widget build(BuildContext context) {
     List<String> studentsIdsWithHW = [];
     Map<String, dynamic> hws = {};
-    return FutureBuilder<Map<String, HomeworkModel?>>(
+    return FutureBuilder<Map<String, List<HomeworkModel?>>>(
       future: widget._hwsFuture(widget._date, true),
       builder: (context, snapHWs) {
         if (snapHWs.connectionState == ConnectionState.done) {

@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';

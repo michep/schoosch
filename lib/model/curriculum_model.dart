@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -36,6 +35,10 @@ class CurriculumModel {
     alias = map['alias'] != null ? map['alias'] as String : null;
     _masterId = map['master_id'] != null ? map['master_id'] as String : throw 'need master_id key in curriculum $id';
     map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
+
+    if (map.containsKey('master') && map['master'] is Map) {
+      _master = TeacherModel.fromMap((map['master'] as Map<String, dynamic>)['_id'] as String, map['master'] as Map<String, dynamic>);
+    }
   }
 
   String get aliasOrName => alias ?? name;

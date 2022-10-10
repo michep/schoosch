@@ -19,7 +19,7 @@ class ObserverLessonPage extends StatelessWidget {
   final VenueModel venue;
   final LessontimeModel time;
   final DateTime date;
-  final Map<String, HomeworkModel?> homeworks;
+  final Map<String, List<HomeworkModel>> homeworks;
 
   const ObserverLessonPage(
       {Key? key, required this.lesson, required this.homeworks, required this.curriculum, required this.venue, required this.time, required this.date})
@@ -95,7 +95,7 @@ class ObserverLessonPage extends StatelessWidget {
                         curriculum,
                         date,
                         lesson,
-                        (d, f) => lesson.homeworOnDateForClass(d, forceRefresh: f),
+                        (d, f) => lesson.homeworkNextLessonForClass(d, forceRefresh: f),
                         readOnly: true,
                       ),
                       StudentsTasksWithCompetionsPage(
@@ -103,7 +103,7 @@ class ObserverLessonPage extends StatelessWidget {
                         curriculum,
                         date,
                         lesson,
-                        (d, f) => lesson.homeworkOnDateForClassAndAllStudents(d, forceRefresh: f),
+                        (d, f) => lesson.homeworkNextLessonForClassAndAllStudents(d, forceRefresh: f),
                         readOnly: true,
                       ),
                     ],

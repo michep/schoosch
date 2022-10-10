@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart' as isoweek;
-import 'package:mongo_dart/mongo_dart.dart';
 import 'package:mutex/mutex.dart';
-import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
@@ -352,12 +350,15 @@ class ObserverModel extends PersonModel {
   Future<List<ClassModel>> classes({forceRefresh = false}) async {
     if (!_classesLoaded || forceRefresh) {
       _classes.clear();
-      var store = Get.find<ProxyStore>();
-      for (var id in classIds) {
-        var cl = await store.getClass(id);
-        _classes.add(cl);
-        _classesLoaded = true;
-      }
+      _classes.addAll(await Get.find<ProxyStore>().getClassesByIds(classIds));
+      _classesLoaded = true;
+
+      // var store = Get.find<ProxyStore>();
+      // for (var id in classIds) {
+      //   var cl = await store.getClass(id);
+      //   _classes.add(cl);
+      //   _classesLoaded = true;
+      // }
     }
     return _classes;
   }

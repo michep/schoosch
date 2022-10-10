@@ -1,6 +1,5 @@
 import 'dart:math';
-
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_list_interface.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +36,7 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
   void initState() {
     _from = widget._schedule.from;
     _till = widget._schedule.till;
-    widget._schedule.lessons(forceRefresh: true).then(
+    widget._schedule.classLessons(forceRefresh: true).then(
           (lessons) => setState(
             () {
               for (var lesson in lessons) {

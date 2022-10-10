@@ -18,7 +18,7 @@ class TeacherDayScheduleTile extends StatelessWidget {
     var cw = Get.find<CurrentWeek>();
 
     return FutureBuilder<List<LessonModel>>(
-        future: _schedule.lessonsForTeacher(PersonModel.currentTeacher!, cw.currentWeek),
+        future: _schedule.teacherLessons(PersonModel.currentTeacher!, cw.currentWeek),
         builder: (context, snap) {
           if (!snap.hasData) {
             return const SizedBox.shrink();

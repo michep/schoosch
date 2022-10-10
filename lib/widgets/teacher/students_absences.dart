@@ -68,7 +68,7 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
       var abs = AbsenceModel.fromMap(null, {
         'lesson_order': widget._lesson.order,
         'person_id': stud.id,
-        'date': Timestamp.fromDate(widget._date),
+        'date': widget._date.toIso8601String(),
       });
       widget._lesson.createAbsence(abs).then((value) => setState(() {}));
     }

@@ -43,8 +43,10 @@ class LessonModel {
   late int order;
   late final String? curriculumId;
   late final String? venueId;
-  final Map<String, HomeworkModel?> _homeworksThisLesson = {};
-  final Map<String, HomeworkModel?> _homeworksNextLesson = {};
+  final Map<String, List<HomeworkModel>> _homeworksThisLesson = {};
+  bool _homeworksThisLessonLoaded = false;
+  final Map<String, List<HomeworkModel>> _homeworksNextLesson = {};
+  bool _homeworksNextLessonLoaded = false;
   final Map<String, List<MarkModel>> _marks = {};
   bool _marksLoaded = false;
   CurriculumModel? _curriculum;
@@ -99,6 +101,24 @@ class LessonModel {
       _marks.addAll(_splitMarksByStudent(m));
       _marksLoaded = true;
     }
+
+    if (map.containsKey('thishomework') && map['thishomework'] is List) {
+      var hw = (map['thishomework'] as List).map<HomeworkModel>((e) {
+        var data = e as Map<String, dynamic>;
+        return HomeworkModel.fromMap(data['_id'], data);
+      }).toList();
+      _homeworksThisLesson.addAll(_splitHomeworksByStudent(hw));
+      _homeworksThisLessonLoaded = true;
+    }
+
+    if (map.containsKey('nexthomework') && map['nexthomework'] is List) {
+      var hw = (map['nexthomework'] as List).map<HomeworkModel>((e) {
+        var data = e as Map<String, dynamic>;
+        return HomeworkModel.fromMap(data['_id'], data);
+      }).toList();
+      _homeworksNextLesson.addAll(_splitHomeworksByStudent(hw));
+      _homeworksNextLessonLoaded = true;
+    }
   }
 
   void setReplacedType() {
@@ -126,87 +146,83 @@ class LessonModel {
     return _lessontime;
   }
 
+  Future<Map<String, List<HomeworkModel>>> _getAllHomeworkThisLesson(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
+    var hw = await Get.find<ProxyStore>().getHomeworkThisLesson(aclass, curriculum, date);
+    return _splitHomeworksByStudent(hw);
+  }
+
+  Future<Map<String, List<HomeworkModel>>> _getAllHomeworkNextLesson(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
+    var hw = await Get.find<ProxyStore>().getHomeworkNextLesson(aclass, curriculum, date);
+    return _splitHomeworksByStudent(hw);
+  }
+
   Future<HomeworkModel?> homeworkThisLessonForClass(DateTime date, {bool forceRefresh = false}) async {
-    if (_homeworksThisLesson['class'] == null || forceRefresh) {
-      _homeworksThisLesson['class'] = await Get.find<ProxyStore>().getHomeworkForClassBeforeDate(aclass, (await curriculum)!, date);
+    if (!_homeworksThisLessonLoaded || forceRefresh) {
+      _homeworksThisLesson.addAll(await _getAllHomeworkThisLesson(aclass, (await curriculum)!, date));
+      _homeworksThisLessonLoaded = true;
     }
-    return _homeworksThisLesson['class'];
+    return _homeworksThisLesson['class']?[0];
   }
 
   Future<HomeworkModel?> homeworkThisLessonForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
-    if (_homeworksThisLesson[student.id] == null || forceRefresh) {
-      _homeworksThisLesson[student.id!] = await Get.find<ProxyStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, student, date);
+    if (!_homeworksThisLessonLoaded || forceRefresh) {
+      _homeworksThisLesson.addAll(await _getAllHomeworkThisLesson(aclass, (await curriculum)!, date));
+      _homeworksThisLessonLoaded = true;
     }
-    return _homeworksThisLesson[student.id!];
+    return _homeworksThisLesson[student.id!]?[0];
   }
 
   Future<Map<String, HomeworkModel?>> homeworkThisLessonForClassAndStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
-    if (_homeworksThisLesson[student.id] == null || forceRefresh) {
-      _homeworksThisLesson[student.id!] = await Get.find<ProxyStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, student, date);
+    if (!_homeworksThisLessonLoaded || forceRefresh) {
+      _homeworksThisLesson.addAll(await _getAllHomeworkThisLesson(aclass, (await curriculum)!, date));
+      _homeworksThisLessonLoaded = true;
     }
-    if (_homeworksThisLesson['class'] == null || forceRefresh) {
-      _homeworksThisLesson['class'] = await Get.find<ProxyStore>().getHomeworkForClassBeforeDate(aclass, (await curriculum)!, date);
-    }
-
     return {
-      'student': _homeworksThisLesson[student.id],
-      'class': _homeworksThisLesson['class'],
+      'student': _homeworksThisLesson[student.id]?[0],
+      'class': _homeworksThisLesson['class']?[0],
     };
   }
 
-  Future<Map<String, HomeworkModel?>> homeworkThisLessonForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
-    var studs = await aclass.students();
-    for (StudentModel stud in studs) {
-      if (_homeworksThisLesson[stud.id] == null || forceRefresh) {
-        _homeworksThisLesson[stud.id!] = await Get.find<ProxyStore>().getHomeworkForStudentBeforeDate(aclass, (await curriculum)!, stud, date);
-      }
-    }
-    if (_homeworksThisLesson['class'] == null || forceRefresh) {
-      _homeworksThisLesson['class'] = await Get.find<ProxyStore>().getHomeworkForClassBeforeDate(aclass, (await curriculum)!, date);
+  Future<Map<String, List<HomeworkModel?>>> homeworkThisLessonForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
+    if (!_homeworksThisLessonLoaded || forceRefresh) {
+      _homeworksThisLesson.addAll(await _getAllHomeworkThisLesson(aclass, (await curriculum)!, date));
+      _homeworksThisLessonLoaded = true;
     }
     return _homeworksThisLesson;
   }
 
-  Future<HomeworkModel?> homeworOnDateForClass(DateTime date, {bool forceRefresh = false}) async {
-    if (_homeworksNextLesson['class'] == null || forceRefresh) {
-      _homeworksNextLesson['class'] = await Get.find<ProxyStore>().getHomeworkForClassOnDate(aclass, (await curriculum)!, date);
+  Future<HomeworkModel?> homeworkNextLessonForClass(DateTime date, {bool forceRefresh = false}) async {
+    if (!_homeworksNextLessonLoaded || forceRefresh) {
+      _homeworksNextLesson.addAll(await _getAllHomeworkThisLesson(aclass, (await curriculum)!, date));
+      _homeworksNextLessonLoaded = true;
     }
-    return _homeworksNextLesson['class'];
+    return _homeworksThisLesson['class']?[0];
   }
 
-  Future<HomeworkModel?> homeworkOnDateForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
-    if (_homeworksNextLesson['class'] == null || forceRefresh) {
-      _homeworksNextLesson['class'] = await Get.find<ProxyStore>().getHomeworkForStudentOnDate(aclass, (await curriculum)!, student, date);
+  Future<HomeworkModel?> homeworkNextLessonForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
+    if (!_homeworksNextLessonLoaded || forceRefresh) {
+      _homeworksNextLesson.addAll(await _getAllHomeworkNextLesson(aclass, (await curriculum)!, date));
+      _homeworksNextLessonLoaded = true;
     }
-    return _homeworksNextLesson['class'];
+    return _homeworksNextLesson[student.id!]?[0];
   }
 
-  Future<Map<String, HomeworkModel?>> homeworkOnDateForClassAndStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
-    if (_homeworksNextLesson[student.id] == null || forceRefresh) {
-      _homeworksNextLesson[student.id!] = await Get.find<ProxyStore>().getHomeworkForStudentOnDate(aclass, (await curriculum)!, student, date);
+  Future<Map<String, HomeworkModel?>> homeworkNextLessonForClassAndStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
+    if (!_homeworksNextLessonLoaded || forceRefresh) {
+      _homeworksNextLesson.addAll(await _getAllHomeworkNextLesson(aclass, (await curriculum)!, date));
+      _homeworksNextLessonLoaded = true;
     }
-    if (_homeworksNextLesson['class'] == null || forceRefresh) {
-      _homeworksNextLesson['class'] = await Get.find<ProxyStore>().getHomeworkForClassOnDate(aclass, (await curriculum)!, date);
-    }
-
     return {
-      'student': _homeworksNextLesson[student.id],
-      'class': _homeworksNextLesson['class'],
+      'student': _homeworksNextLesson[student.id]?[0],
+      'class': _homeworksNextLesson['class']?[0],
     };
   }
 
-  Future<Map<String, HomeworkModel?>> homeworkOnDateForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
-    await homeworkOnDateForClassAndAllStudentsMutex.acquire();
-    var studs = await aclass.students();
-    for (StudentModel stud in studs) {
-      if (_homeworksNextLesson[stud.id] == null || forceRefresh) {
-        _homeworksNextLesson[stud.id!] = await Get.find<ProxyStore>().getHomeworkForStudentOnDate(aclass, (await curriculum)!, stud, date);
-      }
+  Future<Map<String, List<HomeworkModel?>>> homeworkNextLessonForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
+    if (!_homeworksNextLessonLoaded || forceRefresh) {
+      _homeworksNextLesson.addAll(await _getAllHomeworkNextLesson(aclass, (await curriculum)!, date));
+      _homeworksNextLessonLoaded = true;
     }
-    if (_homeworksNextLesson['class'] == null || forceRefresh) {
-      _homeworksNextLesson['class'] = await Get.find<ProxyStore>().getHomeworkForClassOnDate(aclass, (await curriculum)!, date);
-    }
-    homeworkOnDateForClassAndAllStudentsMutex.release();
     return _homeworksNextLesson;
   }
 
@@ -218,16 +234,6 @@ class LessonModel {
       _marksLoaded = true;
     }
     return _marks;
-    // Map<String, List<MarkModel>> res = {};
-    // var mrks = await Get.find<ProxyStore>().getAllLessonMarks(this, date);
-    // for (var mrk in mrks) {
-    //   if (res[mrk.studentId] == null) {
-    //     res[mrk.studentId] = [mrk];
-    //   } else {
-    //     res[mrk.studentId]!.add(mrk);
-    //   }
-    // }
-    // return res;
   }
 
   Future<List<MarkModel>> marksForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
@@ -242,6 +248,17 @@ class LessonModel {
     for (var m in marks) {
       if (res[m.studentId] == null) res[m.studentId] = [];
       res[m.studentId]!.add(m);
+    }
+    return res;
+  }
+
+  Map<String, List<HomeworkModel>> _splitHomeworksByStudent(List<HomeworkModel> homework) {
+    Map<String, List<HomeworkModel>> res = {};
+    String key;
+    for (var hw in homework) {
+      hw.studentId == null ? key = 'class' : key = hw.studentId!;
+      if (res[key] == null) res[key] = [];
+      res[key]!.add(hw);
     }
     return res;
   }

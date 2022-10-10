@@ -6,7 +6,6 @@ import 'package:flutterfire_ui/i10n.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
-import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/controller/storage_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
@@ -35,7 +34,7 @@ Future<void> main() async {
   // var fstore = FStore();
   // var mstore = MStore();
   var store = FStorage();
-  var proxy = ProxyStore('83.219.247.178:8182');
+  var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org:8182', path));
   // var bcont = BlueprintController();
   Get.put<FAuth>(fauth);
   // Get.put<FStore>(fstore);

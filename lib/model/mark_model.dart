@@ -1,6 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/mongo_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,7 +18,7 @@ class MarkModel {
   MarkModel.empty(String teacherId, String curriculumId, int lessonOrder, DateTime date)
       : this.fromMap(null, {
           'teacher_id': teacherId,
-          'date': Timestamp.fromDate(date),
+          'date': date.toIso8601String(),
           'curriculum_id': curriculumId,
           'lesson_order': lessonOrder,
           'student_id': '',
