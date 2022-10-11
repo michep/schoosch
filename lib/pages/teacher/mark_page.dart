@@ -30,11 +30,13 @@ class _MarkPageState extends State<MarkPage> {
   final TextEditingController _studentcont = TextEditingController();
   final ScrollController _scrollcon = ScrollController();
   int mark = 0;
+  String markType = '';
   StudentModel? _student;
 
   @override
   void initState() {
     mark = widget.mark.mark;
+    markType = MarkModel.stringFromType(widget.mark.type);
     _commentcont.value = TextEditingValue(text: widget.mark.comment);
     super.initState();
   }
@@ -65,6 +67,35 @@ class _MarkPageState extends State<MarkPage> {
                   mark: widget.mark.mark,
                   onSaved: setMark,
                   validator: (value) => Utils.validateMark(value, S.of(context).errorMarkError),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Тип оценки'),
+                    SizedBox(
+                      width: 100,
+                      child: DropdownButton<String>(
+                        items: [
+                          ...MarkType.values.toList().map(
+                                (e) => DropdownMenuItem(
+                                  value: MarkModel.stringFromType(e),
+                                  child: Text(
+                                    MarkModel.stringFromType(e),
+                                  ),
+                                ),
+                              ),
+                        ],
+                        value: markType,
+                        onChanged: (v) {
+                          if(v is String) {
+                            setState(() {
+                              markType = v;
+                            });
+                          }
+                        },
+                      ),
+                    )
+                  ],
                 ),
                 Scrollbar(
                   controller: _scrollcon,
@@ -131,7 +162,7 @@ class _MarkPageState extends State<MarkPage> {
           'date': Timestamp.fromDate(widget.mark.date),
           'curriculum_id': widget.mark.curriculumId,
           'lesson_order': widget.mark.lessonOrder,
-          'type': widget.mark.type,
+          'type': markType,
           'comment': _commentcont.value.text,
           'mark': mark,
         },

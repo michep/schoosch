@@ -11,7 +11,7 @@ class MarkModel {
   late DateTime date;
   late String curriculumId;
   late int lessonOrder;
-  late String type;
+  late MarkType type;
   late String comment;
   late int mark;
 
@@ -33,8 +33,8 @@ class MarkModel {
     date = map['date'] != null ? DateTime.fromMillisecondsSinceEpoch((map['date'] as Timestamp).millisecondsSinceEpoch) : throw 'need date key in mark $id';
     curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in mark $id';
     lessonOrder = map['lesson_order'] != null ? map['lesson_order'] as int : throw 'need lesson_order key in mark $id';
-    type = map['type'] != null ? map['type'] as String : throw 'need type key in mark $id';
-    if (!['regular', 'test', 'exam'].contains(type)) throw 'incorrect type in mark $id';
+    type = map['type'] != null ? typeFromString(map['type'] as String) : throw 'need type key in mark $id';
+    // if (!['regular', 'test', 'exam'].contains(type)) throw 'incorrect type in mark $id';
     comment = map['comment'] != null ? map['comment'] as String : '';
     mark = map['mark'] != null ? map['mark'] as int : throw 'need mark key in mark $id';
   }
@@ -46,7 +46,7 @@ class MarkModel {
       'date': date,
       'curriculum_id': curriculumId,
       'lesson_order': lessonOrder,
-      'type': type,
+      'type': stringFromType(type),
       'comment': comment,
       'mark': mark,
     };
@@ -67,4 +67,24 @@ class MarkModel {
   Future<void> delete() async {
     Get.find<FStore>().deleteMark(this);
   }
+
+  static MarkType typeFromString(String type) {
+    switch (type) {
+      case 'regular': return MarkType.regular;
+      case 'test': return MarkType.test;
+      case 'exam': return MarkType.exam;
+      default: return MarkType.regular;
+    }
+  }
+
+  static String stringFromType(MarkType type) {
+    switch (type) {
+      case MarkType.regular: return 'regular';
+      case MarkType.test: return 'test';
+      case MarkType.exam: return 'exam';
+      default: return 'regular';
+    }
+  }
 }
+
+enum MarkType {regular, test, exam}
