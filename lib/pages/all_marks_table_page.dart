@@ -30,7 +30,7 @@ class StudentsTablePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(DateFormat.Md().format(listmark[index].date)),
-                Text(listmark[index].mark.toString()),
+                Text(listmark[index].toString()),
               ],
             ),
           ),
@@ -59,7 +59,11 @@ class StudentsTablePage extends StatelessWidget {
   String getSummaryMark(List<MarkModel> listmark) {
     int sum = 0;
     for (MarkModel mark in listmark) {
-      sum += mark.mark;
+      var times = 1;
+      if(mark.type == MarkType.exam || mark.type == MarkType.test) {
+        times = 2;
+      }
+      sum += mark.mark * times;
     }
     return (sum / listmark.length).toStringAsFixed(1);
   }

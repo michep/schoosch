@@ -64,7 +64,7 @@ class _MarksForStudentPageState extends State<MarksForStudentPage> {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    e.mark.toString(),
+                    e.toString(),
                     style: const TextStyle(fontSize: 20),
                   ),
                 ),

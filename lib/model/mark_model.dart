@@ -85,6 +85,15 @@ class MarkModel {
       default: return 'regular';
     }
   }
+
+  @override
+  String toString() {
+    String res = mark.toString();
+    if(type == MarkType.exam || type == MarkType.test) {
+      res = res += '²';
+    }
+    return res;
+  }
 }
 
 enum MarkType {regular, test, exam}

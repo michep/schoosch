@@ -210,7 +210,7 @@ class LessonModel {
 
   Future<String> marksForStudentAsString(StudentModel student, DateTime date) async {
     var ms = await marksForStudent(student, date, forceRefresh: true);
-    return ms.map((e) => e.mark.toString()).join('; ');
+    return ms.map((e) => e.toString()).join('; ');
   }
 
   Future<List<AbsenceModel>> getAllAbsences(DateTime date, {bool forceUpdate = false}) async {

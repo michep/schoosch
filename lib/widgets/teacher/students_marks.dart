@@ -140,7 +140,7 @@ class _MarkListTileState extends State<MarkListTile> {
   String marksString(List<MarkModel?> marks) {
     List<String> ms = [];
     for (var m in marks) {
-      ms.add(m!.mark.toString());
+      ms.add(m!.toString());
     }
     return ms.join('; ');
   }
@@ -162,7 +162,7 @@ class MarkTile extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
       ),
-      leading: Text(mark.mark.toString()),
+      leading: Text(mark.toString()),
       subtitle: FutureBuilder<PersonModel>(
         future: mark.teacher,
         builder: (context, snapshot) {
