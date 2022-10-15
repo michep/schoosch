@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
     if (PersonModel.currentUser == null) return const LoginPage();
     if (PersonModel.currentUser!.currentType == PersonType.admin) return const AdminPage();
     if (PersonModel.currentUser!.currentType == PersonType.observer) return ObserverClassSelectionPage(PersonModel.currentUser!.asObserver!);
-
+  
     return const HomePage();
   }
 }

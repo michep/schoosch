@@ -15,27 +15,29 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const Drawer(
-        child: MDrawer(),
-      ),
-      appBar: MAppBar(
-        S.of(context).appBarTitle,
-        showProfile: true,
-        showSendNotif: false,
-      ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            WeekSelector(key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber)),
-            Expanded(
-              child: _mainPageSelector(PersonModel.currentUser!),
+    return PersonModel.currentUser!.currentType == PersonType.observer
+        ? ObserverClassSelectionPage(PersonModel.currentObserver!)
+        : Scaffold(
+            drawer: const Drawer(
+              child: MDrawer(),
             ),
-          ],
-        ),
-      ),
-    );
+            appBar: MAppBar(
+              S.of(context).appBarTitle,
+              showProfile: true,
+              showSendNotif: false,
+            ),
+            body: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  WeekSelector(key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber)),
+                  Expanded(
+                    child: _mainPageSelector(PersonModel.currentUser!),
+                  ),
+                ],
+              ),
+            ),
+          );
   }
 
   Widget _mainPageSelector(PersonModel user) {
@@ -51,7 +53,7 @@ class HomePage extends StatelessWidget {
           });
     }
     if (user.currentType == PersonType.student) return StudentScheduleSwitcher(PersonModel.currentStudent!);
-    if (user.currentType == PersonType.observer) return ObserverClassSelectionPage(PersonModel.currentObserver!);
+    // if (user.currentType == PersonType.observer) return ObserverClassSelectionPage(PersonModel.currentObserver!);
     return const Center(child: Text('unknown person type'));
   }
 }
