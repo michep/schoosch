@@ -25,7 +25,7 @@ class _HomeworksForStudentPageState extends State<HomeworksForStudentPage> {
         }
         if (snapshot.data!['student'] == null && snapshot.data!['class'] == null) {
           return const Center(
-            child: Text('Нет домашнего задания на этот день.'),
+            child: Text('Нет домашнего задания на этот день! 🎉'),
           );
         }
         var stud = snapshot.data!['student'];

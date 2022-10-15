@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
@@ -10,6 +11,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/homework_page.dart';
 import 'package:schoosch/widgets/teacher/class_homework_completion_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ClassTaskWithCompetionsPage extends StatefulWidget {
   final DateTime _date;
@@ -54,10 +56,11 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
                           ListTile(
                             // onTap: () => editClassHomework(hw),
                             leading: Text(Utils.formatDatetime(hw!.date, format: 'dd MMM')),
-                            title: Text(
-                              hw!.text,
+                            title: Linkify(
+                              text: hw!.text,
+                              onOpen: (link) => _openLink(link.url),
                               overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                              maxLines: 10,
                             ),
                             trailing: widget.readOnly
                                 ? null
@@ -78,7 +81,9 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
                       );
                     },
                   )
-                : const SizedBox.shrink(),
+                : const Center(
+                    child: Text('Вы еще не задали ДЗ.'),
+                  ),
             Visibility(
               visible: buttonVisible,
               child: Align(
@@ -110,7 +115,8 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
           },
         ),
         const [],
-        personalHomework: false,
+        hw != null,
+        isPersonalHomework: false,
       ),
     );
     if (res is bool && res == true) {
@@ -119,7 +125,7 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
   }
 
   void editClassHomework(HomeworkModel hw) async {
-    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, const [], personalHomework: false));
+    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, const [], true, isPersonalHomework: false));
     if (res is bool && res == true) {
       setState(() {});
     }
@@ -136,5 +142,17 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
       default:
     }
     setState(() {});
+  }
+
+  Future<void> _openLink(String adress) async {
+    final url = Uri.parse(adress);
+    if (!(await launchUrl(url))) {
+      Get.showSnackbar(
+        const GetSnackBar(
+          title: 'Ой...',
+          message: 'Не получилось открыть ссылку.',
+        ),
+      );
+    }
   }
 }

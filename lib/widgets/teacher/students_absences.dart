@@ -27,17 +27,21 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
           future: widget._lesson.getAllAbsences(widget._date),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const SizedBox.shrink();
-            return ListView(
-              children: [
-                ...snapshot.data!
-                    .map((absence) => AbsenceListTile(
-                          absence,
-                          deleteAbsence,
-                          widget.readOnly,
-                        ))
-                    .toList()
-              ],
-            );
+            return snapshot.data!.isEmpty
+                ? const Center(
+                    child: Text('На этом уроке нет отсутствующих.'),
+                  )
+                : ListView(
+                    children: [
+                      ...snapshot.data!
+                          .map((absence) => AbsenceListTile(
+                                absence,
+                                deleteAbsence,
+                                widget.readOnly,
+                              ))
+                          .toList()
+                    ],
+                  );
           },
         ),
         Visibility(

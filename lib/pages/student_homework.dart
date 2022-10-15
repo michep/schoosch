@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeworkCard extends StatefulWidget {
   final HomeworkModel homework;
@@ -41,21 +44,24 @@ class _HomeworkCardState extends State<HomeworkCard> {
                 ),
               ),
               ListTile(
-                title: Text(widget.homework.text),
+                title: Linkify(
+                  text: widget.homework.text,
+                  onOpen: (link) => _openLink(link.url),
+                ),
+                onTap: () async {
+                  var completion = await widget.homework.getCompletion(widget.student);
+                  onTap(completion).whenComplete(() {
+                    setState(() {});
+                  });
+                },
                 trailing: PersonModel.currentUser!.currentType == PersonType.parent
                     ? null
-                    : IconButton(
-                        onPressed: () async {
-                          var completion = await widget.homework.getCompletion(widget.student);
-                          onTap(completion).whenComplete(() {
-                            setState(() {});
-                          });
-                        },
-                        icon: Icon(isConfirmed
+                    : Icon(
+                        isConfirmed
                             ? Icons.check_circle_outline_rounded
                             : isChecked
                                 ? Icons.circle_outlined
-                                : Icons.add_circle_outline),
+                                : Icons.add_circle_outline,
                       ),
               ),
             ],
@@ -94,4 +100,16 @@ class _HomeworkCardState extends State<HomeworkCard> {
           );
         },
       );
+
+  Future<void> _openLink(String adress) async {
+    final url = Uri.parse(adress);
+    if (!(await launchUrl(url))) {
+      Get.showSnackbar(
+        const GetSnackBar(
+          title: 'Ой...',
+          message: 'Не получилось открыть ссылку.',
+        ),
+      );
+    }
+  }
 }
