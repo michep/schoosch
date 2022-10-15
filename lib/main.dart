@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
@@ -13,7 +12,6 @@ import 'package:schoosch/firebase_options.dart';
 import 'package:schoosch/flutterfire_ui_ru.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
-import 'package:schoosch/pages/class_selection_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';
 import 'package:schoosch/theme.dart';
@@ -84,7 +82,6 @@ class MyApp extends StatelessWidget {
   Widget _homePageSelector() {
     if (PersonModel.currentUser == null) return const LoginPage();
     if (PersonModel.currentUser!.currentType == PersonType.admin) return const AdminPage();
-    if (PersonModel.currentUser!.currentType == PersonType.observer) return ObserverClassSelectionPage(PersonModel.currentUser!.asObserver!);
   
     return const HomePage();
   }

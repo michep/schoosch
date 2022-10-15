@@ -4,7 +4,6 @@ import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
-import 'package:schoosch/pages/class_selection_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
@@ -130,8 +129,6 @@ class ProfilePage extends StatelessWidget {
       user.setType(type);
       if (type == PersonType.admin) {
         target = const AdminPage();
-      } else if (type == PersonType.observer) {
-        target = ObserverClassSelectionPage(PersonModel.currentUser!.asObserver!);
       } else {
         target = const HomePage();
       }

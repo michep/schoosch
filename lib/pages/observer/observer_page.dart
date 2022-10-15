@@ -44,25 +44,6 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // SizedBox(
-            //   height: 60,
-            //   child: TabBar(
-            //     controller: tabcont,
-            //     indicatorWeight: 0.001,
-            //     onTap: (i) {
-            //       setState(() {
-            //         current = i;
-            //       });
-            //     },
-            //     tabs: [
-            //       TabChip(current: current, pos: 0, text: 'расписание/ДЗ'),
-            //       TabChip(current: current, pos: 1, text: 'успеваемость')
-            //     ],
-            //   ),
-            // ),
-            // WeekSelector(
-            //   key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber),
-            // ),
             Expanded(
               child: _pages[current],
             ),

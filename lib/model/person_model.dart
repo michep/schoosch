@@ -97,30 +97,49 @@ class PersonModel {
     email = map['email'] != null ? map['email'] as String : throw 'need email key in people $id';
     map['type'] != null ? types.addAll((map['type'] as List<dynamic>).map((e) => PersonTypeExt._parse(e))) : throw 'need type key in people $id';
     if (recursive) {
-      for (var t in types) {
-        switch (t) {
-          case PersonType.parent:
-            _asParent = ParentModel.fromMap(id, map)..up = this;
-            _currentType = t;
-            break;
-          case PersonType.student:
-            _asStudent = StudentModel.fromMap(id, map)..up = this;
-            _currentType = t;
-            break;
-          case PersonType.teacher:
-            _asTeacher = TeacherModel.fromMap(id, map)..up = this;
-            _currentType = t;
-            break;
-          case PersonType.observer:
-            _asObserver = ObserverModel.fromMap(id, map)..up = this;
-            _currentType = t;
-            break;
-          case PersonType.admin:
-            _currentType = t;
-            break;
-          default:
-            throw 'incorrect type in people $id';
-        }
+      // for (var t in types) {
+      //   switch (t) {
+      //     case PersonType.parent:
+      //       _asParent = ParentModel.fromMap(id, map)..up = this;
+      //       _currentType = t;
+      //       break;
+      //     case PersonType.student:
+      //       _asStudent = StudentModel.fromMap(id, map)..up = this;
+      //       _currentType = t;
+      //       break;
+      //     case PersonType.teacher:
+      //       _asTeacher = TeacherModel.fromMap(id, map)..up = this;
+      //       _currentType = t;
+      //       break;
+      //     case PersonType.observer:
+      //       _asObserver = ObserverModel.fromMap(id, map)..up = this;
+      //       _currentType = t;
+      //       break;
+      //     case PersonType.admin:
+      //       _currentType = t;
+      //       break;
+      //     default:
+      //       throw 'incorrect type in people $id';
+      //   }
+      // }
+      if (types.contains(PersonType.admin)) {
+        _currentType = PersonType.admin;
+      }
+      if (types.contains(PersonType.observer)) {
+        _asObserver = ObserverModel.fromMap(id, map)..up = this;
+        _currentType = PersonType.observer;
+      }
+      if (types.contains(PersonType.parent)) {
+        _asParent = ParentModel.fromMap(id, map)..up = this;
+        _currentType = PersonType.parent;
+      }
+      if (types.contains(PersonType.teacher)) {
+        _asTeacher = TeacherModel.fromMap(id, map)..up = this;
+        _currentType = PersonType.teacher;
+      }
+      if (types.contains(PersonType.student)) {
+        _asStudent = StudentModel.fromMap(id, map)..up = this;
+        _currentType = PersonType.student;
       }
     }
   }
@@ -202,7 +221,7 @@ class StudentModel extends PersonModel {
 
   Future<ClassModel?> get studentClass async {
     await _studentClassMutex.acquire();
-    if (!_studentClassLoaded) {   
+    if (!_studentClassLoaded) {
       _studentClass = await Get.find<FStore>().getClassForStudent(this);
       _studentClassLoaded = true;
     }
