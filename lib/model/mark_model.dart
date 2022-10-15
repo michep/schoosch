@@ -1,6 +1,7 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -83,6 +84,15 @@ class MarkModel {
       case MarkType.test: return 'test';
       case MarkType.exam: return 'exam';
       default: return 'regular';
+    }
+  }
+
+  static String localizedTypeName(S S, MarkType type) {
+    switch (type) {
+      case MarkType.regular: return S.markTypeRegular;
+      case MarkType.test: return S.markTypeTest;
+      case MarkType.exam: return S.markTypeExam;
+      default: return S.markTypeRegular;
     }
   }
 

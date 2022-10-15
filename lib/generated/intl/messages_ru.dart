@@ -138,6 +138,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "loginPageTitle":
             MessageLookupByLibrary.simpleMessage("Вход в приложение"),
         "markTitle": MessageLookupByLibrary.simpleMessage("Оценка"),
+        "markTypeExam": MessageLookupByLibrary.simpleMessage("Экзамен"),
+        "markTypeRegular": MessageLookupByLibrary.simpleMessage("Обычная"),
+        "markTypeTest": MessageLookupByLibrary.simpleMessage("Проверочная"),
+        "markTypeTitle": MessageLookupByLibrary.simpleMessage("Тип оценки"),
         "name": MessageLookupByLibrary.simpleMessage("Название"),
         "newClass": MessageLookupByLibrary.simpleMessage("Новый учебный класс"),
         "newCurriculum":

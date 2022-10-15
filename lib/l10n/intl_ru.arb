@@ -97,5 +97,9 @@
   "chooseClassTitle": "Выбор класса",
   "loginPageTitle": "Вход в приложение",
   "userProfileTitle": "Профиль пользователя",
-  "lessonTitle": "Урок"
+  "lessonTitle": "Урок",
+  "markTypeTitle": "Тип оценки",
+  "markTypeRegular": "Обычная",
+  "markTypeTest": "Проверочная",
+  "markTypeExam": "Экзамен"
 }

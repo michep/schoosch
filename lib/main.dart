@@ -10,6 +10,7 @@ import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/firebase_options.dart';
+import 'package:schoosch/flutterfire_ui_ru.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
 import 'package:schoosch/pages/class_selection_page.dart';
@@ -63,10 +64,12 @@ class MyApp extends StatelessWidget {
     //       }
     return GetMaterialApp(
       supportedLocales: S.delegate.supportedLocales,
-      localizationsDelegates: const [
+      localizationsDelegates: [
         S.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        FlutterFireUILocalizations.delegate,
+        FlutterFireUIRuLocalizationsDelegate(),
       ],
       locale: const Locale('ru'),
       scrollBehavior: AppScrollBehavior(),

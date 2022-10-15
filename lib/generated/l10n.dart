@@ -1039,6 +1039,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Mark type`
+  String get markTypeTitle {
+    return Intl.message(
+      'Mark type',
+      name: 'markTypeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Regular`
+  String get markTypeRegular {
+    return Intl.message(
+      'Regular',
+      name: 'markTypeRegular',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Test`
+  String get markTypeTest {
+    return Intl.message(
+      'Test',
+      name: 'markTypeTest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exam`
+  String get markTypeExam {
+    return Intl.message(
+      'Exam',
+      name: 'markTypeExam',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

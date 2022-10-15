@@ -127,6 +127,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "loginPageTitle":
             MessageLookupByLibrary.simpleMessage("Application Login"),
         "markTitle": MessageLookupByLibrary.simpleMessage("Mark"),
+        "markTypeExam": MessageLookupByLibrary.simpleMessage("Exam"),
+        "markTypeRegular": MessageLookupByLibrary.simpleMessage("Regular"),
+        "markTypeTest": MessageLookupByLibrary.simpleMessage("Test"),
+        "markTypeTitle": MessageLookupByLibrary.simpleMessage("Mark type"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "newClass": MessageLookupByLibrary.simpleMessage("New Class"),
         "newCurriculum": MessageLookupByLibrary.simpleMessage("New Curriculum"),

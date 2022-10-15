@@ -9,6 +9,7 @@ import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/mark_field.dart';
+import 'package:schoosch/widgets/mark_type_field.dart';
 import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -68,34 +69,15 @@ class _MarkPageState extends State<MarkPage> {
                   onSaved: setMark,
                   validator: (value) => Utils.validateMark(value, S.of(context).errorMarkError),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Тип оценки'),
-                    SizedBox(
-                      width: 100,
-                      child: DropdownButton<String>(
-                        items: [
-                          ...MarkType.values.toList().map(
-                                (e) => DropdownMenuItem(
-                                  value: MarkModel.stringFromType(e),
-                                  child: Text(
-                                    MarkModel.stringFromType(e),
-                                  ),
-                                ),
-                              ),
-                        ],
-                        value: markType,
-                        onChanged: (v) {
-                          if(v is String) {
-                            setState(() {
-                              markType = v;
-                            });
-                          }
-                        },
-                      ),
-                    )
-                  ],
+                MarkTypeFormField(
+                  markType: markType,
+                  onChanged: (v) {
+                    if (v is String) {
+                      setState(() {
+                        markType = v;
+                      });
+                    }
+                  },
                 ),
                 Scrollbar(
                   controller: _scrollcon,
