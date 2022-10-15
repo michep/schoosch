@@ -18,7 +18,7 @@ class DayLessontimeModel {
   DayLessontimeModel.fromMap(this._id, Map<String, Object?> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in daylessontime $_id';
 
-    if (map.containsKey('time') && map['time'].runtimeType == List) {
+    if (map.containsKey('time') && map['time'] is List) {
       for (var t in map['time'] as List) {
         _lessontimes.add(LessontimeModel.fromMap(t['_id'], t));
       }

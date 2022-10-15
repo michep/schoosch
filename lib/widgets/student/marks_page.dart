@@ -69,6 +69,10 @@ class _MarksForStudentPageState extends State<MarksForStudentPage> {
                   ),
                 ),
                 title: Text(e.comment),
+                subtitle: FutureBuilder<PersonModel>(
+                  future: e.teacher,
+                  builder: ((context, snapshot) => snapshot.hasData ? Text(snapshot.data!.fullName) : const Text('')),
+                ),
               ),
             )
           ],

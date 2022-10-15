@@ -73,7 +73,7 @@ class SubjectList extends StatelessWidget {
                     subtitle: Text(teacher.abbreviatedName),
                     onTap: () {
                       Get.to(
-                        TeacherTablePage(
+                        () => TeacherTablePage(
                           currentcur: cur,
                           aclass: _class,
                           teacher: teacher,

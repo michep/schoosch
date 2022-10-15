@@ -116,11 +116,8 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<void> deleteClass(ClassModel aclass) async {
-    var data = aclass.toMap(withId: true);
     await dio.deleteUri(
       baseUriFunc('/class/${aclass.id}'),
-      options: Options(headers: {'Content-Type': 'application/json'}),
-      data: data,
     );
   }
 
@@ -153,11 +150,8 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<void> deleteVenue(VenueModel venue) async {
-    var data = venue.toMap(withId: true);
     await dio.deleteUri(
       baseUriFunc('/venue/${venue.id}'),
-      options: Options(headers: {'Content-Type': 'application/json'}),
-      data: data,
     );
   }
 
@@ -213,11 +207,8 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<void> deleteLessontime(DayLessontimeModel daylessontime, LessontimeModel lessontime) async {
-    var data = lessontime.toMap(withId: true);
     await dio.deleteUri(
-      baseUriFunc('//lessontime/${daylessontime.id!}/time/${lessontime.id}'),
-      options: Options(headers: {'Content-Type': 'application/json'}),
-      data: data,
+      baseUriFunc('/time/${lessontime.id}'),
     );
   }
 
@@ -402,11 +393,8 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<void> deleteLesson(LessonModel lesson) async {
-    var data = lesson.toMap(withId: true);
     await dio.deleteUri(
-      baseUriFunc('/class/${lesson.aclass.id!}/schedule/${lesson.schedule.id}/lesson/${lesson.id}'),
-      options: Options(headers: {'Content-Type': 'application/json'}),
-      data: data,
+      baseUriFunc('/lesson/${lesson.id}'),
     );
   }
 
@@ -553,47 +541,55 @@ class ProxyStore extends getx.GetxController {
 
   Future<void> createCompletion(HomeworkModel homework, StudentModel student) async {
     var data = {
+      '_id': null,
       'completedby_id': student.id,
-      'completed_time': DateTime.now(),
+      'completed_time': DateTime.now().toIso8601String(),
       'confirmedby_id': null,
       'confirmed_time': null,
       'status': 1,
       'homework_id': homework.id,
       'institution_id': institution.id,
     };
-    // await _db.collection('completion').insertOne(data);
-  }
-
-  Future<void> deleteCompletion(HomeworkModel homework, CompletionFlagModel completion, StudentModel student) async {
-    var data = completion.toMap(withId: true);
-    await dio.deleteUri(
-      baseUriFunc('/homework/${homework.id}/student/${student.id}/completion/${completion.id}'),
+    var res = await dio.putUri<Map<String, dynamic>>(
+      baseUriFunc('/completion'),
       options: Options(headers: {'Content-Type': 'application/json'}),
       data: data,
     );
+    var js = res.data!;
+    return js['id'];
   }
 
-  Future<void> confirmCompletion(HomeworkModel homework, CompletionFlagModel completion, PersonModel person) async {
-    await dio.putUri<Map<String, dynamic>>(baseUriFunc('/homework/${homework.id}/completion/${completion.id}'),
-        options: Options(headers: {'Content-Type': 'application/json'}),
-        data: {
-          'status': 2,
-          'confirmedby_id': person.id,
-          'confirmed_time': DateTime.now().toIso8601String(),
-        });
+  Future<void> deleteCompletion(CompletionFlagModel completion) async {
+    await dio.deleteUri(
+      baseUriFunc('/completion/${completion.id}'),
+    );
   }
 
-  Future<void> unconfirmCompletion(HomeworkModel homework, CompletionFlagModel completion, PersonModel person) async {
-    await dio.putUri<Map<String, dynamic>>(baseUriFunc('/homework/${homework.id}/completion/${completion.id}'),
-        options: Options(headers: {'Content-Type': 'application/json'}),
-        data: {
-          'status': 1,
-          'confirmedby_id': person.id,
-          'confirmed_time': null,
-        });
+  Future<void> confirmCompletion(CompletionFlagModel completion, PersonModel person) async {
+    await dio.putUri<Map<String, dynamic>>(
+      baseUriFunc('/completion/${completion.id}'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {
+        'status': 2,
+        'confirmedby_id': person.id,
+        'confirmed_time': DateTime.now().toIso8601String(),
+      },
+    );
   }
 
-  Future<CompletionFlagModel?> getHomeworkCompletion(HomeworkModel homework, StudentModel student) async {
+  Future<void> unconfirmCompletion(CompletionFlagModel completion, PersonModel person) async {
+    await dio.putUri<Map<String, dynamic>>(
+      baseUriFunc('/completion/${completion.id}'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {
+        'status': 1,
+        'confirmedby_id': person.id,
+        'confirmed_time': null,
+      },
+    );
+  }
+
+  Future<CompletionFlagModel?> getStudentHomeworkCompletion(HomeworkModel homework, StudentModel student) async {
     var res = await dio.getUri<Map<String, dynamic>>(baseUriFunc('/homework/${homework.id}/student/${student.id}/completion'));
     var js = res.data!;
     return CompletionFlagModel.fromMap(js['_id'], js);
@@ -684,7 +680,7 @@ class ProxyStore extends getx.GetxController {
     // var data = jsonDecode(res.body);
     // return (data as List).map((e) => AbsenceModel.fromMap(e['_id'], e)).toList();
 
-    var res = await dio.getUri<List>(baseUriFunc('/class/${lesson.aclass.id}/absence/${date.toIso8601String()}'));
+    var res = await dio.getUri<List>(baseUriFunc('/class/${lesson.aclass.id}/absence/${date.toIso8601String()}/${lesson.order}'));
     var js = res.data!;
     return js.map((data) => AbsenceModel.fromMap(data['_id'], data)).toList();
   }
@@ -696,7 +692,7 @@ class ProxyStore extends getx.GetxController {
     // var data = jsonDecode(res.body);
     // return (data as List).map((e) => AbsenceModel.fromMap(e['_id'], e)).toList();
 
-    var res = await dio.getUri<List>(baseUriFunc('/class/${lesson.aclass.id}/student/$studentId/absence/${date.toIso8601String()}'));
+    var res = await dio.getUri<List>(baseUriFunc('/class/${lesson.aclass.id}/student/$studentId/absence/${date.toIso8601String()}/${lesson.order}'));
     var js = res.data!;
     return js.map((data) => AbsenceModel.fromMap(data['_id'], data)).toList();
   }
@@ -716,12 +712,9 @@ class ProxyStore extends getx.GetxController {
     }
   }
 
-  Future<void> deleteAbsence(LessonModel lesson, AbsenceModel absence) async {
-    var data = absence.toMap(withId: true);
+  Future<void> deleteAbsence(AbsenceModel absence) async {
     await dio.deleteUri(
-      baseUriFunc('/class/${lesson.aclass.id}/absence/${absence.id}'),
-      options: Options(headers: {'Content-Type': 'application/json'}),
-      data: data,
+      baseUriFunc('/absence/${absence.id}'),
     );
   }
 
@@ -794,14 +787,9 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<void> deleteMark(MarkModel mark) async {
-    if (mark.id != null) {
-      var data = mark.toMap(withId: true);
-      await dio.deleteUri(
-        baseUriFunc('/mark/${mark.id}'),
-        options: Options(headers: {'Content-Type': 'application/json'}),
-        data: data,
-      );
-    }
+    await dio.deleteUri(
+      baseUriFunc('/mark/${mark.id}'),
+    );
   }
 
   Future<List<ClassScheduleModel>> getClassWeekSchedule(ClassModel aclass, Week currentWeek) async {
@@ -867,5 +855,10 @@ class ProxyStore extends getx.GetxController {
 
     var res = await dio.getUri<List>(baseUriFunc('/person/${teacher.id}/teacher/curriculum'));
     return res.data!.map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
+  }
+
+  Future<DateTime> getNextLessonDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
+    var res = await dio.getUri<String>(baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/nextdate/${date.toIso8601String()}'));
+    return DateTime.parse(res.data!);
   }
 }

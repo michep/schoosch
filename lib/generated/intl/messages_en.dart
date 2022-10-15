@@ -157,6 +157,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "personTypeTeacher": MessageLookupByLibrary.simpleMessage("Teacher"),
         "replacementsTitle":
             MessageLookupByLibrary.simpleMessage("Schedule Replacements"),
+        "roleAdmin": MessageLookupByLibrary.simpleMessage("Administrator"),
+        "roleObserver": MessageLookupByLibrary.simpleMessage("Observer"),
+        "roleParent": MessageLookupByLibrary.simpleMessage("Parnet"),
+        "roleStudent": MessageLookupByLibrary.simpleMessage("Student"),
+        "roleTeacher": MessageLookupByLibrary.simpleMessage("Teacher"),
         "saveChanges": MessageLookupByLibrary.simpleMessage("Save changes"),
         "scheduleFromDate":
             MessageLookupByLibrary.simpleMessage("Schedule start date"),

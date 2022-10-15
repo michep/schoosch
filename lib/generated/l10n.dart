@@ -1039,6 +1039,56 @@ class S {
       args: [],
     );
   }
+
+  /// `Administrator`
+  String get roleAdmin {
+    return Intl.message(
+      'Administrator',
+      name: 'roleAdmin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Teacher`
+  String get roleTeacher {
+    return Intl.message(
+      'Teacher',
+      name: 'roleTeacher',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Parnet`
+  String get roleParent {
+    return Intl.message(
+      'Parnet',
+      name: 'roleParent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Student`
+  String get roleStudent {
+    return Intl.message(
+      'Student',
+      name: 'roleStudent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Observer`
+  String get roleObserver {
+    return Intl.message(
+      'Observer',
+      name: 'roleObserver',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

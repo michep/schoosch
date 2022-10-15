@@ -27,7 +27,7 @@ class ProfilePage extends StatelessWidget {
           children: [
             Text(_user.fullName),
             Text(_user.email),
-            _changeTypeW(_user),
+            _changeTypeW(context, _user),
             _chateChildW(_user),
             ElevatedButton(
               onPressed: _logout,
@@ -96,19 +96,19 @@ class ProfilePage extends StatelessWidget {
     Get.offAll(() => const LoginPage());
   }
 
-  Widget _changeTypeW(PersonModel user) {
+  Widget _changeTypeW(BuildContext context, PersonModel user) {
     return Row(children: [
       Text(user.currentType.name),
       user.types.length > 1
           ? ElevatedButton(
               child: const Text('сменить тип'),
-              onPressed: () => _changeTypeBottomsheet(user),
+              onPressed: () => _changeTypeBottomsheet(context, user),
             )
           : const SizedBox.shrink(),
     ]);
   }
 
-  void _changeTypeBottomsheet(PersonModel user) {
+  void _changeTypeBottomsheet(BuildContext context, PersonModel user) {
     Get.bottomSheet(
       Card(
         child: Column(
@@ -116,7 +116,7 @@ class ProfilePage extends StatelessWidget {
           children: [
             ...user.types.map((e) => ElevatedButton(
                   onPressed: () => _changeType(user, e),
-                  child: Text(e.name),
+                  child: Text(e.localizedName(S.of(context))),
                 )),
           ],
         ),

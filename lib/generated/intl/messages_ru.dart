@@ -172,6 +172,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Преподаватель"),
         "replacementsTitle":
             MessageLookupByLibrary.simpleMessage("Подмены в расписании"),
+        "roleAdmin": MessageLookupByLibrary.simpleMessage("Администратор"),
+        "roleObserver": MessageLookupByLibrary.simpleMessage("Наблюдатель"),
+        "roleParent": MessageLookupByLibrary.simpleMessage("Родитель"),
+        "roleStudent": MessageLookupByLibrary.simpleMessage("Ученик"),
+        "roleTeacher": MessageLookupByLibrary.simpleMessage("Учитель"),
         "saveChanges":
             MessageLookupByLibrary.simpleMessage("Сохранить изменения"),
         "scheduleFromDate":

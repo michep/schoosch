@@ -4,17 +4,19 @@ import 'package:schoosch/model/person_model.dart';
 
 class CompletionFlagModel {
   late final String? id;
-  late final String? completedById;
-  late final String? confirmedById;
-  late final DateTime? completedTime;
-  late final DateTime? confirmedTime;
-  late final Status? status;
+  late final String homeworkId;
+  String? completedById;
+  String? confirmedById;
+  DateTime? completedTime;
+  DateTime? confirmedTime;
+  Status? status;
   late PersonModel? _completer;
-  bool completerLoaded = false;
+  bool _completerLoaded = false;
   late PersonModel? _confirmer;
-  bool confirmerLoaded = false;
+  bool _confirmerLoaded = false;
 
   CompletionFlagModel.fromMap(this.id, Map<String, dynamic> map) {
+    confirmedById = map['homework_id'] != null ? map['homework_id'] as String : throw 'need homework_id key in completion $id';
     completedById = map['completedby_id'] != null ? map['completedby_id'] as String : null;
     confirmedById = map['confirmedby_id'] != null ? map['confirmedby_id'] as String : null;
     completedTime = map['completed_time'] != null ? DateTime.tryParse(map['completed_time']) : null;
@@ -27,6 +29,16 @@ class CompletionFlagModel {
       }
     } else {
       throw 'NEED PURPOSE IN CHAT $id';
+    }
+
+    if (map.containsKey('completedby') && map['completedby'] is Map) {
+      _completer = PersonModel.fromMap((map['completedby'] as Map<String, dynamic>)['_id'] as String, map['completedby'] as Map<String, dynamic>);
+      _completerLoaded = true;
+    }
+
+    if (map.containsKey('confirmedby') && map['confirmedby'] is Map) {
+      _confirmer = PersonModel.fromMap((map['confirmedby'] as Map<String, dynamic>)['_id'] as String, map['confirmedby'] as Map<String, dynamic>);
+      _confirmerLoaded = true;
     }
   }
 
@@ -44,19 +56,31 @@ class CompletionFlagModel {
   }
 
   Future<StudentModel> get student async {
-    if (!completerLoaded) {
+    if (!_completerLoaded) {
       _completer = await Get.find<ProxyStore>().getPerson(completedById!);
-      completerLoaded = true;
+      _completerLoaded = true;
     }
     return _completer!.asStudent!;
   }
 
   Future<TeacherModel?> get teacher async {
-    if (confirmedById != null && !confirmerLoaded) {
+    if (confirmedById != null && !_confirmerLoaded) {
       _confirmer = await Get.find<ProxyStore>().getPerson(confirmedById!);
-      confirmerLoaded = true;
+      _confirmerLoaded = true;
     }
     return _confirmer?.asTeacher;
+  }
+
+  Future<void> delete() async {
+    return await Get.find<ProxyStore>().deleteCompletion(this);
+  }
+
+  Future<void> confirm(PersonModel person) async {
+    return await Get.find<ProxyStore>().confirmCompletion(this, person);
+  }
+
+  Future<void> unconfirm(PersonModel person) async {
+    return await Get.find<ProxyStore>().unconfirmCompletion(this, person);
   }
 
   // Future<CompletionFlagModel?> refresh(HomeworkModel homework) async {

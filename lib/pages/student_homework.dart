@@ -18,7 +18,7 @@ class _HomeworkCardState extends State<HomeworkCard> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<CompletionFlagModel?>(
-      future: widget.homework.getCompletion(widget.student),
+      future: widget.homework.getCompletion(widget.student, forceRefresh: true),
       builder: (context, snapshot) {
         bool isChecked = false;
         bool isConfirmed = false;
@@ -43,22 +43,22 @@ class _HomeworkCardState extends State<HomeworkCard> {
               ),
               ListTile(
                 title: Text(widget.homework.text),
-                trailing: PersonModel.currentUser!.currentType == PersonType.parent
-                    ? null
-                    : IconButton(
-                        onPressed: () async {
+                trailing: IconButton(
+                  onPressed: PersonModel.currentUser!.currentType == PersonType.parent
+                      ? null
+                      : () async {
                           // var completion = await widget.homework.getCompletion(widget.student);
                           var completion = snapshot.data;
                           onTap(completion).whenComplete(() {
                             setState(() {});
                           });
                         },
-                        icon: Icon(isConfirmed
-                            ? Icons.check_circle_outline_rounded
-                            : isChecked
-                                ? Icons.circle_outlined
-                                : Icons.add_circle_outline),
-                      ),
+                  icon: Icon(isConfirmed
+                      ? Icons.check_circle_outline_rounded
+                      : isChecked
+                          ? Icons.circle_outlined
+                          : Icons.add_circle_outline),
+                ),
               ),
             ],
           ),
@@ -76,7 +76,7 @@ class _HomeworkCardState extends State<HomeworkCard> {
                 if (c == null) {
                   await widget.homework.createCompletion(widget.student);
                 } else if (c.status == Status.completed) {
-                  await widget.homework.deleteCompletion(c, widget.student);
+                  await c.delete();
                 }
                 setState(() {});
                 Get.back();

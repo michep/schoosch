@@ -193,10 +193,10 @@ class LessonModel {
 
   Future<HomeworkModel?> homeworkNextLessonForClass(DateTime date, {bool forceRefresh = false}) async {
     if (!_homeworksNextLessonLoaded || forceRefresh) {
-      _homeworksNextLesson.addAll(await _getAllHomeworkThisLesson(aclass, (await curriculum)!, date));
+      _homeworksNextLesson.addAll(await _getAllHomeworkNextLesson(aclass, (await curriculum)!, date));
       _homeworksNextLessonLoaded = true;
     }
-    return _homeworksThisLesson['class']?[0];
+    return _homeworksNextLesson['class']?[0];
   }
 
   Future<HomeworkModel?> homeworkNextLessonForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
@@ -237,7 +237,7 @@ class LessonModel {
   }
 
   Future<List<MarkModel>> marksForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
-    if (!_marksLoaded && forceRefresh) {
+    if (!_marksLoaded || forceRefresh) {
       getAllMarks(date, forceRefresh: forceRefresh);
     }
     return _marks[student.id!] == null ? [] : _marks[student.id!]!;
@@ -268,7 +268,7 @@ class LessonModel {
   }
 
   Future<String> marksForStudentAsString(StudentModel student, DateTime date) async {
-    var ms = await marksForStudent(student, date, forceRefresh: true);
+    var ms = await marksForStudent(student, date);
     return ms.map((e) => e.mark.toString()).join('; ');
   }
 

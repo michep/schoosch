@@ -97,5 +97,11 @@
   "chooseClassTitle": "Choose Class",
   "loginPageTitle": "Application Login",
   "userProfileTitle": "User profile",
-  "lessonTitle": "Lesson"
+  "lessonTitle": "Lesson",
+  "roleAdmin": "Administrator",
+  "roleTeacher": "Teacher",
+  "roleParent": "Parnet",
+  "roleStudent": "Student",
+  "roleObserver": "Observer"
+
 }

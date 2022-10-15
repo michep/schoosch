@@ -97,5 +97,10 @@
   "chooseClassTitle": "Выбор класса",
   "loginPageTitle": "Вход в приложение",
   "userProfileTitle": "Профиль пользователя",
-  "lessonTitle": "Урок"
+  "lessonTitle": "Урок",
+  "roleAdmin": "Администратор",
+  "roleTeacher": "Учитель",
+  "roleParent": "Родитель",
+  "roleStudent": "Ученик",
+  "roleObserver": "Наблюдатель"
 }

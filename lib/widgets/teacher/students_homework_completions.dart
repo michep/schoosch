@@ -109,10 +109,10 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
   void toggleHomeworkCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
     switch (completion.status) {
       case Status.completed:
-        await hw.confirmCompletion(completion, PersonModel.currentUser!);
+        await completion.confirm(PersonModel.currentUser!);
         break;
       case Status.confirmed:
-        await hw.unconfirmCompletion(completion, PersonModel.currentUser!);
+        await completion.unconfirm(PersonModel.currentUser!);
         break;
       default:
     }

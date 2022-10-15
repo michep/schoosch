@@ -2,7 +2,6 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MarkModel {
   String? id;
@@ -14,6 +13,7 @@ class MarkModel {
   late String type;
   late String comment;
   late int mark;
+  TeacherModel? _teacher;
 
   MarkModel.empty(String teacherId, String curriculumId, int lessonOrder, DateTime date)
       : this.fromMap(null, {
@@ -37,6 +37,10 @@ class MarkModel {
     if (!['regular', 'test', 'exam'].contains(type)) throw 'incorrect type in mark $id';
     comment = map['comment'] != null ? map['comment'] as String : '';
     mark = map['mark'] != null ? map['mark'] as int : throw 'need mark key in mark $id';
+
+    if (map.containsKey('teacher') && map['teacher'] is Map) {
+      _teacher = TeacherModel.fromMap((map['teacher'] as Map<String, dynamic>)['_id'] as String, map['teacher'] as Map<String, dynamic>);
+    }
   }
 
   Map<String, dynamic> toMap({bool withId = false}) {
@@ -55,7 +59,9 @@ class MarkModel {
   }
 
   Future<PersonModel> get teacher async {
-    return Get.find<ProxyStore>().getPerson(teacherId);
+    _teacher ??= (await Get.find<ProxyStore>().getPerson(teacherId)).asTeacher;
+    return _teacher!;
+    // return
   }
 
   Future<PersonModel> get student async {

@@ -24,7 +24,7 @@ class DayScheduleModel {
     from = map['from'] != null ? DateTime.tryParse(map['from']) : throw 'need from key in schedule $_id';
     till = map['till'] != null ? DateTime.tryParse(map['till']) : null;
 
-    if (map.containsKey('lesson') && map['lesson'].runtimeType == List) {
+    if (map.containsKey('lesson') && map['lesson'] is List) {
       for (var l in map['lesson'] as List) {
         var aclass = ClassModel.fromMap(l['class']['_id'], l['class']);
         _lessons.add(LessonModel.fromMap(aclass, this, l['_id'], l));
@@ -96,7 +96,7 @@ class StudentScheduleModel extends ClassScheduleModel {
   // final Mutex _studentLessonsMutex = Mutex();
 
   StudentScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map) {
-    // if (map.containsKey('lesson') && map['lesson'].runtimeType == List) {
+    // if (map.containsKey('lesson') && map['lesson'] is List) {
     //   for (var l in map['lesson'] as List) {
     //     _studentLessons.add(LessonModel.fromMap(aclass, this, l['_id'], l));
     //   }
@@ -125,7 +125,7 @@ class StudentScheduleModel extends ClassScheduleModel {
 
 class TeacherScheduleModel extends DayScheduleModel {
   TeacherScheduleModel.fromMap(String id, Map<String, Object?> map) : super.fromMap(id, map) {
-    // if (map.containsKey('lesson') && map['lesson'].runtimeType == List) {
+    // if (map.containsKey('lesson') && map['lesson'] is List) {
     //   for (var l in map['lesson'] as List) {
     //     var aclass = ClassModel.fromMap(l['class']['_id'], l['class']);
     //     _teacherLessons.add(LessonModel.fromMap(aclass, this, l['_id'], l));

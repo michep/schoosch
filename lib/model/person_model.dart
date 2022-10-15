@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart' as isoweek;
 import 'package:mutex/mutex.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
@@ -53,6 +54,23 @@ extension PersonTypeExt on PersonType {
         return _student;
       case PersonType.observer:
         return _observer;
+      case PersonType.none:
+        throw 'none as PersontType';
+    }
+  }
+
+  String localizedName(S S) {
+    switch (this) {
+      case PersonType.admin:
+        return S.roleAdmin;
+      case PersonType.teacher:
+        return S.roleTeacher;
+      case PersonType.parent:
+        return S.roleParent;
+      case PersonType.student:
+        return S.roleStudent;
+      case PersonType.observer:
+        return S.roleObserver;
       case PersonType.none:
         throw 'none as PersontType';
     }

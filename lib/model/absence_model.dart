@@ -30,7 +30,7 @@ class AbsenceModel {
   }
 
   Future<void> delete(LessonModel lesson) async {
-    Get.find<ProxyStore>().deleteAbsence(lesson, this);
+    Get.find<ProxyStore>().deleteAbsence(this);
   }
 
   Future<StudentModel> get student async {
