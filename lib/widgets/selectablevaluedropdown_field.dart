@@ -19,7 +19,6 @@ class SelectableValueDropdownFormField<T extends Object> extends StatefulWidget 
   final TitleFunc<T> titleFunc;
   final FormFieldValidator<String>? validatorFunc;
   final CallbackMaybeFunc<T> callback;
-  final bool isUnneccesary;
 
   const SelectableValueDropdownFormField({
     required this.title,
@@ -30,7 +29,6 @@ class SelectableValueDropdownFormField<T extends Object> extends StatefulWidget 
     required this.callback,
     this.detailsFunc,
     this.validatorFunc,
-    this.isUnneccesary = false,
     Key? key,
   }) : super(key: key);
 
@@ -82,7 +80,7 @@ class SelectableValueDropdownFormFieldState<T extends Object> extends State<Sele
       focusNode: focusNode,
       onFieldSubmitted: (value) => onFieldSubmitted(),
       decoration: InputDecoration(
-        label: Text(widget.title + (widget.isUnneccesary ? ' (необязательно)' : '')),
+        label: Text(widget.title),
         suffixIcon: Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: _data == null

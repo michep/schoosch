@@ -74,7 +74,6 @@ class _HomeworkPageState extends State<HomeworkPage> {
                     // validatorFunc: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty),
                     validatorFunc: validateStudent,
                     callback: (value) => _setStudent(value),
-                    isUnneccesary: true,
                   ),
                 Scrollbar(
                   controller: _scrollcon,
