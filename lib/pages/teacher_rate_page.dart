@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/widgets/rateteachersheet.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -15,14 +15,6 @@ class RatePage extends StatefulWidget {
 }
 
 class _RatePageState extends State<RatePage> {
-  Future<void> activateBottomSheet(BuildContext context, TeacherModel teach) async {
-    return await showModalBottomSheet(
-        context: context,
-        builder: (_) {
-          return RateSheet(teach);
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,14 +53,14 @@ class _RatePageState extends State<RatePage> {
                                                   return snapshot.hasData ? Text(snapshot.data!.toStringAsFixed(2)) : const Text('нет оценок');
                                                 }),
                                             onTap: () async {
-                                              var has = await Get.find<FStore>().hasRatingInMonth(teacher);
-                                              if(has) {
+                                              var has = await Get.find<ProxyStore>().hasRatingInMonth(teacher);
+                                              if (has) {
                                                 Get.showSnackbar(const GetSnackBar(
-                                                  message: 'этомц учителю ты уже ставил оценку в текущем месяце.',
+                                                  message: 'этому учителю ты уже ставил оценку в текущем месяце.',
                                                 ));
                                                 return;
                                               }
-                                              activateBottomSheet(context, teacher).then((_) => setState(() {}));
+                                              Get.bottomSheet(RateSheet(teacher)).then((_) => setState(() {}));
                                             },
                                           ),
                                         );

@@ -62,27 +62,26 @@ class SubjectList extends StatelessWidget {
           itemBuilder: (context, index) {
             var cur = snapshot.data!.elementAt(index);
             return FutureBuilder<TeacherModel?>(
-              future: cur.master,
-              builder: (context, teachersnap) {
-                if(!teachersnap.hasData) {
-                  return const SizedBox.shrink();
-                }
-                var teacher = teachersnap.data!;
-                return ListTile(
-                  title: Text(cur.aliasOrName),
-                  subtitle: Text(teacher.abbreviatedName),
-                  onTap: () {
-                    Get.to(
-                      TeacherTablePage(
-                        currentcur: cur,
-                        aclass: _class,
-                        teacher: teacher,
-                      ),
-                    );
-                  },
-                );
-              }
-            );
+                future: cur.master,
+                builder: (context, teachersnap) {
+                  if (!teachersnap.hasData) {
+                    return const SizedBox.shrink();
+                  }
+                  var teacher = teachersnap.data!;
+                  return ListTile(
+                    title: Text(cur.aliasOrName),
+                    subtitle: Text(teacher.abbreviatedName),
+                    onTap: () {
+                      Get.to(
+                        () => TeacherTablePage(
+                          currentcur: cur,
+                          aclass: _class,
+                          teacher: teacher,
+                        ),
+                      );
+                    },
+                  );
+                });
           },
           itemCount: snapshot.data!.length,
         );

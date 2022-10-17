@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
@@ -19,27 +19,27 @@ class InstitutionModel {
     address = map['address'] != null ? map['address'] as String : '';
   }
 
-  static InstitutionModel get currentInstitution => Get.find<FStore>().currentInstitution!;
+  static InstitutionModel get currentInstitution => Get.find<ProxyStore>().currentInstitution!;
 
   Future<List<VenueModel>> get venues async {
-    return Get.find<FStore>().getAllVenues();
+    return Get.find<ProxyStore>().getAllVenues();
   }
 
   Future<List<PersonModel>> people() async {
-    return Get.find<FStore>().getAllPeople();
+    return Get.find<ProxyStore>().getAllPeople();
   }
 
   Future<PersonModel> getPerson(String id) async {
-    return Get.find<FStore>().getPerson(id);
+    return Get.find<ProxyStore>().getPerson(id);
   }
 
   Future<List<ClassModel>> get classes async {
-    return Get.find<FStore>().getAllClasses();
+    return Get.find<ProxyStore>().getAllClasses();
   }
 
-  Future<List<CurriculumModel>> get curriculums async {
-    if (!_curriculumsLoaded) {
-      var curs = await Get.find<FStore>().getAllCurriculums();
+  Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
+    if (!_curriculumsLoaded || forceRefresh) {
+      var curs = await Get.find<ProxyStore>().getAllCurriculums();
       _curriculums.addAll(curs);
       _curriculumsLoaded = true;
     }
@@ -47,18 +47,18 @@ class InstitutionModel {
   }
 
   Future<List<DayLessontimeModel>> get daylessontimes async {
-    return Get.find<FStore>().getAllDayLessontime();
+    return Get.find<ProxyStore>().getAllDayLessontime();
   }
 
-  Future<void> createChatRoom(PersonModel other) async {
-    return await Get.find<FStore>().createChatRoom(other);
-  }
+  // Future<void> createChatRoom(PersonModel other) async {
+  //   return await Get.find<MStore>().createChatRoom(other);
+  // }
 
-  Future<List<PersonModel>> findFreeTeachers(DateTime date, int order) async {
-    return await Get.find<FStore>().getFreeTeachersOnLesson(date, order);
-  }
+  // Future<List<PersonModel>> findFreeTeachers(DateTime date, int order) async {
+  //   return await Get.find<MStore>().getFreeTeachersOnLesson(date, order);
+  // }
 
   // Future<List<PersonModel>> getUsersByName(String query) async {
-  //   return Get.find<FStore>().getPeopleByName(query);
+  //   return Get.find<MStore>().getPeopleByName(query);
   // }
 }

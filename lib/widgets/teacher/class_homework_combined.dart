@@ -13,24 +13,25 @@ import 'package:schoosch/widgets/teacher/students_homework_completion_tile.dart'
 import 'package:schoosch/widgets/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ClassTasksCombinedPage extends StatefulWidget {
+class ClassHomeworksCombinedPage extends StatefulWidget {
   final DateTime _date;
   final CurriculumModel _curriculum;
   final TeacherModel? _teacher;
   final LessonModel _lesson;
-  final Future<Map<String, HomeworkModel?>> Function(DateTime, bool) _hwsFuture;
+  final Future<Map<String, List<HomeworkModel?>>> Function(DateTime, bool) _hwsFuture;
   final Future<HomeworkModel?> Function(DateTime, bool) _hwFuture;
 
   final bool readOnly;
 
-  const ClassTasksCombinedPage(this._teacher, this._curriculum, this._date, this._lesson, this._hwsFuture, this._hwFuture, {Key? key, this.readOnly = false})
+  const ClassHomeworksCombinedPage(this._teacher, this._curriculum, this._date, this._lesson, this._hwsFuture, this._hwFuture,
+      {Key? key, this.readOnly = false})
       : super(key: key);
 
   @override
-  State<ClassTasksCombinedPage> createState() => _ClassTasksCombinedPageState();
+  State<ClassHomeworksCombinedPage> createState() => _ClassHomeworksCombinedPageState();
 }
 
-class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
+class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage> {
   HomeworkModel? hw;
 
   @override
@@ -98,7 +99,7 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
                       );
               },
             ),
-            FutureBuilder<Map<String, HomeworkModel?>>(
+            FutureBuilder<Map<String, List<HomeworkModel?>>>(
               future: widget._hwsFuture(widget._date, true),
               builder: (context, snapHWs) {
                 if (snapHWs.connectionState == ConnectionState.done) {
@@ -172,11 +173,13 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
     var res = await Get.to<bool>(
       () => HomeworkPage(
         widget._lesson,
+        widget._curriculum,
         HomeworkModel.fromMap(
           null,
           {
             'class_id': widget._lesson.aclass.id,
-            'date': Timestamp.fromDate(widget._date),
+            'date': widget._date.toIso8601String(),
+            'todate': null, //TODO
             'text': '',
             'teacher_id': widget._teacher!.id,
             'curriculum_id': widget._curriculum.id,
@@ -194,7 +197,7 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
 
   void editStudentHomework(HomeworkModel hw, List<String> studentIDs, bool classHwExists) async {
     studentIDs.remove(hw.studentId);
-    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, studentIDs, classHwExists, isPersonalHomework: true));
+    var res = await Get.to(() => HomeworkPage(widget._lesson, widget._curriculum, hw, studentIDs, classHwExists, isPersonalHomework: true));
     if (res is bool && res == true) {
       setState(() {});
     }
@@ -203,10 +206,10 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
   void toggleHomeworkCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
     switch (completion.status) {
       case Status.completed:
-        await hw.confirmCompletion(completion, PersonModel.currentUser!);
+        await completion.confirm(PersonModel.currentUser!);
         break;
       case Status.confirmed:
-        await hw.unconfirmCompletion(completion, PersonModel.currentUser!);
+        await completion.unconfirm(PersonModel.currentUser!);
         break;
       default:
     }
@@ -214,7 +217,7 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
   }
 
   void editClassHomework(HomeworkModel hw) async {
-    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, const [], true, isPersonalHomework: false));
+    var res = await Get.to(() => HomeworkPage(widget._lesson, widget._curriculum, hw, const [], true, isPersonalHomework: false));
     if (res is bool && res == true) {
       setState(() {});
     }

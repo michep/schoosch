@@ -37,18 +37,18 @@ class MDrawer extends StatelessWidget {
       //     label: const Text('Оценить учителей'),
       //   ),
       // );
-      if (Get.find<BlueprintController>().canShow) {
-        items.add(
-          TextButton.icon(
-            onPressed: () async {
-              ClassModel? clas = await PersonModel.currentStudent!.studentClass;
-              Get.to(() => SchoolMapPage(clas));
-            },
-            icon: const Icon(Icons.map_rounded),
-            label: const Text('План школы'),
-          ),
-        );
-      }
+      // if (Get.find<BlueprintController>().canShow) {
+      //   items.add(
+      //     TextButton.icon(
+      //       onPressed: () async {
+      //         ClassModel? clas = await PersonModel.currentStudent!.studentClass;
+      //         Get.to(() => SchoolMapPage(clas));
+      //       },
+      //       icon: const Icon(Icons.map_rounded),
+      //       label: const Text('План школы'),
+      //     ),
+      //   );
+      // }
       items.add(
         TextButton.icon(
           onPressed: () async {
@@ -98,15 +98,15 @@ class MDrawer extends StatelessWidget {
     //   ),
     // );
     // }
-    items.add(
-      TextButton.icon(
-        onPressed: () {
-          Get.to(() => const AllChatsPage());
-        },
-        icon: const Icon(Icons.chat_rounded),
-        label: const Text('общение'),
-      ),
-    );
+    // items.add(
+    //   TextButton.icon(
+    //     onPressed: () {
+    //       Get.to(() => const AllChatsPage());
+    //     },
+    //     icon: const Icon(Icons.chat_rounded),
+    //     label: const Text('общение'),
+    //   ),
+    // );
     // items.add(
     //   TextButton.icon(
     //     onPressed: () {

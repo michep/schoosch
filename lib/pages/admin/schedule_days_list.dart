@@ -23,54 +23,52 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
         title: Text(S.of(context).classScheduleName(widget._aclass.name)),
       ),
       body: SafeArea(
-        child: Scrollbar(
-          thumbVisibility: true,
-          child: ListView.builder(
-            itemCount: 7,
-            itemBuilder: (BuildContext context, int day) {
-              return FutureBuilder<List<StudentScheduleModel>>(
-                future: widget._aclass.getSchedulesDay(day + 1, forceRefresh: true),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) return const SizedBox.shrink();
-                  return ExpansionTile(
-                    controlAffinity: ListTileControlAffinity.leading,
-                    title: Text(Utils.dayName(day)),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () => _newSchedule(day + 1),
-                    ),
-                    children: [
-                      ...snapshot.data!.map(
-                        (schedule) => ListTile(
-                          title: Text(schedule.formatPeriod),
-                          trailing: const Icon(Icons.chevron_right),
-                          onTap: () => _onTap(schedule),
-                        ),
+        child: ListView.builder(
+          itemCount: 7,
+          itemBuilder: (BuildContext context, int day) {
+            return FutureBuilder<List<StudentScheduleModel>>(
+              future: widget._aclass.getSchedulesDay(day + 1, forceRefresh: true),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return const SizedBox.shrink();
+                return ExpansionTile(
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: Text(Utils.dayName(day)),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () => _newSchedule(day + 1),
+                  ),
+                  children: [
+                    ...snapshot.data!.map(
+                      (schedule) => ListTile(
+                        title: Text(schedule.formatPeriod),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () => _onTap(schedule),
                       ),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
         ),
       ),
     );
   }
 
   Future<void> _onTap(StudentScheduleModel schedule) async {
-    var res = await Get.to<DayScheduleModel>(() => ScheduleLessonsPage(widget._aclass, schedule, '${schedule.aclass.name}, ${Utils.dayName(schedule.day - 1)}'),
+    var res = await Get.to<ClassScheduleModel>(
+        () => ScheduleLessonsPage(widget._aclass, schedule, '${schedule.aclass.name}, ${Utils.dayName(schedule.day - 1)}'),
         transition: Transition.rightToLeft);
-    if (res is DayScheduleModel) {
+    if (res is ClassScheduleModel) {
       setState(() {});
     }
   }
 
   Future<void> _newSchedule(int day) async {
-    var nschedule = DayScheduleModel.empty(widget._aclass, day);
+    var nschedule = ClassScheduleModel.empty(widget._aclass, day);
     nschedule.day = day;
-    var res = await Get.to<DayScheduleModel>(() => ScheduleLessonsPage(widget._aclass, nschedule, '${nschedule.aclass.name}, ${Utils.dayName(day)}'));
-    if (res is DayScheduleModel) {
+    var res = await Get.to<ClassScheduleModel>(() => ScheduleLessonsPage(widget._aclass, nschedule, '${nschedule.aclass.name}, ${Utils.dayName(day)}'));
+    if (res is ClassScheduleModel) {
       setState(() {});
     }
   }

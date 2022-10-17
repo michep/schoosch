@@ -6,7 +6,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/student/student_dayschedule_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class StudentScheduleWidget extends StatelessWidget {
+class StudentScheduleWidget extends StatefulWidget {
   final ClassModel _class;
   final Week _week;
   final StudentModel _student;
@@ -14,9 +14,16 @@ class StudentScheduleWidget extends StatelessWidget {
   const StudentScheduleWidget(this._student, this._class, this._week, {Key? key}) : super(key: key);
 
   @override
+  State<StudentScheduleWidget> createState() => _StudentScheduleWidgetState();
+}
+
+class _StudentScheduleWidgetState extends State<StudentScheduleWidget> {
+  bool forceRefresh = false;
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<StudentScheduleModel>>(
-      future: _class.getSchedulesWeek(_week),
+      future: widget._class.getStudentSchedulesWeek(widget._week, widget._student, forceRefresh: forceRefresh),
       builder: (context, schedules) {
         if (!schedules.hasData) {
           return Utils.progressIndicator();
@@ -29,10 +36,17 @@ class StudentScheduleWidget extends StatelessWidget {
             ),
           );
         }
-        return ListView(
-          children: [
-            ...schedules.data!.map((schedule) => ClassDayScheduleTile(schedule, _student, _week.day(schedule.day - 1))),
-          ],
+        forceRefresh = false;
+        return RefreshIndicator(
+          onRefresh: () async {
+            forceRefresh = true;
+            setState(() {});
+          },
+          child: ListView(
+            children: [
+              ...schedules.data!.map((schedule) => ClassDayScheduleTile(schedule, widget._student, widget._week.day(schedule.day - 1))),
+            ],
+          ),
         );
       },
     );

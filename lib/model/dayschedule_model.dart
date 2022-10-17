@@ -1,102 +1,148 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:mutex/mutex.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class DayScheduleModel {
-  final ClassModel _class;
   String? _id;
   late int day;
   late final DateTime? from;
   late final DateTime? till;
   final List<LessonModel> _lessons = [];
   bool _lessonsLoaded = false;
+  final Mutex _lessonsMutex = Mutex();
 
   String? get id => _id;
-  ClassModel get aclass => _class;
 
-  DayScheduleModel.empty(ClassModel aclass, int day)
-      : this.fromMap(aclass, null, <String, dynamic>{
-          'day': day,
-          'from': Timestamp.fromDate(DateTime(1900)),
-          'till': null,
-        });
-
-  DayScheduleModel.fromMap(this._class, this._id, Map<String, dynamic> map) {
+  DayScheduleModel.fromMap(this._id, Map<String, dynamic> map) {
     day = map['day'] != null ? map['day'] as int : throw 'need day key in schedule $_id';
     if (day < 1 || day > 7) throw 'incorrect day in schedule $id';
-    from =
-        map['from'] != null ? DateTime.fromMillisecondsSinceEpoch((map['from'] as Timestamp).millisecondsSinceEpoch) : throw 'need from key in schedule $_id';
-    till = map['till'] != null ? DateTime.fromMillisecondsSinceEpoch((map['till'] as Timestamp).millisecondsSinceEpoch) : null;
+    from = map['from'] != null ? DateTime.tryParse(map['from']) : throw 'need from key in schedule $_id';
+    till = map['till'] != null ? DateTime.tryParse(map['till']) : null;
+
+    if (map.containsKey('lesson') && map['lesson'] is List) {
+      for (var l in map['lesson'] as List) {
+        var aclass = ClassModel.fromMap(l['class']['_id'], l['class']);
+        _lessons.add(LessonModel.fromMap(aclass, this, l['_id'], l));
+      }
+      _lessonsLoaded = true;
+    }
   }
 
   String get formatPeriod {
     return Utils.formatPeriod(from!, till);
   }
+}
 
-  Future<List<LessonModel>> allLessons({bool forceRefresh = false, DateTime? date, bool needsEmpty = false}) async {
-    if (!_lessonsLoaded || forceRefresh) {
-      _lessons.clear();
-      _lessons.addAll(await Get.find<FStore>().getScheduleLessons(
-        _class,
-        this,
-        date: date,
-        needsEmpty: needsEmpty,
-      ));
+class ClassScheduleModel extends DayScheduleModel {
+  final ClassModel _class;
+  ClassModel get aclass => _class;
+
+  ClassScheduleModel.empty(ClassModel aclass, int day)
+      : this.fromMap(aclass, null, <String, dynamic>{
+          'day': day,
+          'from': DateTime(1900).toIso8601String(),
+          'till': null,
+        });
+
+  ClassScheduleModel.fromMap(this._class, String? id, Map<String, dynamic> map) : super.fromMap(id, map);
+
+  Future<List<LessonModel>> classLessons({bool forceRefresh = false, DateTime? date, bool needsEmpty = false}) async {
+    await _lessonsMutex.acquire();
+    if (!_lessonsLoaded) {
+      _lessons.addAll(await Get.find<ProxyStore>().getScheduleLessons(_class, this, date: date, needsEmpty: needsEmpty));
       _lessonsLoaded = true;
     }
+    _lessonsMutex.release();
     return _lessons;
+
+    // await _lessonsMutex.acquire();
+    // if (!_lessonsLoaded || forceRefresh) {
+    //   _lessons.clear();
+    //   _lessons.addAll(await Get.find<ProxyStore>().getScheduleLessons(
+    //     _class,
+    //     this,
+    //     date: date,
+    //     needsEmpty: needsEmpty,
+    //   ));
+    //   _lessonsLoaded = true;
+    // }
+    // _lessonsMutex.release();
+    // return _lessons;
   }
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> res = {};
     res['day'] = day;
-    res['from'] = from;
-    res['till'] = till;
+    res['from'] = from!.toIso8601String();
+    res['till'] = till?.toIso8601String();
     return res;
   }
 
-  Future<DayScheduleModel> save() async {
-    var id = await Get.find<FStore>().saveDaySchedule(this);
+  Future<ClassScheduleModel> save() async {
+    var id = await Get.find<ProxyStore>().saveDaySchedule(this);
     _id ??= id;
     return this;
   }
 }
 
-class StudentScheduleModel extends DayScheduleModel {
-  final List<LessonModel> _studentLessons = [];
-  bool _studentLessonsLoaded = false;
+class StudentScheduleModel extends ClassScheduleModel {
+  // final List<LessonModel> _studentLessons = [];
+  // bool _studentLessonsLoaded = false;
+  // final Mutex _studentLessonsMutex = Mutex();
 
-  StudentScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map);
+  StudentScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map) {
+    // if (map.containsKey('lesson') && map['lesson'] is List) {
+    //   for (var l in map['lesson'] as List) {
+    //     _studentLessons.add(LessonModel.fromMap(aclass, this, l['_id'], l));
+    //   }
+    //   _studentLessonsLoaded = true;
+    // }
+  }
 
-  Future<List<LessonModel>> lessonsForStudent(StudentModel student, {DateTime? date}) async {
-    if (!_studentLessonsLoaded) {
-      _studentLessons.addAll(await Get.find<FStore>().getScheduleLessonsForStudent(_class, this, student, date));
-      _studentLessonsLoaded = true;
+  Future<List<LessonModel>> studentLessons(StudentModel student, {DateTime? date}) async {
+    await _lessonsMutex.acquire();
+    if (!_lessonsLoaded) {
+      _lessons.addAll(await Get.find<ProxyStore>().getScheduleLessonsForStudent(_class, this, student, date));
+      _lessonsLoaded = true;
     }
-    return _studentLessons;
+    _lessonsMutex.release();
+    return _lessons;
+
+    // await _studentLessonsMutex.acquire();
+    // if (!_studentLessonsLoaded) {
+    //   _studentLessons.addAll(await Get.find<ProxyStore>().getScheduleLessonsForStudent(_class, this, student, date));
+    //   _studentLessonsLoaded = true;
+    // }
+    // _studentLessonsMutex.release();
+    // return _studentLessons;
   }
 }
 
 class TeacherScheduleModel extends DayScheduleModel {
-  late final List<LessonModel> _teacherLessons = [];
-
-  TeacherScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map);
-
-  void addLessons(List<LessonModel> lessons) {
-    _teacherLessons.addAll(lessons);
-    _teacherLessons.sort((a, b) => a.order.compareTo(b.order));
+  TeacherScheduleModel.fromMap(String id, Map<String, Object?> map) : super.fromMap(id, map) {
+    // if (map.containsKey('lesson') && map['lesson'] is List) {
+    //   for (var l in map['lesson'] as List) {
+    //     var aclass = ClassModel.fromMap(l['class']['_id'], l['class']);
+    //     _teacherLessons.add(LessonModel.fromMap(aclass, this, l['_id'], l));
+    //   }
+    // }
   }
 
-  Future<List<LessonModel>> lessonsForTeacher(TeacherModel teacher, Week week) async {
-    return _teacherLessons;
+  // void addLessons(List<LessonModel> lessons) {
+  //   _teacherLessons.addAll(lessons);
+  //   _teacherLessons.sort((a, b) => a.order.compareTo(b.order));
+  // }
+
+  Future<List<LessonModel>> teacherLessons(TeacherModel teacher, Week week) async {
+    return _lessons;
   }
 
-  Future<List<LessonModel>> getLessons() async {
-    return _teacherLessons;
-  }
+  // Future<List<LessonModel>> getLessons() async {
+  //   return _teacherLessons;
+  // }
 }

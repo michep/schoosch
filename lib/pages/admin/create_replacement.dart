@@ -152,7 +152,7 @@ class _CreateReplacementState extends State<CreateReplacement> {
         'curriculum_id': newCurriculum!.id,
         'venue_id': newVenue!.id,
         'teacher_id': newTeacher!.id,
-        'date': date,
+        'date': date!.toIso8601String(),
       }).whenComplete(() {
         setState(() {
           isLoading = false;
@@ -171,7 +171,7 @@ class _CreateReplacementState extends State<CreateReplacement> {
   }
 
   Future<List<CurriculumModel>> _initCurriculumOptions() {
-    return InstitutionModel.currentInstitution.curriculums;
+    return InstitutionModel.currentInstitution.curriculums();
   }
 
   bool _setCurriculum(CurriculumModel? value) {

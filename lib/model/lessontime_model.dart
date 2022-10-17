@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -22,20 +22,21 @@ class LessontimeModel {
     till = TimeOfDay(hour: int.parse(t[0]), minute: int.parse(t[1]));
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'from': Utils.formatTimeOfDay(from),
-      'till': Utils.formatTimeOfDay(till),
-    };
+  Map<String, dynamic> toMap({bool withId = false}) {
+    Map<String, dynamic> res = {};
+    if (withId) res['_id'] = id;
+    res['from'] = Utils.formatTimeOfDay(from);
+    res['till'] = Utils.formatTimeOfDay(till);
+    return res;
   }
 
   Future<LessontimeModel> save(DayLessontimeModel daylessontime) async {
-    await Get.find<FStore>().saveLessontime(daylessontime, this);
+    await Get.find<ProxyStore>().saveLessontime(daylessontime, this);
     return this;
   }
 
   Future<void> delete(DayLessontimeModel daylessontime) async {
-    return Get.find<FStore>().deleteLessontime(daylessontime, this);
+    return Get.find<ProxyStore>().deleteLessontime(daylessontime, this);
   }
 
   String formatPeriod() {

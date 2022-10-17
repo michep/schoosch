@@ -49,7 +49,7 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
       //   (d, f) => widget.lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
       //   readOnly: true,
       // ),
-      ClassTasksCombinedPage(
+      ClassHomeworksCombinedPage(
         widget.teacher,
         widget.curriculum,
         widget.date,
@@ -80,13 +80,13 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
       //   widget.lesson,
       //   (d, f) => widget.lesson.homeworkOnDateForClassAndAllStudents(d, forceRefresh: f),
       // ),
-      ClassTasksCombinedPage(
+      ClassHomeworksCombinedPage(
         widget.teacher,
         widget.curriculum,
         widget.date,
         widget.lesson,
-        (d, f) => widget.lesson.homeworkOnDateForClassAndAllStudents(d, forceRefresh: f),
-        (d, f) => widget.lesson.homeworOnDateForClass(d, forceRefresh: f),
+        (d, f) => widget.lesson.homeworkNextLessonForClassAndAllStudents(d, forceRefresh: f),
+        (d, f) => widget.lesson.homeworkNextLessonForClass(d, forceRefresh: f),
       ),
     ];
     super.initState();
@@ -94,6 +94,7 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
 
   @override
   Widget build(BuildContext context) {
+// <<<<<<< HEAD
     return Scaffold(
       appBar: MAppBar(widget.curriculum.aliasOrName),
       body: SafeArea(
@@ -265,6 +266,88 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
           activeColor: Theme.of(context).colorScheme.onBackground,
           tabActiveBorder: Border.all(
             color: Theme.of(context).colorScheme.onBackground,
+// =======
+//     return DefaultTabController(
+//       length: 6,
+//       child: Scaffold(
+//         appBar: MAppBar(curriculum.aliasOrName),
+//         body: SafeArea(
+//           child: Padding(
+//             padding: const EdgeInsets.all(8),
+//             child: Column(
+//               mainAxisSize: MainAxisSize.min,
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(lesson.aclass.name),
+//                 Text(Utils.formatDatetime(date)),
+//                 Text('${lesson.order} ${S.of(context).lesson}'),
+//                 Text(time.formatPeriod()),
+//                 FutureBuilder<TeacherModel?>(
+//                   future: curriculum.master,
+//                   builder: (context, snapshot) {
+//                     if (!snapshot.hasData || snapshot.data == null) return const SizedBox.shrink();
+//                     return Text(snapshot.data!.fullName);
+//                   },
+//                 ),
+//                 TabBar(
+//                   labelPadding: const EdgeInsets.all(16),
+//                   isScrollable: true,
+//                   tabs: [
+//                     Text(S.of(context).currentLessonClassHomework),
+//                     Text(S.of(context).currentLessonPersonalHomeworks),
+//                     Text(S.of(context).currentLessonAbsences),
+//                     Text(S.of(context).currentLessonMarks),
+//                     Text(S.of(context).nextLessonClassHomework),
+//                     Text(S.of(context).nextLessonPersonalHomeworks),
+//                   ],
+//                 ),
+//                 Expanded(
+//                   child: TabBarView(
+//                     children: [
+//                       ClassTaskWithCompetionsPage(
+//                         teacher,
+//                         curriculum,
+//                         date,
+//                         lesson,
+//                         (d, f) => lesson.homeworkThisLessonForClass(d, forceRefresh: f),
+//                         readOnly: true,
+//                       ),
+//                       StudentsTasksWithCompetionsPage(
+//                         teacher,
+//                         curriculum,
+//                         date,
+//                         lesson,
+//                         (d, f) => lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
+//                         readOnly: true,
+//                       ),
+//                       StudentsAbsencePage(
+//                         date,
+//                         lesson,
+//                       ),
+//                       StudentsMarksPage(
+//                         date,
+//                         lesson,
+//                       ),
+//                       ClassTaskWithCompetionsPage(
+//                         teacher,
+//                         curriculum,
+//                         date,
+//                         lesson,
+//                         (d, f) => lesson.homeworkNextLessonForClass(d, forceRefresh: f),
+//                       ),
+//                       StudentsTasksWithCompetionsPage(
+//                         teacher,
+//                         curriculum,
+//                         date,
+//                         lesson,
+//                         (d, f) => lesson.homeworkNextLessonForClassAndAllStudents(d, forceRefresh: f),
+//                       ),
+//                     ],
+//                   ),
+//                 )
+//               ],
+//             ),
+// >>>>>>> proxy
           ),
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           tabs: const [

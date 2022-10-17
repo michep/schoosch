@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
@@ -10,20 +9,25 @@ class AbsenceModel {
   late final String personId;
   late final int lessonOrder;
   // late final String status;
+  StudentModel? _student;
 
   String? get id => _id;
 
   AbsenceModel.fromMap(this._id, Map<String, dynamic> map) {
-    date =
-        map['date'] != null ? DateTime.fromMillisecondsSinceEpoch((map['date'] as Timestamp).millisecondsSinceEpoch) : throw 'need date key in attendance $_id';
+    date = map['date'] != null ? DateTime.tryParse(map['date'])! : throw 'need date key in attendance $_id';
     personId = map['person_id'] != null ? map['person_id'] as String : throw 'need person_id key in attendance $_id';
     lessonOrder = map['lesson_order'] != null ? map['lesson_order'] as int : throw 'need lesson_order key in attendance $_id';
     // status = map['status'] != null ? map['status'] as String : throw 'need status key in attendance $_id'; //TODO: status should be a emun with extensions
+
+    if (map.containsKey('student') && map['student'] is Map) {
+      _student = StudentModel.fromMap((map['student'] as Map<String, dynamic>)['_id'] as String, map['student'] as Map<String, dynamic>);
+    }
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool withId = false}) {
     Map<String, dynamic> res = {};
-    res['date'] = date;
+    if (withId) res['_id'] = id;
+    res['date'] = date.toIso8601String();
     res['person_id'] = personId;
     res['lesson_order'] = lessonOrder;
     // res['status'] = status;
@@ -31,10 +35,11 @@ class AbsenceModel {
   }
 
   Future<void> delete(LessonModel lesson) async {
-    Get.find<FStore>().deleteAbsence(lesson, this);
+    await Get.find<ProxyStore>().deleteAbsence(this);
   }
 
   Future<StudentModel> get student async {
-    return (await Get.find<FStore>().getPerson(personId)).asStudent!;
+    _student ??= (await Get.find<ProxyStore>().getPerson(personId)).asStudent;
+    return _student!;
   }
 }

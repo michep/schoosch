@@ -77,5 +77,8 @@ class _VenuePageState extends State<VenuePage> {
     }
   }
 
-  Future<void> _delete(VenueModel venue) async {}
+  Future<void> _delete(VenueModel venue) async {
+    venue.delete();
+    Get.back<VenueModel>(result: venue);
+  }
 }

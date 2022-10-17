@@ -118,37 +118,33 @@ class SelectableValueDropdownFormFieldState<T extends Object> extends State<Sele
         elevation: 4.0,
         child: ConstrainedBox(
           constraints: BoxConstraints(maxHeight: 200, maxWidth: _width),
-          child: Scrollbar(
+          child: ListView.builder(
             controller: _scroll,
-            thumbVisibility: true,
-            child: ListView.builder(
-              controller: _scroll,
-              padding: const EdgeInsets.all(8.0),
-              itemCount: options.length,
-              itemBuilder: (BuildContext context, int index) {
-                final T option = options.elementAt(index);
-                return InkWell(
-                  onTap: () {
-                    onSelected(option);
+            padding: const EdgeInsets.all(8.0),
+            itemCount: options.length,
+            itemBuilder: (BuildContext context, int index) {
+              final T option = options.elementAt(index);
+              return InkWell(
+                onTap: () {
+                  onSelected(option);
+                },
+                child: Builder(
+                  builder: (BuildContext context) {
+                    final bool highlight = autocomlete.AutocompleteHighlightedOption.of(context) == index;
+                    if (highlight) {
+                      SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
+                        Scrollable.ensureVisible(context, alignment: 0.5);
+                      });
+                    }
+                    return Container(
+                      color: highlight ? Theme.of(context).focusColor : null,
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(option.toString()),
+                    );
                   },
-                  child: Builder(
-                    builder: (BuildContext context) {
-                      final bool highlight = autocomlete.AutocompleteHighlightedOption.of(context) == index;
-                      if (highlight) {
-                        SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
-                          Scrollable.ensureVisible(context, alignment: 0.5);
-                        });
-                      }
-                      return Container(
-                        color: highlight ? Theme.of(context).focusColor : null,
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(option.toString()),
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),

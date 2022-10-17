@@ -20,7 +20,7 @@ class _HomeworkCardState extends State<HomeworkCard> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<CompletionFlagModel?>(
-      future: widget.homework.getCompletion(widget.student),
+      future: widget.homework.getCompletion(widget.student, forceRefresh: true),
       builder: (context, snapshot) {
         bool isChecked = false;
         bool isConfirmed = false;
@@ -48,21 +48,22 @@ class _HomeworkCardState extends State<HomeworkCard> {
                   text: widget.homework.text,
                   onOpen: (link) => _openLink(link.url),
                 ),
-                onTap: () async {
-                  var completion = await widget.homework.getCompletion(widget.student);
-                  onTap(completion).whenComplete(() {
-                    setState(() {});
-                  });
-                },
-                trailing: PersonModel.currentUser!.currentType == PersonType.parent
-                    ? null
-                    : Icon(
-                        isConfirmed
-                            ? Icons.check_circle_outline_rounded
-                            : isChecked
-                                ? Icons.circle_outlined
-                                : Icons.add_circle_outline,
-                      ),
+                trailing: IconButton(
+                  onPressed: PersonModel.currentUser!.currentType == PersonType.parent
+                      ? null
+                      : () async {
+                          // var completion = await widget.homework.getCompletion(widget.student);
+                          var completion = snapshot.data;
+                          onTap(completion).whenComplete(() {
+                            setState(() {});
+                          });
+                        },
+                  icon: Icon(isConfirmed
+                      ? Icons.check_circle_outline_rounded
+                      : isChecked
+                          ? Icons.circle_outlined
+                          : Icons.add_circle_outline),
+                ),
               ),
             ],
           ),
@@ -71,20 +72,19 @@ class _HomeworkCardState extends State<HomeworkCard> {
     );
   }
 
-  Future<void> onTap(CompletionFlagModel? c) => showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Padding(
+  Future<void> onTap(CompletionFlagModel? c) => Get.bottomSheet(
+        Card(
+          child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: ElevatedButton.icon(
               onPressed: () async {
                 if (c == null) {
                   await widget.homework.createCompletion(widget.student);
                 } else if (c.status == Status.completed) {
-                  await widget.homework.deleteCompletion(widget.student);
+                  await c.delete();
                 }
                 setState(() {});
-                Navigator.pop(context);
+                Get.back();
               },
               label: Text(c == null
                   ? 'сообщить о выполнении'
@@ -97,8 +97,8 @@ class _HomeworkCardState extends State<HomeworkCard> {
                       ? Icons.close
                       : Icons.check),
             ),
-          );
-        },
+          ),
+        ),
       );
 
   Future<void> _openLink(String adress) async {

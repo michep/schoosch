@@ -360,7 +360,7 @@ class _RawAutocompleteState<T extends Object> extends State<RawAutocomplete<T>> 
           );
         },
       );
-      Overlay.of(context, rootOverlay: true)!.insert(_floatingOptions!);
+      Overlay.of(context, rootOverlay: true)?.insert(_floatingOptions!);
     } else if (_floatingOptions != null) {
       _floatingOptions!.remove();
       _floatingOptions = null;

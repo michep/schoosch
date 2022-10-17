@@ -24,23 +24,26 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
     return Stack(
       children: [
         FutureBuilder<Map<String, List<MarkModel>>>(
-          future: widget._lesson.getAllMarks(widget._date),
+          future: widget._lesson.getAllMarks(widget._date, forceRefresh: true),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const SizedBox.shrink();
-            return snapshot.data!.isEmpty ? const Center(child: Text('Вы еще не ставили оценок.')) : ListView(
-              children: [...snapshot.data!.keys.map(
-                  (e) => MarkListTile(
-                    e,
-                    widget._lesson,
-                    widget._date,
-                    deleteMark,
-                    editMark,
-                    widget.readOnly,
-                    key: ValueKey(e),
-                  ),
-                )
-              ].toList(),
-            );
+            return snapshot.data!.isEmpty
+                ? const Center(child: Text('Вы еще не ставили оценок.'))
+                : ListView(
+                    children: [
+                      ...snapshot.data!.keys.map(
+                        (e) => MarkListTile(
+                          e,
+                          widget._lesson,
+                          widget._date,
+                          deleteMark,
+                          editMark,
+                          widget.readOnly,
+                          key: ValueKey(e),
+                        ),
+                      )
+                    ].toList(),
+                  );
           },
         ),
         Visibility(
@@ -75,8 +78,9 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
     }
   }
 
-  void deleteMark(MarkModel mark) {
-    mark.delete().then((value) => setState(() {}));
+  void deleteMark(MarkModel mark) async {
+    await mark.delete();
+    setState(() {});
   }
 
   Future<void> editMark(MarkModel mark) async {
@@ -169,19 +173,21 @@ class MarkTile extends StatelessWidget {
           return Text(snapshot.data!.fullName);
         },
       ),
-      trailing: readOnly ? null : Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            onPressed: () => editFunc(mark),
-            icon: const Icon(Icons.edit),
-          ),
-          IconButton(
-            onPressed: () => deleteFunc(mark),
-            icon: const Icon(Icons.delete),
-          ),
-        ],
-      ),
+      trailing: readOnly
+          ? null
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: () => editFunc(mark),
+                  icon: const Icon(Icons.edit),
+                ),
+                IconButton(
+                  onPressed: () => deleteFunc(mark),
+                  icon: const Icon(Icons.delete),
+                ),
+              ],
+            ),
     );
   }
 }

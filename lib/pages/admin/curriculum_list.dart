@@ -54,31 +54,28 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
             ),
             Expanded(
               child: FutureBuilder<List<CurriculumModel>>(
-                  future: widget._institution.curriculums,
+                  future: widget._institution.curriculums(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) return Utils.progressIndicator();
                     var sorted = snapshot.data!;
                     sorted.sort((a, b) => a.name.compareTo(b.name));
-                    return Scrollbar(
-                      thumbVisibility: true,
-                      child: ListView(
-                        children: [
-                          ...sorted.where(_filter).map(
-                                (v) => ListTile(
-                                  onTap: () => _onTap(v),
-                                  title: Text(v.name),
-                                  subtitle: FutureBuilder<TeacherModel?>(
-                                      future: v.master,
-                                      builder: (context, snapshot) {
-                                        if (!snapshot.hasData) return const SizedBox.shrink();
-                                        return Text(snapshot.data!.fullName);
-                                      }),
-                                  leading: widget.selectionMode ? const Icon(Icons.chevron_left) : null,
-                                  trailing: widget.selectionMode ? null : const Icon(Icons.chevron_right),
-                                ),
+                    return ListView(
+                      children: [
+                        ...sorted.where(_filter).map(
+                              (v) => ListTile(
+                                onTap: () => _onTap(v),
+                                title: Text(v.name),
+                                subtitle: FutureBuilder<TeacherModel?>(
+                                    future: v.master,
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) return const SizedBox.shrink();
+                                      return Text(snapshot.data!.fullName);
+                                    }),
+                                leading: widget.selectionMode ? const Icon(Icons.chevron_left) : null,
+                                trailing: widget.selectionMode ? null : const Icon(Icons.chevron_right),
                               ),
-                        ],
-                      ),
+                            ),
+                      ],
                     );
                   }),
             ),

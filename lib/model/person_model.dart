@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:isoweek/isoweek.dart';
+import 'package:isoweek/isoweek.dart' as isoweek;
 import 'package:mutex/mutex.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
@@ -58,6 +58,23 @@ extension PersonTypeExt on PersonType {
         throw 'none as PersontType';
     }
   }
+
+  String localizedName(S S) {
+    switch (this) {
+      case PersonType.admin:
+        return S.roleAdmin;
+      case PersonType.teacher:
+        return S.roleTeacher;
+      case PersonType.parent:
+        return S.roleParent;
+      case PersonType.student:
+        return S.roleStudent;
+      case PersonType.observer:
+        return S.roleObserver;
+      case PersonType.none:
+        throw 'none as PersontType';
+    }
+  }
 }
 
 extension PersonTypeList on List<PersonType> {
@@ -93,35 +110,10 @@ class PersonModel {
     firstname = map['firstname'] != null ? map['firstname'] as String : throw 'need firstname key in people $id';
     middlename = map['middlename'] != null ? map['middlename'] as String : null;
     lastname = map['lastname'] != null ? map['lastname'] as String : throw 'need lastname key in people $id';
-    birthday = map['birthday'] != null ? DateTime.fromMillisecondsSinceEpoch((map['birthday'] as Timestamp).millisecondsSinceEpoch) : null;
+    birthday = map['birthday'] != null ? DateTime.tryParse(map['birthday']) : null;
     email = map['email'] != null ? map['email'] as String : throw 'need email key in people $id';
-    map['type'] != null ? types.addAll((map['type'] as List<dynamic>).map((e) => PersonTypeExt._parse(e))) : throw 'need type key in people $id';
+    map['type'] != null ? types.addAll((map['type'] as List).map((e) => PersonTypeExt._parse(e))) : throw 'need type key in people $id';
     if (recursive) {
-      // for (var t in types) {
-      //   switch (t) {
-      //     case PersonType.parent:
-      //       _asParent = ParentModel.fromMap(id, map)..up = this;
-      //       _currentType = t;
-      //       break;
-      //     case PersonType.student:
-      //       _asStudent = StudentModel.fromMap(id, map)..up = this;
-      //       _currentType = t;
-      //       break;
-      //     case PersonType.teacher:
-      //       _asTeacher = TeacherModel.fromMap(id, map)..up = this;
-      //       _currentType = t;
-      //       break;
-      //     case PersonType.observer:
-      //       _asObserver = ObserverModel.fromMap(id, map)..up = this;
-      //       _currentType = t;
-      //       break;
-      //     case PersonType.admin:
-      //       _currentType = t;
-      //       break;
-      //     default:
-      //       throw 'incorrect type in people $id';
-      //   }
-      // }
       if (types.contains(PersonType.admin)) {
         _currentType = PersonType.admin;
       }
@@ -144,7 +136,7 @@ class PersonModel {
     }
   }
 
-  static PersonModel? get currentUser => Get.find<FStore>().currentUser;
+  static PersonModel? get currentUser => Get.find<ProxyStore>().currentUser;
   static StudentModel? get currentStudent => currentUser?._asStudent;
   static TeacherModel? get currentTeacher => currentUser?._asTeacher;
   static ParentModel? get currentParent => currentUser?._asParent;
@@ -177,26 +169,29 @@ class PersonModel {
   String get fullName => middlename != null ? '$lastname $firstname $middlename' : '$lastname $firstname';
   String get abbreviatedName => middlename != null ? '$lastname ${firstname[0]}. ${middlename![0]}.' : '$lastname ${firstname[0]}.';
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool withId = false}) {
     Map<String, dynamic> res = {};
+    if (withId) res['_id'] = id;
     res['firstname'] = firstname;
     res['middlename'] = middlename;
     res['lastname'] = lastname;
-    res['birthday'] = birthday != null ? Timestamp.fromDate(birthday!) : null;
+    res['birthday'] = birthday?.toIso8601String();
     res['email'] = email;
     res['type'] = types.toStringList();
+    if (asObserver != null) res.addAll(asObserver!.toMap());
+    if (asParent != null) res.addAll(asParent!.toMap());
     return res;
   }
 
   Future<PersonModel> save() async {
-    var id = await Get.find<FStore>().savePerson(this);
+    var id = await Get.find<ProxyStore>().savePerson(this);
     _id ??= id;
     return this;
   }
 
-  Future<bool> alreadyHasChat() async {
-    return await Get.find<FStore>().checkChatExistence(this);
-  }
+  // Future<bool> alreadyHasChat() async {
+  //   return await Get.find<MStore>().checkChatExistence(this);
+  // }
 }
 
 class StudentModel extends PersonModel {
@@ -222,7 +217,7 @@ class StudentModel extends PersonModel {
   Future<ClassModel?> get studentClass async {
     await _studentClassMutex.acquire();
     if (!_studentClassLoaded) {
-      _studentClass = await Get.find<FStore>().getClassForStudent(this);
+      _studentClass = await Get.find<ProxyStore>().getClassByStudent(this);
       _studentClassLoaded = true;
     }
     _studentClassMutex.release();
@@ -233,7 +228,7 @@ class StudentModel extends PersonModel {
     await _curriculumsMutex.acquire();
     if (!_curriculumsLoaded || forceRefresh) {
       _curriculums.clear();
-      _curriculums.addAll(await Get.find<FStore>().getStudentCurriculums(this));
+      _curriculums.addAll(await Get.find<ProxyStore>().getStudentCurriculums(this));
       _curriculumsLoaded = true;
     }
     _curriculumsMutex.release();
@@ -241,16 +236,19 @@ class StudentModel extends PersonModel {
   }
 
   Future<List<MarkModel>> curriculumMarks(CurriculumModel cur) async {
-    return Get.find<FStore>().getStudentCurriculumMarks(this, cur);
+    return Get.find<ProxyStore>().getStudentCurriculumMarks(this, cur);
   }
 
   Future<List<MarkModel>> curriculumTeacherMarks(CurriculumModel cur, TeacherModel teacher) async {
-    return Get.find<FStore>().getStudentCurriculumTeacherMarks(this, cur, teacher);
+    return Get.find<ProxyStore>().getStudentCurriculumTeacherMarks(this, cur, teacher);
   }
 }
 
 class TeacherModel extends PersonModel {
-  final Map<Week, List<TeacherScheduleModel>> _schedule = {};
+  final Map<isoweek.Week, List<TeacherScheduleModel>> _weekTeccherSchedules = {};
+  final List<CurriculumModel> _curriculums = [];
+  bool _curriculumsLoaded = false;
+  final Mutex _curriculumsMutex = Mutex();
 
   TeacherModel.empty()
       : super.fromMap(null, <String, dynamic>{
@@ -264,19 +262,29 @@ class TeacherModel extends PersonModel {
   TeacherModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
   Future<double> get averageRating async {
-    return Get.find<FStore>().getAverageTeacherRating(this);
+    return Get.find<ProxyStore>().getAverageTeacherRating(this);
   }
 
   Future<void> createRating(PersonModel user, int rating, String comment) async {
-    return Get.find<FStore>().saveTeacherRating(this, user, DateTime.now(), rating, comment);
+    return Get.find<ProxyStore>().saveTeacherRating(this, user, DateTime.now(), rating, comment);
   }
 
-  Future<List<TeacherScheduleModel>> getSchedulesWeek(Week week) async {
-    return _schedule[week] ??= await Get.find<FStore>().getTeacherWeekSchedule(this, week);
+  Future<List<TeacherScheduleModel>> getSchedulesWeek(isoweek.Week week) async {
+    return _weekTeccherSchedules[week] ??= await Get.find<ProxyStore>().getTeacherWeekSchedule(this, week);
   }
 
+  Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
+    await _curriculumsMutex.acquire();
+    if (!_curriculumsLoaded || forceRefresh) {
+      _curriculums.clear();
+      _curriculums.addAll(await Get.find<ProxyStore>().getTeacherCurriculums(this));
+      _curriculumsLoaded = true;
+    }
+    _curriculumsMutex.release();
+    return _curriculums;
+  }
   // Future<void> confirmCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
-  //   return await Get.find<FStore>().confirmCompletion(hw, completion);
+  //   return await Get.find<MStore>().confirmCompletion(hw, completion);
   // }
 }
 
@@ -298,16 +306,16 @@ class ParentModel extends PersonModel {
 
   ParentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
     map['student_ids'] != null
-        ? studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String))
+        // ? studentIds.addAll((map['student_ids'] as List).map<String>((e) => e.runtimeType == String ? e : (e as ObjectId).toHexString()))
+        ? studentIds.addAll((map['student_ids'] as List).map<String>((e) => e as String))
         : throw 'need student_ids key in people for parent $id';
   }
 
   Future<List<StudentModel>> children({forceRefresh = false}) async {
     if (!_studentsLoaded || forceRefresh) {
       _students.clear();
-      var store = Get.find<FStore>();
       for (var id in studentIds) {
-        var p = await store.getPerson(id);
+        var p = await Get.find<ProxyStore>().getPerson(id);
         if (p.types.contains(PersonType.student)) {
           p.asStudent!.parent = this;
           _students.add(p.asStudent!);
@@ -325,8 +333,9 @@ class ParentModel extends PersonModel {
   void setChild(StudentModel val) => _selectedChild = val;
 
   @override
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> res = super.toMap();
+  Map<String, dynamic> toMap({bool withId = false}) {
+    Map<String, dynamic> res = super.toMap(withId: withId);
+    // Map<String, dynamic> res = {};
     res['student_ids'] = studentIds;
     return res;
   }
@@ -348,26 +357,31 @@ class ObserverModel extends PersonModel {
 
   ObserverModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
     map['class_ids'] != null
-        ? classIds.addAll((map['class_ids'] as List<dynamic>).map((e) => e as String))
+        // ? classIds.addAll((map['class_ids'] as List).map<String>((e) => e.runtimeType == String ? e : (e as ObjectId).toHexString()))
+        ? classIds.addAll((map['class_ids'] as List).map<String>((e) => e as String))
         : throw 'need class_ids key in people for observer $id';
   }
 
   Future<List<ClassModel>> classes({forceRefresh = false}) async {
     if (!_classesLoaded || forceRefresh) {
       _classes.clear();
-      var store = Get.find<FStore>();
-      for (var id in classIds) {
-        var cl = await store.getClass(id);
-        _classes.add(cl);
-        _classesLoaded = true;
-      }
+      _classes.addAll(await Get.find<ProxyStore>().getClassesByIds(classIds));
+      _classesLoaded = true;
+
+      // var store = Get.find<ProxyStore>();
+      // for (var id in classIds) {
+      //   var cl = await store.getClass(id);
+      //   _classes.add(cl);
+      //   _classesLoaded = true;
+      // }
     }
     return _classes;
   }
 
   @override
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> res = super.toMap();
+  Map<String, dynamic> toMap({bool withId = false}) {
+    Map<String, dynamic> res = super.toMap(withId: withId);
+    // Map<String, dynamic> res = {};
     res['class_ids'] = classIds;
     return res;
   }

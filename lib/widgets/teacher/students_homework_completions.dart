@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
@@ -14,7 +13,7 @@ class StudentsTasksWithCompetionsPage extends StatefulWidget {
   final CurriculumModel _curriculum;
   final TeacherModel? _teacher;
   final LessonModel _lesson;
-  final Future<Map<String, HomeworkModel?>> Function(DateTime, bool) _hwsFuture;
+  final Future<Map<String, List<HomeworkModel?>>> Function(DateTime, bool) _hwsFuture;
 
   final bool readOnly;
 
@@ -30,7 +29,7 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
   Widget build(BuildContext context) {
     List<String> studentsIdsWithHW = [];
     Map<String, dynamic> hws = {};
-    return FutureBuilder<Map<String, HomeworkModel?>>(
+    return FutureBuilder<Map<String, List<HomeworkModel?>>>(
       future: widget._hwsFuture(widget._date, true),
       builder: (context, snapHWs) {
         if (snapHWs.connectionState == ConnectionState.done) {
@@ -80,11 +79,12 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
     var res = await Get.to<bool>(
       () => HomeworkPage(
         widget._lesson,
+        widget._curriculum,
         HomeworkModel.fromMap(
           null,
           {
             'class_id': widget._lesson.aclass.id,
-            'date': Timestamp.fromDate(widget._date),
+            'date': widget._date.toIso8601String(),
             'text': '',
             'teacher_id': widget._teacher!.id,
             'curriculum_id': widget._curriculum.id,
@@ -102,7 +102,7 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
 
   void editStudentHomework(HomeworkModel hw, List<String> studentIDs) async {
     studentIDs.remove(hw.studentId);
-    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, studentIDs, true, isPersonalHomework: true));
+    var res = await Get.to(() => HomeworkPage(widget._lesson, widget._curriculum, hw, studentIDs, true, isPersonalHomework: true));
     if (res is bool && res == true) {
       setState(() {});
     }
@@ -111,10 +111,10 @@ class _StudentsTasksWithCompetionsPageState extends State<StudentsTasksWithCompe
   void toggleHomeworkCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
     switch (completion.status) {
       case Status.completed:
-        await hw.confirmCompletion(completion, PersonModel.currentUser!);
+        await completion.confirm(PersonModel.currentUser!);
         break;
       case Status.confirmed:
-        await hw.unconfirmCompletion(completion, PersonModel.currentUser!);
+        await completion.unconfirm(PersonModel.currentUser!);
         break;
       default:
     }

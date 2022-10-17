@@ -1,6 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
@@ -14,13 +16,15 @@ import 'package:schoosch/widgets/utils.dart';
 
 class HomeworkPage extends StatefulWidget {
   final LessonModel lesson;
+  final CurriculumModel curriculum;
   final HomeworkModel homework;
   final StudentModel? student = null;
   final bool isPersonalHomework;
   final bool doErrorOnEmptyStudent;
   final List<String> studentIds;
 
-  const HomeworkPage(this.lesson, this.homework, this.studentIds, this.doErrorOnEmptyStudent, {Key? key, this.isPersonalHomework = true}) : super(key: key);
+  const HomeworkPage(this.lesson, this.curriculum, this.homework, this.studentIds, this.doErrorOnEmptyStudent, {Key? key, this.isPersonalHomework = true})
+      : super(key: key);
 
   @override
   State<HomeworkPage> createState() => _HomeworkPageState();
@@ -30,8 +34,10 @@ class _HomeworkPageState extends State<HomeworkPage> {
   final _formKey = GlobalKey<FormState>();
   final _studentFieldKey = GlobalKey<FormFieldState>();
   StudentModel? _student;
+  DateTime? _todate;
   final TextEditingController _studentcont = TextEditingController();
   final TextEditingController _commentcont = TextEditingController();
+  final TextEditingController _todatecont = TextEditingController();
   final ScrollController _scrollcon = ScrollController();
 
   @override
@@ -39,6 +45,14 @@ class _HomeworkPageState extends State<HomeworkPage> {
     _student = widget.student;
     _commentcont.value = TextEditingValue(text: widget.homework.text);
     if (_student != null) _studentcont.value = TextEditingValue(text: _student!.fullName);
+    Get.find<ProxyStore>().getNextLessonDate(widget.lesson.aclass, widget.curriculum, widget.homework.date).then(
+          (value) => setState(
+            () {
+              _todate = value;
+              _todatecont.value = TextEditingValue(text: DateFormat('dd MMM yyyy').format(value));
+            },
+          ),
+        );
     super.initState();
   }
 
@@ -76,18 +90,33 @@ class _HomeworkPageState extends State<HomeworkPage> {
                     callback: (value) => _setStudent(value),
                     isUnneccesary: true,
                   ),
-                Scrollbar(
-                  controller: _scrollcon,
-                  thumbVisibility: true,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      label: Text(S.of(context).homeworkTextTitle),
-                    ),
-                    controller: _commentcont,
-                    maxLines: 3,
-                    scrollController: _scrollcon,
-                    validator: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty),
+                TextFormField(
+                  decoration: InputDecoration(
+                    label: Text(S.of(context).homeworkTextTitle),
                   ),
+                  controller: _commentcont,
+                  maxLines: 3,
+                  scrollController: _scrollcon,
+                  validator: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty),
+                ),
+                DateTimeField(
+                  controller: _todatecont,
+                  initialValue: _todate,
+                  format: DateFormat('dd MMM yyyy'),
+                  onChanged: (DateTime? date) => _todate = date,
+                  decoration: InputDecoration(
+                    label: Text(loc.todateTitle),
+                  ),
+                  onShowPicker: (context, currentValue) async {
+                    var date = await showDatePicker(
+                      context: context,
+                      firstDate: DateTime(1900),
+                      initialDate: currentValue ?? DateTime.now(),
+                      lastDate: DateTime(2100),
+                    );
+                    return date;
+                  },
+                  validator: (value) => Utils.validateDateTimeNotEmpty(value, loc.errorScheduleFromDateEmpty),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -133,7 +162,7 @@ class _HomeworkPageState extends State<HomeworkPage> {
     if (widget.doErrorOnEmptyStudent && _student == null) return 'Задание для класса уже существует, выберите ученика';
     res = Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty);
     if (res != null) return res;
-    if (widget.studentIds.contains(_student?.id)) return S.of(context).errorHomeWorkExists;
+    if (_student != null && widget.studentIds.contains(_student!.id!)) return S.of(context).errorHomeWorkExists;
     return null;
   }
 
@@ -142,7 +171,8 @@ class _HomeworkPageState extends State<HomeworkPage> {
       var nhw = HomeworkModel.fromMap(
         widget.homework.id,
         {
-          'date': Timestamp.fromDate(widget.homework.date),
+          'date': widget.homework.date.toIso8601String(),
+          'todate': _todate?.toIso8601String(),
           'text': _commentcont.value.text,
           'class_id': widget.homework.classId,
           'student_id': _student?.id,

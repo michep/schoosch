@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
@@ -79,17 +78,14 @@ class _MarkPageState extends State<MarkPage> {
                     }
                   },
                 ),
-                Scrollbar(
-                  controller: _scrollcon,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      label: Text(S.of(context).commentTitle),
-                    ),
-                    controller: _commentcont,
-                    scrollController: _scrollcon,
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 3,
+                TextFormField(
+                  decoration: InputDecoration(
+                    label: Text(S.of(context).commentTitle),
                   ),
+                  controller: _commentcont,
+                  scrollController: _scrollcon,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 3,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -141,7 +137,7 @@ class _MarkPageState extends State<MarkPage> {
         {
           'teacher_id': widget.mark.teacherId,
           'student_id': _student!.id,
-          'date': Timestamp.fromDate(widget.mark.date),
+          'date': widget.mark.date.toIso8601String(),
           'curriculum_id': widget.mark.curriculumId,
           'lesson_order': widget.mark.lessonOrder,
           'type': markType,

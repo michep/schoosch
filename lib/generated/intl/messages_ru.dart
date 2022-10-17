@@ -24,7 +24,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m1(type) => "Новый ${type}";
 
-  static String m2(order) => "${order} урок\'";
+  static String m2(order) => "${order} урок";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -176,6 +176,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Преподаватель"),
         "replacementsTitle":
             MessageLookupByLibrary.simpleMessage("Подмены в расписании"),
+        "roleAdmin": MessageLookupByLibrary.simpleMessage("Администратор"),
+        "roleObserver": MessageLookupByLibrary.simpleMessage("Наблюдатель"),
+        "roleParent": MessageLookupByLibrary.simpleMessage("Родитель"),
+        "roleStudent": MessageLookupByLibrary.simpleMessage("Ученик"),
+        "roleTeacher": MessageLookupByLibrary.simpleMessage("Учитель"),
         "saveChanges":
             MessageLookupByLibrary.simpleMessage("Сохранить изменения"),
         "scheduleFromDate":
@@ -190,6 +195,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Поставить оценку"),
         "studentTitle": MessageLookupByLibrary.simpleMessage("Ученик"),
         "tillTitle": MessageLookupByLibrary.simpleMessage("Время окончания"),
+        "todateTitle": MessageLookupByLibrary.simpleMessage("Выполнить к дате"),
         "updateMarkTitle":
             MessageLookupByLibrary.simpleMessage("Изменить оценку"),
         "userProfileTitle":

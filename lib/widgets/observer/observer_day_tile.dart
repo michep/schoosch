@@ -10,11 +10,11 @@ import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/pages/observer/observer_lesson_page.dart';
 
 class ObserverDayTile extends StatelessWidget {
-  final DayScheduleModel _schedule;
+  final ClassScheduleModel _schedule;
   final DateTime _date;
   const ObserverDayTile(this._schedule, this._date, {Key? key}) : super(key: key);
 
-  void onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim, Map<String, HomeworkModel?> homw) {
+  void onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim, Map<String, List<HomeworkModel>> homw) {
     Get.to(
       () => ObserverLessonPage(
         lesson: les,
@@ -30,7 +30,7 @@ class ObserverDayTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<LessonModel>>(
-      future: _schedule.allLessons(
+      future: _schedule.classLessons(
         date: _date,
         needsEmpty: true,
       ),
@@ -51,7 +51,7 @@ class ObserverDayTile extends StatelessWidget {
                         les.curriculum,
                         les.lessontime,
                         les.venue,
-                        les.homeworkOnDateForClassAndAllStudents(_date),
+                        les.homeworkNextLessonForClassAndAllStudents(_date),
                       ])
                     : Future.delayed(
                         const Duration(
@@ -69,7 +69,7 @@ class ObserverDayTile extends StatelessWidget {
                   var cur = les.type != LessonType.empty ? list[0] as CurriculumModel : null;
                   var tim = les.type != LessonType.empty ? list[1] as LessontimeModel : null;
                   var ven = les.type != LessonType.empty ? list[2] as VenueModel : null;
-                  var homw = les.type != LessonType.empty ? list[3] as Map<String, HomeworkModel?> : null;
+                  var homws = les.type != LessonType.empty ? list[3] as Map<String, List<HomeworkModel>> : null;
                   return ListTile(
                     title: Text(
                       les.type != LessonType.empty ? cur!.aliasOrName : 'окно',
@@ -78,13 +78,13 @@ class ObserverDayTile extends StatelessWidget {
                       les.order.toString(),
                     ),
                     subtitle: les.type != LessonType.empty
-                        ? homw!.values.every((element) => element == null)
+                        ? homws!.isEmpty
                             ? null
                             : const Text('есть домашнее задание')
                         : null,
                     onTap: les.type != LessonType.empty
                         ? () {
-                            onTap(les, cur!, ven!, tim!, homw!);
+                            onTap(les, cur!, ven!, tim!, homws!);
                           }
                         : null,
                   );

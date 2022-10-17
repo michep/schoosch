@@ -101,5 +101,11 @@
   "markTypeTitle": "Mark type",
   "markTypeRegular": "Regular",
   "markTypeTest": "Test",
-  "markTypeExam": "Exam"
+  "markTypeExam": "Exam",
+  "roleAdmin": "Administrator",
+  "roleTeacher": "Teacher",
+  "roleParent": "Parnet",
+  "roleStudent": "Student",
+  "roleObserver": "Observer",
+  "todateTitle": "TBD till"
 }

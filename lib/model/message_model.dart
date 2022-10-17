@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 
 class MessageModel {
   late final String? id;
@@ -11,8 +10,8 @@ class MessageModel {
   MessageModel.fromMap(this.id, Map<String, dynamic> map) {
     message = map['message'] != null ? map['message'] as String : throw '';
     sentById = map['sent_by'] != null ? map['sent_by'] as String : throw '';
-    timeSent = map['timestamp'] != null ? DateTime.fromMillisecondsSinceEpoch((map['timestamp'] as Timestamp).millisecondsSinceEpoch) : throw '';
+    timeSent = map['timestamp'] != null ? DateTime.tryParse(map['timestamp']) : throw '';
   }
 
-  bool get sentByMe => sentById! == Get.find<FStore>().currentUser!.id;
+  bool get sentByMe => sentById! == Get.find<ProxyStore>().currentUser!.id;
 }

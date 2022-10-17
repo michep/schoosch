@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:get/get.dart';
 
@@ -66,8 +66,8 @@ class RateSheetState extends State<RateSheet> {
   }
 
   void _rate() async {
-    var has = await Get.find<FStore>().hasRatingInMonth(widget._teacher);
-    if(has) return;
+    var has = await Get.find<ProxyStore>().hasRatingInMonth(widget._teacher);
+    if (has) return;
     widget._teacher.createRating(PersonModel.currentUser!, _rating, _comment.text);
     _rating = 0;
     _comment.clear();

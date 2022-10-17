@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
-import 'package:intl/intl.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -58,7 +58,7 @@ class StudentsTablePage extends StatelessWidget {
     int sum = 0;
     for (MarkModel mark in listmark) {
       var times = 1;
-      if(mark.type == MarkType.exam || mark.type == MarkType.test) {
+      if (mark.type == MarkType.exam || mark.type == MarkType.test) {
         times = 2;
       }
       sum += mark.mark * times;
@@ -92,7 +92,6 @@ class StudentsTablePage extends StatelessWidget {
     return List.generate(
       listcur.length,
       (index) => FutureBuilder<List<MarkModel>>(
-        // future: Get.find<FStore>().getStudentCurriculumMarks(PersonModel.currentStudent!, listcur[index]),
         future: student.curriculumMarks(listcur[index]),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {

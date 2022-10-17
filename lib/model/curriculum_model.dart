@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
@@ -35,23 +35,24 @@ class CurriculumModel {
     alias = map['alias'] != null ? map['alias'] as String : null;
     _masterId = map['master_id'] != null ? map['master_id'] as String : throw 'need master_id key in curriculum $id';
     map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
+
+    if (map.containsKey('master') && map['master'] is Map) {
+      _master = TeacherModel.fromMap((map['master'] as Map<String, dynamic>)['_id'] as String, map['master'] as Map<String, dynamic>);
+    }
   }
 
   String get aliasOrName => alias ?? name;
 
   Future<TeacherModel?> get master async {
     if (_masterId.isEmpty) return null;
-    if (_master == null) {
-      var store = Get.find<FStore>();
-      _master = (await store.getPerson(_masterId)).asTeacher;
-    }
+    _master ??= (await Get.find<ProxyStore>().getPerson(_masterId)).asTeacher;
     return _master;
   }
 
   Future<List<StudentModel>> students({bool forceRefresh = false}) async {
     if (!_studentsLoaded || forceRefresh) {
       _students.clear();
-      _students.addAll((await Get.find<FStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
+      _students.addAll((await Get.find<ProxyStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
       _studentsLoaded = true;
     }
     return _students;
@@ -60,7 +61,7 @@ class CurriculumModel {
   Future<List<ClassModel>> classes({bool forceRefresh = false}) async {
     if (!_classesLoaded || forceRefresh) {
       _classes.clear();
-      _classes.addAll((await Get.find<FStore>().getCurriculumClasses(this)));
+      _classes.addAll((await Get.find<ProxyStore>().getCurriculumClasses(this)));
       _classesLoaded = true;
     }
     return _classes;
@@ -84,8 +85,9 @@ class CurriculumModel {
     return _studentIds.isEmpty || _studentIds.contains(student.id);
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool withId = false}) {
     Map<String, dynamic> res = {};
+    if (withId) res['_id'] = id;
     res['name'] = name;
     res['alias'] = alias;
     res['master_id'] = _masterId;
@@ -94,7 +96,7 @@ class CurriculumModel {
   }
 
   Future<CurriculumModel> save() async {
-    var id = await Get.find<FStore>().saveCurriculum(this);
+    var id = await Get.find<ProxyStore>().saveCurriculum(this);
     _id ??= id;
     return this;
   }

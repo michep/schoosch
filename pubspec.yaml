@@ -23,7 +23,6 @@ dependencies:
   flutterfire_ui: ^0.4.1+2
   google_sign_in: ^5.2.1
   flutter_rating_bar: ^4.0.0
-  datetime_picker_formfield: ^2.0.0
   drag_and_drop_lists: ^0.3.2+2
   qr_code_scanner: ^1.0.0
   dropdown_search: ^5.0.1
@@ -37,6 +36,10 @@ dependencies:
   flutter_linkify: ^5.0.2
   url_launcher: ^6.1.5
   google_nav_bar: ^5.0.6
+  mongo_dart: ^0.7.4+1
+  dio: ^4.0.6
+  _flutterfire_internals: ^1.0.1
+  datetime_picker_formfield_new: ^2.0.0
 
 dev_dependencies:
   flutter_test:

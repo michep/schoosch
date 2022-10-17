@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_store_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 
 class VenueModel {
   late String? _id;
@@ -50,16 +50,21 @@ class VenueModel {
     // _initPath();
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap({bool withId = false}) {
     Map<String, dynamic> res = {};
+    if (withId) res['_id'] = id;
     res['name'] = name;
     return res;
   }
 
   Future<VenueModel> save() async {
-    var id = await Get.find<FStore>().saveVenue(this);
+    var id = await Get.find<ProxyStore>().saveVenue(this);
     _id ??= id;
     return this;
+  }
+
+  Future<void> delete() async {
+    if (_id != null) return Get.find<ProxyStore>().deleteVenue(this);
   }
 
   void _initPath() {

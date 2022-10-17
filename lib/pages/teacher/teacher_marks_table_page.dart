@@ -65,7 +65,8 @@ class TeacherTablePage extends StatelessWidget {
     return List.generate(
       liststud.length,
       (index) => FutureBuilder<List<MarkModel>>(
-          future: liststud[index].curriculumTeacherMarks(currentcur, aclass == null ? PersonModel.currentTeacher! : teacher!),
+          // future: liststud[index].curriculumTeacherMarks(currentcur, aclass == null ? PersonModel.currentTeacher! : teacher!),
+          future: liststud[index].curriculumMarks(currentcur),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(

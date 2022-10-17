@@ -1,5 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -348,7 +347,7 @@ class _PersonPageState extends State<PersonPage> {
       map['middlename'] = _middlename.text == '' ? null : _middlename.text;
       map['lastname'] = _lastname.text;
       map['email'] = _email.text;
-      map['birthday'] = _birthday != null ? Timestamp.fromDate(_birthday!) : null;
+      map['birthday'] = _birthday != null ? _birthday! : null;
 
       var nperson = PersonModel.fromMap(person.id, map);
       await nperson.save();

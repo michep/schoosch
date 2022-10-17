@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:get/get.dart';
@@ -104,11 +103,13 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
     var res = await Get.to<bool>(
       () => HomeworkPage(
         widget._lesson,
+        widget._curriculum,
         HomeworkModel.fromMap(
           null,
           {
             'class_id': widget._lesson.aclass.id,
-            'date': Timestamp.fromDate(widget._date),
+            'date': widget._date,
+            'todate': null, //TODO
             'text': '',
             'teacher_id': widget._teacher!.id,
             'curriculum_id': widget._curriculum.id,
@@ -125,7 +126,7 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
   }
 
   void editClassHomework(HomeworkModel hw) async {
-    var res = await Get.to(() => HomeworkPage(widget._lesson, hw, const [], true, isPersonalHomework: false));
+    var res = await Get.to(() => HomeworkPage(widget._lesson, widget._curriculum, hw, const [], true, isPersonalHomework: false));
     if (res is bool && res == true) {
       setState(() {});
     }
@@ -134,10 +135,10 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
   void toggleHomeworkCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
     switch (completion.status) {
       case Status.completed:
-        await hw.confirmCompletion(completion, PersonModel.currentUser!);
+        await completion.confirm(PersonModel.currentUser!);
         break;
       case Status.confirmed:
-        await hw.unconfirmCompletion(completion, PersonModel.currentUser!);
+        await completion.unconfirm(PersonModel.currentUser!);
         break;
       default:
     }
