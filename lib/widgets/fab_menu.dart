@@ -104,12 +104,27 @@ class _FABMenuState extends State<FABMenu> with SingleTickerProviderStateMixin {
               _animationButton.value * (widget.children.length - widget.children.indexOf(child)),
               0,
             ),
-            child: FloatingActionButton(
-              key: ValueKey(child),
-              heroTag: ValueKey(child),
-              onPressed: child.onPressed,
-              backgroundColor: widget.colorOpen,
-              child: Icon(child.icon),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (child.title != null && isOpened)
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    color: widget.colorOpen,
+                    child: Text(child.title!),
+                  ),
+                const SizedBox(
+                  width: 8,
+                ),
+                FloatingActionButton(
+                  key: ValueKey(child),
+                  heroTag: ValueKey(child),
+                  onPressed: child.onPressed,
+                  backgroundColor: widget.colorOpen,
+                  child: Icon(child.icon),
+                ),
+              ],
             ),
           )
         : const SizedBox.shrink();
@@ -127,6 +142,7 @@ class _FABMenuState extends State<FABMenu> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         // ...widget.children.keys.toList().map((e) {
         //   var l = widget.children.keys.toList();
@@ -164,11 +180,13 @@ class FABmenuchild {
   late final IconData icon;
   late final bool isVisible;
   late final void Function() onPressed;
+  late final String? title;
 
   FABmenuchild({
     required this.icon,
     this.isVisible = true,
     required this.onPressed,
+    this.title,
   });
 }
 

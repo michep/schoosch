@@ -218,6 +218,7 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
                     isPersonal: false,
                   ),
                   isVisible: buttonVisible,
+                  title: 'Классу',
                 ),
                 FABmenuchild(
                   icon: Icons.person_rounded,
@@ -226,6 +227,7 @@ class _ClassTasksCombinedPageState extends State<ClassTasksCombinedPage> {
                     studentIDs: hws.keys.toList(),
                   ),
                   isVisible: !widget.readOnly,
+                  title: 'Личное',
                 ),
               ],
               colorClosed: Theme.of(context).colorScheme.secondary,
