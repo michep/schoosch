@@ -88,8 +88,11 @@ class ClassModel {
     return _master!;
   }
 
-  Future<List<ClassScheduleModel>> getClassSchedulesWeek(Week week) async {
-    return _weekClassSchedules[week] ??= await Get.find<ProxyStore>().getClassWeekSchedule(this, week);
+  Future<List<ClassScheduleModel>> getClassSchedulesWeek(Week week, {bool forceRefresh = false}) async {
+    if (_weekClassSchedules[week] == null || forceRefresh) {
+      _weekClassSchedules[week] = await Get.find<ProxyStore>().getClassWeekSchedule(this, week);
+    }
+    return _weekClassSchedules[week]!;
   }
 
   Future<List<StudentScheduleModel>> getStudentSchedulesWeek(Week week, StudentModel student, {bool forceRefresh = false}) async {

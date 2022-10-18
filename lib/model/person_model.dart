@@ -269,8 +269,12 @@ class TeacherModel extends PersonModel {
     return Get.find<ProxyStore>().saveTeacherRating(this, user, DateTime.now(), rating, comment);
   }
 
-  Future<List<TeacherScheduleModel>> getSchedulesWeek(isoweek.Week week) async {
-    return _weekTeccherSchedules[week] ??= await Get.find<ProxyStore>().getTeacherWeekSchedule(this, week);
+  Future<List<TeacherScheduleModel>> getSchedulesWeek(isoweek.Week week, {forceRefresh = false}) async {
+    if (_weekTeccherSchedules[week] == null || forceRefresh) {
+      _weekTeccherSchedules[week] = await Get.find<ProxyStore>().getTeacherWeekSchedule(this, week);
+    }
+
+    return _weekTeccherSchedules[week]!;
   }
 
   Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {

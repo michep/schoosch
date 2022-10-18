@@ -19,6 +19,7 @@ class ObserverSchedule extends StatefulWidget {
 
 class _ObserverScheduleState extends State<ObserverSchedule> {
   final _cw = Get.find<CurrentWeek>();
+  bool forceRefresh = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +45,7 @@ class _ObserverScheduleState extends State<ObserverSchedule> {
       childrenDelegate: SliverChildBuilderDelegate(
         (context, idx) {
           return FutureBuilder<List<ClassScheduleModel>>(
-            future: widget._class.getClassSchedulesWeek(
-              Week(year: idx ~/ 100, weekNumber: idx % 100),
-            ),
+            future: widget._class.getClassSchedulesWeek(Week(year: idx ~/ 100, weekNumber: idx % 100), forceRefresh: forceRefresh),
             builder: (context, schedules) {
               if (!schedules.hasData) {
                 return Utils.progressIndicator();
@@ -59,15 +58,22 @@ class _ObserverScheduleState extends State<ObserverSchedule> {
                   ),
                 );
               }
-              return ListView(
-                children: [
-                  ...schedules.data!.map(
-                    (schedule) => ObserverDayTile(
-                      schedule,
-                      Week(year: idx ~/ 100, weekNumber: idx % 100).day(schedule.day - 1),
+              forceRefresh = false;
+              return RefreshIndicator(
+                onRefresh: () async {
+                  forceRefresh = true;
+                  setState(() {});
+                },
+                child: ListView(
+                  children: [
+                    ...schedules.data!.map(
+                      (schedule) => ObserverDayTile(
+                        schedule,
+                        Week(year: idx ~/ 100, weekNumber: idx % 100).day(schedule.day - 1),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             },
           );
