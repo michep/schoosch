@@ -17,7 +17,7 @@ class AbsenceModel {
     date = map['date'] != null ? DateTime.tryParse(map['date'])! : throw 'need date key in attendance $_id';
     personId = map['person_id'] != null ? map['person_id'] as String : throw 'need person_id key in attendance $_id';
     lessonOrder = map['lesson_order'] != null ? map['lesson_order'] as int : throw 'need lesson_order key in attendance $_id';
-    // status = map['status'] != null ? map['status'] as String : throw 'need status key in attendance $_id'; //TODO: status should be a emun with extensions
+    // status = map['status'] != null ? map['status'] as String : throw 'need status key in attendance $_id'; //TODO: status should be a enum with extensions
 
     if (map.containsKey('student') && map['student'] is Map) {
       _student = StudentModel.fromMap((map['student'] as Map<String, dynamic>)['_id'] as String, map['student'] as Map<String, dynamic>);

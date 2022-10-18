@@ -14,16 +14,22 @@ class HomeworkModel {
   late String teacherId;
   final List<CompletionFlagModel> _completions = [];
   bool _completionsLoaded = false;
+
+  StudentModel? _student;
   // final Mutex _completionsMutex = Mutex();
 
   HomeworkModel.fromMap(this.id, Map<String, dynamic> map) {
     text = map['text'] != null ? map['text'] as String : throw 'need text key in homework  $id';
     classId = map['class_id'] != null ? map['class_id'] as String : throw 'need class key in homework  $id';
     date = map['date'] != null ? DateTime.tryParse(map['date'])! : throw 'need date key in homework $id';
-    todate = map['till'] != null ? DateTime.tryParse(map['till'])! : null;
+    todate = map['todate'] != null ? DateTime.tryParse(map['todate'])! : null;
     curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in homework  $id';
     studentId = map['student_id'] != null ? map['student_id'] as String : null;
     teacherId = map['teacher_id'] != null ? map['teacher_id'] as String : throw 'need teacher_id key in homework  $id';
+
+    if (map.containsKey('student') && map['student'] is Map) {
+      _student = StudentModel.fromMap((map['student'] as Map<String, dynamic>)['_id'] as String, map['student'] as Map<String, dynamic>);
+    }
 
     if (map.containsKey('completion') && map['completion'] is List) {
       var s = (map['completion'] as List).map<CompletionFlagModel>((e) {
@@ -35,9 +41,13 @@ class HomeworkModel {
     }
   }
 
-  Future<StudentModel?> get student async => studentId != null ? (await Get.find<ProxyStore>().getPerson(studentId!)).asStudent! : null;
+  Future<StudentModel?> get student async {
+    if (studentId == null) return null;
+    _student ??= (await Get.find<ProxyStore>().getPerson(studentId!)).asStudent;
+    return _student!;
+  }
 
-  Future<CompletionFlagModel?> getCompletion(StudentModel student, {forceRefresh = false}) async {
+  Future<CompletionFlagModel?> getCompletion(StudentModel student, {bool forceRefresh = false}) async {
     if (!_completionsLoaded || forceRefresh) {
       await getAllCompletions(forceRefresh: forceRefresh);
     }
@@ -45,7 +55,7 @@ class HomeworkModel {
     return compl.isEmpty ? null : compl.first;
   }
 
-  Future<List<CompletionFlagModel>> getAllCompletions({forceRefresh = false}) async {
+  Future<List<CompletionFlagModel>> getAllCompletions({bool forceRefresh = false}) async {
     if (!_completionsLoaded || forceRefresh) {
       _completions.clear();
       _completions.addAll(await Get.find<ProxyStore>().getAllHomeworkCompletions(this));

@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:get/get.dart';
@@ -8,17 +8,19 @@ import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/homework_page.dart';
+import 'package:schoosch/widgets/fab_menu.dart';
 import 'package:schoosch/widgets/teacher/class_homework_completion_tile.dart';
 import 'package:schoosch/widgets/teacher/students_homework_completion_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
+// import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class ClassHomeworksCombinedPage extends StatefulWidget {
   final DateTime _date;
   final CurriculumModel _curriculum;
   final TeacherModel? _teacher;
   final LessonModel _lesson;
-  final Future<Map<String, List<HomeworkModel?>>> Function(DateTime, bool) _hwsFuture;
+  final Future<Map<String, List<HomeworkModel>>> Function(DateTime, bool) _hwsFuture;
   final Future<HomeworkModel?> Function(DateTime, bool) _hwFuture;
 
   final bool readOnly;
@@ -33,12 +35,21 @@ class ClassHomeworksCombinedPage extends StatefulWidget {
 
 class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage> {
   HomeworkModel? hw;
+  late bool eXITINFINITELOOPNOW = false;
+  late bool buttonVisible = false;
+
+  // @override
+  // void initState() {
+  //   eXITINFINITELOOPNOW = false;
+  //   buttonVisible = false;
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
     List<String> studentsIdsWithHW = [];
-    Map<String, dynamic> hws = {};
-    var buttonNotVisible = false;
+    Map<String, List> hws = {};
+    // var buttonVisible = false;
     return Stack(
       children: [
         ListView(
@@ -50,11 +61,19 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
               ),
             ),
             FutureBuilder<HomeworkModel?>(
-              future: widget._hwFuture(widget._date, true),
-              builder: (context, snapHW) {
-                if (snapHW.connectionState == ConnectionState.done) {
-                  buttonNotVisible = (widget.readOnly || snapHW.data != null);
+              future: widget._hwFuture(widget._date, true).then((v) {
+                if (!eXITINFINITELOOPNOW) {
+                  setState(() {
+                    buttonVisible = !(widget.readOnly || v != null);
+                  });
+                  eXITINFINITELOOPNOW = true;
                 }
+                return v;
+              }),
+              builder: (context, snapHW) {
+                // if (snapHW.connectionState == ConnectionState.done) {
+
+                // }
                 hw = snapHW.data;
                 return snapHW.hasData
                     ? FutureBuilder<List<CompletionFlagModel>>(
@@ -99,7 +118,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                       );
               },
             ),
-            FutureBuilder<Map<String, List<HomeworkModel?>>>(
+            FutureBuilder<Map<String, List<HomeworkModel>>>(
               future: widget._hwsFuture(widget._date, true),
               builder: (context, snapHWs) {
                 if (snapHWs.connectionState == ConnectionState.done) {
@@ -109,59 +128,101 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                   hws.removeWhere((key, value) => value == null);
                   studentsIdsWithHW = hws.keys.toList();
                 }
-                return snapHWs.hasData
-                    ? Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'ДЗ личные',
-                              style: TextStyle(
-                                fontSize: 17,
-                              ),
-                            ),
+                if (snapHWs.hasData) {
+                  List<Widget> hww = [];
+                  for (var hwl in snapHWs.data!.values) {
+                    for (var hw in hwl) {
+                      if (hw.studentId == null) continue;
+                      var w = StudentHomeworkCompetionTile(
+                        hw,
+                        widget._lesson,
+                        null,
+                        (hws) => editStudentHomework(hws, studentsIdsWithHW, false),
+                        toggleHomeworkCompletion,
+                        readOnly: widget.readOnly,
+                      );
+                      hww.add(w);
+                    }
+                  }
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'ДЗ личные',
+                          style: TextStyle(
+                            fontSize: 17,
                           ),
-                          if (hws.isEmpty)
-                            const Center(
-                              child: Text(
-                                'Вы еще не задавали личных ДЗ.',
-                              ),
-                            )
-                          else
-                            ...hws.values.map(
-                              (e) {
-                                return FutureBuilder<List<CompletionFlagModel>>(
-                                  future: e!.getAllCompletions(),
-                                  builder: (context, snapcompl) {
-                                    if (!snapcompl.hasData) return const SizedBox.shrink();
-                                    var compl = snapcompl.data!.isNotEmpty ? snapcompl.data![0] : null;
-                                    return StudentHomeworkCompetionTile(
-                                      e,
-                                      widget._lesson,
-                                      compl,
-                                      (hws) => editStudentHomework(hws, studentsIdsWithHW, hw != null),
-                                      toggleHomeworkCompletion,
-                                      readOnly: widget.readOnly,
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                        ],
-                      )
-                    : const SizedBox.shrink();
+                        ),
+                      ),
+                      ...hww,
+                    ],
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
               },
             ),
           ],
         ),
         Visibility(
-          visible: !(widget.readOnly || buttonNotVisible),
+          visible: !widget.readOnly,
           child: Align(
             alignment: Alignment.bottomRight,
-            child: FloatingActionButton(
-              onPressed: () => addStudentHomework(hws.keys.toList()),
-              child: const Icon(Icons.add),
+            // child: FloatingActionButton(
+            //   onPressed: () => addStudentHomework(hws.keys.toList()),
+            //   child: const Icon(Icons.add),
+            // ),
+            // child: SpeedDial(
+            //   renderOverlay: false,
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.circular(16),
+            //   ),
+            //   animatedIcon: AnimatedIcons.add_event,
+            //   spaceBetweenChildren: 15,
+            //   spacing: 10,
+            //   childPadding: const EdgeInsets.all(2),
+            //   children: [
+            //     SpeedDialChild(
+            //       child: const Icon(Icons.groups_rounded, size: 25,),
+            //       label: 'классу',
+            //       onTap: () => addHomework(
+            //         isPersonal: false,
+            //       ),
+            //       labelStyle: const TextStyle(fontSize: 16,)
+            //     ),
+            //     SpeedDialChild(
+            //       child: const Icon(Icons.person, size: 25,),
+            //       label: 'личное',
+            //       onTap: () => addHomework(
+            //         isPersonal: true,
+            //         studentIDs: hws.keys.toList(),
+            //       ),
+            //       labelStyle: const TextStyle(fontSize: 16,)
+            //     ),
+            //   ],
+            // ),
+            child: FABMenu(
+              children: [
+                FABmenuchild(
+                  icon: Icons.groups_rounded,
+                  onPressed: () => addHomework(
+                    isPersonal: false,
+                  ),
+                  isVisible: buttonVisible,
+                ),
+                FABmenuchild(
+                  icon: Icons.person_rounded,
+                  onPressed: () => addHomework(
+                    isPersonal: true,
+                    studentIDs: hws.keys.toList(),
+                  ),
+                  isVisible: !widget.readOnly,
+                ),
+              ],
+              colorClosed: Theme.of(context).colorScheme.secondary,
+              colorOpen: Theme.of(context).colorScheme.background,
             ),
           ),
         ),
@@ -169,7 +230,33 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
     );
   }
 
-  void addStudentHomework(List<String> studentIDs) async {
+  // void addStudentHomework({required bool isPersonal, List<String> studentIDs = const [],}) async {
+  //   var res = await Get.to<bool>(
+  //     () => HomeworkPage(
+  //       widget._lesson,
+  //       HomeworkModel.fromMap(
+  //         null,
+  //         {
+  //           'class_id': widget._lesson.aclass.id,
+  //           'date': Timestamp.fromDate(widget._date),
+  //           'text': '',
+  //           'teacher_id': widget._teacher!.id,
+  //           'curriculum_id': widget._curriculum.id,
+  //         },
+  //       ),
+  //       isPersonal ? const [] : studentIDs,
+  //       personalHomework: isPersonal,
+  //     ),
+  //   );
+  //   if (res is bool && res == true) {
+  //     setState(() {});
+  //   }
+  // }
+
+  void addHomework({
+    required bool isPersonal,
+    List<String> studentIDs = const [],
+  }) async {
     var res = await Get.to<bool>(
       () => HomeworkPage(
         widget._lesson,
@@ -185,13 +272,15 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
             'curriculum_id': widget._curriculum.id,
           },
         ),
-        studentIDs,
+        !isPersonal ? const [] : studentIDs,
         hw != null,
-        isPersonalHomework: true,
+        isPersonalHomework: isPersonal,
       ),
     );
     if (res is bool && res == true) {
-      setState(() {});
+      setState(() {
+        eXITINFINITELOOPNOW = false;
+      });
     }
   }
 

@@ -183,7 +183,7 @@ class LessonModel {
     };
   }
 
-  Future<Map<String, List<HomeworkModel?>>> homeworkThisLessonForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
+  Future<Map<String, List<HomeworkModel>>> homeworkThisLessonForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
     if (!_homeworksThisLessonLoaded || forceRefresh) {
       _homeworksThisLesson.addAll(await _getAllHomeworkThisLesson(aclass, (await curriculum)!, date));
       _homeworksThisLessonLoaded = true;
@@ -218,7 +218,7 @@ class LessonModel {
     };
   }
 
-  Future<Map<String, List<HomeworkModel?>>> homeworkNextLessonForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
+  Future<Map<String, List<HomeworkModel>>> homeworkNextLessonForClassAndAllStudents(DateTime date, {bool forceRefresh = false}) async {
     if (!_homeworksNextLessonLoaded || forceRefresh) {
       _homeworksNextLesson.addAll(await _getAllHomeworkNextLesson(aclass, (await curriculum)!, date));
       _homeworksNextLessonLoaded = true;
