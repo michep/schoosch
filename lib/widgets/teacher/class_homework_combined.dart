@@ -210,7 +210,6 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                   onPressed: () => addHomework(
                     isPersonal: false,
                   ),
-                  isVisible: buttonVisible,
                 ),
                 FABmenuchild(
                   icon: Icons.person_rounded,
@@ -218,7 +217,6 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                     isPersonal: true,
                     studentIDs: hws.keys.toList(),
                   ),
-                  isVisible: !widget.readOnly,
                 ),
               ],
               colorClosed: Theme.of(context).colorScheme.secondary,
@@ -266,14 +264,13 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
           {
             'class_id': widget._lesson.aclass.id,
             'date': widget._date.toIso8601String(),
-            'todate': null, //TODO
+            'todate': null,
             'text': '',
             'teacher_id': widget._teacher!.id,
             'curriculum_id': widget._curriculum.id,
           },
         ),
         !isPersonal ? const [] : studentIDs,
-        hw != null,
         isPersonalHomework: isPersonal,
       ),
     );
@@ -286,7 +283,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
 
   void editStudentHomework(HomeworkModel hw, List<String> studentIDs, bool classHwExists) async {
     studentIDs.remove(hw.studentId);
-    var res = await Get.to(() => HomeworkPage(widget._lesson, widget._curriculum, hw, studentIDs, classHwExists, isPersonalHomework: true));
+    var res = await Get.to(() => HomeworkPage(widget._lesson, widget._curriculum, hw, studentIDs, isPersonalHomework: true));
     if (res is bool && res == true) {
       setState(() {});
     }
@@ -306,7 +303,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
   }
 
   void editClassHomework(HomeworkModel hw) async {
-    var res = await Get.to(() => HomeworkPage(widget._lesson, widget._curriculum, hw, const [], true, isPersonalHomework: false));
+    var res = await Get.to(() => HomeworkPage(widget._lesson, widget._curriculum, hw, const [], isPersonalHomework: false));
     if (res is bool && res == true) {
       setState(() {});
     }

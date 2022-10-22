@@ -20,11 +20,9 @@ class HomeworkPage extends StatefulWidget {
   final HomeworkModel homework;
   final StudentModel? student = null;
   final bool isPersonalHomework;
-  final bool doErrorOnEmptyStudent;
   final List<String> studentIds;
 
-  const HomeworkPage(this.lesson, this.curriculum, this.homework, this.studentIds, this.doErrorOnEmptyStudent, {Key? key, this.isPersonalHomework = true})
-      : super(key: key);
+  const HomeworkPage(this.lesson, this.curriculum, this.homework, this.studentIds, {Key? key, this.isPersonalHomework = true}) : super(key: key);
 
   @override
   State<HomeworkPage> createState() => _HomeworkPageState();
@@ -45,14 +43,19 @@ class _HomeworkPageState extends State<HomeworkPage> {
     _student = widget.student;
     _commentcont.value = TextEditingValue(text: widget.homework.text);
     if (_student != null) _studentcont.value = TextEditingValue(text: _student!.fullName);
-    Get.find<ProxyStore>().getNextLessonDate(widget.lesson.aclass, widget.curriculum, widget.homework.date).then(
-          (value) => setState(
-            () {
-              _todate = value;
-              _todatecont.value = TextEditingValue(text: DateFormat('dd MMM yyyy').format(value));
-            },
-          ),
-        );
+    if (widget.homework.todate != null) {
+      _todate = widget.homework.todate;
+      _todatecont.value = TextEditingValue(text: DateFormat('dd MMM yyyy').format(widget.homework.todate!));
+    } else {
+      Get.find<ProxyStore>().getNextLessonDate(widget.lesson.aclass, widget.curriculum, widget.homework.date).then(
+            (value) => setState(
+              () {
+                _todate = value;
+                _todatecont.value = TextEditingValue(text: DateFormat('dd MMM yyyy').format(value));
+              },
+            ),
+          );
+    }
     super.initState();
   }
 
@@ -85,8 +88,7 @@ class _HomeworkPageState extends State<HomeworkPage> {
                     titleFunc: (value) => value?.fullName ?? '',
                     listFunc: () => PeopleListPage(widget.lesson.aclass.students, selectionMode: true, type: 'student', title: loc.classStudentsTitle),
                     detailsFunc: () => PersonPage(_student!, _student!.fullName),
-                    // validatorFunc: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty),
-                    validatorFunc: validateStudent,
+                    validatorFunc: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorStudentEmpty),
                     callback: (value) => _setStudent(value),
                   ),
                 TextFormField(
@@ -154,15 +156,6 @@ class _HomeworkPageState extends State<HomeworkPage> {
       _student = null;
       return true;
     }
-  }
-
-  String? validateStudent(String? value) {
-    String? res;
-    if (widget.doErrorOnEmptyStudent && _student == null) return 'Задание для класса уже существует, выберите ученика';
-    res = Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty);
-    if (res != null) return res;
-    if (_student != null && widget.studentIds.contains(_student!.id!)) return S.of(context).errorHomeWorkExists;
-    return null;
   }
 
   void save() async {

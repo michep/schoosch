@@ -4,6 +4,7 @@ import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class TeacherTablePage extends StatelessWidget {
@@ -94,8 +95,8 @@ class TeacherTablePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(currentcur.aliasOrName),
+      appBar: MAppBar(
+        currentcur.aliasOrName,
       ),
       body: SingleChildScrollView(
         child: FutureBuilder<List<StudentModel>>(

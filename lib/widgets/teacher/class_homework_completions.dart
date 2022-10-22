@@ -109,14 +109,13 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
           {
             'class_id': widget._lesson.aclass.id,
             'date': widget._date,
-            'todate': null, //TODO
+            'todate': null,
             'text': '',
             'teacher_id': widget._teacher!.id,
             'curriculum_id': widget._curriculum.id,
           },
         ),
         const [],
-        hw != null,
         isPersonalHomework: false,
       ),
     );
@@ -126,7 +125,7 @@ class _ClassTaskWithCompetionsPageState extends State<ClassTaskWithCompetionsPag
   }
 
   void editClassHomework(HomeworkModel hw) async {
-    var res = await Get.to(() => HomeworkPage(widget._lesson, widget._curriculum, hw, const [], true, isPersonalHomework: false));
+    var res = await Get.to(() => HomeworkPage(widget._lesson, widget._curriculum, hw, const [], isPersonalHomework: false));
     if (res is bool && res == true) {
       setState(() {});
     }

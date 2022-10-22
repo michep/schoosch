@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/teacher_marks_table_page.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class CurriculumChoicePage extends StatelessWidget {
@@ -11,8 +12,8 @@ class CurriculumChoicePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('предмет'),
+      appBar: const MAppBar(
+        'Предмет',
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -28,6 +29,7 @@ class CurriculumChoicePage extends StatelessWidget {
             return ListView.builder(
               itemBuilder: (_, index) {
                 return ListTile(
+                  title: Text(snapshot.data![index].aliasOrName),
                   onTap: () {
                     Get.to(
                       TeacherTablePage(
@@ -35,8 +37,6 @@ class CurriculumChoicePage extends StatelessWidget {
                       ),
                     );
                   },
-                  title: Text(snapshot.data![index].aliasOrName),
-                  subtitle: Text(snapshot.data![index].id!),
                 );
               },
               itemCount: snapshot.data!.length,
