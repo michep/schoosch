@@ -210,6 +210,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                   onPressed: () => addHomework(
                     isPersonal: false,
                   ),
+                  title: 'Классу',
                 ),
                 FABmenuchild(
                   icon: Icons.person_rounded,
@@ -217,6 +218,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                     isPersonal: true,
                     studentIDs: hws.keys.toList(),
                   ),
+                  title: 'Личное',
                 ),
               ],
               colorClosed: Theme.of(context).colorScheme.secondary,
