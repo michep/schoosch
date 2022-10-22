@@ -19,7 +19,7 @@ class TeacherTablePage extends StatelessWidget {
   }) : super(key: key);
 
   List<Widget> _buildMarkCells(List<MarkModel> listmark) {
-    listmark.sort((a, b) => a.date.compareTo(b.date));
+    listmark.sort((a, b) => b.date.compareTo(a.date));
     return List.generate(
       listmark.length,
       (index) => Container(
@@ -36,25 +36,27 @@ class TeacherTablePage extends StatelessWidget {
           ],
         ),
       ),
-    ) + [
-          Container(
-            alignment: Alignment.center,
-            width: 120.0,
-            height: 60.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.black54,
-            ),
-            margin: const EdgeInsets.all(4.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('средний'),
-                Text(getSummaryMark(listmark)),
-              ],
-            ),
-          )
-        ];
+    );
+    // ) +
+    // [
+    //   Container(
+    //     alignment: Alignment.center,
+    //     width: 120.0,
+    //     height: 60.0,
+    //     decoration: BoxDecoration(
+    //       borderRadius: BorderRadius.circular(12),
+    //       color: Colors.black54,
+    //     ),
+    //     margin: const EdgeInsets.all(4.0),
+    //     child: Column(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: [
+    //         const Text('средний'),
+    //         Text(getSummaryMark(listmark)),
+    //       ],
+    //     ),
+    //   )
+    // ];
   }
 
   String getSummaryMark(List<MarkModel> listmark) {
@@ -75,18 +77,49 @@ class TeacherTablePage extends StatelessWidget {
       (index) => Container(
         alignment: Alignment.center,
         width: 120.0,
-        height: 60.0,
-        decoration: const BoxDecoration(
-          border: Border.symmetric(
-            horizontal: BorderSide(
-              color: Colors.black,
-              width: 1.5,
-            ),
+        height: 70.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.grey
           ),
         ),
         margin: const EdgeInsets.all(4.0),
-        child: Text(
-          liststud[index].fullName,
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(
+            liststud[index].fullName,
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildSummaryMarks(Map<StudentModel, List<MarkModel>> data) {
+    return List.generate(
+      data.keys.toList().length,
+      (index) => Container(
+        alignment: Alignment.center,
+        width: 120.0,
+        height: 60.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.grey,
+          ),
+          color: Colors.black54,
+        ),
+        margin: const EdgeInsets.all(4.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('средний'),
+            Text(
+              getSummaryMark(
+                data.values.toList()[index],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -95,24 +128,23 @@ class TeacherTablePage extends StatelessWidget {
   List<Widget> _buildRows(Map<StudentModel, List<MarkModel>> data, List<StudentModel> liststud) {
     return List.generate(
       liststud.length,
-      (index) =>
-          data[liststud[index]] == null
-              ? Container(
-                  alignment: Alignment.center,
-                  width: 120.0,
-                  height: 60.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.black54,
-                  ),
-                  margin: const EdgeInsets.all(4.0),
-                  child: const Text('нет оценок.'),
-                )
-              : Row(
-                  children: _buildMarkCells(
-                    data[liststud[index]]!,
-                  ),
-                ),
+      (index) => data[liststud[index]] == null
+          ? Container(
+              alignment: Alignment.center,
+              width: 120.0,
+              height: 60.0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.black54,
+              ),
+              margin: const EdgeInsets.all(4.0),
+              child: const Text('нет оценок.'),
+            )
+          : Column(
+              children: _buildMarkCells(
+                data[liststud[index]]!,
+              ),
+            ),
       // }),
     );
   }
@@ -124,6 +156,7 @@ class TeacherTablePage extends StatelessWidget {
         currentcur.aliasOrName,
       ),
       body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
         child: FutureBuilder<List<StudentModel>>(
           future: aclass != null ? currentcur.classStudents(aclass!) : currentcur.students(),
           builder: (context, snapshot) {
@@ -134,33 +167,44 @@ class TeacherTablePage extends StatelessWidget {
             }
             var students = snapshot.data!;
             return FutureBuilder<Map<StudentModel, List<MarkModel>>>(
-                future: currentcur.getMarksByStudents(students),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: Utils.progressIndicator(),
-                    );
-                  }
-                  var data = snapshot.data!;
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _buildStudentCells(students),
-                      ),
-                      Flexible(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: _buildRows(data, students),
-                          ),
-                        ),
-                      )
-                    ],
+              future: currentcur.getMarksByStudents(students),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: Utils.progressIndicator(),
                   );
-                });
+                }
+                var data = snapshot.data!;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _buildStudentCells(students),
+                    ),
+                    Flexible(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: _buildRows(data, students),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 8.0,
+                        top: 4,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _buildSummaryMarks(data),
+                      ),
+                    )
+                  ],
+                );
+              },
+            );
           },
         ),
       ),
