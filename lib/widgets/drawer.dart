@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/blueprint_controller.dart';
-import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/all_chats_page.dart';
 import 'package:schoosch/pages/all_marks_table_page.dart';
-import 'package:schoosch/pages/map/school_map_page.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
 

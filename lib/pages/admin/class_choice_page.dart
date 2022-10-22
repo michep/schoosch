@@ -3,7 +3,6 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/pages/admin/create_replacement.dart';
-import 'package:schoosch/pages/admin/freelessons_page.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class ClassChoicePage extends StatefulWidget {

@@ -148,7 +148,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
   }
 
   Future<List<PersonModel>> _initStudents() async {
-    return widget._curriculum.students(forceRefresh: true).then((value) {
+    return widget._curriculum.specificStudents(forceRefresh: true).then((value) {
       _students.addAll(value);
       return _students;
     });

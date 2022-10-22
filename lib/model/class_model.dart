@@ -53,7 +53,7 @@ class ClassModel {
 
     if (map.containsKey('lessontime') && map['lessontime'] is Map) {
       var times = DayLessontimeModel.fromMap((map['lessontime'] as Map<String, dynamic>)['_id'] as String, map['lessontime'] as Map<String, dynamic>);
-      _lessontimes.addAll(times.lessontimes_sync!);
+      _lessontimes.addAll(times.lessontimesSync!);
     }
 
     if (map.containsKey('student') && map['student'] is List) {

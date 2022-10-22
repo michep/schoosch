@@ -370,7 +370,7 @@ class ProxyStore extends getx.GetxController {
 
     for (var l in less) {
       var cur = l.type == LessonType.empty ? null : await l.curriculum;
-      if ((cur != null && await cur.isAvailableForStudent(student)) || l.type == LessonType.empty) {
+      if ((cur != null && cur.isAvailableForStudent(student)) || l.type == LessonType.empty) {
         ///TODO: db query?
         res.add(l);
       }
@@ -771,6 +771,16 @@ class ProxyStore extends getx.GetxController {
   //     data: {'mark': newMark},
   //   );
   // }
+
+  Future<List<MarkModel>> getCurriculumMarksByStudents(CurriculumModel curriculum,  List<StudentModel> students) async {
+    var res = await dio.postUri<List>(
+      baseUriFunc('/curriculum/${curriculum.id}/students/mark'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: students.map((e) => e.id).toList(),
+    );
+    var js = res.data!;
+    return js.map((e) => MarkModel.fromMap(e['_id'], e)).toList();
+  }
 
   Future<String> saveMark(MarkModel mark) async {
     var data = mark.toMap(withId: true);

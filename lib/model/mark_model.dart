@@ -15,6 +15,7 @@ class MarkModel {
   late String comment;
   late int mark;
   TeacherModel? _teacher;
+  StudentModel? _student;
 
   MarkModel.empty(String teacherId, String curriculumId, int lessonOrder, DateTime date)
       : this.fromMap(null, {
@@ -42,6 +43,10 @@ class MarkModel {
     if (map.containsKey('teacher') && map['teacher'] is Map) {
       _teacher = TeacherModel.fromMap((map['teacher'] as Map<String, dynamic>)['_id'] as String, map['teacher'] as Map<String, dynamic>);
     }
+
+    if (map.containsKey('student') && map['student'] is Map) {
+      _student = StudentModel.fromMap((map['student'] as Map<String, dynamic>)['_id'] as String, map['student'] as Map<String, dynamic>);
+    }
   }
 
   Map<String, dynamic> toMap({bool withId = false}) {
@@ -59,14 +64,14 @@ class MarkModel {
     return data;
   }
 
-  Future<PersonModel> get teacher async {
+  Future<TeacherModel> get teacher async {
     _teacher ??= (await Get.find<ProxyStore>().getPerson(teacherId)).asTeacher;
     return _teacher!;
-    // return
   }
 
-  Future<PersonModel> get student async {
-    return Get.find<ProxyStore>().getPerson(studentId);
+  Future<StudentModel> get student async {
+    _student ??= (await Get.find<ProxyStore>().getPerson(studentId)).asStudent;
+    return _student!;
   }
 
   Future<void> save() async {

@@ -35,7 +35,7 @@ class DayLessontimeModel {
     return _lessontimes;
   }
 
-  List<LessontimeModel>? get lessontimes_sync {
+  List<LessontimeModel>? get lessontimesSync {
     return _lessontimesLoaded ? _lessontimes : null;
   }
 

@@ -9,7 +9,6 @@ import 'package:schoosch/pages/admin/institution.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/class_choice_page.dart';
 import 'package:schoosch/pages/admin/venue_list.dart';
-import 'package:schoosch/pages/free_teachers_page.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
 import 'package:schoosch/pages/about_page.dart';
 

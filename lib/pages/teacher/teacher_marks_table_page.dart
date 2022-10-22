@@ -36,7 +36,37 @@ class TeacherTablePage extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ) + [
+          Container(
+            alignment: Alignment.center,
+            width: 120.0,
+            height: 60.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.black54,
+            ),
+            margin: const EdgeInsets.all(4.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('средний'),
+                Text(getSummaryMark(listmark)),
+              ],
+            ),
+          )
+        ];
+  }
+
+  String getSummaryMark(List<MarkModel> listmark) {
+    int sum = 0;
+    for (MarkModel mark in listmark) {
+      var times = 1;
+      if (mark.type == MarkType.exam || mark.type == MarkType.test) {
+        times = 2;
+      }
+      sum += mark.mark * times;
+    }
+    return (sum / listmark.length).toStringAsFixed(1);
   }
 
   List<Widget> _buildStudentCells(List<StudentModel> liststud) {
@@ -62,33 +92,28 @@ class TeacherTablePage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildRows(List<StudentModel> liststud) {
+  List<Widget> _buildRows(Map<StudentModel, List<MarkModel>> data, List<StudentModel> liststud) {
     return List.generate(
       liststud.length,
-      (index) => FutureBuilder<List<MarkModel>>(
-          // future: liststud[index].curriculumTeacherMarks(currentcur, aclass == null ? PersonModel.currentTeacher! : teacher!),
-          future: liststud[index].curriculumMarks(currentcur),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: Utils.progressIndicator(),
-              );
-            }
-            if (snapshot.data!.isEmpty) {
-              return Container(
-                alignment: Alignment.center,
-                width: 120.0,
-                height: 60.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.black54,
+      (index) =>
+          data[liststud[index]] == null
+              ? Container(
+                  alignment: Alignment.center,
+                  width: 120.0,
+                  height: 60.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.black54,
+                  ),
+                  margin: const EdgeInsets.all(4.0),
+                  child: const Text('нет оценок.'),
+                )
+              : Row(
+                  children: _buildMarkCells(
+                    data[liststud[index]]!,
+                  ),
                 ),
-                margin: const EdgeInsets.all(4.0),
-                child: const Text('нет оценок.'),
-              );
-            }
-            return Row(children: _buildMarkCells(snapshot.data!));
-          }),
+      // }),
     );
   }
 
@@ -100,7 +125,7 @@ class TeacherTablePage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder<List<StudentModel>>(
-          future: currentcur.allStudents(aclass: aclass),
+          future: aclass != null ? currentcur.classStudents(aclass!) : currentcur.students(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(
@@ -108,24 +133,34 @@ class TeacherTablePage extends StatelessWidget {
               );
             }
             var students = snapshot.data!;
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _buildStudentCells(students),
-                ),
-                Flexible(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildRows(students),
-                    ),
-                  ),
-                )
-              ],
-            );
+            return FutureBuilder<Map<StudentModel, List<MarkModel>>>(
+                future: currentcur.getMarksByStudents(students),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: Utils.progressIndicator(),
+                    );
+                  }
+                  var data = snapshot.data!;
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _buildStudentCells(students),
+                      ),
+                      Flexible(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: _buildRows(data, students),
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                });
           },
         ),
       ),

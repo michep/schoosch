@@ -11,6 +11,7 @@ import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:mutex/mutex.dart';
+import 'package:schoosch/widgets/utils.dart';
 
 enum LessonType {
   normal,
@@ -98,7 +99,7 @@ class LessonModel {
         var data = e as Map<String, dynamic>;
         return MarkModel.fromMap(data['_id'], data);
       }).toList();
-      _marks.addAll(_splitMarksByStudent(m));
+      _marks.addAll(Utils.splitMarksByStudent(m));
       _marksLoaded = true;
     }
 
@@ -230,7 +231,7 @@ class LessonModel {
     if (!_marksLoaded || forceRefresh) {
       var m = await Get.find<ProxyStore>().getAllLessonMarks(this, date);
       _marks.clear();
-      _marks.addAll(_splitMarksByStudent(m));
+      _marks.addAll(Utils.splitMarksByStudent(m));
       _marksLoaded = true;
     }
     return _marks;
@@ -241,15 +242,6 @@ class LessonModel {
       getAllMarks(date, forceRefresh: forceRefresh);
     }
     return _marks[student.id!] == null ? [] : _marks[student.id!]!;
-  }
-
-  Map<String, List<MarkModel>> _splitMarksByStudent(List<MarkModel> marks) {
-    Map<String, List<MarkModel>> res = {};
-    for (var m in marks) {
-      if (res[m.studentId] == null) res[m.studentId] = [];
-      res[m.studentId]!.add(m);
-    }
-    return res;
   }
 
   Map<String, List<HomeworkModel>> _splitHomeworksByStudent(List<HomeworkModel> homework) {

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
 class FABMenu extends StatefulWidget {
-  // final int childCount;
-  // final Map<IconData, void Function()> children;
   final List<FABmenuchild> children;
   final Color colorClosed;
   final Color colorOpen;
   const FABMenu({
     Key? key,
-    // required this.childCount,
     required this.children,
     required this.colorClosed,
     required this.colorOpen,
@@ -80,22 +77,6 @@ class _FABMenuState extends State<FABMenu> with SingleTickerProviderStateMixin {
     );
   }
 
-  // Widget _hwclass() {
-  //   return FloatingActionButton(
-  //     onPressed: null,
-  //     backgroundColor: Theme.of(context).colorScheme.background,
-  //     child: const Icon(Icons.groups_rounded),
-  //   );
-  // }
-
-  // Widget _hwstudent() {
-  //   return FloatingActionButton(
-  //     onPressed: null,
-  //     backgroundColor: Theme.of(context).colorScheme.background,
-  //     child: const Icon(Icons.person_rounded),
-  //   );
-  // }
-
   Widget _hwsbutton(FABmenuchild child) {
     return child.isVisible
         ? Transform(
@@ -128,14 +109,6 @@ class _FABMenuState extends State<FABMenu> with SingleTickerProviderStateMixin {
             ),
           )
         : const SizedBox.shrink();
-    //       );
-    // return FloatingActionButton(
-    //   key: ValueKey(child),
-    //   heroTag: ValueKey(child),
-    //   onPressed: child.onPressed,
-    //   backgroundColor: widget.colorOpen,
-    //   child: Icon(child.icon),
-    // );
   }
 
   @override
@@ -144,32 +117,9 @@ class _FABMenuState extends State<FABMenu> with SingleTickerProviderStateMixin {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        // ...widget.children.keys.toList().map((e) {
-        //   var l = widget.children.keys.toList();
-        //   return Transform(
-        //     transform: Matrix4.translationValues(
-        //       0,
-        //       _animationButton.value * (l.length - l.indexOf(e)),
-        //       0,
-        //     ),
-        //     child: _hwsbutton(
-        //       widget.children[e]!,
-        //       e,
-        //       ValueKey(e),
-        //     ),
-        //   );
-        // }),
         ...widget.children.map((e) {
           return _hwsbutton(e);
         }),
-        // Transform(
-        //   transform: Matrix4.translationValues(0, _animationButton.value * 2, 0),
-        //   child: _hwstudent(),
-        // ),
-        // Transform(
-        //   transform: Matrix4.translationValues(0, _animationButton.value * 1, 0),
-        //   child: _hwclass(),
-        // ),
         _toggle(),
       ],
     );
@@ -189,29 +139,3 @@ class FABmenuchild {
     this.title,
   });
 }
-
-// class FABmenuchild extends StatelessWidget {
-//   FABmenuchild({Key? key}) : super(key: key);
-
-//   late Animation<double> anim;
-
-//   void setAnimationController
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Transform(
-//       transform: Matrix4.translationValues(
-//         0,
-//         _animationButton.value * (l.length - l.indexOf(e)),
-//         0,
-//       ),
-//       child: FloatingActionButton(
-//       key: key,
-//       heroTag: key,
-//       onPressed: onTap,
-//       backgroundColor: widget.colorOpen,
-//       child: Icon(icon),
-//     ),
-//     );
-//   }
-// }

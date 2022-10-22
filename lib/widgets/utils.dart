@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:schoosch/model/mark_model.dart';
 
 class Utils {
   static DefaultMaterialLocalizations defaultLocalizations = const DefaultMaterialLocalizations();
@@ -67,5 +68,14 @@ class Utils {
   static String formatTimeOfDay(TimeOfDay? value, {bool alwaysUse24HourFormat = true}) {
     if (value != null) return defaultLocalizations.formatTimeOfDay(value, alwaysUse24HourFormat: alwaysUse24HourFormat);
     return '';
+  }
+
+  static Map<String, List<MarkModel>> splitMarksByStudent(List<MarkModel> marks) {
+    Map<String, List<MarkModel>> res = {};
+    for (var m in marks) {
+      if (res[m.studentId] == null) res[m.studentId] = [];
+      res[m.studentId]!.add(m);
+    }
+    return res;
   }
 }
