@@ -71,19 +71,22 @@ class StudentsTablePage extends StatelessWidget {
       listcur.length,
       (index) => Container(
         alignment: Alignment.center,
-        width: 150.0,
-        height: 60.0,
+        width: 120.0,
+        height: 70.0,
         // color: Colors.white,
-        decoration: const BoxDecoration(
-          border: Border.symmetric(
-            horizontal: BorderSide(
-              color: Colors.black,
-              width: 1.5,
-            ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.grey
           ),
         ),
         margin: const EdgeInsets.all(4.0),
-        child: Text(listcur[index].aliasOrName),
+        child:  Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(
+            listcur[index].aliasOrName,
+          ),
+        ),
       ),
     );
   }
@@ -112,8 +115,50 @@ class StudentsTablePage extends StatelessWidget {
               child: const Text('нет оценок.'),
             );
           }
-          return Row(children: _buildMarkCells(snapshot.data!));
+          return Column(
+            children: _buildMarkCells(
+              snapshot.data!,
+            ),
+          );
         },
+      ),
+    );
+  }
+
+  Future<Map<CurriculumModel, List<MarkModel>>> getCurriculumMarksList(List<CurriculumModel> listcur) async {
+    Map<CurriculumModel, List<MarkModel>> res = {};
+    for (var i in listcur) {
+      res[i] = await student.curriculumMarks(i);
+    }
+    return res;
+  }
+
+  List<Widget> _buildSummaryMarks(Map<CurriculumModel, List<MarkModel>> data) {
+    return List.generate(
+      data.keys.toList().length,
+      (index) => Container(
+        alignment: Alignment.center,
+        width: 120.0,
+        height: 60.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.grey,
+          ),
+          color: Colors.black54,
+        ),
+        margin: const EdgeInsets.all(4.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('средний'),
+            Text(
+              getSummaryMark(
+                data.values.toList()[index],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -125,6 +170,7 @@ class StudentsTablePage extends StatelessWidget {
         title: const Text('все оценки'),
       ),
       body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
         child: FutureBuilder<List<CurriculumModel>>(
           future: student.curriculums(),
           builder: (context, snapshot) {
@@ -133,22 +179,64 @@ class StudentsTablePage extends StatelessWidget {
                 child: Utils.progressIndicator(),
               );
             }
-            return Row(
+            // return Row(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: _buildSubjectCells(snapshot.data!),
+            //     ),
+            //     Flexible(
+            //       child: SingleChildScrollView(
+            //         scrollDirection: Axis.horizontal,
+            //         child: Column(
+            //           crossAxisAlignment: CrossAxisAlignment.start,
+            //           children: _buildRows(snapshot.data!),
+            //         ),
+            //       ),
+            //     )
+            //   ],
+            // );
+            return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _buildSubjectCells(snapshot.data!),
+                  children: _buildSubjectCells(
+                    snapshot.data!,
+                  ),
                 ),
                 Flexible(
                   child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Column(
+                    scrollDirection: Axis.vertical,
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildRows(snapshot.data!),
+                      children: _buildRows(
+                        snapshot.data!,
+                      ),
                     ),
                   ),
-                )
+                ),
+                FutureBuilder<Map<CurriculumModel, List<MarkModel>>>(
+                  future: getCurriculumMarksList(snapshot.data!),
+                  builder: (context, markssnapshot) {
+                    if(!markssnapshot.hasData) {
+                      return const SizedBox.shrink();
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 8,
+                        top: 4,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _buildSummaryMarks(
+                          markssnapshot.data!,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ],
             );
           },
