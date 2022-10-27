@@ -67,7 +67,13 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                   ),
                   ...(hws['class'] ?? []).map(
                     (hw) {
-                      return Text(hw.text);
+                      // return Text(hw.text);
+                      return ExpansionTile(
+                        title: Text(hw.text),
+                        subtitle: Text(
+                          '${Utils.formatDatetime(hw.date)} - ${Utils.formatDatetime(hw.todate!)}',
+                        ),
+                      );
                     },
                   ).toList(),
                   const Text(
