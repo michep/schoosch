@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
+import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
@@ -16,6 +17,8 @@ class HomeworkModel {
   bool _completionsLoaded = false;
 
   StudentModel? _student;
+  TeacherModel? _teacher;
+  ClassModel? _aclass;
   // final Mutex _completionsMutex = Mutex();
 
   HomeworkModel.fromMap(this.id, Map<String, dynamic> map) {
@@ -29,6 +32,14 @@ class HomeworkModel {
 
     if (map.containsKey('student') && map['student'] is Map) {
       _student = StudentModel.fromMap((map['student'] as Map<String, dynamic>)['_id'] as String, map['student'] as Map<String, dynamic>);
+    }
+
+    if (map.containsKey('teacher') && map['teacher'] is Map) {
+      _teacher = TeacherModel.fromMap((map['teacher'] as Map<String, dynamic>)['_id'] as String, map['teacher'] as Map<String, dynamic>);
+    }
+
+    if (map.containsKey('class') && map['class'] is Map) {
+      _aclass = ClassModel.fromMap((map['class'] as Map<String, dynamic>)['_id'] as String, map['class'] as Map<String, dynamic>);
     }
 
     if (map.containsKey('completion') && map['completion'] is List) {
@@ -45,6 +56,16 @@ class HomeworkModel {
     if (studentId == null) return null;
     _student ??= (await Get.find<ProxyStore>().getPerson(studentId!)).asStudent;
     return _student!;
+  }
+
+  Future<TeacherModel> get teacher async {
+    _teacher ??= (await Get.find<ProxyStore>().getPerson(teacherId)).asTeacher;
+    return _teacher!;
+  }
+
+  Future<ClassModel> get aclass async {
+    _aclass ??= (await Get.find<ProxyStore>().getClass(classId));
+    return _aclass!;
   }
 
   Future<CompletionFlagModel?> getCompletion(StudentModel student, {bool forceRefresh = false}) async {

@@ -65,7 +65,22 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                       fontSize: 17,
                     ),
                   ),
-                  ...(hws['class'] ?? []).map((e) => Text(e.text)).toList(),
+                  ...(hws['class'] ?? []).map(
+                    (hw) {
+                      return Text(hw.text);
+                    },
+                  ).toList(),
+                  const Text(
+                    'ДЗ личные',
+                    style: TextStyle(
+                      fontSize: 17,
+                    ),
+                  ),
+                  ...hws.keys.where((element) => element != 'class').expand((element) => hws[element]!).map(
+                    (hw) {
+                      return Text(hw.text);
+                    },
+                  ).toList(),
                 ],
               ),
             );
