@@ -28,31 +28,6 @@ class _MarksForStudentPageState extends State<MarksForStudentPage> {
             child: Text('Нет оценок.'),
           );
         }
-        // return ListView.builder(
-        //   itemCount: snapshot.data!.length,
-        //   itemBuilder: (BuildContext context, int i) {
-        //     return Card(
-        //       elevation: 3,
-        //       child: ListTile(
-        //         leading: Container(
-        //           padding: const EdgeInsets.all(6),
-        //           decoration: BoxDecoration(
-        //             border: Border.all(
-        //               color: Colors.red,
-        //               width: 1.5,
-        //             ),
-        //             borderRadius: BorderRadius.circular(4),
-        //           ),
-        //           child: Text(
-        //             snapshot.data![i].mark.toString(),
-        //             style: const TextStyle(fontSize: 20),
-        //           ),
-        //         ),
-        //         title: Text(snapshot.data![i].comment),
-        //       ),
-        //     );
-        //   },
-        // );
         return ListView(
           children: [
             ...snapshot.data!.map(

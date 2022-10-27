@@ -108,7 +108,7 @@ class _MarkPageState extends State<MarkPage> {
 
   Future<PersonModel?> _initStudent() async {
     if (widget.mark.studentId.isNotEmpty) {
-      _student = (await widget.mark.student).asStudent;
+      _student = await widget.mark.student;
       _studentcont.text = _student!.fullName;
       return _student;
     }

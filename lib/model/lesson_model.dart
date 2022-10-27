@@ -10,7 +10,6 @@ import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
-import 'package:mutex/mutex.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 enum LessonType {
@@ -56,10 +55,11 @@ class LessonModel {
   bool _venueLoaded = false;
   LessontimeModel? _lessontime;
   bool _lessontimeLoaded = false;
+  final List<AbsenceModel> _absence = [];
+  bool _absenceLoaded = false;
+
   LessonModel? replaceLesson;
   LessonType? type;
-  final Mutex homeworkOnDateForClassAndAllStudentsMutex = Mutex();
-
   String? get id => _id;
 
   LessonModel.empty(ClassModel aclass, ClassScheduleModel schedule, int order)
@@ -264,8 +264,14 @@ class LessonModel {
     return ms.map((e) => e.toString()).join('; ');
   }
 
-  Future<List<AbsenceModel>> getAllAbsences(DateTime date, {bool forceUpdate = false}) async {
-    return Get.find<ProxyStore>().getAllAbsences(this, date);
+  Future<List<AbsenceModel>> getAllAbsences(DateTime date, {bool forceRefresh = false}) async {
+    if (!_absenceLoaded || forceRefresh) {
+      var a = await Get.find<ProxyStore>().getAllAbsences(this, date);
+      _absence.clear();
+      _absence.addAll(a);
+      _absenceLoaded = true;
+    }
+    return _absence;
   }
 
   Future<void> createAbsence(AbsenceModel absence) async {

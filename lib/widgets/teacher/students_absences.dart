@@ -18,29 +18,37 @@ class StudentsAbsencePage extends StatefulWidget {
 }
 
 class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
+  bool forceRefresh = false;
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         FutureBuilder<List<AbsenceModel>>(
-          future: widget._lesson.getAllAbsences(widget._date),
+          future: widget._lesson.getAllAbsences(widget._date, forceRefresh: forceRefresh),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const SizedBox.shrink();
-            return snapshot.data!.isEmpty
-                ? const Center(
-                    child: Text('На этом уроке нет отсутствующих.'),
-                  )
-                : ListView(
-                    children: [
-                      ...snapshot.data!
-                          .map((absence) => AbsenceListTile(
-                                absence,
-                                deleteAbsence,
-                                widget.readOnly,
-                              ))
-                          .toList()
-                    ],
-                  );
+            forceRefresh = false;
+            return RefreshIndicator(
+              onRefresh: () async {
+                forceRefresh = true;
+                setState(() {});
+              },
+              child: snapshot.data!.isEmpty
+                  ? ListView(
+                      children: const [Center(child: Text('На этом уроке нет отсутствующих'))],
+                    )
+                  : ListView(
+                      children: [
+                        ...snapshot.data!
+                            .map((absence) => AbsenceListTile(
+                                  absence,
+                                  deleteAbsence,
+                                  widget.readOnly,
+                                ))
+                            .toList()
+                      ],
+                    ),
+            );
           },
         ),
         Visibility(

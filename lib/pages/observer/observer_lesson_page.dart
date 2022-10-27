@@ -106,122 +106,16 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
                   );
                 },
               ),
-              // TabBar(
-              //   labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              //   isScrollable: true,
-              //   indicatorWeight: 0.001,
-              //   onTap: (i) {
-              //     setState(() {
-              //       current = i;
-              //     });
-              //   },
-              //   tabs: [
-              //     TabChip(text: S.of(context).currentLessonClassHomework, pos: 0, current: current),
-              //     TabChip(text: S.of(context).currentLessonPersonalHomeworks, pos: 1, current: current),
-              //     TabChip(text: S.of(context).currentLessonAbsences, pos: 2, current: current),
-              //     TabChip(text: S.of(context).currentLessonMarks, pos: 3, current: current),
-              //     TabChip(text: S.of(context).nextLessonClassHomework, pos: 4, current: current),
-              //     TabChip(text: S.of(context).nextLessonPersonalHomeworks, pos: 5, current: current),
-              //   ],
-              // ),
-              // Expanded(
-              //   child: TabBarView(
-              //     children: [
-              //       ClassTaskWithCompetionsPage(
-              //         null,
-              //         widget.curriculum,
-              //         widget.date,
-              //         widget.lesson,
-              //         (d, f) => widget.lesson.homeworkThisLessonForClass(d, forceRefresh: f),
-              //         readOnly: true,
-              //       ),
-              //       StudentsTasksWithCompetionsPage(
-              //         null,
-              //         widget.curriculum,
-              //         widget.date,
-              //         widget.lesson,
-              //         (d, f) => widget.lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
-              //         readOnly: true,
-              //       ),
-              //       StudentsAbsencePage(
-              //         widget.date,
-              //         widget.lesson,
-              //         readOnly: true,
-              //       ),
-              //       StudentsMarksPage(
-              //         widget.date,
-              //         widget.lesson,
-              //         readOnly: true,
-              //       ),
-              //       ClassTaskWithCompetionsPage(
-              //         null,
-              //         widget.curriculum,
-              //         widget.date,
-              //         widget.lesson,
-              //         (d, f) => widget.lesson.homeworOnDateForClass(d, forceRefresh: f),
-              //         readOnly: true,
-              //       ),
-              //       StudentsTasksWithCompetionsPage(
-              //         null,
-              //         widget.curriculum,
-              //         widget.date,
-              //         widget.lesson,
-              //         (d, f) => widget.lesson.homeworkOnDateForClassAndAllStudents(d, forceRefresh: f),
-              //         readOnly: true,
-              //       ),
-              //     ],
-              //   ),
-              // )
-              // TabsWidget(
-              //   pages: {
-              //     S.of(context).currentLessonClassHomework: ClassTaskWithCompetionsPage(
-              //       null,
-              //       widget.curriculum,
-              //       widget.date,
-              //       widget.lesson,
-              //       (d, f) => widget.lesson.homeworkThisLessonForClass(d, forceRefresh: f),
-              //       readOnly: true,
-              //     ),
-              //     S.of(context).currentLessonPersonalHomeworks: StudentsTasksWithCompetionsPage(
-              //       null,
-              //       widget.curriculum,
-              //       widget.date,
-              //       widget.lesson,
-              //       (d, f) => widget.lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
-              //       readOnly: true,
-              //     ),
-              //     S.of(context).currentLessonAbsences: StudentsAbsencePage(
-              //       widget.date,
-              //       widget.lesson,
-              //     ),
-              //     S.of(context).currentLessonMarks: StudentsMarksPage(
-              //       widget.date,
-              //       widget.lesson,
-              //     ),
-              //     S.of(context).nextLessonClassHomework: ClassTaskWithCompetionsPage(
-              //       null,
-              //       widget.curriculum,
-              //       widget.date,
-              //       widget.lesson,
-              //       (d, f) => widget.lesson.homeworOnDateForClass(d, forceRefresh: f),
-              //     ),
-              //     S.of(context).nextLessonPersonalHomeworks: StudentsTasksWithCompetionsPage(
-              //       null,
-              //       widget.curriculum,
-              //       widget.date,
-              //       widget.lesson,
-              //       (d, f) => widget.lesson.homeworkOnDateForClassAndAllStudents(d, forceRefresh: f),
-              //     ),
-              //   },
-              //   isScrollable: true,
-              // ),
               const Divider(
                 indent: 50,
                 endIndent: 50,
                 thickness: 3,
               ),
               Expanded(
-                child: pages[current],
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: pages[current],
+                ),
               ),
             ],
           ),
@@ -229,7 +123,7 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
       ),
       bottomNavigationBar: Container(
         color: Theme.of(context).colorScheme.primary,
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
         child: GNav(
           onTabChange: (i) => setState(() {
             current = i;
@@ -240,92 +134,6 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
           activeColor: Theme.of(context).colorScheme.onBackground,
           tabActiveBorder: Border.all(
             color: Theme.of(context).colorScheme.onBackground,
-// =======
-//     return DefaultTabController(
-//       length: 6,
-//       child: Scaffold(
-//         appBar: MAppBar(curriculum.aliasOrName),
-//         body: SafeArea(
-//           child: Padding(
-//             padding: const EdgeInsets.all(8),
-//             child: Column(
-//               mainAxisSize: MainAxisSize.min,
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(lesson.aclass.name),
-//                 Text(Utils.formatDatetime(date)),
-//                 Text('${lesson.order} ${S.of(context).lesson}'),
-//                 Text(time.formatPeriod()),
-//                 FutureBuilder<TeacherModel?>(
-//                   future: curriculum.master,
-//                   builder: (context, snapshot) {
-//                     if (!snapshot.hasData || snapshot.data == null) return const SizedBox.shrink();
-//                     return Text(snapshot.data!.fullName);
-//                   },
-//                 ),
-//                 TabBar(
-//                   labelPadding: const EdgeInsets.all(16),
-//                   isScrollable: true,
-//                   tabs: [
-//                     Text(S.of(context).currentLessonClassHomework),
-//                     Text(S.of(context).currentLessonPersonalHomeworks),
-//                     Text(S.of(context).currentLessonAbsences),
-//                     Text(S.of(context).currentLessonMarks),
-//                     Text(S.of(context).nextLessonClassHomework),
-//                     Text(S.of(context).nextLessonPersonalHomeworks),
-//                   ],
-//                 ),
-//                 Expanded(
-//                   child: TabBarView(
-//                     children: [
-//                       ClassTaskWithCompetionsPage(
-//                         null,
-//                         curriculum,
-//                         date,
-//                         lesson,
-//                         (d, f) => lesson.homeworkThisLessonForClass(d, forceRefresh: f),
-//                         readOnly: true,
-//                       ),
-//                       StudentsTasksWithCompetionsPage(
-//                         null,
-//                         curriculum,
-//                         date,
-//                         lesson,
-//                         (d, f) => lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
-//                         readOnly: true,
-//                       ),
-//                       StudentsAbsencePage(
-//                         date,
-//                         lesson,
-//                         readOnly: true,
-//                       ),
-//                       StudentsMarksPage(
-//                         date,
-//                         lesson,
-//                         readOnly: true,
-//                       ),
-//                       ClassTaskWithCompetionsPage(
-//                         null,
-//                         curriculum,
-//                         date,
-//                         lesson,
-//                         (d, f) => lesson.homeworkNextLessonForClass(d, forceRefresh: f),
-//                         readOnly: true,
-//                       ),
-//                       StudentsTasksWithCompetionsPage(
-//                         null,
-//                         curriculum,
-//                         date,
-//                         lesson,
-//                         (d, f) => lesson.homeworkNextLessonForClassAndAllStudents(d, forceRefresh: f),
-//                         readOnly: true,
-//                       ),
-//                     ],
-//                   ),
-//                 )
-//               ],
-//             ),
-// >>>>>>> proxy
           ),
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           tabs: const [
@@ -335,7 +143,7 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
             ),
             GButton(
               icon: Icons.person_off_rounded,
-              text: 'Отсутствующщие',
+              text: 'Отсутствующие',
             ),
             GButton(
               icon: Icons.thumb_up_alt_rounded,

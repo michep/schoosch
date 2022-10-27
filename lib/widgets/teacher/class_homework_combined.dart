@@ -38,13 +38,6 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
   late bool eXITINFINITELOOPNOW = false;
   late bool buttonVisible = false;
 
-  // @override
-  // void initState() {
-  //   eXITINFINITELOOPNOW = false;
-  //   buttonVisible = false;
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     List<String> studentsIdsWithHW = [];
@@ -170,39 +163,6 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
           visible: !widget.readOnly,
           child: Align(
             alignment: Alignment.bottomRight,
-            // child: FloatingActionButton(
-            //   onPressed: () => addStudentHomework(hws.keys.toList()),
-            //   child: const Icon(Icons.add),
-            // ),
-            // child: SpeedDial(
-            //   renderOverlay: false,
-            //   shape: RoundedRectangleBorder(
-            //     borderRadius: BorderRadius.circular(16),
-            //   ),
-            //   animatedIcon: AnimatedIcons.add_event,
-            //   spaceBetweenChildren: 15,
-            //   spacing: 10,
-            //   childPadding: const EdgeInsets.all(2),
-            //   children: [
-            //     SpeedDialChild(
-            //       child: const Icon(Icons.groups_rounded, size: 25,),
-            //       label: 'классу',
-            //       onTap: () => addHomework(
-            //         isPersonal: false,
-            //       ),
-            //       labelStyle: const TextStyle(fontSize: 16,)
-            //     ),
-            //     SpeedDialChild(
-            //       child: const Icon(Icons.person, size: 25,),
-            //       label: 'личное',
-            //       onTap: () => addHomework(
-            //         isPersonal: true,
-            //         studentIDs: hws.keys.toList(),
-            //       ),
-            //       labelStyle: const TextStyle(fontSize: 16,)
-            //     ),
-            //   ],
-            // ),
             child: FABMenu(
               children: [
                 FABmenuchild(
@@ -229,29 +189,6 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
       ],
     );
   }
-
-  // void addStudentHomework({required bool isPersonal, List<String> studentIDs = const [],}) async {
-  //   var res = await Get.to<bool>(
-  //     () => HomeworkPage(
-  //       widget._lesson,
-  //       HomeworkModel.fromMap(
-  //         null,
-  //         {
-  //           'class_id': widget._lesson.aclass.id,
-  //           'date': Timestamp.fromDate(widget._date),
-  //           'text': '',
-  //           'teacher_id': widget._teacher!.id,
-  //           'curriculum_id': widget._curriculum.id,
-  //         },
-  //       ),
-  //       isPersonal ? const [] : studentIDs,
-  //       personalHomework: isPersonal,
-  //     ),
-  //   );
-  //   if (res is bool && res == true) {
-  //     setState(() {});
-  //   }
-  // }
 
   void addHomework({
     required bool isPersonal,

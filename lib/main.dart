@@ -21,13 +21,6 @@ import 'model/person_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-
-  // OneSignal.shared.setAppId("0725282a-b87a-4ea8-97ab-165108deee94");
-
-  // OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
-  //   print("Accepted permission: $accepted");
-  // });
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var fauth = FAuth();
   // var fstore = FStore();
@@ -59,17 +52,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return StreamBuilder<ConnectivityResult>(
-    //     stream: Connectivity().onConnectivityChanged,
-    //     builder: (context, snapshot) {
-    //       if (!snapshot.hasData) {
-    //         return Center(
-    //           child: Utils.progressIndicator(),
-    //         );
-    //       }
-    //       if (snapshot.data! == ConnectivityResult.none) {
-    //         Get.off(() => const DisconnectedPage());
-    //       }
     return GetMaterialApp(
       supportedLocales: S.delegate.supportedLocales,
       localizationsDelegates: [
@@ -86,13 +68,12 @@ class MyApp extends StatelessWidget {
       theme: darkTheme,
       home: _homePageSelector(),
     );
-    // });
   }
 
   Widget _homePageSelector() {
     if (PersonModel.currentUser == null) return const LoginPage();
     if (PersonModel.currentUser!.currentType == PersonType.admin) return const AdminPage();
-  
+
     return const HomePage();
   }
 }

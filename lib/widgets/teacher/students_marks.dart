@@ -19,31 +19,43 @@ class StudentsMarksPage extends StatefulWidget {
 }
 
 class _StudentsMarksPageState extends State<StudentsMarksPage> {
+  bool forceRefresh = false;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         FutureBuilder<Map<String, List<MarkModel>>>(
-          future: widget._lesson.getAllMarks(widget._date, forceRefresh: true),
+          future: widget._lesson.getAllMarks(widget._date, forceRefresh: forceRefresh),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const SizedBox.shrink();
-            return snapshot.data!.isEmpty
-                ? const Center(child: Text('Вы еще не ставили оценок.'))
-                : ListView(
-                    children: [
-                      ...snapshot.data!.keys.map(
-                        (e) => MarkListTile(
-                          e,
-                          widget._lesson,
-                          widget._date,
-                          deleteMark,
-                          editMark,
-                          widget.readOnly,
-                          key: ValueKey(e),
-                        ),
-                      )
-                    ].toList(),
-                  );
+            forceRefresh = false;
+            return RefreshIndicator(
+              onRefresh: () async {
+                forceRefresh = true;
+                setState(() {});
+              },
+              child: snapshot.data!.isEmpty
+                  ? ListView(
+                      children: const [Center(child: Text('Вы еще не ставили оценок'))],
+                    )
+                  : ListView(
+                      children: [
+                        ...snapshot.data!.keys.map(
+                          (e) => MarkListTile(
+                            e,
+                            widget._lesson,
+                            widget._date,
+                            snapshot.data![e]!,
+                            deleteMark,
+                            editMark,
+                            widget.readOnly,
+                            key: ValueKey(e),
+                          ),
+                        )
+                      ].toList(),
+                    ),
+            );
           },
         ),
         Visibility(
@@ -99,9 +111,10 @@ class MarkListTile extends StatefulWidget {
   final DateTime date;
   final void Function(MarkModel) deleteFunc;
   final Future<void> Function(MarkModel) editFunc;
+  final List<MarkModel> marks;
   final bool readOnly;
 
-  const MarkListTile(this.studentId, this.lesson, this.date, this.deleteFunc, this.editFunc, this.readOnly, {Key? key}) : super(key: key);
+  const MarkListTile(this.studentId, this.lesson, this.date, this.marks, this.deleteFunc, this.editFunc, this.readOnly, {Key? key}) : super(key: key);
 
   @override
   State<MarkListTile> createState() => _MarkListTileState();
@@ -125,18 +138,12 @@ class _MarkListTileState extends State<MarkListTile> {
   @override
   Widget build(BuildContext context) {
     if (student == null) return const SizedBox.shrink();
-    return FutureBuilder<List<MarkModel>>(
-      future: widget.lesson.marksForStudent(student!, widget.date, forceRefresh: true),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return const SizedBox.shrink();
-        return ExpansionTile(
-          title: Text(student!.fullName),
-          subtitle: Text(marksString(snapshot.data!)),
-          children: [
-            ...snapshot.data!.map((e) => MarkTile(e, widget.deleteFunc, widget.editFunc, widget.readOnly, key: ValueKey(e.id))).toList(),
-          ],
-        );
-      },
+    return ExpansionTile(
+      title: Text(student!.fullName),
+      subtitle: Text(marksString(widget.marks)),
+      children: [
+        ...widget.marks.map((e) => MarkTile(e, widget.deleteFunc, widget.editFunc, widget.readOnly, key: ValueKey(e.id))).toList(),
+      ],
     );
   }
 
