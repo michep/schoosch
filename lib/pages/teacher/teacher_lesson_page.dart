@@ -39,7 +39,7 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
         widget.date,
         widget.lesson,
         (d, f) => widget.lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
-        (d, f) => widget.lesson.homeworkThisLessonForClass(d, forceRefresh: f),
+        // (d, f) => widget.lesson.homeworkThisLessonForClass(d, forceRefresh: f),
         readOnly: true,
         key: const ValueKey(0),
       ),
@@ -57,7 +57,7 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
         widget.date,
         widget.lesson,
         (d, f) => widget.lesson.homeworkNextLessonForClassAndAllStudents(d, forceRefresh: f),
-        (d, f) => widget.lesson.homeworkNextLessonForClass(d, forceRefresh: f),
+        // (d, f) => widget.lesson.homeworkNextLessonForClass(d, forceRefresh: f),
         key: const ValueKey(1),
       ),
     ];

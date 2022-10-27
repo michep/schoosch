@@ -17,7 +17,7 @@ class HomeworksForStudentPage extends StatefulWidget {
 class _HomeworksForStudentPageState extends State<HomeworksForStudentPage> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, HomeworkModel?>?>(
+    return FutureBuilder<Map<String, List<HomeworkModel>>>(
       future: widget._lesson.homeworkThisLessonForClassAndStudent(widget._student, widget._date, forceRefresh: false),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -33,15 +33,17 @@ class _HomeworksForStudentPageState extends State<HomeworksForStudentPage> {
         return ListView(
           shrinkWrap: true,
           children: [
+            //TODO: now its list
             if (stud != null)
               HomeworkCard(
-                homework: stud,
+                homework: stud[0],
                 isClass: false,
                 student: widget._student,
               ),
+            //TODO: now its list too
             if (clas != null)
               HomeworkCard(
-                homework: clas,
+                homework: clas[0],
                 isClass: true,
                 student: widget._student,
               ),

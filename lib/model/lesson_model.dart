@@ -157,30 +157,30 @@ class LessonModel {
     return _splitHomeworksByStudent(hw);
   }
 
-  Future<HomeworkModel?> homeworkThisLessonForClass(DateTime date, {bool forceRefresh = false}) async {
+  Future<List<HomeworkModel>> homeworkThisLessonForClass(DateTime date, {bool forceRefresh = false}) async {
     if (!_homeworksThisLessonLoaded || forceRefresh) {
       _homeworksThisLesson.addAll(await _getAllHomeworkThisLesson(aclass, (await curriculum)!, date));
       _homeworksThisLessonLoaded = true;
     }
-    return _homeworksThisLesson['class']?[0];
+    return _homeworksThisLesson['class'] ?? [];
   }
 
-  Future<HomeworkModel?> homeworkThisLessonForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
+  Future<List<HomeworkModel>> homeworkThisLessonForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
     if (!_homeworksThisLessonLoaded || forceRefresh) {
       _homeworksThisLesson.addAll(await _getAllHomeworkThisLesson(aclass, (await curriculum)!, date));
       _homeworksThisLessonLoaded = true;
     }
-    return _homeworksThisLesson[student.id!]?[0];
+    return _homeworksThisLesson[student.id!] ?? [];
   }
 
-  Future<Map<String, HomeworkModel?>> homeworkThisLessonForClassAndStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
+  Future<Map<String, List<HomeworkModel>>> homeworkThisLessonForClassAndStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
     if (!_homeworksThisLessonLoaded || forceRefresh) {
       _homeworksThisLesson.addAll(await _getAllHomeworkThisLesson(aclass, (await curriculum)!, date));
       _homeworksThisLessonLoaded = true;
     }
     return {
-      'student': _homeworksThisLesson[student.id]?[0],
-      'class': _homeworksThisLesson['class']?[0],
+      'student': _homeworksThisLesson[student.id] ?? [],
+      'class': _homeworksThisLesson['class'] ?? [],
     };
   }
 
@@ -192,30 +192,30 @@ class LessonModel {
     return _homeworksThisLesson;
   }
 
-  Future<HomeworkModel?> homeworkNextLessonForClass(DateTime date, {bool forceRefresh = false}) async {
+  Future<List<HomeworkModel>> homeworkNextLessonForClass(DateTime date, {bool forceRefresh = false}) async {
     if (!_homeworksNextLessonLoaded || forceRefresh) {
       _homeworksNextLesson.addAll(await _getAllHomeworkNextLesson(aclass, (await curriculum)!, date));
       _homeworksNextLessonLoaded = true;
     }
-    return _homeworksNextLesson['class']?[0];
+    return _homeworksNextLesson['class'] ?? [];
   }
 
-  Future<HomeworkModel?> homeworkNextLessonForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
+  Future<List<HomeworkModel>> homeworkNextLessonForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
     if (!_homeworksNextLessonLoaded || forceRefresh) {
       _homeworksNextLesson.addAll(await _getAllHomeworkNextLesson(aclass, (await curriculum)!, date));
       _homeworksNextLessonLoaded = true;
     }
-    return _homeworksNextLesson[student.id!]?[0];
+    return _homeworksNextLesson[student.id!] ?? [];
   }
 
-  Future<Map<String, HomeworkModel?>> homeworkNextLessonForClassAndStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
+  Future<Map<String, List<HomeworkModel>>> homeworkNextLessonForClassAndStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
     if (!_homeworksNextLessonLoaded || forceRefresh) {
       _homeworksNextLesson.addAll(await _getAllHomeworkNextLesson(aclass, (await curriculum)!, date));
       _homeworksNextLessonLoaded = true;
     }
     return {
-      'student': _homeworksNextLesson[student.id]?[0],
-      'class': _homeworksNextLesson['class']?[0],
+      'student': _homeworksNextLesson[student.id] ?? [],
+      'class': _homeworksNextLesson['class'] ?? [],
     };
   }
 
@@ -249,7 +249,7 @@ class LessonModel {
     String key;
     for (var hw in homework) {
       hw.studentId == null ? key = 'class' : key = hw.studentId!;
-      if (res[key] == null) res[key] = [];
+      if (!res.keys.contains(key)) res[key] = [];
       res[key]!.add(hw);
     }
     return res;

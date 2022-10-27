@@ -21,12 +21,13 @@ class ClassHomeworksCombinedPage extends StatefulWidget {
   final TeacherModel? _teacher;
   final LessonModel _lesson;
   final Future<Map<String, List<HomeworkModel>>> Function(DateTime, bool) _hwsFuture;
-  final Future<HomeworkModel?> Function(DateTime, bool) _hwFuture;
+  // final Future<HomeworkModel?> Function(DateTime, bool) _hwFuture;
 
   final bool readOnly;
 
-  const ClassHomeworksCombinedPage(this._teacher, this._curriculum, this._date, this._lesson, this._hwsFuture, this._hwFuture,
-      {Key? key, this.readOnly = false})
+  const ClassHomeworksCombinedPage(this._teacher, this._curriculum, this._date, this._lesson, this._hwsFuture, //this._hwFuture,
+      {Key? key,
+      this.readOnly = false})
       : super(key: key);
 
   @override
@@ -37,128 +38,153 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
   HomeworkModel? hw;
   late bool eXITINFINITELOOPNOW = false;
   late bool buttonVisible = false;
+  bool forceRefresh = false;
 
   @override
   Widget build(BuildContext context) {
-    List<String> studentsIdsWithHW = [];
-    Map<String, List> hws = {};
+    Map<String, List<HomeworkModel>> hws = {};
     // var buttonVisible = false;
     return Stack(
       children: [
-        ListView(
-          children: [
-            const Text(
-              'ДЗ классу',
-              style: TextStyle(
-                fontSize: 17,
+        FutureBuilder<Map<String, List<HomeworkModel>>>(
+          future: widget._hwsFuture(widget._date, forceRefresh),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return const SizedBox.shrink();
+            hws = snapshot.data!;
+            forceRefresh = false;
+            return RefreshIndicator(
+              onRefresh: () async {
+                forceRefresh = true;
+                setState(() {});
+              },
+              child: ListView(
+                children: [
+                  const Text(
+                    'ДЗ классу',
+                    style: TextStyle(
+                      fontSize: 17,
+                    ),
+                  ),
+                  ...(hws['class'] ?? []).map((e) => Text(e.text)).toList(),
+                ],
               ),
-            ),
-            FutureBuilder<HomeworkModel?>(
-              future: widget._hwFuture(widget._date, true).then((v) {
-                if (!eXITINFINITELOOPNOW) {
-                  setState(() {
-                    buttonVisible = !(widget.readOnly || v != null);
-                  });
-                  eXITINFINITELOOPNOW = true;
-                }
-                return v;
-              }),
-              builder: (context, snapHW) {
-                // if (snapHW.connectionState == ConnectionState.done) {
-
-                // }
-                hw = snapHW.data;
-                return snapHW.hasData
-                    ? FutureBuilder<List<CompletionFlagModel>>(
-                        future: hw!.getAllCompletions(),
-                        builder: (context, snapCompl) {
-                          if (!snapCompl.hasData) return const SizedBox.shrink();
-                          return ExpansionTile(
-                            leading: Text(
-                              Utils.formatDatetime(
-                                hw!.date,
-                                format: 'dd MMM',
-                              ),
-                            ),
-                            title: Linkify(
-                              text: hw!.text,
-                              onOpen: (link) => _openLink(link.url),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 10,
-                            ),
-                            trailing: widget.readOnly
-                                ? null
-                                : IconButton(
-                                    icon: const Icon(Icons.edit),
-                                    onPressed: () => editClassHomework(hw!),
-                                  ),
-                            children: [
-                              ...snapCompl.data!.map(
-                                (compl) => ClassHomeworkCompetionTile(
-                                  hw!,
-                                  compl,
-                                  toggleHomeworkCompletion,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      )
-                    : const Center(
-                        child: Text(
-                          'Вы еще не задавали ДЗ.',
-                        ),
-                      );
-              },
-            ),
-            FutureBuilder<Map<String, List<HomeworkModel>>>(
-              future: widget._hwsFuture(widget._date, true),
-              builder: (context, snapHWs) {
-                if (snapHWs.connectionState == ConnectionState.done) {
-                  hws.clear();
-                  hws.addAll(snapHWs.data!);
-                  hws.remove('class');
-                  hws.removeWhere((key, value) => value == null);
-                  studentsIdsWithHW = hws.keys.toList();
-                }
-                if (snapHWs.hasData) {
-                  List<Widget> hww = [];
-                  for (var hwl in snapHWs.data!.values) {
-                    for (var hw in hwl) {
-                      if (hw.studentId == null) continue;
-                      var w = StudentHomeworkCompetionTile(
-                        hw,
-                        widget._lesson,
-                        null,
-                        (hws) => editStudentHomework(hws, studentsIdsWithHW, false),
-                        toggleHomeworkCompletion,
-                        readOnly: widget.readOnly,
-                      );
-                      hww.add(w);
-                    }
-                  }
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'ДЗ личные',
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                      ...hww,
-                    ],
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
-              },
-            ),
-          ],
+            );
+          },
         ),
+        // ListView(
+        //   children: [
+        //     const Text(
+        //       'ДЗ классу',
+        //       style: TextStyle(
+        //         fontSize: 17,
+        //       ),
+        //     ),
+        //     FutureBuilder<HomeworkModel?>(
+        //       future: widget._hwFuture(widget._date, forceRefresh).then((v) {
+        //         if (!eXITINFINITELOOPNOW) {
+        //           setState(() {
+        //             buttonVisible = !(widget.readOnly || v != null);
+        //           });
+        //           eXITINFINITELOOPNOW = true;
+        //         }
+        //         return v;
+        //       }),
+        //       builder: (context, snapHW) {
+        //         // if (snapHW.connectionState == ConnectionState.done) {
+
+        //         // }
+        //         hw = snapHW.data;
+        //         return snapHW.hasData
+        //             ? FutureBuilder<List<CompletionFlagModel>>(
+        //                 future: hw!.getAllCompletions(),
+        //                 builder: (context, snapCompl) {
+        //                   if (!snapCompl.hasData) return const SizedBox.shrink();
+        //                   return ExpansionTile(
+        //                     leading: Text(
+        //                       Utils.formatDatetime(
+        //                         hw!.date,
+        //                         format: 'dd MMM',
+        //                       ),
+        //                     ),
+        //                     title: Linkify(
+        //                       text: hw!.text,
+        //                       onOpen: (link) => _openLink(link.url),
+        //                       overflow: TextOverflow.ellipsis,
+        //                       maxLines: 10,
+        //                     ),
+        //                     trailing: widget.readOnly
+        //                         ? null
+        //                         : IconButton(
+        //                             icon: const Icon(Icons.edit),
+        //                             onPressed: () => editClassHomework(hw!),
+        //                           ),
+        //                     children: [
+        //                       ...snapCompl.data!.map(
+        //                         (compl) => ClassHomeworkCompetionTile(
+        //                           hw!,
+        //                           compl,
+        //                           toggleHomeworkCompletion,
+        //                         ),
+        //                       ),
+        //                     ],
+        //                   );
+        //                 },
+        //               )
+        //             : const Center(
+        //                 child: Text(
+        //                   'Вы еще не задавали ДЗ.',
+        //                 ),
+        //               );
+        //       },
+        //     ),
+        //     FutureBuilder<Map<String, List<HomeworkModel>>>(
+        //       future: widget._hwsFuture(widget._date, forceRefresh),
+        //       builder: (context, snapHWs) {
+        //         if (snapHWs.connectionState == ConnectionState.done) {
+        //           hws.clear();
+        //           hws.addAll(snapHWs.data!);
+        //           hws.remove('class');
+        //           hws.removeWhere((key, value) => value == null);
+        //           studentsIdsWithHW = hws.keys.toList();
+        //         }
+        //         if (snapHWs.hasData) {
+        //           List<Widget> hww = [];
+        //           for (var hwl in snapHWs.data!.values) {
+        //             for (var hw in hwl) {
+        //               if (hw.studentId == null) continue;
+        //               var w = StudentHomeworkCompetionTile(
+        //                 hw,
+        //                 widget._lesson,
+        //                 null,
+        //                 (hws) => editStudentHomework(hws, studentsIdsWithHW, false),
+        //                 toggleHomeworkCompletion,
+        //                 readOnly: widget.readOnly,
+        //               );
+        //               hww.add(w);
+        //             }
+        //           }
+        //           return Column(
+        //             mainAxisSize: MainAxisSize.min,
+        //             children: [
+        //               const Align(
+        //                 alignment: Alignment.centerLeft,
+        //                 child: Text(
+        //                   'ДЗ личные',
+        //                   style: TextStyle(
+        //                     fontSize: 17,
+        //                   ),
+        //                 ),
+        //               ),
+        //               ...hww,
+        //             ],
+        //           );
+        //         } else {
+        //           return const SizedBox.shrink();
+        //         }
+        //       },
+        //     ),
+        //   ],
+        // ),
         Visibility(
           visible: !widget.readOnly,
           child: Align(

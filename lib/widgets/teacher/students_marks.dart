@@ -126,13 +126,15 @@ class _MarkListTileState extends State<MarkListTile> {
   @override
   void initState() {
     super.initState();
-    InstitutionModel.currentInstitution.getPerson(widget.studentId).then((value) {
-      if (mounted) {
-        setState(() {
-          student = value.asStudent;
-        });
-      }
-    });
+    if (widget.marks.isNotEmpty) {
+      widget.marks[0].student.then((value) {
+        if (mounted) {
+          setState(() {
+            student = value.asStudent;
+          });
+        }
+      });
+    }
   }
 
   @override
