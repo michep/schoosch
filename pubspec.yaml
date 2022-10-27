@@ -61,7 +61,7 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  # image_path: "assets/play_store_512.png"
+  image_path: "assets/play_store_512.png"
   adaptive_icon_foreground: "assets/play_store_512.png"
   adaptive_icon_background: "#57859D"
   remove_alpha_ios: true
