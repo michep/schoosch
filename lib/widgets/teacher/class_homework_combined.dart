@@ -68,11 +68,62 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                   ...(hws['class'] ?? []).map(
                     (hw) {
                       // return Text(hw.text);
-                      return ExpansionTile(
-                        title: Text(hw.text),
-                        subtitle: Text(
-                          '${Utils.formatDatetime(hw.date)} - ${Utils.formatDatetime(hw.todate!)}',
-                        ),
+                      // return ExpansionTile(
+                      //   title: Linkify(
+                      //     text: hw.text,
+                      //     onOpen: (link) => _openLink(link.url),
+                      //     overflow: TextOverflow.ellipsis,
+                      //     maxLines: 10,
+                      //   ),
+                      //   subtitle: Text(
+                      //     '${Utils.formatDatetime(hw.date)} - ${Utils.formatDatetime(hw.todate!)}',
+                      //     style: TextStyle(
+                      //       color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+                      //       fontSize: 13,
+                      //     ),
+                      //   ),
+                      // );
+                      return FutureBuilder<List<CompletionFlagModel>>(
+                        future: hw.getAllCompletions(),
+                        builder: (context, snapCompl) {
+                          if (!snapCompl.hasData) return const SizedBox.shrink();
+                          return ExpansionTile(
+                            leading: Text(
+                              Utils.formatDatetime(
+                                hw.date,
+                                format: 'dd MMM',
+                              ),
+                            ),
+                            title: Linkify(
+                              text: hw.text,
+                              onOpen: (link) => _openLink(link.url),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 10,
+                            ),
+                            subtitle: Text(
+                              '${Utils.formatDatetime(hw.date)} - ${Utils.formatDatetime(hw.todate!)}',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+                                fontSize: 13,
+                              ),
+                            ),
+                            // trailing: widget.readOnly
+                            //     ? null
+                            //     : IconButton(
+                            //         icon: const Icon(Icons.edit),
+                            //         onPressed: () => editClassHomework(hw),
+                            //       ),
+                            children: [
+                              ...snapCompl.data!.map(
+                                (compl) => ClassHomeworkCompetionTile(
+                                  hw,
+                                  compl,
+                                  toggleHomeworkCompletion,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       );
                     },
                   ).toList(),

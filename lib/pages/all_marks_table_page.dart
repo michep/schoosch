@@ -153,7 +153,7 @@ class StudentsTablePage extends StatelessWidget {
           children: [
             const Text('средний'),
             Text(
-              getSummaryMark(
+              data[data.keys.toList()[index]] == null ? 'нет данных' : getSummaryMark(
                 data.values.toList()[index],
               ),
             ),

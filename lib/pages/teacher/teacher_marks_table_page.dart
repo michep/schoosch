@@ -115,7 +115,10 @@ class TeacherTablePage extends StatelessWidget {
           children: [
             const Text('средний'),
             Text(
-              getSummaryMark(
+              // getSummaryMark(
+              //   data.values.toList()[index],
+              // ),
+              data[data.keys.toList()[index]] == null ? 'нет данных' : getSummaryMark(
                 data.values.toList()[index],
               ),
             ),
