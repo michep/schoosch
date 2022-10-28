@@ -119,7 +119,7 @@ class ClassModel {
   //       await Get.find<MStore>().getLessontimes(_dayLessontimeId),
   //     );
   //     _lessontimes.sort((a, b) => a.order.compareTo(b.order));
-  //     _lessontimesLoaded = true; //TODO: fallboack to default lessontimes?
+  //     _lessontimesLoaded = true; //TODO: fallback to default lessontimes?
   //   }
   //   return _lessontimes;
   // }
@@ -131,7 +131,7 @@ class ClassModel {
         await Get.find<ProxyStore>().getLessontimes(_dayLessontimeId),
       );
       _lessontimes.sort((a, b) => a.order.compareTo(b.order));
-      _lessontimesLoaded = true; //TODO: fallboack to default lessontimes?
+      _lessontimesLoaded = true; //TODO: fallback to default lessontimes?
     }
     __lessontimesMutex.release();
     return _lessontimes[n - 1];

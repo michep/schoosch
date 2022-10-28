@@ -6,8 +6,8 @@ import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
-import 'package:schoosch/widgets/student/homeworks_page.dart';
-import 'package:schoosch/widgets/student/marks_page.dart';
+import 'package:schoosch/widgets/student/student_homeworks.dart';
+import 'package:schoosch/widgets/student/student_marks.dart';
 import 'package:schoosch/widgets/utils.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -33,12 +33,12 @@ class _StudentLessonPageState extends State<StudentLessonPage> with SingleTicker
   void initState() {
     // tabcont = TabController(length: 2, vsync: this);
     pages = [
-      HomeworksForStudentPage(
+      StudentHomeworks(
         widget._lesson,
         widget._date,
         widget._student,
       ),
-      MarksForStudentPage(
+      StudentMarks(
         widget._lesson,
         widget._date,
         widget._student,

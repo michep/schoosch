@@ -3,17 +3,17 @@ import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
-class MarksForStudentPage extends StatefulWidget {
+class StudentMarks extends StatefulWidget {
   final LessonModel _lesson;
   final DateTime _date;
   final StudentModel _student;
-  const MarksForStudentPage(this._lesson, this._date, this._student, {Key? key}) : super(key: key);
+  const StudentMarks(this._lesson, this._date, this._student, {Key? key}) : super(key: key);
 
   @override
-  State<MarksForStudentPage> createState() => _MarksForStudentPageState();
+  State<StudentMarks> createState() => _StudentMarksState();
 }
 
-class _MarksForStudentPageState extends State<MarksForStudentPage> {
+class _StudentMarksState extends State<StudentMarks> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<MarkModel>?>(

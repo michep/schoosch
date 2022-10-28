@@ -5,38 +5,43 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class ClassHomeworkCompetionTile extends StatelessWidget {
-  final HomeworkModel hw;
-  final CompletionFlagModel compl;
+  final HomeworkModel homework;
+  final CompletionFlagModel completion;
   final void Function(HomeworkModel, CompletionFlagModel) toggleHomeworkCompletion;
 
-  const ClassHomeworkCompetionTile(this.hw, this.compl, this.toggleHomeworkCompletion, {Key? key}) : super(key: key);
+  const ClassHomeworkCompetionTile({
+    Key? key,
+    required this.homework,
+    required this.completion,
+    required this.toggleHomeworkCompletion,
+  }) : super(key: key);
 
   @override
   Widget build(Object context) {
     Widget icon;
     Widget complTime;
 
-    switch (compl.status) {
+    switch (completion.status) {
       case Status.completed:
         icon = IconButton(
           icon: const Icon(Icons.circle_outlined),
-          onPressed: () => toggleHomeworkCompletion(hw, compl),
+          onPressed: () => toggleHomeworkCompletion(homework, completion),
         );
         break;
       case Status.confirmed:
         icon = IconButton(
           icon: const Icon(Icons.check_circle_outline),
-          onPressed: () => toggleHomeworkCompletion(hw, compl),
+          onPressed: () => toggleHomeworkCompletion(homework, completion),
         );
         break;
       default:
         icon = const SizedBox.shrink();
     }
-    complTime = Text(Utils.formatDatetime(compl.completedTime!, format: 'dd MMM'));
+    complTime = Text(Utils.formatDatetime(completion.completedTime!, format: 'dd MMM'));
     return ListTile(
       leading: complTime,
       title: FutureBuilder<StudentModel>(
-          future: compl.student,
+          future: completion.student,
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const SizedBox.shrink();
             return Text(snapshot.data!.fullName);

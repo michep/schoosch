@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:schoosch/model/mark_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
   static DefaultMaterialLocalizations defaultLocalizations = const DefaultMaterialLocalizations();
@@ -77,5 +78,17 @@ class Utils {
       res[m.studentId]!.add(m);
     }
     return res;
+  }
+
+  static Future<void> openLink(String adress) async {
+    final url = Uri.parse(adress);
+    if (!(await launchUrl(url))) {
+      Get.showSnackbar(
+        const GetSnackBar(
+          title: 'Ой...',
+          message: 'Не получилось открыть ссылку.',
+        ),
+      );
+    }
   }
 }

@@ -4,19 +4,19 @@ import 'package:get/get.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:schoosch/widgets/utils.dart';
 
-class HomeworkCard extends StatefulWidget {
+class StudentHomework extends StatefulWidget {
   final HomeworkModel homework;
   final bool isClass;
   final StudentModel student;
-  const HomeworkCard({Key? key, required this.homework, required this.isClass, required this.student}) : super(key: key);
+  const StudentHomework({Key? key, required this.homework, required this.isClass, required this.student}) : super(key: key);
 
   @override
-  State<HomeworkCard> createState() => _HomeworkCardState();
+  State<StudentHomework> createState() => _StudentHomeworkState();
 }
 
-class _HomeworkCardState extends State<HomeworkCard> {
+class _StudentHomeworkState extends State<StudentHomework> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<CompletionFlagModel?>(
@@ -46,7 +46,7 @@ class _HomeworkCardState extends State<HomeworkCard> {
               ListTile(
                 title: Linkify(
                   text: widget.homework.text,
-                  onOpen: (link) => _openLink(link.url),
+                  onOpen: (link) => Utils.openLink(link.url),
                 ),
                 trailing: IconButton(
                   onPressed: PersonModel.currentUser!.currentType == PersonType.parent
@@ -100,16 +100,4 @@ class _HomeworkCardState extends State<HomeworkCard> {
           ),
         ),
       );
-
-  Future<void> _openLink(String adress) async {
-    final url = Uri.parse(adress);
-    if (!(await launchUrl(url))) {
-      Get.showSnackbar(
-        const GetSnackBar(
-          title: 'Ой...',
-          message: 'Не получилось открыть ссылку.',
-        ),
-      );
-    }
-  }
 }

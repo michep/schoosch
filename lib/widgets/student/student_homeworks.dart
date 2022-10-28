@@ -4,17 +4,17 @@ import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/student_homework.dart';
 
-class HomeworksForStudentPage extends StatefulWidget {
+class StudentHomeworks extends StatefulWidget {
   final LessonModel _lesson;
   final DateTime _date;
   final StudentModel _student;
-  const HomeworksForStudentPage(this._lesson, this._date, this._student, {Key? key}) : super(key: key);
+  const StudentHomeworks(this._lesson, this._date, this._student, {Key? key}) : super(key: key);
 
   @override
-  State<HomeworksForStudentPage> createState() => _HomeworksForStudentPageState();
+  State<StudentHomeworks> createState() => _StudentHomeworksState();
 }
 
-class _HomeworksForStudentPageState extends State<HomeworksForStudentPage> {
+class _StudentHomeworksState extends State<StudentHomeworks> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, List<HomeworkModel>>>(
@@ -35,14 +35,14 @@ class _HomeworksForStudentPageState extends State<HomeworksForStudentPage> {
           children: [
             //TODO: now its list
             if (stud != null)
-              HomeworkCard(
+              StudentHomework(
                 homework: stud[0],
                 isClass: false,
                 student: widget._student,
               ),
             //TODO: now its list too
             if (clas != null)
-              HomeworkCard(
+              StudentHomework(
                 homework: clas[0],
                 isClass: true,
                 student: widget._student,

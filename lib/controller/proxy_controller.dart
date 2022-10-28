@@ -68,10 +68,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<ClassModel>> getAllClasses() async {
-    // var res = await http.get(baseUriFunc('/class'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => ClassModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/class'));
     var js = res.data!;
     return js.map((data) => ClassModel.fromMap(data['_id'], data)).toList();
@@ -84,10 +80,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<ClassModel>> getClassesByIds(List<String> ids) async {
-    // var res = await http.post(baseUriFunc('/class'), body: jsonEncode(ids), headers: {'Content-Type': 'application/json'});
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => ClassModel.fromMap((e as Map<String, dynamic>)['_id'], e)).toList();
-
     var res = await dio.postUri<List>(
       baseUriFunc('/class'),
       options: Options(headers: {'Content-Type': 'application/json'}),
@@ -122,10 +114,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<VenueModel>> getAllVenues() async {
-    // var res = await http.get(baseUriFunc('/venue'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => VenueModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/venue'));
     var js = res.data!;
     return js.map((data) => VenueModel.fromMap(data['_id'], data)).toList();
@@ -156,10 +144,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<DayLessontimeModel>> getAllDayLessontime() async {
-    // var res = await http.get(baseUriFunc('/lessontime'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => DayLessontimeModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/lessontime'));
     var js = res.data!;
     return js.map((data) => DayLessontimeModel.fromMap(data['_id'], data)).toList();
@@ -184,10 +168,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<LessontimeModel>> getLessontimes(String id) async {
-    // var res = await http.get(baseUriFunc('/lessontime/$id/time'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => LessontimeModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/lessontime/$id/time'));
     var js = res.data!;
     return js.map((data) => LessontimeModel.fromMap(data['_id'], data)).toList();
@@ -213,10 +193,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<PersonModel>> getAllPeople() async {
-    // var res = await http.get(baseUriFunc('/person'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => PersonModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/person'));
     var js = res.data!;
     return js.map((data) => PersonModel.fromMap(data['_id'], data)).toList();
@@ -229,10 +205,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<PersonModel>> getPeopleByIds(List<String> ids) async {
-    // var res = await http.post(baseUriFunc('/person'), body: jsonEncode(ids), headers: {'Content-Type': 'application/json'});
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => PersonModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.postUri<List>(
       baseUriFunc('/person'),
       options: Options(headers: {'Content-Type': 'application/json'}),
@@ -255,10 +227,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<CurriculumModel>> getAllCurriculums() async {
-    // var res = await http.get(baseUriFunc('/curriculum'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/curriculum'));
     var js = res.data!;
     return js.map((data) => CurriculumModel.fromMap(data['_id'], data)).toList();
@@ -283,10 +251,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<StudentScheduleModel>> getClassDaySchedule(ClassModel aclass, int day) async {
-    // var res = await http.get(baseUriFunc('/class/${aclass.id}/schedule/day/$day'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => StudentScheduleModel.fromMap(aclass, e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/class/${aclass.id}/schedule/day/$day'));
     var js = res.data!;
     return js.map((data) => StudentScheduleModel.fromMap(aclass, data['_id'], data)).toList();
@@ -308,10 +272,6 @@ class ProxyStore extends getx.GetxController {
   Future<List<LessonModel>> getScheduleLessons(ClassModel aclass, ClassScheduleModel schedule, {DateTime? date, bool needsEmpty = false}) async {
     // await scheduleLessonsMutex.acquire();
     List<LessonModel> result = [];
-
-    // var res = await http.get(baseUriFunc('/class/${aclass.id}/schedule/${schedule.id}/lesson'));
-    // var data = jsonDecode(res.body);
-    // var less = (data as List).map((e) => LessonModel.fromMap(aclass, schedule, e['_id'], e)).toList();
 
     var res = await dio.getUri<List>(baseUriFunc('/class/${aclass.id}/schedule/${schedule.id}/lesson'));
     var js = res.data!;
@@ -399,10 +359,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<ReplacementModel>> getReplacementsOnDate(ClassModel aclass, ClassScheduleModel schedule, DateTime date) async {
-    // var res = await http.get(baseUriFunc('/class/${aclass.id}/replace/${date.toIso8601String()}'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => ReplacementModel.fromMap(aclass, schedule, e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/class/${aclass.id}/replace/${date.toIso8601String()}'));
     var js = res.data!;
     return js.map((data) => ReplacementModel.fromMap(aclass, schedule, data['_id'], data)).toList();
@@ -410,13 +366,6 @@ class ProxyStore extends getx.GetxController {
 
   Future<List<ReplacementModel>> getAllReplacementsOnDate(ClassScheduleModel schedule, DateTime date) async {
     List<ReplacementModel> repl = [];
-    // var res = await http.get(baseUriFunc('/replace/${date.toIso8601String()}'));
-    // var data = jsonDecode(res.body);
-    // for (var i in data) {
-    //   var aclass = await getClass(i['class_id']);
-    //   repl.add(ReplacementModel.fromMap(aclass, schedule, i['_id'], i));
-    // }
-
     var res = await dio.getUri<List>(baseUriFunc('/replace/${date.toIso8601String()}'));
     var js = res.data!;
     for (var i in js) {
@@ -443,41 +392,7 @@ class ProxyStore extends getx.GetxController {
     );
   }
 
-  // Future<List<HomeworkModel>> getHomeworkThisLessonForStudent(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
-  //   // var res = await http.get(
-  //   //   baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/student/${student.id}/homework/beforedate/${date.toIso8601String()}'),
-  //   // );
-  //   // var data = jsonDecode(res.body);
-  //   // return (data as List).map((e) => HomeworkModel.fromMap(e['_id'], e)).toList();
-
-  //   var res = await dio.getUri<List>(
-  //     baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/student/${student.id}/homework/beforedate/${date.toIso8601String()}'),
-  //   );
-  //   var js = res.data!;
-  //   return js.map((data) => HomeworkModel.fromMap(data['_id'], data)).toList();
-  // }
-
-  // Future<List<HomeworkModel>> getHomeworkThisLessonForClass(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
-  //   // var res = await http.get(
-  //   //   baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/homework/beforedate/${date.toIso8601String()}'),
-  //   // );
-  //   // var data = jsonDecode(res.body);
-  //   // return (data as List).map((e) => HomeworkModel.fromMap(e['_id'], e)).toList();
-
-  //   var res = await dio.getUri<List>(
-  //     baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/homework/beforedate/${date.toIso8601String()}'),
-  //   );
-  //   var js = res.data!;
-  //   return js.map((data) => HomeworkModel.fromMap(data['_id'], data)).toList();
-  // }
-
   Future<List<HomeworkModel>> getHomeworkThisLesson(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
-    // var res = await http.get(
-    //   baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/homework/beforedate/${date.toIso8601String()}'),
-    // );
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => HomeworkModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(
       baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/homework/beforedate/${date.toIso8601String()}'),
     );
@@ -485,41 +400,7 @@ class ProxyStore extends getx.GetxController {
     return js.map((data) => HomeworkModel.fromMap(data['_id'], data)).toList();
   }
 
-  // Future<List<HomeworkModel>> getHomeworkNextLessonForStudent(ClassModel aclass, CurriculumModel curriculum, StudentModel student, DateTime date) async {
-  //   // var res = await http.get(
-  //   //   baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/student/${student.id}/homework/ondate/${date.toIso8601String()}'),
-  //   // );
-  //   // var data = jsonDecode(res.body);
-  //   // return (data as List).map((e) => HomeworkModel.fromMap(e['_id'], e)).toList();
-
-  //   var res = await dio.getUri<List>(
-  //     baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/student/${student.id}/homework/ondate/${date.toIso8601String()}'),
-  //   );
-  //   var js = res.data!;
-  //   return js.map((data) => HomeworkModel.fromMap(data['_id'], data)).toList();
-  // }
-
-  // Future<List<HomeworkModel>> getHomeworkNextLessonForClass(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
-  //   // var res = await http.get(
-  //   //   baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/homework/ondate/${date.toIso8601String()}'),
-  //   // );
-  //   // var data = jsonDecode(res.body);
-  //   // return (data as List).map((e) => HomeworkModel.fromMap(e['_id'], e)).toList();
-
-  //   var res = await dio.getUri<List>(
-  //     baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/homework/ondate/${date.toIso8601String()}'),
-  //   );
-  //   var js = res.data!;
-  //   return js.map((data) => HomeworkModel.fromMap(data['_id'], data)).toList();
-  // }
-
   Future<List<HomeworkModel>> getHomeworkNextLesson(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
-    // var res = await http.get(
-    //   baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/homework/ondate/${date.toIso8601String()}'),
-    // );
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => HomeworkModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(
       baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/homework/ondate/${date.toIso8601String()}'),
     );
@@ -596,10 +477,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<CompletionFlagModel>> getAllHomeworkCompletions(HomeworkModel homework) async {
-    // var res = await http.get(baseUriFunc('/homework/${homework.id}/completion'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => CompletionFlagModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/homework/${homework.id}/completion'));
     var js = res.data!;
     return js.map((data) => CompletionFlagModel.fromMap(data['_id'], data)).toList();
@@ -676,10 +553,6 @@ class ProxyStore extends getx.GetxController {
   Future<List<AbsenceModel>> getAllAbsences(LessonModel lesson, DateTime date) async {
     //TODO: total redesign
 
-    // var res = await http.get(baseUriFunc('/class/${lesson.aclass.id}/absence/${date.toIso8601String()}'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => AbsenceModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/class/${lesson.aclass.id}/absence/${date.toIso8601String()}/${lesson.order}'));
     var js = res.data!;
     return js.map((data) => AbsenceModel.fromMap(data['_id'], data)).toList();
@@ -687,10 +560,6 @@ class ProxyStore extends getx.GetxController {
 
   Future<List<AbsenceModel>> getStudentAbsence(LessonModel lesson, String studentId, DateTime date) async {
     //TODO: total redesign
-
-    // var res = await http.get(baseUriFunc('/class/${lesson.aclass.id}/student/$studentId/absence/${date.toIso8601String()}'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => AbsenceModel.fromMap(e['_id'], e)).toList();
 
     var res = await dio.getUri<List>(baseUriFunc('/class/${lesson.aclass.id}/student/$studentId/absence/${date.toIso8601String()}/${lesson.order}'));
     var js = res.data!;
@@ -717,10 +586,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<MarkModel>> getAllLessonMarks(LessonModel lesson, DateTime date) async {
-    // var res = await http.get(baseUriFunc('/class/${lesson.aclass.id}/curriculum/${lesson.curriculumId}/mark/${date.toIso8601String()}'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => MarkModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(
       baseUriFunc('/class/${lesson.aclass.id}/curriculum/${lesson.curriculumId}/mark/${date.toIso8601String()}'),
     );
@@ -729,10 +594,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<MarkModel>> getStudentLessonMarks(LessonModel lesson, StudentModel student, DateTime date) async {
-    // var res = await http.get(baseUriFunc('/curriculum/${lesson.curriculumId}/student/${student.id}/mark/${date.toIso8601String()}/${lesson.order}'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => MarkModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(
       baseUriFunc('/curriculum/${lesson.curriculumId}/student/${student.id}/mark/${date.toIso8601String()}/${lesson.order}'),
     );
@@ -741,10 +602,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<MarkModel>> getStudentCurriculumMarks(StudentModel student, CurriculumModel curriculum) async {
-    // var res = await http.get(baseUriFunc('/curriculum/${curriculum.id}/student/${student.id}/mark'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => MarkModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(
       baseUriFunc('/curriculum/${curriculum.id}/student/${student.id}/mark'),
     );
@@ -753,10 +610,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<MarkModel>> getStudentCurriculumTeacherMarks(StudentModel student, CurriculumModel curriculum, TeacherModel teacher) async {
-    // var res = await http.get(baseUriFunc('/curriculum/${curriculum.id}/student/${student.id}/teacher/${teacher.id}/mark'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => MarkModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(
       baseUriFunc('/curriculum/${curriculum.id}/student/${student.id}/teacher/${teacher.id}/mark'),
     );
@@ -793,10 +646,6 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<ClassScheduleModel>> getClassWeekSchedule(ClassModel aclass, Week currentWeek) async {
-    // var res = await http.get(Uri.http(host, '/class/${aclass.id}/weekschedule/${currentWeek.day(0).toIso8601String()}'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => ClassScheduleModel.fromMap(aclass, e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(
       baseUriFunc('/class/${aclass.id}/weekschedule/${currentWeek.day(0).toIso8601String()}'),
     );
@@ -804,55 +653,31 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<StudentScheduleModel>> getStudentWeekSchedule(ClassModel aclass, Week currentWeek, StudentModel student) async {
-    // var res = await http.get(Uri.http(host, '/class/${aclass.id}/weekschedule/${currentWeek.day(0).toIso8601String()}/student/${student.id}'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => StudentScheduleModel.fromMap(aclass, e['_id'], e)).toList();
-
     var res = await dio.getUri(baseUriFunc('/class/${aclass.id}/weekschedule/${currentWeek.day(0).toIso8601String()}/student/${student.id}'));
     return (res.data as List<dynamic>).map((e) => StudentScheduleModel.fromMap(aclass, e['_id'], e)).toList();
   }
 
   Future<List<TeacherScheduleModel>> getTeacherWeekSchedule(TeacherModel teacher, Week currentWeek) async {
-    // var res = await http.get(baseUriFunc('/person/${teacher.id}/teacher/weekschedule/${currentWeek.day(0).toIso8601String()}'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => TeacherScheduleModel.fromMap(e['schedule_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/person/${teacher.id}/teacher/weekschedule/${currentWeek.day(0).toIso8601String()}'));
     return res.data!.map((e) => TeacherScheduleModel.fromMap(e['schedule_id'], e)).toList();
   }
 
   Future<List<ClassModel>> getCurriculumClasses(CurriculumModel curriculum) async {
-    // var res = await http.get(baseUriFunc('/curriculum/${curriculum.id}/class'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => ClassModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/curriculum/${curriculum.id}/class'));
     return res.data!.map((e) => ClassModel.fromMap(e['_id'], e)).toList();
   }
 
   Future<List<CurriculumModel>> getClassCurriculums(ClassModel aclass) async {
-    // var res = await http.get(baseUriFunc('/class/${aclass.id}/curriculum'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/class/${aclass.id}/curriculum'));
     return res.data!.map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
   }
 
   Future<List<CurriculumModel>> getStudentCurriculums(StudentModel student) async {
-    // var res = await http.get(baseUriFunc('/person/${student.id}/student/curriculum'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/person/${student.id}/student/curriculum'));
     return res.data!.map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
   }
 
   Future<List<CurriculumModel>> getTeacherCurriculums(TeacherModel teacher) async {
-    // var res = await http.get(baseUriFunc('/person/${teacher.id}/teacher/curriculum'));
-    // var data = jsonDecode(res.body);
-    // return (data as List).map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
-
     var res = await dio.getUri<List>(baseUriFunc('/person/${teacher.id}/teacher/curriculum'));
     return res.data!.map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
   }
