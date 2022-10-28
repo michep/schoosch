@@ -23,7 +23,7 @@ class _StudentHomeworksState extends State<StudentHomeworks> {
         if (!snapshot.hasData) {
           return const SizedBox.shrink();
         }
-        if (snapshot.data!['student'] == null && snapshot.data!['class'] == null) {
+        if (snapshot.data!['student']!.isEmpty && snapshot.data!['class']!.isEmpty) {
           return const Center(
             child: Text('Нет домашнего задания на этот день! 🎉'),
           );
@@ -36,14 +36,14 @@ class _StudentHomeworksState extends State<StudentHomeworks> {
             //TODO: now its list
             if (stud != null)
               StudentHomework(
-                homework: stud[0],
+                homework: stud,
                 isClass: false,
                 student: widget._student,
               ),
             //TODO: now its list too
             if (clas != null)
               StudentHomework(
-                homework: clas[0],
+                homework: clas,
                 isClass: true,
                 student: widget._student,
               ),
