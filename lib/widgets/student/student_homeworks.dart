@@ -20,9 +20,7 @@ class _StudentHomeworksState extends State<StudentHomeworks> {
     return FutureBuilder<Map<String, List<HomeworkModel>>>(
       future: widget._lesson.homeworkThisLessonForClassAndStudent(widget._student, widget._date, forceRefresh: false),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const SizedBox.shrink();
-        }
+        if (!snapshot.hasData) return const SizedBox.shrink();
         if (snapshot.data!['student']!.isEmpty && snapshot.data!['class']!.isEmpty) {
           return const Center(
             child: Text('Нет домашнего задания на этот день! 🎉'),
@@ -33,14 +31,12 @@ class _StudentHomeworksState extends State<StudentHomeworks> {
         return ListView(
           shrinkWrap: true,
           children: [
-            //TODO: now its list
             if (stud != null)
               StudentHomework(
                 homework: stud,
                 isClass: false,
                 student: widget._student,
               ),
-            //TODO: now its list too
             if (clas != null)
               StudentHomework(
                 homework: clas,

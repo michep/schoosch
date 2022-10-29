@@ -27,6 +27,7 @@ class StudentHomeworkTile extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done || !snapshot.hasData) return const SizedBox.shrink();
         return ExpansionTile(
+          controlAffinity: ListTileControlAffinity.leading,
           title: Text(snapshot.data!.fullName),
           children: [
             ...homeworks

@@ -14,46 +14,57 @@ class StudentMarks extends StatefulWidget {
 }
 
 class _StudentMarksState extends State<StudentMarks> {
+  late bool forceRefresh;
+
+  @override
+  void initState() {
+    forceRefresh = false;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<MarkModel>?>(
-      future: widget._lesson.marksForStudent(widget._student, widget._date),
+      future: widget._lesson.marksForStudent(widget._student, widget._date, forceRefresh: forceRefresh),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Text('');
-        }
-        if (snapshot.data!.isEmpty) {
-          // return const SizedBox.shrink(child: Text('Нет оценок.'),);
-          return const Center(
-            child: Text('Нет оценок.'),
-          );
-        }
-        return ListView(
-          children: [
-            ...snapshot.data!.map(
-              (e) => ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.red,
-                      width: 1.5,
-                    ),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    e.toString(),
-                    style: const TextStyle(fontSize: 20),
-                  ),
+        if (!snapshot.hasData) return const SizedBox.shrink();
+        return RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              forceRefresh = true;
+            });
+          },
+          child: snapshot.data!.isEmpty
+              ? ListView(
+                  children: const [Center(child: Text('Нет оценок'))],
+                )
+              : ListView(
+                  children: [
+                    ...snapshot.data!.map(
+                      (e) => ListTile(
+                        leading: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.red,
+                              width: 1.5,
+                            ),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            e.toString(),
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                        ),
+                        title: Text(e.comment),
+                        subtitle: FutureBuilder<PersonModel>(
+                          future: e.teacher,
+                          builder: ((context, snapshot) => snapshot.hasData ? Text(snapshot.data!.fullName) : const Text('')),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-                title: Text(e.comment),
-                subtitle: FutureBuilder<PersonModel>(
-                  future: e.teacher,
-                  builder: ((context, snapshot) => snapshot.hasData ? Text(snapshot.data!.fullName) : const Text('')),
-                ),
-              ),
-            )
-          ],
         );
       },
     );

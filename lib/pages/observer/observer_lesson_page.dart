@@ -42,8 +42,8 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
         widget.date,
         widget.lesson,
         (d, f) => widget.lesson.homeworkThisLessonForClassAndAllStudents(d, forceRefresh: f),
-        // (d, f) => widget.lesson.homeworkThisLessonForClass(d, forceRefresh: f),
         readOnly: true,
+        key: const ValueKey(0),
       ),
       StudentsAbsencePage(
         widget.date,
@@ -61,8 +61,8 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
         widget.date,
         widget.lesson,
         (d, f) => widget.lesson.homeworkNextLessonForClassAndAllStudents(d, forceRefresh: f),
-        // (d, f) => widget.lesson.homeworkNextLessonForClass(d, forceRefresh: f),
         readOnly: true,
+        key: const ValueKey(1),
       ),
     ];
     super.initState();
