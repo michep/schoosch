@@ -32,9 +32,10 @@ class StudentLessonTile extends StatelessWidget {
     return GestureDetector(
       onTap: () => _onTap(),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8.0,
-          vertical: 6,
+        padding: const EdgeInsets.only(
+          bottom: 10,
+          top: 10,
+          left: 0,
         ),
         child: SizedBox(
           child: Row(
@@ -42,15 +43,48 @@ class StudentLessonTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(lesson.order.toString()),
+              SizedBox(
+                width: 50,
+                child: Center(
+                  child: Text(
+                    lesson.order.toString(),
+                    style: const TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(lesson.type == LessonType.empty ? 'Окно' : cur!.aliasOrName),
-                    if (lesson.type != LessonType.empty) Text('${tim!.formatPeriod()}, ${ven!.name}'),
+                    Text(
+                      lesson.type == LessonType.empty ? 'Окно' : cur!.aliasOrName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    if (lesson.type != LessonType.empty)
+                      Text(
+                        '${tim!.formatPeriod()}, ${ven!.name}',
+                        style: TextStyle(
+                            // fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7)),
+                      ),
+                    const SizedBox(
+                      height: 2,
+                    ),
                     if (lesson.type != LessonType.empty)
                       FutureBuilder<Map<String, List<HomeworkModel>>>(
                         future: lesson.homeworkThisLessonForClassAndStudent(student, date),
@@ -58,32 +92,66 @@ class StudentLessonTile extends StatelessWidget {
                           if (!hw.hasData) {
                             return const SizedBox.shrink();
                           }
-                          if (hw.data!['student'] == null && hw.data!['class'] == null) {
-                            return const Text('нет дз');
-                          }
                           var stud = hw.data!['student'];
                           var clas = hw.data!['class'];
+                          String text = '';
                           if (clas!.isNotEmpty) {
-                            return Text(clas.first.text);
+                            text = clas.first.text;
                           } else if (stud!.isNotEmpty) {
-                            return Text(stud.first.text);
-                          } else {
-                            return const Text('не заданы дз');
+                            text = stud.first.text;
                           }
+                          return text.isNotEmpty
+                              ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Divider(
+                                      height: 4,
+                                      thickness: 2,
+                                      endIndent: MediaQuery.of(context).size.width * 0.1,
+                                    ),
+                                    Text(
+                                      'ДЗ: $text',
+                                      // overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        overflow: TextOverflow.ellipsis,
+                                        fontSize: 14,
+                                        color: Theme.of(context).colorScheme.onBackground.withOpacity(
+                                              0.7,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox.shrink();
                         },
                       ),
                   ],
                 ),
               ),
-              if (lesson.type != LessonType.empty && mar != '')
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: Colors.red, width: 1.5),
+              SizedBox(
+                width: 80,
+                child: lesson.type != LessonType.empty && mar != '' ? Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: Colors.red, width: 1.5),
+                    ),
+                    child: Text(mar!),
                   ),
-                  child: Text(mar!),
-                ),
+                ) : null,
+              ),
+              // if (lesson.type != LessonType.empty && mar != '')
+              //   Container(
+              //     padding: const EdgeInsets.all(5),
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(4),
+              //       border: Border.all(color: Colors.red, width: 1.5),
+              //     ),
+              //     child: Text(mar!),
+              //   ),
             ],
           ),
         ),
