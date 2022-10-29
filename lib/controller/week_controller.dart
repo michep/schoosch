@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
+import 'package:schoosch/controller/day_controller.dart';
 
 class CurrentWeek extends GetxController {
   late final Rx<Week> _currentWeek = Rx(Week.current());
@@ -26,14 +27,20 @@ class CurrentWeek extends GetxController {
 
   void next() {
     _currentWeek.value = _currentWeek.value.next;
+    Get.find<CurrentDay>().setDate(
+      _currentWeek.value.days[0],
+    );
     _pageController.nextPage(
       duration: const Duration(milliseconds: 1000),
       curve: Curves.easeOutExpo,
     );
   }
 
-  void previous() {
+  void previous({bool isFromDay = false}) {
     _currentWeek.value = _currentWeek.value.previous;
+    Get.find<CurrentDay>().setDate(
+      _currentWeek.value.days[isFromDay ? 6 : 0],
+    );
     _pageController.previousPage(
       duration: const Duration(milliseconds: 1000),
       curve: Curves.easeOutExpo,

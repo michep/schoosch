@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
+import 'package:schoosch/controller/day_controller.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/controller/storage_controller.dart';
@@ -27,13 +28,15 @@ Future<void> main() async {
   // var mstore = MStore();
   var store = FStorage();
   var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org:8182', path));
+  var curweek = CurrentWeek(Week.current());
   // var bcont = BlueprintController();
   Get.put<FAuth>(fauth);
   // Get.put<FStore>(fstore);
   // Get.put<MStore>(mstore);
   Get.put<FStorage>(store);
   Get.put<ProxyStore>(proxy);
-  Get.put(CurrentWeek(Week.current()));
+  Get.put<CurrentWeek>(curweek);
+  Get.put<CurrentDay>(CurrentDay(DateTime.now(), curweek));
   // Get.put<BlueprintController>(bcont);
   if (fauth.currentUser != null) {
     // await fstore.init(fauth.currentUser!.email!);
