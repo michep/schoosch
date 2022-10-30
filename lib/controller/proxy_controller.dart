@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/adapter.dart';
 import 'package:get/get.dart' as getx;
 import 'package:isoweek/isoweek.dart';
-import 'package:mutex/mutex.dart';
+import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/class_model.dart';
@@ -23,7 +23,6 @@ class ProxyStore extends getx.GetxController {
   late InstitutionModel institution;
   PersonModel? _currentUser;
   final Dio dio = Dio();
-  final Mutex scheduleLessonsMutex = Mutex();
   Uri Function(String) baseUriFunc;
 
   ProxyStore(this.baseUriFunc);
@@ -35,7 +34,13 @@ class ProxyStore extends getx.GetxController {
         return client;
       };
     }
-
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) {
+        var currentToken = getx.Get.find<FAuth>().token;
+        options.headers.addAll({'Authorization': 'Bearer $currentToken'});
+        return handler.next(options);
+      },
+    ));
     institution = await _geInstitutionIdByUserEmail(userEmail);
     _currentUser = await _getPersonByEmail(userEmail);
   }
