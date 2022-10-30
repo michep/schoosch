@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:get/get.dart';
-// import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
@@ -23,13 +22,14 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _auth = Get.find<FAuth>();
   late StreamSubscription _sub;
+  User? prevUser;
 
   @override
   void initState() {
     if (_auth.currentUser != null) {
       SchedulerBinding.instance.addPostFrameCallback((_) => _authenticated(_auth.currentUser!));
     }
-    _sub = _auth.userChanges$.listen(_authenticated);
+    _sub = _auth.authStateChanges$.listen(_authenticated);
     super.initState();
   }
 
@@ -55,6 +55,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _authenticated(User? user) async {
+    // if (prevUser == user) return;
+    // prevUser = user;
     // var fstore = Get.find<FStore>();
     // var store = Get.find<FStorage>();
     // var bcont = Get.find<BlueprintController>();

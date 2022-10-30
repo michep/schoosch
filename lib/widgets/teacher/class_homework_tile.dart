@@ -28,12 +28,15 @@ class ClassHomeworkTile extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) return const SizedBox.shrink();
         return ExpansionTile(
-          leading: Text(
-            Utils.formatDatetime(
-              homework.date,
-              format: 'dd MMM',
-            ),
-          ),
+          iconColor: ListTileTheme.of(context).iconColor,
+          textColor: ListTileTheme.of(context).textColor,
+          controlAffinity: ListTileControlAffinity.leading,
+          // leading: Text(
+          //   Utils.formatDatetime(
+          //     homework.date,
+          //     format: 'dd MMM',
+          //   ),
+          // ),
           title: Linkify(
             text: homework.text,
             onOpen: (link) => Utils.openLink(link.url),
@@ -47,12 +50,12 @@ class ClassHomeworkTile extends StatelessWidget {
               fontSize: 13,
             ),
           ),
-          // trailing: readOnly
-          //     ? null
-          //     : IconButton(
-          //         icon: const Icon(Icons.edit),
-          //         onPressed: () => editHomework(hw, false),
-          //       ),
+          trailing: readOnly
+              ? null
+              : IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () => editHomework(homework, false),
+                ),
           children: [
             ...snapshot.data!.map(
               (compl) => ClassHomeworkCompetionTile(

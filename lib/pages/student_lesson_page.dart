@@ -86,18 +86,6 @@ class _StudentLessonPageState extends State<StudentLessonPage> with SingleTicker
                   );
                 },
               ),
-              // TabBar(
-              //   controller: tabcont,
-              //   isScrollable: false,
-              //   labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              //   indicatorWeight: 0.001,
-              //   onTap: (i) {
-              //     setState(() {
-              //       current = i;
-              //     });
-              //   },
-              //   tabs: [TabChip(current: current, pos: 0, text: 'ДЗ на этот урок'), TabChip(current: current, pos: 1, text: 'Оценки')],
-              // ),
               const Divider(
                 indent: 50,
                 endIndent: 50,
@@ -106,31 +94,6 @@ class _StudentLessonPageState extends State<StudentLessonPage> with SingleTicker
               Expanded(
                 child: pages[current],
               ),
-              // Expanded(
-              //   child: TabBarView(
-              //     children: [
-              //       HomeworksForStudentPage(widget._lesson, widget._date, widget._student),
-              //       MarksForStudentPage(widget._lesson, widget._date, widget._student),
-              //     ],
-              //   ),
-              // ),
-              // Expanded(
-              //   child: TabsWidget(
-              //     pages: {
-              //       'Дз на этот урок': HomeworksForStudentPage(
-              //         widget._lesson,
-              //         widget._date,
-              //         widget._student,
-              //       ),
-              //       'Оценки': MarksForStudentPage(
-              //         widget._lesson,
-              //         widget._date,
-              //         widget._student,
-              //       ),
-              //     },
-              //     isScrollable: false,
-              //   ),
-              // ),
             ],
           ),
         ),
