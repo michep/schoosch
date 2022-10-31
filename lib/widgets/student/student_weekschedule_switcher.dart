@@ -4,18 +4,18 @@ import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/widgets/student/student_schedule.dart';
+import 'package:schoosch/widgets/student/student_weekschedule.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class StudentScheduleSwitcher extends StatefulWidget {
+class StudentWeekScheduleSwitcher extends StatefulWidget {
   final StudentModel _student;
-  const StudentScheduleSwitcher(this._student, {Key? key}) : super(key: key);
+  const StudentWeekScheduleSwitcher(this._student, {Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => StudentScheduleSwitcherState();
+  State<StatefulWidget> createState() => StudentWeekScheduleSwitcherState();
 }
 
-class StudentScheduleSwitcherState extends State<StudentScheduleSwitcher> {
+class StudentWeekScheduleSwitcherState extends State<StudentWeekScheduleSwitcher> {
   final _cw = Get.find<CurrentWeek>();
 
   @override
@@ -30,7 +30,7 @@ class StudentScheduleSwitcherState extends State<StudentScheduleSwitcher> {
             onPageChanged: _cw.setIdx,
             childrenDelegate: SliverChildBuilderDelegate(
               (context, idx) {
-                return StudentScheduleWidget(
+                return StudentWeekScheduleWidget(
                   widget._student,
                   classSnap.data!,
                   Week(year: idx ~/ 100, weekNumber: idx % 100),

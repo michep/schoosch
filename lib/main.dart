@@ -36,7 +36,7 @@ Future<void> main() async {
   Get.put<FStorage>(store);
   Get.put<ProxyStore>(proxy);
   Get.put<CurrentWeek>(curweek);
-  Get.put<CurrentDay>(CurrentDay(DateTime.now(), curweek));
+  Get.put<CurrentDay>(CurrentDay(DateTime.now()));
   // Get.put<BlueprintController>(bcont);
   if (fauth.currentUser != null) {
     // await fstore.init(fauth.currentUser!.email!);

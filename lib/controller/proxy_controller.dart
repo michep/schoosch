@@ -209,6 +209,14 @@ class ProxyStore extends getx.GetxController {
     return PersonModel.fromMap(js['_id'], js);
   }
 
+  //TODO: this one below
+  // Future<void> changePersonView(PersonModel person) async {
+  //   var res = await dio.patchUri(
+  //     baseUriFunc('/person/${person.id}/pageview'),
+  //     options: Options(headers: {'Content-Type': 'application/json'}),
+  //   );
+  // }
+
   Future<List<PersonModel>> getPeopleByIds(List<String> ids) async {
     var res = await dio.postUri<List>(
       baseUriFunc('/person'),
