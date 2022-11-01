@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/day_controller.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
+import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/controller/storage_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
@@ -29,6 +30,8 @@ Future<void> main() async {
   var store = FStorage();
   var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org:8182', path));
   var curweek = CurrentWeek(Week.current());
+  var prefs = PrefsController();
+  await prefs.init();
   // var bcont = BlueprintController();
   Get.put<FAuth>(fauth);
   // Get.put<FStore>(fstore);
@@ -37,6 +40,7 @@ Future<void> main() async {
   Get.put<ProxyStore>(proxy);
   Get.put<CurrentWeek>(curweek);
   Get.put<CurrentDay>(CurrentDay(DateTime.now()));
+  Get.put<PrefsController>(prefs);
   // Get.put<BlueprintController>(bcont);
   if (fauth.currentUser != null) {
     // await fstore.init(fauth.currentUser!.email!);
