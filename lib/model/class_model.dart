@@ -20,14 +20,12 @@ class ClassModel {
   final Mutex _studentsMutex = Mutex();
   final List<LessontimeModel> _lessontimes = [];
   bool _lessontimesLoaded = false;
-  final Mutex __lessontimesMutex = Mutex();
   TeacherModel? _master;
   final Map<Week, List<ClassScheduleModel>> _weekClassSchedules = {};
   final Map<Week, List<StudentScheduleModel>> _weekStudentSchedules = {};
   final Map<int, List<StudentScheduleModel>> _daySchedules = {};
   final List<CurriculumModel> _curriculums = [];
   bool _curriculumsLoaded = false;
-  final Mutex _curriculumsMutex = Mutex();
 
   String? get id => _id;
 
@@ -125,7 +123,6 @@ class ClassModel {
   // }
 
   Future<LessontimeModel> getLessontime(int n) async {
-    await __lessontimesMutex.acquire();
     if (!_lessontimesLoaded) {
       _lessontimes.addAll(
         await Get.find<ProxyStore>().getLessontimes(_dayLessontimeId),
@@ -133,7 +130,6 @@ class ClassModel {
       _lessontimes.sort((a, b) => a.order.compareTo(b.order));
       _lessontimesLoaded = true; //TODO: fallback to default lessontimes?
     }
-    __lessontimesMutex.release();
     return _lessontimes[n - 1];
   }
 
@@ -176,13 +172,11 @@ class ClassModel {
   // }
 
   Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
-    await _curriculumsMutex.acquire();
     if (!_curriculumsLoaded || forceRefresh) {
       _curriculums.clear();
       _curriculums.addAll(await Get.find<ProxyStore>().getClassCurriculums(this));
       _curriculumsLoaded = true;
     }
-    _curriculumsMutex.release();
     return _curriculums;
   }
 

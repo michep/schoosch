@@ -5,15 +5,13 @@ import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class LessontimeModel {
+  String? id;
   late int order;
   late TimeOfDay from;
   late TimeOfDay till;
 
-  String get id => order.toString();
-
-  LessontimeModel.fromMap(String id, Map<String, Object?> map) {
-    var ord = int.tryParse(id);
-    ord != null ? order = ord : throw 'doc_id needs to be an integer order in lessontime $id';
+  LessontimeModel.fromMap(this.id, Map<String, Object?> map) {
+    order = map['order'] != null ? map['order'] as int : throw 'need order key in lessontime $id';
     var f = map['from'] != null ? (map['from'] as String).split(':') : throw 'need from key in lessontime $id';
     if (f.length != 2) throw 'incorrect from in lessontime $id';
     var t = map['till'] != null ? (map['till'] as String).split(':') : throw 'need till key in lessontime $id';
