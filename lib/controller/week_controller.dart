@@ -28,7 +28,8 @@ class CurrentWeek extends GetxController {
   void next() {
     _currentWeek.value = _currentWeek.value.next;
     Get.find<CurrentDay>().setDate(
-      _currentWeek.value.days[0],
+      _currentWeek.value.days.first,
+      isFromWeek: true
     );
     _pageController.nextPage(
       duration: const Duration(milliseconds: 1000),
@@ -39,7 +40,8 @@ class CurrentWeek extends GetxController {
   void previous({bool isFromDay = false}) {
     _currentWeek.value = _currentWeek.value.previous;
     Get.find<CurrentDay>().setDate(
-      _currentWeek.value.days[isFromDay ? 6 : 0],
+      isFromDay ? _currentWeek.value.days.last : _currentWeek.value.days.first,
+      isFromWeek: true
     );
     _pageController.previousPage(
       duration: const Duration(milliseconds: 1000),

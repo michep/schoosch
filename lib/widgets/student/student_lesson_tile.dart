@@ -101,28 +101,17 @@ class StudentLessonTile extends StatelessWidget {
                             text = stud.first.text;
                           }
                           return text.isNotEmpty
-                              ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Divider(
-                                      height: 4,
-                                      thickness: 2,
-                                      endIndent: MediaQuery.of(context).size.width * 0.1,
-                                    ),
-                                    Text(
-                                      'ДЗ: $text',
-                                      // overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                        overflow: TextOverflow.ellipsis,
-                                        fontSize: 14,
-                                        color: Theme.of(context).colorScheme.onBackground.withOpacity(
-                                              0.7,
-                                            ),
-                                      ),
-                                    ),
-                                  ],
+                              ? Text(
+                                  'ДЗ: $text',
+                                  // overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    overflow: TextOverflow.ellipsis,
+                                    fontSize: 14,
+                                    color: Theme.of(context).colorScheme.onBackground.withOpacity(
+                                          0.7,
+                                        ),
+                                  ),
                                 )
                               : const SizedBox.shrink();
                         },
@@ -132,26 +121,19 @@ class StudentLessonTile extends StatelessWidget {
               ),
               SizedBox(
                 width: 80,
-                child: lesson.type != LessonType.empty && mar != '' ? Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: Colors.red, width: 1.5),
-                    ),
-                    child: Text(mar!),
-                  ),
-                ) : null,
+                child: lesson.type != LessonType.empty && mar != ''
+                    ? Center(
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Colors.red, width: 1.5),
+                          ),
+                          child: Text(mar!),
+                        ),
+                      )
+                    : null,
               ),
-              // if (lesson.type != LessonType.empty && mar != '')
-              //   Container(
-              //     padding: const EdgeInsets.all(5),
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(4),
-              //       border: Border.all(color: Colors.red, width: 1.5),
-              //     ),
-              //     child: Text(mar!),
-              //   ),
             ],
           ),
         ),

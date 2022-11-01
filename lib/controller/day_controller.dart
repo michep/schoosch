@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
 
 class CurrentDay extends GetxController {
   late final Rx<DateTime> _currentDay = Rx(DateTime.now());
   late final PageController _pageController;
-  late final CurrentWeek _week;
 
   DateTime get currentDay => _currentDay.value;
 
   PageController get pageController => _pageController;
 
-  CurrentDay(DateTime dt, this._week) {
+  CurrentDay(DateTime dt) {
     _currentDay.value = dt;
     _pageController = PageController(
       initialPage: currentDay.year * 1000 +
@@ -32,8 +32,7 @@ class CurrentDay extends GetxController {
             DateFormat('D').format(
               currentDay,
             ),
-          ) +
-          1,
+          ),
       duration: const Duration(milliseconds: 1000),
       curve: Curves.easeOutExpo,
     );
@@ -42,16 +41,17 @@ class CurrentDay extends GetxController {
   void next() {
     if (_currentDay.value.weekday == 7) {
       Get.find<CurrentWeek>().next();
+    } else {
+      _currentDay.value = _currentDay.value.add(
+        const Duration(
+          days: 1,
+        ),
+      );
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 1000),
+        curve: Curves.easeOutExpo,
+      );
     }
-    _currentDay.value = _currentDay.value.add(
-      const Duration(
-        days: 1,
-      ),
-    );
-    _pageController.nextPage(
-      duration: const Duration(milliseconds: 1000),
-      curve: Curves.easeOutExpo,
-    );
   }
 
   void previous() {
@@ -59,20 +59,22 @@ class CurrentDay extends GetxController {
       Get.find<CurrentWeek>().previous(
         isFromDay: true,
       );
+    } else {
+      _currentDay.value = _currentDay.value.subtract(
+        const Duration(
+          days: 1,
+        ),
+      );
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 1000),
+        curve: Curves.easeOutExpo,
+      );
     }
-    _currentDay.value = _currentDay.value.subtract(
-      const Duration(
-        days: 1,
-      ),
-    );
-    _pageController.previousPage(
-      duration: const Duration(milliseconds: 1000),
-      curve: Curves.easeOutExpo,
-    );
   }
 
-  void setDate(DateTime date) {
+  void setDate(DateTime date, {bool isFromWeek = false}) {
     _currentDay.value = date;
+    if (!isFromWeek) Get.find<CurrentWeek>().setIdx(date.year * 100 + Week.fromDate(date).weekNumber);
     _pageController.animateToPage(
       date.year * 1000 +
           int.parse(
@@ -82,6 +84,12 @@ class CurrentDay extends GetxController {
           ),
       duration: const Duration(milliseconds: 1000),
       curve: Curves.easeOutExpo,
+    );
+  }
+
+  void changeToCurrentDay() {
+    setDate(
+      DateTime.now(),
     );
   }
 }

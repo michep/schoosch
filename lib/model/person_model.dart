@@ -97,6 +97,7 @@ class PersonModel {
   late final String email;
   late List<PersonType> types = [];
   late final DateTime? birthday;
+  late final bool viewByDays;
   late PersonType _currentType;
   ParentModel? _asParent;
   StudentModel? _asStudent;
@@ -112,6 +113,7 @@ class PersonModel {
     lastname = map['lastname'] != null ? map['lastname'] as String : throw 'need lastname key in people $id';
     birthday = map['birthday'] != null ? DateTime.tryParse(map['birthday']) : null;
     email = map['email'] != null ? map['email'] as String : throw 'need email key in people $id';
+    viewByDays = map['viewbydays'] != null ? map['viewbydays'] as bool : false;
     map['type'] != null ? types.addAll((map['type'] as List).map((e) => PersonTypeExt._parse(e))) : throw 'need type key in people $id';
     if (recursive) {
       if (types.contains(PersonType.admin)) {
@@ -242,6 +244,11 @@ class StudentModel extends PersonModel {
   Future<List<MarkModel>> curriculumTeacherMarks(CurriculumModel cur, TeacherModel teacher) async {
     return Get.find<ProxyStore>().getStudentCurriculumTeacherMarks(this, cur, teacher);
   }
+
+  //TODO: unrem, first finish in ProxyStore
+  // Future<void> changeViewType() {
+  //   return Get.find<ProxyStore>().changePersonView(this);
+  // }
 }
 
 class TeacherModel extends PersonModel {
