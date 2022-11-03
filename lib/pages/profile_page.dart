@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
+import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
@@ -26,6 +27,7 @@ class ProfilePage extends StatelessWidget {
           children: [
             Text(_user.fullName),
             Text(_user.email),
+            if (_user.currentType == PersonType.student) _changeView(),
             _changeTypeW(context, _user),
             _chateChildW(_user),
             ElevatedButton(
@@ -48,15 +50,25 @@ class ProfilePage extends StatelessWidget {
               var currentChild = list[0] as StudentModel;
               var children = list[1] as List<StudentModel>;
 
-              return Row(children: [
-                Text(currentChild.fullName),
-                children.length > 1
+              // return Row(children: [
+              //   Text(currentChild.fullName),
+              //   children.length > 1
+              //       ? ElevatedButton(
+              //           onPressed: () => _changeChildBottomsheet(user.asParent!),
+              //           child: const Text('сменить ребенка'),
+              //         )
+              //       : const SizedBox.shrink(),
+              // ]);
+
+              return ListTile(
+                title: Text(currentChild.fullName),
+                trailing: children.length > 1
                     ? ElevatedButton(
                         onPressed: () => _changeChildBottomsheet(user.asParent!),
                         child: const Text('сменить ребенка'),
                       )
                     : const SizedBox.shrink(),
-              ]);
+              );
             })
         : const SizedBox.shrink();
   }
@@ -96,15 +108,41 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _changeTypeW(BuildContext context, PersonModel user) {
-    return Row(children: [
-      Text(user.currentType.name),
-      user.types.length > 1
+    // return Row(children: [
+    //   Text(user.currentType.name),
+    //   user.types.length > 1
+    //       ? ElevatedButton(
+    //           child: const Text('сменить тип'),
+    //           onPressed: () => _changeTypeBottomsheet(context, user),
+    //         )
+    //       : const SizedBox.shrink(),
+    // ]);
+    return ListTile(
+      title: Text(
+        user.currentType.localizedName(
+          S.of(context),
+        ),
+      ),
+      trailing: user.types.length > 1
           ? ElevatedButton(
               child: const Text('сменить тип'),
               onPressed: () => _changeTypeBottomsheet(context, user),
             )
           : const SizedBox.shrink(),
-    ]);
+    );
+  }
+
+  Widget _changeView() {
+    return Obx(() {
+      var prefs = Get.find<PrefsController>();
+      return SwitchListTile(
+        value: prefs.dayview,
+        onChanged: (v) async {
+          prefs.changeViewType(v);
+        },
+        title: const Text('показывать интерфейс дней'),
+      );
+    });
   }
 
   void _changeTypeBottomsheet(BuildContext context, PersonModel user) {

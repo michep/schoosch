@@ -95,9 +95,9 @@ class TeacherTablePage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildSummaryMarks(Map<StudentModel, List<MarkModel>> data) {
+  List<Widget> _buildSummaryMarks(Map<StudentModel, List<MarkModel>> data, List<StudentModel> liststud) {
     return List.generate(
-      data.keys.toList().length,
+      liststud.length,
       (index) => Container(
         alignment: Alignment.center,
         width: 120.0,
@@ -118,8 +118,8 @@ class TeacherTablePage extends StatelessWidget {
               // getSummaryMark(
               //   data.values.toList()[index],
               // ),
-              data[data.keys.toList()[index]] == null ? 'нет данных' : getSummaryMark(
-                data.values.toList()[index],
+              data[liststud[index]] == null ? 'нет данных' : getSummaryMark(
+                data[liststud[index]]!,
               ),
             ),
           ],
@@ -171,13 +171,13 @@ class TeacherTablePage extends StatelessWidget {
             var students = snapshot.data!;
             return FutureBuilder<Map<StudentModel, List<MarkModel>>>(
               future: currentcur.getMarksByStudents(students),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
+              builder: (context, studsnapshot) {
+                if (!studsnapshot.hasData) {
                   return Center(
                     child: Utils.progressIndicator(),
                   );
                 }
-                var data = snapshot.data!;
+                var data = studsnapshot.data!;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -201,7 +201,7 @@ class TeacherTablePage extends StatelessWidget {
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _buildSummaryMarks(data),
+                        children: _buildSummaryMarks(data, students),
                       ),
                     )
                   ],

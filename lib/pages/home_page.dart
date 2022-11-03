@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:schoosch/controller/day_controller.dart';
+import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -53,17 +54,20 @@ class HomePage extends StatelessWidget {
     if (PersonModel.currentUser!.currentType == PersonType.observer) {
       return const SizedBox.shrink();
     } else {
-      if (PersonModel.currentUser!.viewByDays && PersonModel.currentUser!.currentType == PersonType.student) {
-        return DaySelector(
-          key: ValueKey(
-            int.parse(DateFormat('D').format(Get.find<CurrentDay>().currentDay)),
-          ),
-        );
-      } else {
-        return WeekSelector(
-          key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber),
-        );
-      }
+      return Obx(() {
+        var prefs = Get.find<PrefsController>();
+        if (prefs.dayview && PersonModel.currentUser!.currentType == PersonType.student) {
+          return DaySelector(
+            key: ValueKey(
+              int.parse(DateFormat('D').format(Get.find<CurrentDay>().currentDay)),
+            ),
+          );
+        } else {
+          return WeekSelector(
+            key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber),
+          );
+        }
+      });
     }
   }
 
@@ -80,7 +84,10 @@ class HomePage extends StatelessWidget {
           });
     }
     if (user.currentType == PersonType.student) {
-      return user.viewByDays ? StudentDayScheduleSwitcher(PersonModel.currentStudent!) : StudentWeekScheduleSwitcher(PersonModel.currentStudent!);
+      return Obx(() {
+        var prefs = Get.find<PrefsController>();
+        return prefs.dayview ? StudentDayScheduleSwitcher(PersonModel.currentStudent!) : StudentWeekScheduleSwitcher(PersonModel.currentStudent!);
+      });
     }
     // if (user.currentType == PersonType.student) return StudentDayScheduleSwitcher(PersonModel.currentStudent!);
     if (user.currentType == PersonType.observer) return ObserverClassSelectionPage(PersonModel.currentObserver!);
