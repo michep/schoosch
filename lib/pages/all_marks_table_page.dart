@@ -98,7 +98,7 @@ class StudentsTablePage extends StatelessWidget {
     List<CurriculumModel> curs,
   ) {
     return List.generate(
-      data.keys.toList().length,
+      curs.length,
       (index) => Container(
         alignment: Alignment.center,
         width: 120.0,
@@ -119,7 +119,7 @@ class StudentsTablePage extends StatelessWidget {
               data[curs[index]] == null
                   ? 'нет данных'
                   : getSummaryMark(
-                      data.values.toList()[index],
+                      data[curs[index]]!,
                     ),
             ),
           ],
