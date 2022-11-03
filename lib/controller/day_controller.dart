@@ -26,16 +26,18 @@ class CurrentDay extends GetxController {
 
   void setIdx(int idx) {
     _currentDay.value = DateFormat('y D').parse('${idx ~/ 1000} ${idx % 1000}');
-    _pageController.animateToPage(
-      currentDay.year * 1000 +
-          int.parse(
-            DateFormat('D').format(
-              currentDay,
+    if (_pageController.hasClients) {
+      _pageController.animateToPage(
+        currentDay.year * 1000 +
+            int.parse(
+              DateFormat('D').format(
+                currentDay,
+              ),
             ),
-          ),
-      duration: const Duration(milliseconds: 1000),
-      curve: Curves.easeOutExpo,
-    );
+        duration: const Duration(milliseconds: 1000),
+        curve: Curves.easeOutExpo,
+      );
+    }
   }
 
   void next() {
@@ -47,10 +49,12 @@ class CurrentDay extends GetxController {
           days: 1,
         ),
       );
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 1000),
-        curve: Curves.easeOutExpo,
-      );
+      if (_pageController.hasClients) {
+        _pageController.nextPage(
+          duration: const Duration(milliseconds: 1000),
+          curve: Curves.easeOutExpo,
+        );
+      }
     }
   }
 
@@ -65,31 +69,52 @@ class CurrentDay extends GetxController {
           days: 1,
         ),
       );
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 1000),
-        curve: Curves.easeOutExpo,
-      );
+      if (_pageController.hasClients) {
+        _pageController.previousPage(
+          duration: const Duration(milliseconds: 1000),
+          curve: Curves.easeOutExpo,
+        );
+      }
     }
   }
 
   void setDate(DateTime date, {bool isFromWeek = false}) {
     _currentDay.value = date;
     if (!isFromWeek) Get.find<CurrentWeek>().setIdx(date.year * 100 + Week.fromDate(date).weekNumber);
-    _pageController.animateToPage(
-      date.year * 1000 +
-          int.parse(
-            DateFormat('D').format(
-              date,
+    if (_pageController.hasClients) {
+      _pageController.animateToPage(
+        date.year * 1000 +
+            int.parse(
+              DateFormat('D').format(
+                date,
+              ),
             ),
-          ),
-      duration: const Duration(milliseconds: 1000),
-      curve: Curves.easeOutExpo,
-    );
+        duration: const Duration(milliseconds: 1000),
+        curve: Curves.easeOutExpo,
+      );
+    }
   }
 
-  void changeToCurrentDay() {
-    setDate(
-      DateTime.now(),
-    );
+  Future<void> changeToCurrentDay() async {
+    var date = DateTime.now();
+    var nIdx = date.year * 1000 +
+        int.parse(
+          DateFormat('D').format(
+            date,
+          ),
+        );
+    var cIdx = currentDay.year * 1000 +
+        int.parse(
+          DateFormat('D').format(
+            currentDay,
+          ),
+        );
+    int direction = 0;
+    if (nIdx > cIdx) direction = -1;
+    if (nIdx < cIdx) direction = 1;
+    if (direction == 0) return Future.value();
+    _pageController.jumpToPage(nIdx + direction);
+    _currentDay.value = date;
+    return _pageController.animateToPage(nIdx, duration: const Duration(milliseconds: 1000), curve: Curves.easeOutExpo);
   }
 }

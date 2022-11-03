@@ -36,7 +36,7 @@ class StudentDayScheduleSwitcherState extends State<StudentDayScheduleSwitcher> 
                 return StudentDayScheduleWidget(
                   widget._student,
                   classSnap.data!,
-                  Week(year: idx ~/ 1000, weekNumber: ((idx % 1000) ~/ 7) + 1),
+                  Week(year: idx ~/ 1000, weekNumber: Week.fromDate(dt).weekNumber),
                   dt,
                   key: ValueKey(idx),
                 );
