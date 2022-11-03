@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart' as isoweek;
-import 'package:mutex/mutex.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/mark_model.dart';
+import 'package:schoosch/widgets/utils.dart';
 
 enum PersonType {
   none,
@@ -198,10 +198,8 @@ class StudentModel extends PersonModel {
   ClassModel? _studentClass;
   ParentModel? parent;
   bool _studentClassLoaded = false;
-  final Mutex _studentClassMutex = Mutex();
   final List<CurriculumModel> _curriculums = [];
   bool _curriculumsLoaded = false;
-  final Mutex _curriculumsMutex = Mutex();
 
   StudentModel.empty()
       : super.fromMap(null, <String, dynamic>{
@@ -215,32 +213,30 @@ class StudentModel extends PersonModel {
   StudentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
   Future<ClassModel?> get studentClass async {
-    await _studentClassMutex.acquire();
     if (!_studentClassLoaded) {
       _studentClass = await Get.find<ProxyStore>().getClassByStudent(this);
       _studentClassLoaded = true;
     }
-    _studentClassMutex.release();
     return _studentClass!;
   }
 
   Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
-    await _curriculumsMutex.acquire();
     if (!_curriculumsLoaded || forceRefresh) {
       _curriculums.clear();
       _curriculums.addAll(await Get.find<ProxyStore>().getStudentCurriculums(this));
       _curriculumsLoaded = true;
     }
-    _curriculumsMutex.release();
     return _curriculums;
   }
 
-  Future<List<MarkModel>> curriculumMarks(CurriculumModel cur) async {
-    return Get.find<ProxyStore>().getStudentCurriculumMarks(this, cur);
-  }
-
-  Future<List<MarkModel>> curriculumTeacherMarks(CurriculumModel cur, TeacherModel teacher) async {
-    return Get.find<ProxyStore>().getStudentCurriculumTeacherMarks(this, cur, teacher);
+  Future<Map<CurriculumModel, List<MarkModel>>> getMarksByCurriculums(List<CurriculumModel> curriculums) async {
+    Map<CurriculumModel, List<MarkModel>> res = {};
+    var marks = await Get.find<ProxyStore>().getStudenMarksByCurriculums(this, curriculums);
+    var splitted = Utils.splitMarksByCurriculum(marks);
+    for (var studid in splitted.keys) {
+      res[await splitted[studid]![0].curriculum] = splitted[studid]!;
+    }
+    return res;
   }
 }
 
@@ -248,7 +244,6 @@ class TeacherModel extends PersonModel {
   final Map<isoweek.Week, List<TeacherScheduleModel>> _weekTeccherSchedules = {};
   final List<CurriculumModel> _curriculums = [];
   bool _curriculumsLoaded = false;
-  final Mutex _curriculumsMutex = Mutex();
 
   TeacherModel.empty()
       : super.fromMap(null, <String, dynamic>{
@@ -278,18 +273,13 @@ class TeacherModel extends PersonModel {
   }
 
   Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
-    await _curriculumsMutex.acquire();
     if (!_curriculumsLoaded || forceRefresh) {
       _curriculums.clear();
       _curriculums.addAll(await Get.find<ProxyStore>().getTeacherCurriculums(this));
       _curriculumsLoaded = true;
     }
-    _curriculumsMutex.release();
     return _curriculums;
   }
-  // Future<void> confirmCompletion(HomeworkModel hw, CompletionFlagModel completion) async {
-  //   return await Get.find<MStore>().confirmCompletion(hw, completion);
-  // }
 }
 
 class ParentModel extends PersonModel {
@@ -310,7 +300,6 @@ class ParentModel extends PersonModel {
 
   ParentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
     map['student_ids'] != null
-        // ? studentIds.addAll((map['student_ids'] as List).map<String>((e) => e.runtimeType == String ? e : (e as ObjectId).toHexString()))
         ? studentIds.addAll((map['student_ids'] as List).map<String>((e) => e as String))
         : throw 'need student_ids key in people for parent $id';
   }
@@ -339,7 +328,6 @@ class ParentModel extends PersonModel {
   @override
   Map<String, dynamic> toMap({bool withId = false}) {
     Map<String, dynamic> res = super.toMap(withId: withId);
-    // Map<String, dynamic> res = {};
     res['student_ids'] = studentIds;
     return res;
   }
@@ -361,7 +349,6 @@ class ObserverModel extends PersonModel {
 
   ObserverModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
     map['class_ids'] != null
-        // ? classIds.addAll((map['class_ids'] as List).map<String>((e) => e.runtimeType == String ? e : (e as ObjectId).toHexString()))
         ? classIds.addAll((map['class_ids'] as List).map<String>((e) => e as String))
         : throw 'need class_ids key in people for observer $id';
   }
@@ -371,13 +358,6 @@ class ObserverModel extends PersonModel {
       _classes.clear();
       _classes.addAll(await Get.find<ProxyStore>().getClassesByIds(classIds));
       _classesLoaded = true;
-
-      // var store = Get.find<ProxyStore>();
-      // for (var id in classIds) {
-      //   var cl = await store.getClass(id);
-      //   _classes.add(cl);
-      //   _classesLoaded = true;
-      // }
     }
     return _classes;
   }
@@ -385,7 +365,6 @@ class ObserverModel extends PersonModel {
   @override
   Map<String, dynamic> toMap({bool withId = false}) {
     Map<String, dynamic> res = super.toMap(withId: withId);
-    // Map<String, dynamic> res = {};
     res['class_ids'] = classIds;
     return res;
   }

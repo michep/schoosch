@@ -17,7 +17,6 @@ class ClassModel {
   final List<String> _studentIds = [];
   final List<StudentModel> _students = [];
   bool _studentsLoaded = false;
-  final Mutex _studentsMutex = Mutex();
   final List<LessontimeModel> _lessontimes = [];
   bool _lessontimesLoaded = false;
   TeacherModel? _master;
@@ -111,17 +110,6 @@ class ClassModel {
     return _daySchedules[day]!;
   }
 
-  // Future<List<LessontimeModel>> getLessontimes() async {
-  //   if (!_lessontimesLoaded) {
-  //     _lessontimes.addAll(
-  //       await Get.find<MStore>().getLessontimes(_dayLessontimeId),
-  //     );
-  //     _lessontimes.sort((a, b) => a.order.compareTo(b.order));
-  //     _lessontimesLoaded = true; //TODO: fallback to default lessontimes?
-  //   }
-  //   return _lessontimes;
-  // }
-
   Future<LessontimeModel> getLessontime(int n) async {
     if (!_lessontimesLoaded) {
       _lessontimes.addAll(
@@ -143,13 +131,11 @@ class ClassModel {
   }
 
   Future<List<StudentModel>> students({forceRefresh = false}) async {
-    await _studentsMutex.acquire();
     if (!_studentsLoaded || forceRefresh) {
       _students.clear();
       _students.addAll((await Get.find<ProxyStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));
       _studentsLoaded = true;
     }
-    _studentsMutex.release();
     return _students;
   }
 

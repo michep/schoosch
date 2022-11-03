@@ -37,26 +37,6 @@ class TeacherTablePage extends StatelessWidget {
         ),
       ),
     );
-    // ) +
-    // [
-    //   Container(
-    //     alignment: Alignment.center,
-    //     width: 120.0,
-    //     height: 60.0,
-    //     decoration: BoxDecoration(
-    //       borderRadius: BorderRadius.circular(12),
-    //       color: Colors.black54,
-    //     ),
-    //     margin: const EdgeInsets.all(4.0),
-    //     child: Column(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: [
-    //         const Text('средний'),
-    //         Text(getSummaryMark(listmark)),
-    //       ],
-    //     ),
-    //   )
-    // ];
   }
 
   String getSummaryMark(List<MarkModel> listmark) {
@@ -80,9 +60,7 @@ class TeacherTablePage extends StatelessWidget {
         height: 70.0,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Colors.grey
-          ),
+          border: Border.all(color: Colors.grey),
         ),
         margin: const EdgeInsets.all(4.0),
         child: Padding(
@@ -115,12 +93,11 @@ class TeacherTablePage extends StatelessWidget {
           children: [
             const Text('средний'),
             Text(
-              // getSummaryMark(
-              //   data.values.toList()[index],
-              // ),
-              data[data.keys.toList()[index]] == null ? 'нет данных' : getSummaryMark(
-                data.values.toList()[index],
-              ),
+              data[data.keys.toList()[index]] == null
+                  ? 'нет данных'
+                  : getSummaryMark(
+                      data.values.toList()[index],
+                    ),
             ),
           ],
         ),
@@ -148,7 +125,6 @@ class TeacherTablePage extends StatelessWidget {
                 data[liststud[index]]!,
               ),
             ),
-      // }),
     );
   }
 
