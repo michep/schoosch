@@ -14,44 +14,25 @@ class StudentsTablePage extends StatelessWidget {
 
   List<Widget> _buildMarkCells(List<MarkModel> listmark) {
     return List.generate(
-          listmark.length,
-          (index) => Container(
-            alignment: Alignment.center,
-            width: 120.0,
-            height: 60.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.black54,
-            ),
-            margin: const EdgeInsets.all(4.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(DateFormat.Md().format(listmark[index].date)),
-                Text(listmark[index].toString()),
-              ],
-            ),
-          ),
-        ) +
-        [
-          Container(
-            alignment: Alignment.center,
-            width: 120.0,
-            height: 60.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.black54,
-            ),
-            margin: const EdgeInsets.all(4.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('средний'),
-                Text(getSummaryMark(listmark)),
-              ],
-            ),
-          )
-        ];
+      listmark.length,
+      (index) => Container(
+        alignment: Alignment.center,
+        width: 120.0,
+        height: 60.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.black54,
+        ),
+        margin: const EdgeInsets.all(4.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(DateFormat.Md().format(listmark[index].date)),
+            Text(listmark[index].toString()),
+          ],
+        ),
+      ),
+    );
   }
 
   String getSummaryMark(List<MarkModel> listmark) {
@@ -112,7 +93,10 @@ class StudentsTablePage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildSummaryMarks(Map<CurriculumModel, List<MarkModel>> data) {
+  List<Widget> _buildSummaryMarks(
+    Map<CurriculumModel, List<MarkModel>> data,
+    List<CurriculumModel> curs,
+  ) {
     return List.generate(
       data.keys.toList().length,
       (index) => Container(
@@ -132,7 +116,7 @@ class StudentsTablePage extends StatelessWidget {
           children: [
             const Text('средний'),
             Text(
-              data[data.keys.toList()[index]] == null
+              data[curs[index]] == null
                   ? 'нет данных'
                   : getSummaryMark(
                       data.values.toList()[index],
@@ -193,7 +177,10 @@ class StudentsTablePage extends StatelessWidget {
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _buildSummaryMarks(data),
+                        children: _buildSummaryMarks(
+                          data,
+                          curriculums,
+                        ),
                       ),
                     ),
                   ],
