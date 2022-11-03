@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
@@ -13,6 +14,8 @@ class InstitutionModel {
   final Map<String, String> attributes = {};
   final List<CurriculumModel> _curriculums = [];
   bool _curriculumsLoaded = false;
+
+  final Map<String, Uint8List> _files = {};
 
   InstitutionModel.fromMap(this.id, Map<String, dynamic> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in institution $id';
@@ -48,6 +51,14 @@ class InstitutionModel {
 
   Future<List<DayLessontimeModel>> get daylessontimes async {
     return Get.find<ProxyStore>().getAllDayLessontime();
+  }
+
+  Future<Uint8List> getFile(String filename) async {
+    if (!_files.keys.contains(filename)) {
+      var data = await Get.find<ProxyStore>().getFile(filename);
+      _files.addAll({filename: data});
+    }
+    return _files[filename]!;
   }
 
   // Future<void> createChatRoom(PersonModel other) async {

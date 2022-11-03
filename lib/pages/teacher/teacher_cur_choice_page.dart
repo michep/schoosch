@@ -31,11 +31,7 @@ class CurriculumChoicePage extends StatelessWidget {
                 return ListTile(
                   title: Text(snapshot.data![index].aliasOrName),
                   onTap: () {
-                    Get.to(
-                      TeacherTablePage(
-                        currentcur: snapshot.data![index],
-                      ),
-                    );
+                    Get.to(() => TeacherTablePage(currentcur: snapshot.data![index]));
                   },
                 );
               },

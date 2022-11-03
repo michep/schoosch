@@ -8,7 +8,6 @@ import 'package:schoosch/controller/day_controller.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
-import 'package:schoosch/controller/storage_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/firebase_options.dart';
 import 'package:schoosch/flutterfire_ui_ru.dart';
@@ -27,7 +26,7 @@ Future<void> main() async {
   var fauth = FAuth();
   // var fstore = FStore();
   // var mstore = MStore();
-  var store = FStorage();
+  // var store = FStorage();
   var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org:8182', path));
   var curweek = CurrentWeek(Week.current());
   var prefs = PrefsController();
@@ -36,7 +35,7 @@ Future<void> main() async {
   Get.put<FAuth>(fauth);
   // Get.put<FStore>(fstore);
   // Get.put<MStore>(mstore);
-  Get.put<FStorage>(store);
+  // Get.put<FStorage>(store);
   Get.put<ProxyStore>(proxy);
   Get.put<CurrentWeek>(curweek);
   Get.put<CurrentDay>(CurrentDay(DateTime.now()));

@@ -2,6 +2,7 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
+import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class MarkModel {
@@ -16,6 +17,7 @@ class MarkModel {
   late int mark;
   TeacherModel? _teacher;
   StudentModel? _student;
+  CurriculumModel? _curriculum;
 
   MarkModel.empty(String teacherId, String curriculumId, int lessonOrder, DateTime date)
       : this.fromMap(null, {
@@ -47,6 +49,10 @@ class MarkModel {
     if (map.containsKey('student') && map['student'] is Map) {
       _student = StudentModel.fromMap((map['student'] as Map<String, dynamic>)['_id'] as String, map['student'] as Map<String, dynamic>);
     }
+
+    if (map.containsKey('curriculum') && map['curriculum'] is Map) {
+      _curriculum = CurriculumModel.fromMap((map['curriculum'] as Map<String, dynamic>)['_id'] as String, map['curriculum'] as Map<String, dynamic>);
+    }
   }
 
   Map<String, dynamic> toMap({bool withId = false}) {
@@ -72,6 +78,11 @@ class MarkModel {
   Future<StudentModel> get student async {
     _student ??= (await Get.find<ProxyStore>().getPerson(studentId)).asStudent;
     return _student!;
+  }
+
+  Future<CurriculumModel> get curriculum async {
+    _curriculum ??= (await Get.find<ProxyStore>().getCurriculum(curriculumId));
+    return _curriculum!;
   }
 
   Future<void> save() async {

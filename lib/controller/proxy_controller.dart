@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:dio/adapter.dart';
 import 'package:get/get.dart' as getx;
@@ -614,17 +615,11 @@ class ProxyStore extends getx.GetxController {
     return js.map((e) => MarkModel.fromMap(e['_id'], e)).toList();
   }
 
-  Future<List<MarkModel>> getStudentCurriculumMarks(StudentModel student, CurriculumModel curriculum) async {
-    var res = await dio.getUri<List>(
-      baseUriFunc('/curriculum/${curriculum.id}/student/${student.id}/mark'),
-    );
-    var js = res.data!;
-    return js.map((e) => MarkModel.fromMap(e['_id'], e)).toList();
-  }
-
-  Future<List<MarkModel>> getStudentCurriculumTeacherMarks(StudentModel student, CurriculumModel curriculum, TeacherModel teacher) async {
-    var res = await dio.getUri<List>(
-      baseUriFunc('/curriculum/${curriculum.id}/student/${student.id}/teacher/${teacher.id}/mark'),
+  Future<List<MarkModel>> getStudenMarksByCurriculums(StudentModel student, List<CurriculumModel> curriculum) async {
+    var res = await dio.postUri<List>(
+      baseUriFunc('/student/${student.id}/curriculums/mark'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: curriculum.map((e) => e.id).toList(),
     );
     var js = res.data!;
     return js.map((e) => MarkModel.fromMap(e['_id'], e)).toList();
@@ -680,6 +675,11 @@ class ProxyStore extends getx.GetxController {
     return res.data!.map((e) => ClassModel.fromMap(e['_id'], e)).toList();
   }
 
+  Future<List<StudentModel>> getCurriculumStudents(CurriculumModel curriculum) async {
+    var res = await dio.getUri<List>(baseUriFunc('/curriculum/${curriculum.id}/student'));
+    return res.data!.map((e) => StudentModel.fromMap(e['_id'], e)).toList();
+  }
+
   Future<List<CurriculumModel>> getClassCurriculums(ClassModel aclass) async {
     var res = await dio.getUri<List>(baseUriFunc('/class/${aclass.id}/curriculum'));
     return res.data!.map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
@@ -698,5 +698,10 @@ class ProxyStore extends getx.GetxController {
   Future<DateTime> getNextLessonDate(ClassModel aclass, CurriculumModel curriculum, DateTime date) async {
     var res = await dio.getUri<Map<String, dynamic>>(baseUriFunc('/class/${aclass.id}/curriculum/${curriculum.id}/nextdate/${date.toIso8601String()}'));
     return DateTime.parse(res.data!['nextdate']);
+  }
+
+  Future<Uint8List> getFile(String filename) async {
+    var res = await dio.getUri<Uint8List>(baseUriFunc('/files/$filename'), options: Options(responseType: ResponseType.bytes));
+    return res.data!;
   }
 }

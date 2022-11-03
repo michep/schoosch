@@ -76,12 +76,10 @@ class StudentsTablePage extends StatelessWidget {
         // color: Colors.white,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Colors.grey
-          ),
+          border: Border.all(color: Colors.grey),
         ),
         margin: const EdgeInsets.all(4.0),
-        child:  Padding(
+        child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Text(
             listcur[index].aliasOrName,
@@ -91,19 +89,11 @@ class StudentsTablePage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildRows(List<CurriculumModel> listcur) {
+  List<Widget> _buildRows(Map<CurriculumModel, List<MarkModel>> data, List<CurriculumModel> listcur) {
     return List.generate(
       listcur.length,
-      (index) => FutureBuilder<List<MarkModel>>(
-        future: student.curriculumMarks(listcur[index]),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: Utils.progressIndicator(),
-            );
-          }
-          if (snapshot.data!.isEmpty) {
-            return Container(
+      (index) => data[listcur[index]] == null
+          ? Container(
               alignment: Alignment.center,
               width: 120.0,
               height: 60.0,
@@ -113,24 +103,13 @@ class StudentsTablePage extends StatelessWidget {
               ),
               margin: const EdgeInsets.all(4.0),
               child: const Text('нет оценок.'),
-            );
-          }
-          return Column(
-            children: _buildMarkCells(
-              snapshot.data!,
+            )
+          : Column(
+              children: _buildMarkCells(
+                data[listcur[index]]!,
+              ),
             ),
-          );
-        },
-      ),
     );
-  }
-
-  Future<Map<CurriculumModel, List<MarkModel>>> getCurriculumMarksList(List<CurriculumModel> listcur) async {
-    Map<CurriculumModel, List<MarkModel>> res = {};
-    for (var i in listcur) {
-      res[i] = await student.curriculumMarks(i);
-    }
-    return res;
   }
 
   List<Widget> _buildSummaryMarks(Map<CurriculumModel, List<MarkModel>> data) {
@@ -153,9 +132,11 @@ class StudentsTablePage extends StatelessWidget {
           children: [
             const Text('средний'),
             Text(
-              data[data.keys.toList()[index]] == null ? 'нет данных' : getSummaryMark(
-                data.values.toList()[index],
-              ),
+              data[data.keys.toList()[index]] == null
+                  ? 'нет данных'
+                  : getSummaryMark(
+                      data.values.toList()[index],
+                    ),
             ),
           ],
         ),
@@ -179,65 +160,45 @@ class StudentsTablePage extends StatelessWidget {
                 child: Utils.progressIndicator(),
               );
             }
-            // return Row(
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: [
-            //     Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: _buildSubjectCells(snapshot.data!),
-            //     ),
-            //     Flexible(
-            //       child: SingleChildScrollView(
-            //         scrollDirection: Axis.horizontal,
-            //         child: Column(
-            //           crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: _buildRows(snapshot.data!),
-            //         ),
-            //       ),
-            //     )
-            //   ],
-            // );
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+            var curriculums = snapshot.data!;
+            return FutureBuilder<Map<CurriculumModel, List<MarkModel>>>(
+              future: student.getMarksByCurriculums(curriculums),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: Utils.progressIndicator(),
+                  );
+                }
+                var data = snapshot.data!;
+                return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _buildSubjectCells(
-                    snapshot.data!,
-                  ),
-                ),
-                Flexible(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Row(
+                  children: [
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildRows(
-                        snapshot.data!,
+                      children: _buildSubjectCells(curriculums),
+                    ),
+                    Flexible(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: _buildRows(data, curriculums),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                FutureBuilder<Map<CurriculumModel, List<MarkModel>>>(
-                  future: getCurriculumMarksList(snapshot.data!),
-                  builder: (context, markssnapshot) {
-                    if(!markssnapshot.hasData) {
-                      return const SizedBox.shrink();
-                    }
-                    return Padding(
+                    Padding(
                       padding: const EdgeInsets.only(
                         bottom: 8,
                         top: 4,
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _buildSummaryMarks(
-                          markssnapshot.data!,
-                        ),
+                        children: _buildSummaryMarks(data),
                       ),
-                    );
-                  },
-                ),
-              ],
+                    ),
+                  ],
+                );
+              },
             );
           },
         ),

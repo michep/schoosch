@@ -12,8 +12,10 @@ class CurriculumModel {
   late final String _masterId;
   final List<String> _studentIds = [];
   final List<StudentModel> _specificStudents = [];
+  final List<StudentModel> _students = [];
   final List<ClassModel> _classes = [];
   bool _specificStudentsLoaded = false;
+  bool _studentsLoaded = false;
   bool _classesLoaded = false;
   TeacherModel? _master;
 
@@ -71,16 +73,16 @@ class CurriculumModel {
 
   Future<List<StudentModel>> classStudents(ClassModel aclass) async {
     var s = await aclass.students();
-    return s.where((element) => isAvailableForStudent(element)).toList();  
+    return s.where((element) => isAvailableForStudent(element)).toList();
   }
 
-  Future<List<StudentModel>> students() async {
-    List<StudentModel> res = [];
-    var cl = await classes();
-    for(var c in cl) {
-      res.addAll(await classStudents(c));
+  Future<List<StudentModel>> students({bool forceRefresh = false}) async {
+    if (!_studentsLoaded || forceRefresh) {
+      _students.clear();
+      _students.addAll((await Get.find<ProxyStore>().getCurriculumStudents(this)));
+      _studentsLoaded = true;
     }
-    return res;
+    return _students;
   }
 
   bool isAvailableForStudent(StudentModel student) {
@@ -90,10 +92,10 @@ class CurriculumModel {
   Future<Map<StudentModel, List<MarkModel>>> getMarksByStudents(List<StudentModel> students) async {
     Map<StudentModel, List<MarkModel>> res = {};
     var marks = await Get.find<ProxyStore>().getCurriculumMarksByStudents(this, students);
-    var splitted =  Utils.splitMarksByStudent(marks);
-    for(var studid in splitted.keys) {
+    var splitted = Utils.splitMarksByStudent(marks);
+    for (var studid in splitted.keys) {
       res[await splitted[studid]![0].student] = splitted[studid]!;
-    } 
+    }
     return res;
   }
 
