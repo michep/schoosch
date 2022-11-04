@@ -45,7 +45,10 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-              child: _pages[current],
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                child: _pages[current],
+              ),
             ),
           ],
         ),

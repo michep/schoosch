@@ -199,7 +199,6 @@ class PersonModel {
 class StudentModel extends PersonModel {
   ClassModel? _studentClass;
   ParentModel? parent;
-  bool _studentClassLoaded = false;
   final List<CurriculumModel> _curriculums = [];
   bool _curriculumsLoaded = false;
 
@@ -214,11 +213,8 @@ class StudentModel extends PersonModel {
 
   StudentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
-  Future<ClassModel?> get studentClass async {
-    if (!_studentClassLoaded) {
-      _studentClass = await Get.find<ProxyStore>().getClassByStudent(this);
-      _studentClassLoaded = true;
-    }
+  Future<ClassModel> get studentClass async {
+    _studentClass ??= await Get.find<ProxyStore>().getClassByStudent(this);
     return _studentClass!;
   }
 
