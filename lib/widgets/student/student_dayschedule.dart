@@ -44,14 +44,14 @@ class _StudentDayScheduleWidgetState extends State<StudentDayScheduleWidget> {
           );
         }
         forceRefresh = false;
-        if (schedules.data!.length - 1 < widget._currentdate.weekday -1) {
+        if (schedules.data!.length - 1 < widget._currentdate.weekday - 1) {
           return headedListview(
             child: const Center(
               child: Text('на этот день нет расписания'),
             ),
           );
         }
-        var sched = schedules.data!.toList()[widget._currentdate.weekday -1];
+        var sched = schedules.data!.toList()[widget._currentdate.weekday - 1];
         return RefreshIndicator(
           onRefresh: () async {
             forceRefresh = true;
@@ -66,47 +66,45 @@ class _StudentDayScheduleWidgetState extends State<StudentDayScheduleWidget> {
                 );
               }
               return headedListview(
-                child: Expanded(
-                  child: Column(
-                    children: [
-                      ...lessons.data!.map(
-                        (lesson) => FutureBuilder(
-                          future: lesson.type != LessonType.empty
-                              ? Future.wait([
-                                  lesson.curriculum,
-                                  lesson.venue,
-                                  lesson.lessontime,
-                                  lesson.marksForStudentAsString(widget._student, widget._week.day(sched.day - 1)),
-                                ])
-                              : Future.delayed(
-                                  const Duration(
-                                    milliseconds: 0,
-                                  ), () {
-                                  return [];
-                                }),
-                          builder: (context, snap) {
-                            if (!snap.hasData) {
-                              return const ListTile();
-                            }
-                            var list = snap.data! as List<dynamic>;
-                            var cur = lesson.type != LessonType.empty ? list[0] as CurriculumModel : null;
-                            var ven = lesson.type != LessonType.empty ? list[1] as VenueModel : null;
-                            var tim = lesson.type != LessonType.empty ? list[2] as LessontimeModel : null;
-                            var mar = lesson.type != LessonType.empty ? list[3] as String : null;
-                            return StudentLessonTile(
-                              lesson: lesson,
-                              student: widget._student,
-                              date: widget._week.day(sched.day - 1),
-                              cur: cur,
-                              ven: ven,
-                              tim: tim,
-                              mar: mar,
-                            );
-                          },
-                        ),
+                child: Column(
+                  children: [
+                    ...lessons.data!.map(
+                      (lesson) => FutureBuilder(
+                        future: lesson.type != LessonType.empty
+                            ? Future.wait([
+                                lesson.curriculum,
+                                lesson.venue,
+                                lesson.lessontime,
+                                lesson.marksForStudentAsString(widget._student, widget._week.day(sched.day - 1)),
+                              ])
+                            : Future.delayed(
+                                const Duration(
+                                  milliseconds: 0,
+                                ), () {
+                                return [];
+                              }),
+                        builder: (context, snap) {
+                          if (!snap.hasData) {
+                            return const ListTile();
+                          }
+                          var list = snap.data! as List<dynamic>;
+                          var cur = lesson.type != LessonType.empty ? list[0] as CurriculumModel : null;
+                          var ven = lesson.type != LessonType.empty ? list[1] as VenueModel : null;
+                          var tim = lesson.type != LessonType.empty ? list[2] as LessontimeModel : null;
+                          var mar = lesson.type != LessonType.empty ? list[3] as String : null;
+                          return StudentLessonTile(
+                            lesson: lesson,
+                            student: widget._student,
+                            date: widget._week.day(sched.day - 1),
+                            cur: cur,
+                            ven: ven,
+                            tim: tim,
+                            mar: mar,
+                          );
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               );
             },
