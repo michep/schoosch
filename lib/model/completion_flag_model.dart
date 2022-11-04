@@ -83,16 +83,6 @@ class CompletionFlagModel {
     return await Get.find<ProxyStore>().unconfirmCompletion(this, person);
   }
 
-  // Future<CompletionFlagModel?> refresh(HomeworkModel homework) async {
-  //   var refr = await Get.find<MStore>().refreshCompletion(homework, this);
-  //   completedTime = refr!.completedTime;
-  //   confirmedById = refr.confirmedById;
-  //   completedById = refr.completedById;
-  //   confirmedTime = refr.confirmedTime;
-  //   status = refr.status;
-  //   return refr;
-  // }
-
   Map<String, dynamic> toMap({bool withId = false}) {
     var data = <String, dynamic>{
       'completedby_id': completedById,

@@ -59,20 +59,6 @@ class ClassScheduleModel extends DayScheduleModel {
     }
     _lessonsMutex.release();
     return _lessons;
-
-    // await _lessonsMutex.acquire();
-    // if (!_lessonsLoaded || forceRefresh) {
-    //   _lessons.clear();
-    //   _lessons.addAll(await Get.find<ProxyStore>().getScheduleLessons(
-    //     _class,
-    //     this,
-    //     date: date,
-    //     needsEmpty: needsEmpty,
-    //   ));
-    //   _lessonsLoaded = true;
-    // }
-    // _lessonsMutex.release();
-    // return _lessons;
   }
 
   Map<String, dynamic> toMap() {
@@ -91,18 +77,7 @@ class ClassScheduleModel extends DayScheduleModel {
 }
 
 class StudentScheduleModel extends ClassScheduleModel {
-  // final List<LessonModel> _studentLessons = [];
-  // bool _studentLessonsLoaded = false;
-  // final Mutex _studentLessonsMutex = Mutex();
-
-  StudentScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map) {
-    // if (map.containsKey('lesson') && map['lesson'] is List) {
-    //   for (var l in map['lesson'] as List) {
-    //     _studentLessons.add(LessonModel.fromMap(aclass, this, l['_id'], l));
-    //   }
-    //   _studentLessonsLoaded = true;
-    // }
-  }
+  StudentScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map);
 
   Future<List<LessonModel>> studentLessons(StudentModel student, {DateTime? date}) async {
     await _lessonsMutex.acquire();
@@ -112,37 +87,13 @@ class StudentScheduleModel extends ClassScheduleModel {
     }
     _lessonsMutex.release();
     return _lessons;
-
-    // await _studentLessonsMutex.acquire();
-    // if (!_studentLessonsLoaded) {
-    //   _studentLessons.addAll(await Get.find<ProxyStore>().getScheduleLessonsForStudent(_class, this, student, date));
-    //   _studentLessonsLoaded = true;
-    // }
-    // _studentLessonsMutex.release();
-    // return _studentLessons;
   }
 }
 
 class TeacherScheduleModel extends DayScheduleModel {
-  TeacherScheduleModel.fromMap(String id, Map<String, Object?> map) : super.fromMap(id, map) {
-    // if (map.containsKey('lesson') && map['lesson'] is List) {
-    //   for (var l in map['lesson'] as List) {
-    //     var aclass = ClassModel.fromMap(l['class']['_id'], l['class']);
-    //     _teacherLessons.add(LessonModel.fromMap(aclass, this, l['_id'], l));
-    //   }
-    // }
-  }
-
-  // void addLessons(List<LessonModel> lessons) {
-  //   _teacherLessons.addAll(lessons);
-  //   _teacherLessons.sort((a, b) => a.order.compareTo(b.order));
-  // }
+  TeacherScheduleModel.fromMap(String id, Map<String, Object?> map) : super.fromMap(id, map);
 
   Future<List<LessonModel>> teacherLessons(TeacherModel teacher, Week week) async {
     return _lessons;
   }
-
-  // Future<List<LessonModel>> getLessons() async {
-  //   return _teacherLessons;
-  // }
 }

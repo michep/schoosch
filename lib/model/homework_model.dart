@@ -19,7 +19,6 @@ class HomeworkModel {
   StudentModel? _student;
   TeacherModel? _teacher;
   ClassModel? _aclass;
-  // final Mutex _completionsMutex = Mutex();
 
   HomeworkModel.fromMap(this.id, Map<String, dynamic> map) {
     text = map['text'] != null ? map['text'] as String : throw 'need text key in homework  $id';
@@ -88,34 +87,6 @@ class HomeworkModel {
   Future<void> createCompletion(StudentModel student) async {
     return await Get.find<ProxyStore>().createCompletion(this, student);
   }
-
-  // Future<void> deleteCompletion(CompletionFlagModel completion, StudentModel student) async {
-  //   return await Get.find<ProxyStore>().deleteCompletion(this, completion, student);
-  // }
-
-  // Future<void> confirmCompletion(CompletionFlagModel completion, PersonModel person) async {
-  //   return await Get.find<ProxyStore>().confirmCompletion(this, completion, person);
-  // }
-
-  // Future<void> unconfirmCompletion(CompletionFlagModel completion, PersonModel person) async {
-  //   return await Get.find<ProxyStore>().unconfirmCompletion(this, completion, person);
-  // }
-
-  // Future<void> completeCompletion(CompletionFlagModel c, TeacherModel teacher) async {
-  //   return await Get.find<MStore>().completeCompletion(this, c, teacher);
-  // }
-
-  // Future<void> uncompleteCompletion(CompletionFlagModel c) async {
-  //   return await Get.find<MStore>().uncompleteCompletion(this, c);
-  // }
-
-  // Future<void> confirmHomework() async {
-  //   return await Get.find<MStore>().confirmHomework(this);
-  // }
-
-  // Future<void> change(String newText) async {
-  //   return await Get.find<MStore>().updateHomework(this, newText);
-  // }
 
   Map<String, dynamic> toMap() {
     return {
