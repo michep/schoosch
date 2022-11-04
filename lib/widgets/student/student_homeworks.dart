@@ -15,35 +15,49 @@ class StudentHomeworks extends StatefulWidget {
 }
 
 class _StudentHomeworksState extends State<StudentHomeworks> {
+  late bool forceRefresh;
+
+  @override
+  void initState() {
+    forceRefresh = false;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, List<HomeworkModel>>>(
-      future: widget._lesson.homeworkThisLessonForClassAndStudent(widget._student, widget._date, forceRefresh: false),
+      future: widget._lesson.homeworkThisLessonForClassAndStudent(widget._student, widget._date, forceRefresh: forceRefresh),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const SizedBox.shrink();
-        if (snapshot.data!['student']!.isEmpty && snapshot.data!['class']!.isEmpty) {
-          return const Center(
-            child: Text('Нет домашнего задания на этот день! 🎉'),
-          );
-        }
-        var stud = snapshot.data!['student'];
-        var clas = snapshot.data!['class'];
-        return ListView(
-          shrinkWrap: true,
-          children: [
-            if (stud != null)
-              StudentHomework(
-                homework: stud,
-                isClass: false,
-                student: widget._student,
-              ),
-            if (clas != null)
-              StudentHomework(
-                homework: clas,
-                isClass: true,
-                student: widget._student,
-              ),
-          ],
+        var stud = snapshot.data!['student']!;
+        var clas = snapshot.data!['class']!;
+        forceRefresh = false;
+        return RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              forceRefresh = true;
+            });
+          },
+          child: (stud.isEmpty && clas.isEmpty)
+              ? ListView(
+                  children: const [Center(child: Text('Нет домашнего задания на этот день! 🎉'))],
+                )
+              : ListView(
+                  children: [
+                    if (stud.isNotEmpty)
+                      StudentHomework(
+                        homework: stud,
+                        isClass: false,
+                        student: widget._student,
+                      ),
+                    if (clas.isNotEmpty)
+                      StudentHomework(
+                        homework: clas,
+                        isClass: true,
+                        student: widget._student,
+                      ),
+                  ],
+                ),
         );
       },
     );

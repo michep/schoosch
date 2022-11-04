@@ -19,57 +19,6 @@ class StudentHomework extends StatefulWidget {
 class _StudentHomeworkState extends State<StudentHomework> {
   @override
   Widget build(BuildContext context) {
-    // return FutureBuilder<CompletionFlagModel?>(
-    //   future: widget.homework.getCompletion(widget.student, forceRefresh: true),
-    //   builder: (context, snapshot) {
-    //     bool isChecked = false;
-    //     bool isConfirmed = false;
-    //     if (snapshot.hasData) {
-    //       if (snapshot.data!.status == Status.completed) {
-    //         isChecked = true;
-    //       } else if (snapshot.data!.status == Status.confirmed) {
-    //         isConfirmed = true;
-    //       }
-    //     }
-    //     return Container(
-    //       margin: const EdgeInsets.all(8),
-    //       child: Column(
-    //         crossAxisAlignment: CrossAxisAlignment.start,
-    //         children: [
-    //           Align(
-    //             alignment: Alignment.centerLeft,
-    //             child: Text(
-    //               widget.isClass ? "Д/З класса" : "Д/З личное",
-    //               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-    //             ),
-    //           ),
-    //           ListTile(
-    //             title: Linkify(
-    //               text: widget.homework.text,
-    //               onOpen: (link) => Utils.openLink(link.url),
-    //             ),
-    //             trailing: IconButton(
-    //               onPressed: PersonModel.currentUser!.currentType == PersonType.parent
-    //                   ? null
-    //                   : () async {
-    //                       // var completion = await widget.homework.getCompletion(widget.student);
-    //                       var completion = snapshot.data;
-    //                       onTap(completion).whenComplete(() {
-    //                         setState(() {});
-    //                       });
-    //                     },
-    //               icon: Icon(isConfirmed
-    //                   ? Icons.check_circle_outline_rounded
-    //                   : isChecked
-    //                       ? Icons.circle_outlined
-    //                       : Icons.add_circle_outline),
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     );
-    //   },
-    // );
     return Container(
       margin: const EdgeInsets.all(8),
       child: Column(
