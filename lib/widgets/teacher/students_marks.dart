@@ -129,7 +129,7 @@ class _MarkListTileState extends State<MarkListTile> {
       widget.marks[0].student.then((value) {
         if (mounted) {
           setState(() {
-            student = value.asStudent;
+            student = value;
           });
         }
       });
