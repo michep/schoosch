@@ -156,7 +156,15 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
   }
 
   void editHomework(HomeworkModel hw, bool isPersonalHomework) async {
-    var res = await Get.to(() => HomeworkPage(widget._lesson, widget._curriculum, hw, const [], isPersonalHomework: false));
+    var res = await Get.to(
+      () => HomeworkPage(
+        widget._lesson,
+        widget._curriculum,
+        hw,
+        const [],
+        isPersonalHomework: isPersonalHomework,
+      ),
+    );
     if (res is bool && res == true) {
       setState(() {
         forceRefresh = true;
