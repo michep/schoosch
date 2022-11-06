@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
-import 'package:mutex/mutex.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
@@ -14,7 +13,6 @@ class DayScheduleModel {
   late final DateTime? till;
   final List<LessonModel> _lessons = [];
   bool _lessonsLoaded = false;
-  final Mutex _lessonsMutex = Mutex();
 
   String? get id => _id;
 
@@ -52,12 +50,10 @@ class ClassScheduleModel extends DayScheduleModel {
   ClassScheduleModel.fromMap(this._class, String? id, Map<String, dynamic> map) : super.fromMap(id, map);
 
   Future<List<LessonModel>> classLessons({bool forceRefresh = false, DateTime? date, bool needsEmpty = false}) async {
-    await _lessonsMutex.acquire();
     if (!_lessonsLoaded) {
       _lessons.addAll(await Get.find<ProxyStore>().getScheduleLessons(_class, this, date: date, needsEmpty: needsEmpty));
       _lessonsLoaded = true;
     }
-    _lessonsMutex.release();
     return _lessons;
   }
 
@@ -80,12 +76,10 @@ class StudentScheduleModel extends ClassScheduleModel {
   StudentScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map);
 
   Future<List<LessonModel>> studentLessons(StudentModel student, {DateTime? date}) async {
-    await _lessonsMutex.acquire();
     if (!_lessonsLoaded) {
       _lessons.addAll(await Get.find<ProxyStore>().getScheduleLessonsForStudent(_class, this, student, date));
       _lessonsLoaded = true;
     }
-    _lessonsMutex.release();
     return _lessons;
   }
 }

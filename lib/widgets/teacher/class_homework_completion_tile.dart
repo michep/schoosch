@@ -22,13 +22,13 @@ class ClassHomeworkCompetionTile extends StatelessWidget {
     Widget complTime;
 
     switch (completion.status) {
-      case Status.completed:
+      case CompletionStatus.completed:
         icon = IconButton(
           icon: const Icon(Icons.circle_outlined),
           onPressed: () => toggleHomeworkCompletion(homework, completion),
         );
         break;
-      case Status.confirmed:
+      case CompletionStatus.confirmed:
         icon = IconButton(
           icon: const Icon(Icons.check_circle_outline),
           onPressed: () => toggleHomeworkCompletion(homework, completion),

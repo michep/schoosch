@@ -67,7 +67,7 @@ class HomeworkModel {
     return _aclass!;
   }
 
-  Future<CompletionFlagModel?> getCompletion(StudentModel student, {bool forceRefresh = false}) async {
+  Future<CompletionFlagModel?> getStudentCompletion(StudentModel student, {bool forceRefresh = false}) async {
     if (!_completionsLoaded || forceRefresh) {
       await getAllCompletions(forceRefresh: forceRefresh);
     }

@@ -9,7 +9,7 @@ class CompletionFlagModel {
   String? confirmedById;
   DateTime? completedTime;
   DateTime? confirmedTime;
-  Status? status;
+  CompletionStatus? status;
   late PersonModel? _completer;
   bool _completerLoaded = false;
   late PersonModel? _confirmer;
@@ -42,16 +42,16 @@ class CompletionFlagModel {
     }
   }
 
-  Status stat(int i) {
+  CompletionStatus stat(int i) {
     switch (i) {
       case 0:
-        return Status.decompleted;
+        return CompletionStatus.decompleted;
       case 1:
-        return Status.completed;
+        return CompletionStatus.completed;
       case 2:
-        return Status.confirmed;
+        return CompletionStatus.confirmed;
       default:
-        return Status.completed;
+        return CompletionStatus.completed;
     }
   }
 
@@ -100,4 +100,4 @@ class CompletionFlagModel {
   // }
 }
 
-enum Status { decompleted, completed, confirmed }
+enum CompletionStatus { decompleted, completed, confirmed }

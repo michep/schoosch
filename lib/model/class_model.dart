@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
-import 'package:mutex/mutex.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
