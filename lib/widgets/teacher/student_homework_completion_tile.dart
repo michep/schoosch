@@ -29,19 +29,19 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
     Widget complTime;
 
     return FutureBuilder<CompletionFlagModel?>(
-      future: homework.getCompletion(student, forceRefresh: forceRefresh),
+      future: homework.getStudentCompletion(student, forceRefresh: forceRefresh),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) return const SizedBox.shrink();
         var completion = snapshot.data;
         if (completion != null) {
           switch (completion.status) {
-            case Status.completed:
+            case CompletionStatus.completed:
               icon = IconButton(
                 icon: const Icon(Icons.circle_outlined),
                 onPressed: () => toggleHomeworkCompletion(homework, completion),
               );
               break;
-            case Status.confirmed:
+            case CompletionStatus.confirmed:
               icon = IconButton(
                 icon: const Icon(Icons.check_circle_outline),
                 onPressed: () => toggleHomeworkCompletion(homework, completion),

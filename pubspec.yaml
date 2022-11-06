@@ -32,11 +32,11 @@ dependencies:
   # connectivity_plus: ^3.0.2
   # onesignal_flutter: ^3.0.0
   # http: ^0.13.5
-  mutex: ^3.0.0
+  # mutex: ^3.0.0
   flutter_linkify: ^5.0.2
   url_launcher: ^6.1.5
   google_nav_bar: ^5.0.6
-  mongo_dart: ^0.7.4+1
+  # mongo_dart: ^0.7.4+1
   dio: ^4.0.6
   _flutterfire_internals: ^1.0.1
   datetime_picker_formfield_new: ^2.0.0

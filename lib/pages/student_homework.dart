@@ -33,23 +33,22 @@ class _StudentHomeworkState extends State<StudentHomework> {
           ),
           ...widget.homework.map((hw) {
             bool isConfirmed = false;
-            bool isChecked = false;
+            bool isCompleted = false;
             return ListTile(
               title: Linkify(
                 text: hw.text,
                 onOpen: (link) => Utils.openLink(link.url),
               ),
               trailing: FutureBuilder<CompletionFlagModel?>(
-                  future: hw.getCompletion(
-                    widget.student,
-                    forceRefresh: true,
-                  ),
+                  future: hw.getStudentCompletion(widget.student),
                   builder: (context, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) return const SizedBox.shrink();
+                    if (snapshot.data?.status == CompletionStatus.completed) isCompleted = true;
+                    if (snapshot.data?.status == CompletionStatus.confirmed) isConfirmed = true;
                     return IconButton(
                       onPressed: PersonModel.currentUser!.currentType == PersonType.parent
                           ? null
-                          : () async {
-                              // var completion = await widget.homework.getCompletion(widget.student);
+                          : () {
                               var completion = snapshot.data;
                               onTap(completion, hw).whenComplete(() {
                                 setState(() {});
@@ -57,7 +56,7 @@ class _StudentHomeworkState extends State<StudentHomework> {
                             },
                       icon: Icon(isConfirmed
                           ? Icons.check_circle_outline_rounded
-                          : isChecked
+                          : isCompleted
                               ? Icons.circle_outlined
                               : Icons.add_circle_outline),
                     );
@@ -77,7 +76,7 @@ class _StudentHomeworkState extends State<StudentHomework> {
               onPressed: () async {
                 if (c == null) {
                   await hw.createCompletion(widget.student);
-                } else if (c.status == Status.completed) {
+                } else if (c.status == CompletionStatus.completed) {
                   await c.delete();
                 }
                 setState(() {});
@@ -85,12 +84,12 @@ class _StudentHomeworkState extends State<StudentHomework> {
               },
               label: Text(c == null
                   ? 'сообщить о выполнении'
-                  : c.status == Status.completed
+                  : c.status == CompletionStatus.completed
                       ? 'отметить как невыполненное'
                       : 'выполнение уже подтверждено, его нельзя отметить как невыполненное'),
               icon: Icon(c == null
                   ? Icons.add
-                  : c.status == Status.completed
+                  : c.status == CompletionStatus.completed
                       ? Icons.close
                       : Icons.check),
             ),
