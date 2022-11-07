@@ -107,5 +107,16 @@
   "roleParent": "Родитель",
   "roleStudent": "Ученик",
   "roleObserver": "Наблюдатель",
-  "todateTitle": "Выполнить к дате"
+  "todateTitle": "Выполнить к дате",
+  "currentLessonHomeworks": "ДЗ на сегодня",
+  "nextLessonHomeworks": "Задать ДЗ",
+  "tabScheduleHomeworksTitle": "Расписание/ДЗ",
+  "tabStudentsPerformance": "Успеваемость",
+  "observedClassTitle": "Обзор класса {name}",
+  "noWeekSchedule": "нет расписания на эту неделю",
+  "errorUnknownPersonType": "unknown person type",
+  "personalHomeworkTitle": "Д/З личное",
+  "setCompleted": "сообщить о выполнении",
+  "setUncompleted": "отметить как невыполненное",
+  "errorCanNotBeUncompleted": "выполнение уже подтверждено, его нельзя отметить как невыполненное"
 }

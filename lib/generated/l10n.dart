@@ -1139,6 +1139,116 @@ class S {
       args: [],
     );
   }
+
+  /// `Homework for today`
+  String get currentLessonHomeworks {
+    return Intl.message(
+      'Homework for today',
+      name: 'currentLessonHomeworks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Create Homework`
+  String get nextLessonHomeworks {
+    return Intl.message(
+      'Create Homework',
+      name: 'nextLessonHomeworks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Schedule/HW`
+  String get tabScheduleHomeworksTitle {
+    return Intl.message(
+      'Schedule/HW',
+      name: 'tabScheduleHomeworksTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Performance`
+  String get tabStudentsPerformance {
+    return Intl.message(
+      'Performance',
+      name: 'tabStudentsPerformance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Observe class {name}`
+  String observedClassTitle(Object name) {
+    return Intl.message(
+      'Observe class $name',
+      name: 'observedClassTitle',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `no schedule for this week`
+  String get noWeekSchedule {
+    return Intl.message(
+      'no schedule for this week',
+      name: 'noWeekSchedule',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `unknown person type`
+  String get errorUnknownPersonType {
+    return Intl.message(
+      'unknown person type',
+      name: 'errorUnknownPersonType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personal Homework`
+  String get personalHomeworkTitle {
+    return Intl.message(
+      'Personal Homework',
+      name: 'personalHomeworkTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set as Completed`
+  String get setCompleted {
+    return Intl.message(
+      'Set as Completed',
+      name: 'setCompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set as Uncompleted`
+  String get setUncompleted {
+    return Intl.message(
+      'Set as Uncompleted',
+      name: 'setUncompleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This completion is Confirmed and can not be set as Uncompleted`
+  String get errorCanNotBeUncompleted {
+    return Intl.message(
+      'This completion is Confirmed and can not be set as Uncompleted',
+      name: 'errorCanNotBeUncompleted',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

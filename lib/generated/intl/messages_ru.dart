@@ -24,7 +24,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m1(type) => "Новый ${type}";
 
-  static String m2(order) => "${order} урок";
+  static String m2(name) => "Обзор класса ${name}";
+
+  static String m3(order) => "${order} урок";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -56,6 +58,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Отсутствующие"),
         "currentLessonClassHomework":
             MessageLookupByLibrary.simpleMessage("Задание классу на этот урок"),
+        "currentLessonHomeworks":
+            MessageLookupByLibrary.simpleMessage("ДЗ на сегодня"),
         "currentLessonMarks": MessageLookupByLibrary.simpleMessage("Оценки"),
         "currentLessonPersonalHomeworks": MessageLookupByLibrary.simpleMessage(
             "Персональные задания на этот урок"),
@@ -77,6 +81,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Раписание занятий"),
         "editInstitution": MessageLookupByLibrary.simpleMessage(
             "Информация об учебном заведении"),
+        "errorCanNotBeUncompleted": MessageLookupByLibrary.simpleMessage(
+            "выполнение уже подтверждено, его нельзя отметить как невыполненное"),
         "errorClassGradeEmpty": MessageLookupByLibrary.simpleMessage(
             "Год обучения должен быть заполнен"),
         "errorClassGradeNotANumber": MessageLookupByLibrary.simpleMessage(
@@ -121,6 +127,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Учченик должен быть выбран"),
         "errorTeacherEmpty": MessageLookupByLibrary.simpleMessage(
             "Преподаватель должен быть выбран"),
+        "errorUnknownPersonType":
+            MessageLookupByLibrary.simpleMessage("unknown person type"),
         "errorVenueEmpty":
             MessageLookupByLibrary.simpleMessage("Кабинет должен быть выбран"),
         "freeLessonsTitle":
@@ -150,8 +158,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "newVenue": MessageLookupByLibrary.simpleMessage("Новый кабинет"),
         "nextLessonClassHomework": MessageLookupByLibrary.simpleMessage(
             "Задание классу на следующий урок"),
+        "nextLessonHomeworks":
+            MessageLookupByLibrary.simpleMessage("Задать ДЗ"),
         "nextLessonPersonalHomeworks": MessageLookupByLibrary.simpleMessage(
             "Персональные задания на следующий урок"),
+        "noWeekSchedule": MessageLookupByLibrary.simpleMessage(
+            "нет расписания на эту неделю"),
+        "observedClassTitle": m2,
         "peopleList": MessageLookupByLibrary.simpleMessage(
             "Сотрудники, учителя и ученики"),
         "personBirthday": MessageLookupByLibrary.simpleMessage("Дата рождения"),
@@ -174,6 +187,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "personTypeStudent": MessageLookupByLibrary.simpleMessage("Учащийся"),
         "personTypeTeacher":
             MessageLookupByLibrary.simpleMessage("Преподаватель"),
+        "personalHomeworkTitle":
+            MessageLookupByLibrary.simpleMessage("Д/З личное"),
         "replacementsTitle":
             MessageLookupByLibrary.simpleMessage("Подмены в расписании"),
         "roleAdmin": MessageLookupByLibrary.simpleMessage("Администратор"),
@@ -185,15 +200,23 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Сохранить изменения"),
         "scheduleFromDate":
             MessageLookupByLibrary.simpleMessage("Начало действия расписания"),
-        "scheduleLessonOrder": m2,
+        "scheduleLessonOrder": m3,
         "scheduleNoLesson":
             MessageLookupByLibrary.simpleMessage("нет этого урока"),
         "scheduleTillDate":
             MessageLookupByLibrary.simpleMessage("Окончание действия"),
         "search": MessageLookupByLibrary.simpleMessage("Поиск"),
+        "setCompleted":
+            MessageLookupByLibrary.simpleMessage("сообщить о выполнении"),
         "setMarkTitle":
             MessageLookupByLibrary.simpleMessage("Поставить оценку"),
+        "setUncompleted":
+            MessageLookupByLibrary.simpleMessage("отметить как невыполненное"),
         "studentTitle": MessageLookupByLibrary.simpleMessage("Ученик"),
+        "tabScheduleHomeworksTitle":
+            MessageLookupByLibrary.simpleMessage("Расписание/ДЗ"),
+        "tabStudentsPerformance":
+            MessageLookupByLibrary.simpleMessage("Успеваемость"),
         "tillTitle": MessageLookupByLibrary.simpleMessage("Время окончания"),
         "todateTitle": MessageLookupByLibrary.simpleMessage("Выполнить к дате"),
         "updateMarkTitle":

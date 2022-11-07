@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -27,7 +28,7 @@ class _StudentHomeworkState extends State<StudentHomework> {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              widget.isClass ? "Д/З класса" : "Д/З личное",
+              widget.isClass ? S.of(context).classHomeworkTitle : S.of(context).personalHomeworkTitle,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
             ),
           ),
@@ -83,10 +84,10 @@ class _StudentHomeworkState extends State<StudentHomework> {
                 Get.back();
               },
               label: Text(c == null
-                  ? 'сообщить о выполнении'
+                  ? S.of(context).setCompleted
                   : c.status == CompletionStatus.completed
-                      ? 'отметить как невыполненное'
-                      : 'выполнение уже подтверждено, его нельзя отметить как невыполненное'),
+                      ? S.of(context).setUncompleted
+                      : S.of(context).errorCanNotBeUncompleted),
               icon: Icon(c == null
                   ? Icons.add
                   : c.status == CompletionStatus.completed

@@ -70,7 +70,6 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
 
   @override
   Widget build(BuildContext context) {
-// <<<<<<< HEAD
     return Scaffold(
       appBar: MAppBar(widget.curriculum.aliasOrName),
       body: SafeArea(
@@ -136,22 +135,22 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
             color: Theme.of(context).colorScheme.onBackground,
           ),
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          tabs: const [
+          tabs: [
             GButton(
               icon: Icons.menu_book_rounded,
-              text: 'ДЗ на сегодня',
+              text: S.of(context).currentLessonHomeworks,
             ),
             GButton(
               icon: Icons.person_off_rounded,
-              text: 'Отсутствующие',
+              text: S.of(context).currentLessonAbsences,
             ),
             GButton(
               icon: Icons.thumb_up_alt_rounded,
-              text: 'Оценки',
+              text: S.of(context).currentLessonMarks,
             ),
             GButton(
               icon: Icons.edit_note_rounded,
-              text: 'Задать ДЗ',
+              text: S.of(context).nextLessonHomeworks,
             ),
           ],
         ),

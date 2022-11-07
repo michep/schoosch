@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/pages/class_subject_page.dart';
 import 'package:schoosch/pages/observer/observer_schedule_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/drawer.dart';
-// import 'package:schoosch/widgets/week_selector.dart';
 
 class ObserverPage extends StatefulWidget {
   final ClassModel _class;
@@ -37,7 +37,7 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
         child: MDrawer(),
       ),
       appBar: MAppBar(
-        'Обзор класса ${widget._class.name}',
+        S.of(context).observedClassTitle(widget._class.name),
         showProfile: true,
       ),
       body: SafeArea(
@@ -68,14 +68,14 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
             color: Theme.of(context).colorScheme.onBackground,
           ),
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          tabs: const [
+          tabs: [
             GButton(
               icon: Icons.schema_rounded,
-              text: 'Расписание/ДЗ',
+              text: S.of(context).tabScheduleHomeworksTitle,
             ),
             GButton(
               icon: Icons.school_rounded,
-              text: 'Успеваемость',
+              text: S.of(context).tabStudentsPerformance,
             ),
           ],
         ),

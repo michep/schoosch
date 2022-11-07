@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/widgets/observer/observer_day_tile.dart';
-// import 'package:schoosch/widgets/student/student_dayschedule_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 import 'package:schoosch/widgets/week_selector.dart';
 
@@ -51,10 +51,10 @@ class _ObserverScheduleState extends State<ObserverSchedule> {
                 return Utils.progressIndicator();
               }
               if (schedules.data!.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text(
-                    'нет расписания на эту неделю',
-                    style: TextStyle(fontSize: 16),
+                    S.of(context).noWeekSchedule,
+                    style: const TextStyle(fontSize: 16),
                   ),
                 );
               }
