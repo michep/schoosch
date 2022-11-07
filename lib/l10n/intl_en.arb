@@ -107,5 +107,16 @@
   "roleParent": "Parnet",
   "roleStudent": "Student",
   "roleObserver": "Observer",
-  "todateTitle": "TBD till"
+  "todateTitle": "TBD till",
+  "currentLessonHomeworks": "Homework for today",
+  "nextLessonHomeworks": "Create Homework",
+  "tabScheduleHomeworksTitle": "Schedule/HW",
+  "tabStudentsPerformance": "Performance",
+  "observedClassTitle": "Observe class {name}",
+  "noWeekSchedule": "no schedule for this week",
+  "errorUnknownPersonType": "unknown person type",
+  "personalHomeworkTitle": "Personal Homework",
+  "setCompleted": "Set as Completed",
+  "setUncompleted": "Set as Uncompleted",
+  "errorCanNotBeUncompleted": "This completion is Confirmed and can not be set as Uncompleted"
 }

@@ -12,44 +12,7 @@ class SubjectList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Column(
-    //   mainAxisSize: MainAxisSize.min,
-    //   children: [
-    //     const Text('Предметы:'),
-    //     const SizedBox(
-    //       height: 20,
-    //     ),
-    //     FutureBuilder<List<CurriculumModel>>(
-    //       future: _class.getCurriculums(),
-    //       builder: (context, snapshot) {
-    //         if (!snapshot.hasData) {
-    //           return Utils.progressIndicator();
-    //         }
-    //         if (snapshot.data!.isEmpty) {
-    //           return const Text('нет предметов');
-    //         }
-    //         return ListView.builder(
-    //           itemBuilder: (context, index) {
-    //             return ListTile(
-    //               title: Text(snapshot.data![index].aliasOrName),
-    //               subtitle: Text(snapshot.data![index].id!),
-    //               onTap: () {
-    //                 Get.to(
-    //                   TeacherTablePage(
-    //                     currentcur: snapshot.data![index],
-    //                   ),
-    //                 );
-    //               },
-    //             );
-    //           },
-    //           itemCount: snapshot.data!.length,
-    //         );
-    //       },
-    //     ),
-    //   ],
-    // );
     return FutureBuilder<List<CurriculumModel>>(
-      // future: _class.getCurriculums(forceRefresh: false),
       future: _class.curriculums(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -69,7 +32,7 @@ class SubjectList extends StatelessWidget {
                   }
                   var teacher = teachersnap.data!;
                   return ListTile(
-                    title: Text(cur.aliasOrName),
+                    title: Text(cur.name),
                     subtitle: Text(teacher.abbreviatedName),
                     onTap: () {
                       Get.to(

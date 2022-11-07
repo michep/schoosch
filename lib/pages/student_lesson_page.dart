@@ -25,13 +25,11 @@ class StudentLessonPage extends StatefulWidget {
 }
 
 class _StudentLessonPageState extends State<StudentLessonPage> with SingleTickerProviderStateMixin {
-  late TabController tabcont;
-
   late final List<Widget> pages;
+  int current = 0;
 
   @override
   void initState() {
-    // tabcont = TabController(length: 2, vsync: this);
     pages = [
       StudentHomeworks(
         widget._lesson,
@@ -47,7 +45,6 @@ class _StudentLessonPageState extends State<StudentLessonPage> with SingleTicker
     super.initState();
   }
 
-  int current = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,14 +112,14 @@ class _StudentLessonPageState extends State<StudentLessonPage> with SingleTicker
             color: Theme.of(context).colorScheme.onBackground,
           ),
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          tabs: const [
+          tabs: [
             GButton(
               icon: Icons.menu_book_rounded,
-              text: 'ДЗ на урок',
+              text: S.of(context).currentLessonHomeworks,
             ),
             GButton(
               icon: Icons.thumb_up_alt_rounded,
-              text: 'Оценки',
+              text: S.of(context).currentLessonMarks,
             ),
           ],
         ),
