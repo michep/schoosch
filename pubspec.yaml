@@ -51,7 +51,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.1
   flutter_launcher_icons: ^0.10.0
-  dart_code_metrics: ^4.17.0
+  dart_code_metrics: ^5.0.1
 
 flutter:
   uses-material-design: true
@@ -64,6 +64,8 @@ flutter:
           weight: 800
         - asset: assets/fonts/Lato-Light.ttf
           weight: 200 
+        - asset: assets/fonts/Lato-Italic.ttf
+        - asset: assets/fonts/Lato-BoldItalic.ttf
 
 flutter_icons:
   android: true

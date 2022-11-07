@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdf/pdf.dart';
+import 'package:schoosch/controller/week_controller.dart';
+import 'package:schoosch/model/class_model.dart';
+import 'package:schoosch/model/dayschedule_model.dart';
+import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/all_marks_table_page.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
@@ -115,15 +119,25 @@ class MDrawer extends StatelessWidget {
     //     label: const Text('о приложении'),
     //   ),
     // );
-    if (PersonModel.currentUser!.types.contains(PersonType.admin)) {
+    if (PersonModel.currentUser!.types.contains(PersonType.parent)) {
       items.add(
         TextButton.icon(
           onPressed: () async {
-            List<Map<String, dynamic>> data = [];
+            Map<ClassModel, List<ClassScheduleModel>> data = {};
+            var classes = await InstitutionModel.currentInstitution.classes;
+            classes.sort((a, b) => a.grade.compareTo(b.grade));
+            var cw = Get.find<CurrentWeek>().currentWeek;
+            for (var cls in classes) {
+              var sched = await cls.getClassSchedulesWeek(cw);
+              data[cls] = sched;
+            }
             Get.to(
               () => Preview(
                 format: PdfPageFormat.a4.landscape,
-                generate: PDFSchedule(data: data).generate,
+                generate: PDFSchedule(
+                  data: data,
+                  week: cw,
+                ).generate,
               ),
             );
           },
