@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pdf/pdf.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/all_marks_table_page.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
+import 'package:schoosch/pdf/preview.dart';
+import 'package:schoosch/pdf/pdf_schedule.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
 
 class MDrawer extends StatelessWidget {
@@ -112,6 +115,23 @@ class MDrawer extends StatelessWidget {
     //     label: const Text('о приложении'),
     //   ),
     // );
+    if (PersonModel.currentUser!.types.contains(PersonType.admin)) {
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            List<Map<String, dynamic>> data = [];
+            Get.to(
+              () => Preview(
+                format: PdfPageFormat.a4.landscape,
+                generate: PDFSchedule(data: data).generate,
+              ),
+            );
+          },
+          icon: const Icon(Icons.table_chart_outlined),
+          label: const Text('Печать расписания'),
+        ),
+      );
+    }
 
     return items;
   }

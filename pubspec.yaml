@@ -42,6 +42,8 @@ dependencies:
   datetime_picker_formfield_new: ^2.0.0
   shared_preferences: ^2.0.15
   cupertino_icons: ^1.0.5
+  pdf: ^3.8.4
+  printing: ^5.9.3
   # flutter_speed_dial: ^6.1.0+1
 
 dev_dependencies:
