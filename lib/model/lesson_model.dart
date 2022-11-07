@@ -129,6 +129,7 @@ class LessonModel {
   Future<CurriculumModel?> get curriculum async {
     if (!_curriculumLoaded) {
       _curriculum = await Get.find<ProxyStore>().getCurriculum(curriculumId!);
+      _curriculumLoaded = true;
     }
     return _curriculum;
   }
@@ -136,6 +137,7 @@ class LessonModel {
   Future<VenueModel?> get venue async {
     if (!_venueLoaded) {
       _venue = await Get.find<ProxyStore>().getVenue(venueId!);
+      _venueLoaded = true;
     }
     return _venue;
   }
@@ -143,6 +145,7 @@ class LessonModel {
   Future<LessontimeModel?> get lessontime async {
     if (!_lessontimeLoaded) {
       _lessontime = await aclass.getLessontime(order);
+      _lessontimeLoaded = true;
     }
     return _lessontime;
   }
@@ -278,12 +281,21 @@ class LessonModel {
     return Get.find<ProxyStore>().createAbsence(this, absence);
   }
 
-  Map<String, dynamic> toMap({bool withId = false}) {
+  Map<String, dynamic> toMap({bool withId = false, bool recursive = false}) {
     Map<String, dynamic> res = {};
     if (withId) res['_id'] = id;
     res['order'] = order;
     res['curriculum_id'] = curriculumId;
     res['venue_id'] = venueId;
+    if (recursive && _venueLoaded) {
+      res['venue'] = _venue!.toMap(withId: withId);
+    }
+    if (recursive && _curriculumLoaded) {
+      res['curriculum'] = _curriculum!.toMap(withId: withId, recursive: recursive);
+    }
+    if (recursive && _lessontimeLoaded) {
+      res['time'] = _lessontime!.toMap(withId: withId);
+    }
     return res;
   }
 

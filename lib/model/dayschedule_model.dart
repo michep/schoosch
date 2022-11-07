@@ -34,6 +34,18 @@ class DayScheduleModel {
   String get formatPeriod {
     return Utils.formatPeriod(from!, till);
   }
+
+  Map<String, dynamic> toMap({bool withId = false, bool recursive = false}) {
+    Map<String, dynamic> res = {};
+    if (withId) res['_id'] = id;
+    res['day'] = day;
+    res['from'] = from!.toIso8601String();
+    res['till'] = till?.toIso8601String();
+    if (recursive && _lessonsLoaded) {
+      res['lesson'] = _lessons.map((lesson) => lesson.toMap(withId: withId, recursive: recursive)).toList();
+    }
+    return res;
+  }
 }
 
 class ClassScheduleModel extends DayScheduleModel {
@@ -55,14 +67,6 @@ class ClassScheduleModel extends DayScheduleModel {
       _lessonsLoaded = true;
     }
     return _lessons;
-  }
-
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> res = {};
-    res['day'] = day;
-    res['from'] = from!.toIso8601String();
-    res['till'] = till?.toIso8601String();
-    return res;
   }
 
   Future<ClassScheduleModel> save() async {

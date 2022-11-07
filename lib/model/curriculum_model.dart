@@ -99,13 +99,16 @@ class CurriculumModel {
     return res;
   }
 
-  Map<String, dynamic> toMap({bool withId = false}) {
+  Map<String, dynamic> toMap({bool withId = false, bool recursive = false}) {
     Map<String, dynamic> res = {};
     if (withId) res['_id'] = id;
     res['name'] = name;
     res['alias'] = alias;
     res['master_id'] = _masterId;
     res['student_ids'] = _studentIds;
+    if (recursive && _master != null) {
+      res['master'] = _master!.toMap(withId: withId);
+    }
     return res;
   }
 
