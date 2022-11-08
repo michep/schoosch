@@ -133,7 +133,12 @@ class MDrawer extends StatelessWidget {
             }
             Get.to(
               () => Preview(
-                format: PdfPageFormat.a4.landscape,
+                format: PdfPageFormat.a4.landscape.copyWith(
+                  marginLeft: 1 * PdfPageFormat.cm,
+                  marginTop: 1 * PdfPageFormat.cm,
+                  marginRight: 1 * PdfPageFormat.cm,
+                  marginBottom: 1 * PdfPageFormat.cm,
+                ),
                 generate: PDFSchedule(
                   data: data,
                   week: cw,
