@@ -8,8 +8,9 @@ import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/all_marks_table_page.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
-import 'package:schoosch/pdf/preview.dart';
-import 'package:schoosch/pdf/pdf_schedule.dart';
+import 'package:schoosch/pdf/pdf_preview.dart';
+import 'package:schoosch/pdf/pdf_classesweekschedule.dart';
+import 'package:schoosch/pdf/pdf_theme.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
 
 class MDrawer extends StatelessWidget {
@@ -123,24 +124,14 @@ class MDrawer extends StatelessWidget {
       items.add(
         TextButton.icon(
           onPressed: () async {
-            Map<ClassModel, List<ClassScheduleModel>> data = {};
             var classes = await InstitutionModel.currentInstitution.classes;
-            classes.sort((a, b) => a.grade.compareTo(b.grade));
             var cw = Get.find<CurrentWeek>().currentWeek;
-            for (var cls in classes) {
-              var sched = await cls.getClassSchedulesWeek(cw);
-              data[cls] = sched;
-            }
+
             Get.to(
               () => Preview(
-                format: PdfPageFormat.a4.landscape.copyWith(
-                  marginLeft: 1 * PdfPageFormat.cm,
-                  marginTop: 1 * PdfPageFormat.cm,
-                  marginRight: 1 * PdfPageFormat.cm,
-                  marginBottom: 1 * PdfPageFormat.cm,
-                ),
-                generate: PDFSchedule(
-                  data: data,
+                format: defaultPdfPageFormat,
+                generate: PDFClassesWeekSchedule(
+                  classes: classes.sublist(4),
                   week: cw,
                 ).generate,
               ),
@@ -151,7 +142,6 @@ class MDrawer extends StatelessWidget {
         ),
       );
     }
-
     return items;
   }
 }
