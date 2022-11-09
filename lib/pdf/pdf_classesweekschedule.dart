@@ -9,8 +9,8 @@ import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/pdf/pdf_theme.dart';
 
-class PDFSchedule {
-  final Map<ClassModel, List<ClassScheduleModel>> data;
+class PDFClassesWeekSchedule {
+  final List<ClassModel> classes;
   final Week week;
 
   final lessonOrderStyle = const pw.TextStyle(fontSize: 8);
@@ -19,12 +19,18 @@ class PDFSchedule {
   final lessonMasterStyle = const pw.TextStyle(fontSize: 6, color: PdfColors.grey700);
   final lessonVenueStyle = const pw.TextStyle(fontSize: 6, color: PdfColors.grey700);
 
-  PDFSchedule({
-    required this.data,
+  PDFClassesWeekSchedule({
+    required this.classes,
     required this.week,
   });
 
   Future<Uint8List> generate(PdfPageFormat format) async {
+    Map<ClassModel, List<ClassScheduleModel>> data = {};
+    for (var cls in classes) {
+      var sched = await cls.getClassSchedulesWeek(week);
+      data[cls] = sched;
+    }
+
     var doc = pw.Document(
       theme: await getTheme(),
     );
@@ -48,25 +54,26 @@ class PDFSchedule {
             ],
           ),
           build: (context) {
-            var oneDayAllClasseseLessons = data.keys.skip(4).map(
+            var oneDayAllClasseseLessons = data.keys.map(
               (aclass) {
-                var sched = data[aclass]![day];
-                return sched.toMap(recursive: true)['lesson'] as List<Map<String, dynamic>>;
+                if (data[aclass]!.length > day) {
+                  var sched = data[aclass]![day];
+                  return sched.toMap(recursive: true)['lesson'] as List<Map<String, dynamic>>;
+                } else {
+                  return <Map<String, dynamic>>[];
+                }
               },
             ).toList();
 
-            // var maxLessonsInOneDay = oneDayAllClasseseLessons.map<int>((e) => e.length).reduce(max);
             var maxLessonsInOneDay = oneDayAllClasseseLessons.map<int>((e) => e.map<int>((e) => e['order']).reduce(max)).reduce(max);
             var maxLessonsInOneDayIdx = oneDayAllClasseseLessons.indexWhere((e) => e.map<int>((e) => e['order']).reduce(max) == maxLessonsInOneDay);
 
             List<pw.TableRow> rows = [];
             rows.add(pw.TableRow(
               children: [
-                // _cell(text: 'П/П', fontSize: 10),
-                // _cell(text: 'Время', fontSize: 10),
-                pw.SizedBox.shrink(),
-                pw.SizedBox.shrink(),
-                ...data.keys.skip(4).map((e) => _cell(text: e.name, fontWeight: pw.FontWeight.bold, fontSize: 10)).toList(),
+                _emptyCell(),
+                _emptyCell(),
+                ...data.keys.map((e) => _cell(text: e.name, fontWeight: pw.FontWeight.bold, fontSize: 10)).toList(),
               ],
             ));
 
@@ -74,10 +81,10 @@ class PDFSchedule {
               List<pw.Widget> rowcells = [];
               rowcells.add(_orderWidget((orderidx + 1).toString()));
               rowcells.add(_timePeriodWidget(oneDayAllClasseseLessons[maxLessonsInOneDayIdx][orderidx]));
-              for (var colidx = 0; colidx < data.keys.skip(4).length; colidx++) {
+              for (var colidx = 0; colidx < data.keys.length; colidx++) {
                 orderidx < oneDayAllClasseseLessons[colidx].length
                     ? rowcells.add(_lessonWidget(_getLessonsByOrder(oneDayAllClasseseLessons[colidx], orderidx + 1)))
-                    : rowcells.add(_cell(text: '', fontSize: 8));
+                    : rowcells.add(_emptyCell());
               }
               rows.add(pw.TableRow(children: rowcells));
             }
@@ -165,5 +172,9 @@ class PDFSchedule {
       padding: const pw.EdgeInsets.all(2),
       child: pw.Text(text, style: pw.TextStyle(fontSize: fontSize, fontWeight: fontWeight)),
     );
+  }
+
+  pw.Widget _emptyCell() {
+    return pw.Text('.', style: const pw.TextStyle(color: PdfColors.white));
   }
 }

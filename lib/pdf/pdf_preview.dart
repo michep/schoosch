@@ -17,6 +17,8 @@ class Preview extends StatelessWidget {
     return Scaffold(
       body: PdfPreview(
         initialPageFormat: format,
+        canChangeOrientation: false,
+        canChangePageFormat: false,
         build: (PdfPageFormat format) {
           return generate(format);
         },
