@@ -49,17 +49,25 @@ class _StudentHomeworksState extends State<StudentHomeworks> {
                         homework: stud,
                         isClass: false,
                         student: widget._student,
+                        refresh: refresh,
                       ),
                     if (clas.isNotEmpty)
                       StudentHomework(
                         homework: clas,
                         isClass: true,
                         student: widget._student,
+                        refresh: refresh,
                       ),
                   ],
                 ),
         );
       },
     );
+  }
+
+  void refresh() {
+    setState(() {
+      forceRefresh = true;
+    });
   }
 }
