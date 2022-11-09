@@ -11,7 +11,8 @@ class StudentHomework extends StatefulWidget {
   final List<HomeworkModel> homework;
   final bool isClass;
   final StudentModel student;
-  const StudentHomework({Key? key, required this.homework, required this.isClass, required this.student}) : super(key: key);
+  final void Function() refresh;
+  const StudentHomework({Key? key, required this.homework, required this.isClass, required this.student, required this.refresh}) : super(key: key);
 
   @override
   State<StudentHomework> createState() => _StudentHomeworkState();
@@ -47,14 +48,7 @@ class _StudentHomeworkState extends State<StudentHomework> {
                     if (snapshot.data?.status == CompletionStatus.completed) isCompleted = true;
                     if (snapshot.data?.status == CompletionStatus.confirmed) isConfirmed = true;
                     return IconButton(
-                      onPressed: PersonModel.currentUser!.currentType == PersonType.parent
-                          ? null
-                          : () {
-                              var completion = snapshot.data;
-                              onTap(completion, hw).whenComplete(() {
-                                setState(() {});
-                              });
-                            },
+                      onPressed: PersonModel.currentUser!.currentType == PersonType.parent ? null : () => onTap(snapshot.data, hw),
                       icon: Icon(isConfirmed
                           ? Icons.check_circle_outline_rounded
                           : isCompleted
@@ -80,7 +74,7 @@ class _StudentHomeworkState extends State<StudentHomework> {
                 } else if (c.status == CompletionStatus.completed) {
                   await c.delete();
                 }
-                setState(() {});
+                widget.refresh();
                 Get.back();
               },
               label: Text(c == null
