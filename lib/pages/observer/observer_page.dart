@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
-import 'package:schoosch/pages/class_subject_page.dart';
-import 'package:schoosch/pages/observer/observer_schedule_page.dart';
+import 'package:schoosch/widgets/observer/curriculum_selection.dart';
+import 'package:schoosch/widgets/observer/observer_schedule_switcher.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/drawer.dart';
 
@@ -25,7 +25,7 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
   void initState() {
     _pages = [
       ObserverSchedule(widget._class),
-      SubjectList(widget._class),
+      CurriculumSelection(widget._class),
     ];
     super.initState();
   }

@@ -120,7 +120,7 @@ class MDrawer extends StatelessWidget {
     //     label: const Text('о приложении'),
     //   ),
     // );
-    if (PersonModel.currentUser!.types.contains(PersonType.parent)) {
+    if (PersonModel.currentUser!.types.contains(PersonType.admin)) {
       items.add(
         TextButton.icon(
           onPressed: () async {

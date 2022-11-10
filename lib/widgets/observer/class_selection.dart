@@ -4,10 +4,10 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/class_list_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class ObserverClassSelectionPage extends StatelessWidget {
+class ClassSelection extends StatelessWidget {
   final ObserverModel _observer;
 
-  const ObserverClassSelectionPage(this._observer, {Key? key}) : super(key: key);
+  const ClassSelection(this._observer, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

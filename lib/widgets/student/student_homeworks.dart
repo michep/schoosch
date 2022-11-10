@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/student_homework.dart';
+import 'package:schoosch/widgets/student/student_homework_tile.dart';
 
 class StudentHomeworks extends StatefulWidget {
   final LessonModel _lesson;
@@ -45,14 +45,14 @@ class _StudentHomeworksState extends State<StudentHomeworks> {
               : ListView(
                   children: [
                     if (stud.isNotEmpty)
-                      StudentHomework(
+                      StudentHomeworkTile(
                         homework: stud,
                         isClass: false,
                         student: widget._student,
                         refresh: refresh,
                       ),
                     if (clas.isNotEmpty)
-                      StudentHomework(
+                      StudentHomeworkTile(
                         homework: clas,
                         isClass: true,
                         student: widget._student,

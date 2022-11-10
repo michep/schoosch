@@ -6,7 +6,7 @@ import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/class_selection_page.dart';
+import 'package:schoosch/widgets/observer/class_selection.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/day_selector.dart';
 import 'package:schoosch/widgets/drawer.dart';
@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            getSelector(),
+            _getSelector(),
             Expanded(
               child: _mainPageSelector(PersonModel.currentUser!, context),
             ),
@@ -43,7 +43,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget getSelector() {
+  Widget _getSelector() {
     if (PersonModel.currentUser!.currentType == PersonType.observer) {
       return const SizedBox.shrink();
     } else {
@@ -82,7 +82,7 @@ class HomePage extends StatelessWidget {
         return prefs.dayview ? StudentDayScheduleSwitcher(PersonModel.currentStudent!) : StudentWeekScheduleSwitcher(PersonModel.currentStudent!);
       });
     }
-    if (user.currentType == PersonType.observer) return ObserverClassSelectionPage(PersonModel.currentObserver!);
+    if (user.currentType == PersonType.observer) return ClassSelection(PersonModel.currentObserver!);
     return Center(child: Text(S.of(context).errorUnknownPersonType));
   }
 }

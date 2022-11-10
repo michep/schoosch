@@ -7,18 +7,18 @@ import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class StudentHomework extends StatefulWidget {
+class StudentHomeworkTile extends StatefulWidget {
   final List<HomeworkModel> homework;
   final bool isClass;
   final StudentModel student;
   final void Function() refresh;
-  const StudentHomework({Key? key, required this.homework, required this.isClass, required this.student, required this.refresh}) : super(key: key);
+  const StudentHomeworkTile({Key? key, required this.homework, required this.isClass, required this.student, required this.refresh}) : super(key: key);
 
   @override
-  State<StudentHomework> createState() => _StudentHomeworkState();
+  State<StudentHomeworkTile> createState() => _StudentHomeworkTileState();
 }
 
-class _StudentHomeworkState extends State<StudentHomework> {
+class _StudentHomeworkTileState extends State<StudentHomeworkTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
