@@ -28,6 +28,7 @@ class ClassHomeworkTile extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) return const SizedBox.shrink();
         return ExpansionTile(
+          key: PageStorageKey(homework.id),
           iconColor: ListTileTheme.of(context).iconColor,
           textColor: ListTileTheme.of(context).textColor,
           controlAffinity: ListTileControlAffinity.leading,

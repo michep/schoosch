@@ -23,18 +23,14 @@ class _ObserverScheduleState extends State<ObserverSchedule> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            WeekSelector(key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber)),
-            Expanded(
-              child: observerScheduleWidget(),
-            ),
-          ],
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        WeekSelector(key: ValueKey(Get.find<CurrentWeek>().currentWeek.weekNumber)),
+        Expanded(
+          child: observerScheduleWidget(),
         ),
-      ),
+      ],
     );
   }
 

@@ -27,7 +27,6 @@ class ClassHomeworksCombinedPage extends StatefulWidget {
 }
 
 class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage> {
-  HomeworkModel? hw;
   late bool forceRefresh;
 
   @override
@@ -55,6 +54,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                 });
               },
               child: ListView(
+                key: PageStorageKey(widget.readOnly ? 'thislessonhws' : 'nextlessonhws'),
                 children: [
                   const Text(
                     'ДЗ классу',

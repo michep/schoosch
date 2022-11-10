@@ -6,9 +6,9 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/teacher_marks_table_page.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class SubjectList extends StatelessWidget {
+class CurriculumSelection extends StatelessWidget {
   final ClassModel _class;
-  const SubjectList(this._class, {Key? key}) : super(key: key);
+  const CurriculumSelection(this._class, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
