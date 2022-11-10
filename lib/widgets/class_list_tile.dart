@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/pages/observer/observer_page.dart';
 
@@ -20,7 +21,10 @@ class ClassListTile extends StatelessWidget {
       trailing: const SizedBox(
         height: 10,
       ),
-      onTap: () => Get.to(() => ObserverPage(_class)),
+      onTap: () {
+        Get.find<ProxyStore>().currentObserverClass = _class;
+        Get.to(() => ObserverPage(_class));
+      },
     );
   }
 }

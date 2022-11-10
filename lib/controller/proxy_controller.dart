@@ -23,6 +23,7 @@ import 'package:schoosch/model/venue_model.dart';
 class ProxyStore extends getx.GetxController {
   late InstitutionModel institution;
   PersonModel? _currentUser;
+  ClassModel? currentObserverClass;
   final Dio dio = Dio();
   Uri Function(String) baseUriFunc;
 

@@ -20,7 +20,7 @@ class ClassSelection extends StatelessWidget {
           }
           return ListView(
             children: [
-              ...snapshot.data!.map((doc) => ClassListTile(doc)),
+              ...snapshot.data!.map((element) => ClassListTile(element)),
             ],
           );
         },

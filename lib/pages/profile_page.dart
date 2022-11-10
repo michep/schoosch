@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/prefs_controller.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
@@ -29,7 +30,8 @@ class ProfilePage extends StatelessWidget {
             Text(_user.email),
             if (_user.currentType == PersonType.student) _changeView(),
             _changeTypeW(context, _user),
-            _chateChildW(_user),
+            _changeChildW(context, _user),
+            _changeObserverClassdW(context, _user),
             ElevatedButton(
               onPressed: _logout,
               child: const Text('Выйти из системы'),
@@ -40,7 +42,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _chateChildW(PersonModel user) {
+  Widget _changeChildW(BuildContext context, PersonModel user) {
     return user.currentType == PersonType.parent
         ? FutureBuilder(
             future: Future.wait([user.asParent!.currentChild, user.asParent!.children()]),
@@ -49,17 +51,6 @@ class ProfilePage extends StatelessWidget {
               var list = snapshot.data! as List<dynamic>;
               var currentChild = list[0] as StudentModel;
               var children = list[1] as List<StudentModel>;
-
-              // return Row(children: [
-              //   Text(currentChild.fullName),
-              //   children.length > 1
-              //       ? ElevatedButton(
-              //           onPressed: () => _changeChildBottomsheet(user.asParent!),
-              //           child: const Text('сменить ребенка'),
-              //         )
-              //       : const SizedBox.shrink(),
-              // ]);
-
               return ListTile(
                 title: Text(currentChild.fullName),
                 trailing: children.length > 1
@@ -70,6 +61,18 @@ class ProfilePage extends StatelessWidget {
                     : const SizedBox.shrink(),
               );
             })
+        : const SizedBox.shrink();
+  }
+
+  Widget _changeObserverClassdW(BuildContext context, PersonModel user) {
+    return (user.currentType == PersonType.observer)
+        ? ListTile(
+            title: Text(Get.find<ProxyStore>().currentObserverClass!.name),
+            trailing: ElevatedButton(
+              onPressed: () => Get.offAll(() => const HomePage()),
+              child: const Text('cменить класс'),
+            ),
+          )
         : const SizedBox.shrink();
   }
 
@@ -108,15 +111,6 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _changeTypeW(BuildContext context, PersonModel user) {
-    // return Row(children: [
-    //   Text(user.currentType.name),
-    //   user.types.length > 1
-    //       ? ElevatedButton(
-    //           child: const Text('сменить тип'),
-    //           onPressed: () => _changeTypeBottomsheet(context, user),
-    //         )
-    //       : const SizedBox.shrink(),
-    // ]);
     return ListTile(
       title: Text(
         user.currentType.localizedName(
