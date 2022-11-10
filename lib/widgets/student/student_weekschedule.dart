@@ -43,6 +43,7 @@ class _StudentWeekScheduleWidgetState extends State<StudentWeekScheduleWidget> {
             setState(() {});
           },
           child: ListView(
+            key: PageStorageKey(widget._week),
             children: [
               ...schedules.data!.map((schedule) => ClassDayScheduleTile(schedule, widget._student, widget._week.day(schedule.day - 1))),
             ],

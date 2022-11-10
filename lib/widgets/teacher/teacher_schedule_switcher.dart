@@ -16,20 +16,24 @@ class TeacherScheduleSwitcher extends StatefulWidget {
 
 class TeacherScheduleSwitcherState extends State<TeacherScheduleSwitcher> {
   final _cw = Get.find<CurrentWeek>();
+  final bucket = PageStorageBucket();
 
   @override
   Widget build(BuildContext context) {
-    return PageView.custom(
-      controller: _cw.pageController,
-      onPageChanged: _cw.setIdx,
-      childrenDelegate: SliverChildBuilderDelegate(
-        (context, idx) {
-          return TeacherScheduleWidget(
-            widget._teacher,
-            Week(year: idx ~/ 100, weekNumber: idx % 100),
-            key: ValueKey(idx),
-          );
-        },
+    return PageStorage(
+      bucket: bucket,
+      child: PageView.custom(
+        controller: _cw.pageController,
+        onPageChanged: _cw.setIdx,
+        childrenDelegate: SliverChildBuilderDelegate(
+          (context, idx) {
+            return TeacherScheduleWidget(
+              widget._teacher,
+              Week(year: idx ~/ 100, weekNumber: idx % 100),
+              key: ValueKey(idx),
+            );
+          },
+        ),
       ),
     );
   }

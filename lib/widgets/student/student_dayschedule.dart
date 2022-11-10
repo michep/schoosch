@@ -115,6 +115,7 @@ class _StudentDayScheduleWidgetState extends State<StudentDayScheduleWidget> {
   }
 
   Widget headedListview({required Widget child}) => ListView(
+        key: PageStorageKey(widget._currentdate),
         children: [
           const SizedBox(
             height: 10,

@@ -32,7 +32,7 @@ class ObserverLessonPage extends StatefulWidget {
 class _ObserverLessonPageState extends State<ObserverLessonPage> {
   int current = 0;
   late final List<Widget> pages;
-
+  final bucket = PageStorageBucket();
   @override
   void initState() {
     pages = [
@@ -72,51 +72,54 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MAppBar(widget.curriculum.aliasOrName),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.lesson.aclass.name,
-                style: const TextStyle(fontSize: 17),
-              ),
-              Text(
-                Utils.formatDatetime(widget.date),
-                style: const TextStyle(fontSize: 17),
-              ),
-              Text(
-                '${widget.lesson.order} ${S.of(context).lesson}',
-                style: const TextStyle(fontSize: 17),
-              ),
-              Text(
-                widget.time.formatPeriod(),
-                style: const TextStyle(fontSize: 17),
-              ),
-              FutureBuilder<TeacherModel?>(
-                future: widget.curriculum.master,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData || snapshot.data == null) return const SizedBox.shrink();
-                  return Text(
-                    snapshot.data!.fullName,
-                    style: const TextStyle(fontSize: 17),
-                  );
-                },
-              ),
-              const Divider(
-                indent: 50,
-                endIndent: 50,
-                thickness: 3,
-              ),
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 250),
-                  child: pages[current],
+      body: PageStorage(
+        bucket: bucket,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.lesson.aclass.name,
+                  style: const TextStyle(fontSize: 17),
                 ),
-              ),
-            ],
+                Text(
+                  Utils.formatDatetime(widget.date),
+                  style: const TextStyle(fontSize: 17),
+                ),
+                Text(
+                  '${widget.lesson.order} ${S.of(context).lesson}',
+                  style: const TextStyle(fontSize: 17),
+                ),
+                Text(
+                  widget.time.formatPeriod(),
+                  style: const TextStyle(fontSize: 17),
+                ),
+                FutureBuilder<TeacherModel?>(
+                  future: widget.curriculum.master,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.data == null) return const SizedBox.shrink();
+                    return Text(
+                      snapshot.data!.fullName,
+                      style: const TextStyle(fontSize: 17),
+                    );
+                  },
+                ),
+                const Divider(
+                  indent: 50,
+                  endIndent: 50,
+                  thickness: 3,
+                ),
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: pages[current],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
