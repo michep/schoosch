@@ -39,6 +39,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
                       children: const [Center(child: Text('Вы еще не ставили оценок'))],
                     )
                   : ListView(
+                      key: const PageStorageKey('marks'),
                       children: [
                         ...snapshot.data!.keys.map(
                           (e) => MarkListTile(
@@ -140,6 +141,7 @@ class _MarkListTileState extends State<MarkListTile> {
   Widget build(BuildContext context) {
     if (student == null) return const SizedBox.shrink();
     return ExpansionTile(
+      key: PageStorageKey(student!.id),
       title: Text(student!.fullName),
       subtitle: Text(marksString(widget.marks)),
       children: [

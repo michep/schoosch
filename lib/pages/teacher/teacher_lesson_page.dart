@@ -29,11 +29,10 @@ class TeacherLessonPage extends StatefulWidget {
 class _TeacherLessonPageState extends State<TeacherLessonPage> {
   int current = 0;
   late final List<Widget> pages;
-  late final PageStorageBucket bucket;
+  final bucket = PageStorageBucket();
 
   @override
   void initState() {
-    bucket = PageStorageBucket();
     pages = [
       ClassHomeworksCombinedPage(
         widget.teacher,

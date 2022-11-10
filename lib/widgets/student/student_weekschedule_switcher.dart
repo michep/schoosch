@@ -17,6 +17,7 @@ class StudentWeekScheduleSwitcher extends StatefulWidget {
 
 class StudentWeekScheduleSwitcherState extends State<StudentWeekScheduleSwitcher> {
   final _cw = Get.find<CurrentWeek>();
+  final bucket = PageStorageBucket();
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +26,21 @@ class StudentWeekScheduleSwitcherState extends State<StudentWeekScheduleSwitcher
         builder: (context, classSnap) {
           if (!classSnap.hasData) return Utils.progressIndicator();
           if (classSnap.data == null) return const Center(child: Text('У ученика не определен класс'));
-          return PageView.custom(
-            controller: _cw.pageController,
-            onPageChanged: _cw.setIdx,
-            childrenDelegate: SliverChildBuilderDelegate(
-              (context, idx) {
-                return StudentWeekScheduleWidget(
-                  widget._student,
-                  classSnap.data!,
-                  Week(year: idx ~/ 100, weekNumber: idx % 100),
-                  key: ValueKey(idx),
-                );
-              },
+          return PageStorage(
+            bucket: bucket,
+            child: PageView.custom(
+              controller: _cw.pageController,
+              onPageChanged: _cw.setIdx,
+              childrenDelegate: SliverChildBuilderDelegate(
+                (context, idx) {
+                  return StudentWeekScheduleWidget(
+                    widget._student,
+                    classSnap.data!,
+                    Week(year: idx ~/ 100, weekNumber: idx % 100),
+                    key: ValueKey(idx),
+                  );
+                },
+              ),
             ),
           );
         });

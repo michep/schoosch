@@ -20,6 +20,7 @@ class ObserverSchedule extends StatefulWidget {
 class _ObserverScheduleState extends State<ObserverSchedule> {
   final _cw = Get.find<CurrentWeek>();
   bool forceRefresh = false;
+  final bucket = PageStorageBucket();
 
   @override
   Widget build(BuildContext context) {
@@ -35,45 +36,48 @@ class _ObserverScheduleState extends State<ObserverSchedule> {
   }
 
   Widget observerScheduleWidget() {
-    return PageView.custom(
-      controller: _cw.pageController,
-      onPageChanged: _cw.setIdx,
-      childrenDelegate: SliverChildBuilderDelegate(
-        (context, idx) {
-          return FutureBuilder<List<ClassScheduleModel>>(
-            future: widget._class.getClassSchedulesWeek(Week(year: idx ~/ 100, weekNumber: idx % 100), forceRefresh: forceRefresh),
-            builder: (context, schedules) {
-              if (!schedules.hasData) {
-                return Utils.progressIndicator();
-              }
-              if (schedules.data!.isEmpty) {
-                return Center(
-                  child: Text(
-                    S.of(context).noWeekSchedule,
-                    style: const TextStyle(fontSize: 16),
+    return PageStorage(
+      bucket: bucket,
+      child: PageView.custom(
+        controller: _cw.pageController,
+        onPageChanged: _cw.setIdx,
+        childrenDelegate: SliverChildBuilderDelegate(
+          (context, idx) {
+            return FutureBuilder<List<ClassScheduleModel>>(
+              future: widget._class.getClassSchedulesWeek(Week(year: idx ~/ 100, weekNumber: idx % 100), forceRefresh: forceRefresh),
+              builder: (context, schedules) {
+                if (!schedules.hasData) {
+                  return Utils.progressIndicator();
+                }
+                if (schedules.data!.isEmpty) {
+                  return Center(
+                    child: Text(
+                      S.of(context).noWeekSchedule,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  );
+                }
+                forceRefresh = false;
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    forceRefresh = true;
+                    setState(() {});
+                  },
+                  child: ListView(
+                    children: [
+                      ...schedules.data!.map(
+                        (schedule) => ObserverDayTile(
+                          schedule,
+                          Week(year: idx ~/ 100, weekNumber: idx % 100).day(schedule.day - 1),
+                        ),
+                      ),
+                    ],
                   ),
                 );
-              }
-              forceRefresh = false;
-              return RefreshIndicator(
-                onRefresh: () async {
-                  forceRefresh = true;
-                  setState(() {});
-                },
-                child: ListView(
-                  children: [
-                    ...schedules.data!.map(
-                      (schedule) => ObserverDayTile(
-                        schedule,
-                        Week(year: idx ~/ 100, weekNumber: idx % 100).day(schedule.day - 1),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
+              },
+            );
+          },
+        ),
       ),
     );
   }
