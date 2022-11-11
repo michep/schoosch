@@ -13,10 +13,10 @@ class ScheduleLessonListTile extends StatefulWidget {
   const ScheduleLessonListTile(this._lesson, this._removeLessonFunc, {Key? key}) : super(key: key);
 
   @override
-  State<ScheduleLessonListTile> createState() => _StudentLessonListTileState();
+  State<ScheduleLessonListTile> createState() => _ScheduleLessonListTileState();
 }
 
-class _StudentLessonListTileState extends State<ScheduleLessonListTile> {
+class _ScheduleLessonListTileState extends State<ScheduleLessonListTile> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
