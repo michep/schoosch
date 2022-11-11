@@ -5,7 +5,7 @@ import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/widgets/teacher/teacherlesson_list_tile.dart';
+import 'package:schoosch/widgets/teacher/teacher_lessonlist_tile.dart';
 
 class TeacherDayScheduleTile extends StatelessWidget {
   final TeacherScheduleModel _schedule;
