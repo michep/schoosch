@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutterfire_ui/auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/fire_auth_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
@@ -22,7 +22,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _auth = Get.find<FAuth>();
   late StreamSubscription _sub;
-  User? prevUser;
+  firebase_auth.User? prevUser;
 
   @override
   void initState() {
@@ -45,16 +45,16 @@ class _LoginPageState extends State<LoginPage> {
       appBar: MAppBar(
         S.of(context).loginPageTitle,
       ),
-      body: const SignInScreen(
-        providerConfigs: [
-          EmailProviderConfiguration(),
+      body: SignInScreen(
+        providers: [
+          EmailAuthProvider(),
           // GoogleProviderConfiguration(clientId: '245847143504-ipg09aij94ufg1msovph5cbvsesvnvhm.apps.googleusercontent.com'),
         ],
       ),
     );
   }
 
-  void _authenticated(User? user) async {
+  void _authenticated(firebase_auth.User? user) async {
     var proxy = Get.find<ProxyStore>();
 
     if (user == null) {
