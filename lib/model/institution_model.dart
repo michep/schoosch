@@ -43,6 +43,7 @@ class InstitutionModel {
   Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
     if (!_curriculumsLoaded || forceRefresh) {
       var curs = await Get.find<ProxyStore>().getAllCurriculums();
+      _curriculums.clear();
       _curriculums.addAll(curs);
       _curriculumsLoaded = true;
     }

@@ -23,6 +23,7 @@ class LessontimeModel {
   Map<String, dynamic> toMap({bool withId = false}) {
     Map<String, dynamic> res = {};
     if (withId) res['_id'] = id;
+    res['order'] = order;
     res['from'] = Utils.formatTimeOfDay(from);
     res['till'] = Utils.formatTimeOfDay(till);
     return res;

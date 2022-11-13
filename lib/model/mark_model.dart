@@ -37,8 +37,7 @@ class MarkModel {
     date = map['date'] != null ? DateTime.tryParse(map['date'])! : throw 'need date key in mark $id';
     curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in mark $id';
     lessonOrder = map['lesson_order'] != null ? map['lesson_order'] as int : throw 'need lesson_order key in mark $id';
-    type = map['type'] != null ? typeFromString(map['type'] as String) : throw 'need type key in mark $id';
-    // if (!['regular', 'test', 'exam'].contains(type)) throw 'incorrect type in mark $id';
+    type = map['type'] != null ? MarkTypeExt._parse(map['type'] as String) : throw 'need type key in mark $id';
     comment = map['comment'] != null ? map['comment'] as String : '';
     mark = map['mark'] != null ? map['mark'] as int : throw 'need mark key in mark $id';
 
@@ -62,7 +61,7 @@ class MarkModel {
       'date': date.toIso8601String(),
       'curriculum_id': curriculumId,
       'lesson_order': lessonOrder,
-      'type': stringFromType(type),
+      'type': type.nameString,
       'comment': comment,
       'mark': mark,
     };
@@ -93,45 +92,6 @@ class MarkModel {
     await Get.find<ProxyStore>().deleteMark(this);
   }
 
-  static MarkType typeFromString(String type) {
-    switch (type) {
-      case 'regular':
-        return MarkType.regular;
-      case 'test':
-        return MarkType.test;
-      case 'exam':
-        return MarkType.exam;
-      default:
-        return MarkType.regular;
-    }
-  }
-
-  static String stringFromType(MarkType type) {
-    switch (type) {
-      case MarkType.regular:
-        return 'regular';
-      case MarkType.test:
-        return 'test';
-      case MarkType.exam:
-        return 'exam';
-      default:
-        return 'regular';
-    }
-  }
-
-  static String localizedTypeName(S S, MarkType type) {
-    switch (type) {
-      case MarkType.regular:
-        return S.markTypeRegular;
-      case MarkType.test:
-        return S.markTypeTest;
-      case MarkType.exam:
-        return S.markTypeExam;
-      default:
-        return S.markTypeRegular;
-    }
-  }
-
   @override
   String toString() {
     String res = mark.toString();
@@ -142,4 +102,49 @@ class MarkModel {
   }
 }
 
-enum MarkType { regular, test, exam }
+enum MarkType {
+  regular,
+  test,
+  exam,
+}
+
+extension MarkTypeExt on MarkType {
+  static const _regular = 'regular';
+  static const _test = 'test';
+  static const _exam = 'exam';
+
+  static MarkType _parse(String value) {
+    switch (value) {
+      case _regular:
+        return MarkType.regular;
+      case _test:
+        return MarkType.test;
+      case _exam:
+        return MarkType.exam;
+      default:
+        throw 'unkown type';
+    }
+  }
+
+  String get nameString {
+    switch (this) {
+      case MarkType.regular:
+        return _regular;
+      case MarkType.test:
+        return _test;
+      case MarkType.exam:
+        return _exam;
+    }
+  }
+
+  String localizedName(S S) {
+    switch (this) {
+      case MarkType.regular:
+        return S.markTypeRegular;
+      case MarkType.test:
+        return S.markTypeTest;
+      case MarkType.exam:
+        return S.markTypeExam;
+    }
+  }
+}

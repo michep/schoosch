@@ -98,6 +98,10 @@ class _DayLessontimeListPageState extends State<DayLessontimeListPage> {
   }
 
   Future<void> _newDayLessontime() async {
-    ///TODO:
+    var ncurr = DayLessontimeModel.empty();
+    var res = await Get.to<DayLessontimeModel>(() => DayLessontimePage(ncurr, 'Новое расписание времени уроков'));
+    if (res is DayLessontimeModel) {
+      setState(() {});
+    }
   }
 }

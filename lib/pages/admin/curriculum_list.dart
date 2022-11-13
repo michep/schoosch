@@ -54,7 +54,7 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
             ),
             Expanded(
               child: FutureBuilder<List<CurriculumModel>>(
-                  future: widget._institution.curriculums(),
+                  future: widget._institution.curriculums(forceRefresh: true),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) return Utils.progressIndicator();
                     var sorted = snapshot.data!;

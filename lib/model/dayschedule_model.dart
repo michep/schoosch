@@ -62,7 +62,7 @@ class ClassScheduleModel extends DayScheduleModel {
   ClassScheduleModel.fromMap(this._class, String? id, Map<String, dynamic> map) : super.fromMap(id, map);
 
   Future<List<LessonModel>> classLessons({bool forceRefresh = false, DateTime? date, bool needsEmpty = false}) async {
-    if (!_lessonsLoaded) {
+    if (!_lessonsLoaded && _id != null) {
       _lessons.addAll(await Get.find<ProxyStore>().getScheduleLessons(_class, this, date: date, needsEmpty: needsEmpty));
       _lessonsLoaded = true;
     }

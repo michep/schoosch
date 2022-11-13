@@ -132,7 +132,7 @@ class _LessonPageState extends State<LessonPage> {
       map['curriculum_id'] = curriculum!.id;
       map['venue_id'] = venue!.id;
       var nlesson = LessonModel.fromMap(lesson.aclass, lesson.schedule, lesson.id, map);
-      await nlesson.save();
+      // await nlesson.save();
       Get.back<LessonModel>(result: nlesson);
     }
   }

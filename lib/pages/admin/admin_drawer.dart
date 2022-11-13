@@ -41,12 +41,12 @@ class AdminDrawer extends StatelessWidget {
               child: Text(loc.curriculumList),
             ),
             TextButton(
-              onPressed: _openClassesPage,
-              child: Text(loc.classList),
-            ),
-            TextButton(
               onPressed: _openDayLessontimePage,
               child: Text(loc.dayLessontimeList),
+            ),
+            TextButton(
+              onPressed: _openClassesPage,
+              child: Text(loc.classList),
             ),
             TextButton(
               onPressed: _openSchedulesPage,

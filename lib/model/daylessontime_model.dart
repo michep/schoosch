@@ -15,6 +15,11 @@ class DayLessontimeModel {
     return name;
   }
 
+  DayLessontimeModel.empty()
+      : this.fromMap(null, <String, dynamic>{
+          'name': '',
+        });
+
   DayLessontimeModel.fromMap(this._id, Map<String, Object?> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in daylessontime $_id';
 
@@ -27,7 +32,7 @@ class DayLessontimeModel {
   }
 
   Future<List<LessontimeModel>> get lessontimes async {
-    if (!_lessontimesLoaded) {
+    if (!_lessontimesLoaded && _id != null) {
       _lessontimes.addAll(await Get.find<ProxyStore>().getLessontimes(_id!));
       _lessontimes.sort((a, b) => a.order.compareTo(b.order));
       _lessontimesLoaded = true;

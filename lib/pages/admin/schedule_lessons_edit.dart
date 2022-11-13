@@ -39,6 +39,7 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
     widget._schedule.classLessons(forceRefresh: true).then(
           (lessons) => setState(
             () {
+              if (lessons.isEmpty) return;
               for (var lesson in lessons) {
                 if (_lessons[lesson.order] == null) _lessons[lesson.order] = [];
                 _lessons[lesson.order]!.add(lesson);
@@ -142,11 +143,12 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
     keys.sort((a, b) => a.compareTo(b));
     for (var order in keys) {
       List<DragAndDropItem> items = [];
-      for (var lesson in _lessons[order]!) {
+      for (var lessonidx = 0; lessonidx < _lessons[order]!.length; lessonidx++) {
+        var lesson = _lessons[order]![lessonidx];
         if (lesson.type != LessonType.empty) {
           items.add(
             DragAndDropItem(
-              child: ScheduleLessonListTile(lesson, _removeLesson, key: ValueKey(lesson)),
+              child: ScheduleLessonListTile(lesson, _removeLesson, (less) => _updateLesson(order, lessonidx, less), key: ValueKey(lesson)),
             ),
           );
         }
@@ -211,6 +213,12 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
     }
   }
 
+  void _updateLesson(int order, int lessonidx, LessonModel lesson) {
+    setState(() {
+      _lessons[order]![lessonidx] = lesson;
+    });
+  }
+
   void _removeLesson(LessonModel lesson) {
     _lessonsRemoved.add(lesson);
     setState(() {
@@ -227,8 +235,8 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> map = {
         'day': schedule.day,
-        'from': _from!,
-        'till': _till,
+        'from': _from!.toIso8601String(),
+        'till': _till?.toIso8601String(),
       };
       var nschedule = ClassScheduleModel.fromMap(widget._aclass, schedule.id, map);
       await nschedule.save();
@@ -243,7 +251,7 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
       var lesss = _lessons[i + 1]!;
       for (var less in lesss) {
         less.order = i + 1;
-        var map = less.toMap();
+        var map = less.toMap(withId: true);
         var nless = LessonModel.fromMap(widget._aclass, schedule, less.id, map);
         await nless.save();
       }

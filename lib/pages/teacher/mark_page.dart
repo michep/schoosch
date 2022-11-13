@@ -29,14 +29,14 @@ class _MarkPageState extends State<MarkPage> {
   final TextEditingController _commentcont = TextEditingController();
   final TextEditingController _studentcont = TextEditingController();
   final ScrollController _scrollcon = ScrollController();
-  int mark = 0;
-  String markType = '';
+  late int mark;
+  late MarkType markType;
   StudentModel? _student;
 
   @override
   void initState() {
     mark = widget.mark.mark;
-    markType = MarkModel.stringFromType(widget.mark.type);
+    markType = widget.mark.type;
     _commentcont.value = TextEditingValue(text: widget.mark.comment);
     super.initState();
   }
@@ -71,7 +71,7 @@ class _MarkPageState extends State<MarkPage> {
                 MarkTypeFormField(
                   markType: markType,
                   onChanged: (v) {
-                    if (v is String) {
+                    if (v is MarkType) {
                       setState(() {
                         markType = v;
                       });
@@ -140,7 +140,7 @@ class _MarkPageState extends State<MarkPage> {
           'date': widget.mark.date.toIso8601String(),
           'curriculum_id': widget.mark.curriculumId,
           'lesson_order': widget.mark.lessonOrder,
-          'type': markType,
+          'type': markType.nameString,
           'comment': _commentcont.value.text,
           'mark': mark,
         },
