@@ -118,5 +118,7 @@
   "personalHomeworkTitle": "Д/З личное",
   "setCompleted": "сообщить о выполнении",
   "setUncompleted": "отметить как невыполненное",
-  "errorCanNotBeUncompleted": "выполнение уже подтверждено, его нельзя отметить как невыполненное"
+  "errorCanNotBeUncompleted": "выполнение уже подтверждено, его нельзя отметить как невыполненное",
+  "periodYear": "учебный год",
+  "periodSemester": "учебный период"
 }

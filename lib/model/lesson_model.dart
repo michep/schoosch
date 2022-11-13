@@ -127,7 +127,7 @@ class LessonModel {
   }
 
   Future<CurriculumModel?> get curriculum async {
-    if (!_curriculumLoaded) {
+    if (!_curriculumLoaded && curriculumId != '') {
       _curriculum = await Get.find<ProxyStore>().getCurriculum(curriculumId!);
       _curriculumLoaded = true;
     }
@@ -135,7 +135,7 @@ class LessonModel {
   }
 
   Future<VenueModel?> get venue async {
-    if (!_venueLoaded) {
+    if (!_venueLoaded && venueId != '') {
       _venue = await Get.find<ProxyStore>().getVenue(venueId!);
       _venueLoaded = true;
     }

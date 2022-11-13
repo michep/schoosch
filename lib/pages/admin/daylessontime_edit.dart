@@ -93,7 +93,8 @@ class _DayLessontimePageState extends State<DayLessontimePage> {
 
   void _add() {
     setState(() {
-      _lessontimes.add(LessontimeModel.fromMap((_lessontimes.length + 1).toString(), <String, dynamic>{
+      _lessontimes.add(LessontimeModel.fromMap(null, <String, dynamic>{
+        'order': _lessontimes.length + 1,
         'from': '00:00',
         'till': '00:00',
       }));

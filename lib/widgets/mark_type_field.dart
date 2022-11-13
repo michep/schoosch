@@ -3,31 +3,27 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/mark_model.dart';
 
 class MarkTypeFormField extends StatelessWidget {
-  final void Function(String?) onChanged;
-  final String markType;
+  final void Function(MarkType?) onChanged;
+  final MarkType markType;
   const MarkTypeFormField({Key? key, required this.markType, required this.onChanged}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var loc = S.of(context);
     return FormField<String>(
       builder: ((state) {
         return InputDecorator(
           decoration: InputDecoration(
-            label: Text(S.of(context).markTypeTitle),
+            label: Text(loc.markTypeTitle),
           ),
-          child: DropdownButton<String>(
+          child: DropdownButton<MarkType>(
               isExpanded: true,
               underline: const SizedBox.shrink(),
               items: [
                 ...MarkType.values.toList().map(
                       (e) => DropdownMenuItem(
-                        value: MarkModel.stringFromType(e),
-                        child: Text(
-                          MarkModel.localizedTypeName(
-                            S.of(context),
-                            e,
-                          ),
-                        ),
+                        value: e,
+                        child: Text(e.localizedName(loc)),
                       ),
                     ),
               ],

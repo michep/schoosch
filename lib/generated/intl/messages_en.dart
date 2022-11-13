@@ -155,6 +155,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "observedClassTitle": m2,
         "peopleList":
             MessageLookupByLibrary.simpleMessage("Student, Teachers and other"),
+        "periodSemester":
+            MessageLookupByLibrary.simpleMessage("учебный период"),
+        "periodYear": MessageLookupByLibrary.simpleMessage("учебный год"),
         "personBirthday": MessageLookupByLibrary.simpleMessage("Birthday"),
         "personEmail": MessageLookupByLibrary.simpleMessage("Email"),
         "personFirstName": MessageLookupByLibrary.simpleMessage("First Name"),

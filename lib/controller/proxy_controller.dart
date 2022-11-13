@@ -18,6 +18,7 @@ import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 
 class ProxyStore extends getx.GetxController {
@@ -272,7 +273,7 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<String> saveDaySchedule(ClassScheduleModel schedule) async {
-    var data = schedule.toMap();
+    var data = schedule.toMap(withId: true);
     data['institution_id'] = institution.id;
     data['class_id'] = schedule.aclass.id;
     var res = await dio.putUri<Map<String, dynamic>>(
@@ -354,7 +355,7 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<String> saveLesson(LessonModel lesson) async {
-    var data = lesson.toMap();
+    var data = lesson.toMap(withId: true);
     data['institution_id'] = institution.id;
     data['class_id'] = lesson.aclass.id;
     data['schedule_id'] = lesson.schedule.id;
@@ -652,6 +653,18 @@ class ProxyStore extends getx.GetxController {
     await dio.deleteUri(
       baseUriFunc('/mark/${mark.id}'),
     );
+  }
+
+  Future<String> saveStudyPeriod(StudyPeriodModel period) async {
+    var data = period.toMap(withId: true);
+    data['institution_id'] = institution.id;
+    var res = await dio.putUri<Map<String, dynamic>>(
+      baseUriFunc('/studyperiod'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: data,
+    );
+    var js = res.data!;
+    return js['id'];
   }
 
   Future<List<ClassScheduleModel>> getClassWeekSchedule(ClassModel aclass, Week currentWeek) async {

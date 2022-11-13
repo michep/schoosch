@@ -67,7 +67,7 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
   Future<void> _newSchedule(int day) async {
     var nschedule = ClassScheduleModel.empty(widget._aclass, day);
     nschedule.day = day;
-    var res = await Get.to<ClassScheduleModel>(() => ScheduleLessonsPage(widget._aclass, nschedule, '${nschedule.aclass.name}, ${Utils.dayName(day)}'));
+    var res = await Get.to<ClassScheduleModel>(() => ScheduleLessonsPage(widget._aclass, nschedule, '${nschedule.aclass.name}, ${Utils.dayName(day - 1)}'));
     if (res is ClassScheduleModel) {
       setState(() {});
     }

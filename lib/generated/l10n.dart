@@ -1249,6 +1249,26 @@ class S {
       args: [],
     );
   }
+
+  /// `учебный год`
+  String get periodYear {
+    return Intl.message(
+      'учебный год',
+      name: 'periodYear',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `учебный период`
+  String get periodSemester {
+    return Intl.message(
+      'учебный период',
+      name: 'periodSemester',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

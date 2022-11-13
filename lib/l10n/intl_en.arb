@@ -118,5 +118,7 @@
   "personalHomeworkTitle": "Personal Homework",
   "setCompleted": "Set as Completed",
   "setUncompleted": "Set as Uncompleted",
-  "errorCanNotBeUncompleted": "This completion is Confirmed and can not be set as Uncompleted"
+  "errorCanNotBeUncompleted": "This completion is Confirmed and can not be set as Uncompleted",
+  "periodYear": "учебный год",
+  "periodSemester": "учебный период"
 }
