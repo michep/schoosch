@@ -60,7 +60,10 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget._title),
-        actions: [IconButton(onPressed: _newLesson, icon: const Icon(Icons.add))],
+        actions: [
+          IconButton(onPressed: _duplicateSchedule, icon: const Icon(Icons.copy_all)),
+          IconButton(onPressed: _newLesson, icon: const Icon(Icons.add)),
+        ],
       ),
       body: SafeArea(
         child: Form(
@@ -202,6 +205,10 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
     });
   }
 
+  Future<void> _duplicateSchedule() async {
+    await _save(widget._schedule, duplicate: true);
+  }
+
   Future<void> _newLesson() async {
     var nlesson = LessonModel.empty(widget._aclass, widget._schedule, _lessons.length + 1);
     var res = await Get.to<LessonModel>(() => LessonPage(nlesson, S.of(context).lesson));
@@ -231,28 +238,28 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
     });
   }
 
-  Future<void> _save(ClassScheduleModel schedule) async {
+  Future<void> _save(ClassScheduleModel schedule, {bool duplicate = false}) async {
     if (_formKey.currentState!.validate()) {
       Map<String, dynamic> map = {
         'day': schedule.day,
         'from': _from!.toIso8601String(),
         'till': _till?.toIso8601String(),
       };
-      var nschedule = ClassScheduleModel.fromMap(widget._aclass, schedule.id, map);
+      var nschedule = ClassScheduleModel.fromMap(widget._aclass, duplicate ? null : schedule.id, map);
       await nschedule.save();
-      await _saveLessons(nschedule);
+      await _saveLessons(nschedule, duplicate: duplicate);
       await _deleteLessons();
       Get.back<ClassScheduleModel>(result: nschedule);
     }
   }
 
-  Future<void> _saveLessons(ClassScheduleModel schedule) async {
+  Future<void> _saveLessons(ClassScheduleModel schedule, {bool duplicate = false}) async {
     for (var i = 0; i < _lessons.length; i++) {
       var lesss = _lessons[i + 1]!;
       for (var less in lesss) {
         less.order = i + 1;
         var map = less.toMap(withId: true);
-        var nless = LessonModel.fromMap(widget._aclass, schedule, less.id, map);
+        var nless = LessonModel.fromMap(widget._aclass, schedule, duplicate ? null : less.id, map);
         await nless.save();
       }
     }
