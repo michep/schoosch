@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/fire_auth_controller.dart';
+import 'package:schoosch/controller/auth_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -62,6 +62,11 @@ class _LoginPageState extends State<LoginPage> {
     }
     if (user != null && proxy.currentUser == null) {
       await proxy.init(user.email!);
+
+      proxy.logEvent({
+        'event': 'LOGIN',
+        'useremail': user.email,
+      });
 
       PersonModel.currentUser!.currentType == PersonType.admin ? Get.offAll(() => const AdminPage()) : Get.offAll(() => const HomePage());
     }
