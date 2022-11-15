@@ -9,6 +9,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/daylessontime_list.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/selectablevaluelist_field.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -43,8 +44,8 @@ class _ClassPageState extends State<ClassPage> {
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget._title),
+      appBar: MAppBar(
+        widget._title,
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),

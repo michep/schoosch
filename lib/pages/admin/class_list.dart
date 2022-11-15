@@ -5,6 +5,7 @@ import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/pages/admin/class_edit.dart';
 import 'package:schoosch/pages/admin/schedule_days_list.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 enum ClassListMode { classes, schedules }
@@ -27,8 +28,8 @@ class _ClassListPageState extends State<ClassListPage> {
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(loc.classList),
+      appBar: MAppBar(
+        loc.classList,
         actions: [IconButton(onPressed: _newClass, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(

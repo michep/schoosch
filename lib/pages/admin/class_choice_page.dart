@@ -3,6 +3,7 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/pages/admin/create_replacement.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class ClassChoicePage extends StatefulWidget {
@@ -21,8 +22,8 @@ class _ClassChoicePageState extends State<ClassChoicePage> {
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(loc.classList),
+      appBar: MAppBar(
+        loc.classList,
       ),
       body: SafeArea(
         child: Column(
