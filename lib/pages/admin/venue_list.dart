@@ -4,6 +4,7 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/pages/admin/venue_edit.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class VenueListPage extends StatefulWidget {
@@ -24,8 +25,8 @@ class _VenueListPageState extends State<VenueListPage> {
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(loc.venueList),
+      appBar: MAppBar(
+        loc.venueList,
         actions: [IconButton(onPressed: _newVenue, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(

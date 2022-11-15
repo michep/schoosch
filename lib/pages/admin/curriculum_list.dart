@@ -5,6 +5,7 @@ import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/curriculum_edit.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class CurriculumListPage extends StatefulWidget {
@@ -24,8 +25,8 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(loc.curriculumList),
+      appBar: MAppBar(
+        loc.curriculumList,
         actions: [IconButton(onPressed: _newCurriculum, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(

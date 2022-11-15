@@ -4,6 +4,7 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/pages/admin/lessontime_tile.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class DayLessontimePage extends StatefulWidget {
@@ -37,8 +38,8 @@ class _DayLessontimePageState extends State<DayLessontimePage> {
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget._title),
+      appBar: MAppBar(
+        widget._title,
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),

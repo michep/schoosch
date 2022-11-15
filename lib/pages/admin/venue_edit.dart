@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/venue_model.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class VenuePage extends StatefulWidget {
@@ -28,8 +29,8 @@ class _VenuePageState extends State<VenuePage> {
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget._title),
+      appBar: MAppBar(
+        widget._title,
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),

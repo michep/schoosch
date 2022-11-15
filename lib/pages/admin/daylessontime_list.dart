@@ -4,6 +4,7 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/pages/admin/daylessontime_edit.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class DayLessontimeListPage extends StatefulWidget {
@@ -23,8 +24,8 @@ class _DayLessontimeListPageState extends State<DayLessontimeListPage> {
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).dayLessontimeList),
+      appBar: MAppBar(
+        S.of(context).dayLessontimeList,
         actions: widget.selectionMode ? [] : [IconButton(onPressed: _newDayLessontime, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(

@@ -9,6 +9,7 @@ import 'package:schoosch/pages/admin/curriculum_edit.dart';
 import 'package:schoosch/pages/admin/curriculum_list.dart';
 import 'package:schoosch/pages/admin/venue_edit.dart';
 import 'package:schoosch/pages/admin/venue_list.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -36,8 +37,8 @@ class _LessonPageState extends State<LessonPage> {
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget._title),
+      appBar: MAppBar(
+        widget._title,
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),

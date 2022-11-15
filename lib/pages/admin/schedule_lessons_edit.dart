@@ -11,6 +11,7 @@ import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/pages/admin/lesson_edit.dart';
 import 'package:schoosch/pages/admin/schedule_lessonlist_tile.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class ScheduleLessonsPage extends StatefulWidget {
@@ -58,8 +59,8 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget._title),
+      appBar: MAppBar(
+        widget._title,
         actions: [
           IconButton(onPressed: _duplicateSchedule, icon: const Icon(Icons.copy_all)),
           IconButton(onPressed: _newLesson, icon: const Icon(Icons.add)),

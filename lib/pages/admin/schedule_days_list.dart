@@ -4,6 +4,7 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/pages/admin/schedule_lessons_edit.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class ScheduleDaysListPage extends StatefulWidget {
@@ -19,8 +20,8 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.of(context).classScheduleName(widget._aclass.name)),
+      appBar: MAppBar(
+        S.of(context).classScheduleName(widget._aclass.name),
       ),
       body: SafeArea(
         child: ListView.builder(
