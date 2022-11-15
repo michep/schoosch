@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/adapter.dart';
 import 'package:get/get.dart' as getx;
 import 'package:isoweek/isoweek.dart';
-import 'package:schoosch/controller/fire_auth_controller.dart';
+import 'package:schoosch/controller/auth_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/class_model.dart';
@@ -717,5 +717,15 @@ class ProxyStore extends getx.GetxController {
   Future<Uint8List> getFile(String filename) async {
     var res = await dio.getUri<Uint8List>(baseUriFunc('/files/$filename'), options: Options(responseType: ResponseType.bytes));
     return res.data!;
+  }
+
+  Future<void> logEvent(Map<String, dynamic> data) async {
+    data['institution_id'] = institution.id;
+    data['timestamp'] = DateTime.now().toIso8601String();
+    dio.putUri<Map<String, dynamic>>(
+      baseUriFunc('/eventlog'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: data,
+    );
   }
 }

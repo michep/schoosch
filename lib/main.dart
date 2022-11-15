@@ -6,7 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/day_controller.dart';
-import 'package:schoosch/controller/fire_auth_controller.dart';
+import 'package:schoosch/controller/auth_controller.dart';
 import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
