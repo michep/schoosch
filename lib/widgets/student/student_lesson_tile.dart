@@ -29,13 +29,12 @@ class StudentLessonTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () => _onTap(),
       child: Padding(
         padding: const EdgeInsets.only(
           bottom: 10,
           top: 10,
-          left: 0,
         ),
         child: SizedBox(
           child: Row(

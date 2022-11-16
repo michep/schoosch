@@ -68,11 +68,11 @@ flutter_icons:
   remove_alpha_ios: true
   web: 
     generate: true
-    image_path: "assets/play_store_512.png"
+    image_path: "assets/1024.png"
     background_color: "#57859D"
   windows:
     generate: true
-    image_path: "assets/play_store_512.png"
+    image_path: "assets/1024.png"
     icon_size: 48
 
 flutter_native_splash:
