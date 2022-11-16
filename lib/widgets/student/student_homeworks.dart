@@ -39,9 +39,7 @@ class _StudentHomeworksState extends State<StudentHomeworks> {
             });
           },
           child: (stud.isEmpty && clas.isEmpty)
-              ? ListView(
-                  children: const [Center(child: Text('Нет домашнего задания на этот день! 🎉'))],
-                )
+              ? const Center(child: Text('Нет домашнего задания на этот день! 🎉'))
               : ListView(
                   children: [
                     if (stud.isNotEmpty)
