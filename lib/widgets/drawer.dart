@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pdf/pdf.dart';
 import 'package:schoosch/controller/week_controller.dart';
-import 'package:schoosch/model/class_model.dart';
-import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/all_marks_table_page.dart';
