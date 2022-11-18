@@ -31,8 +31,9 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
             forceRefresh = false;
             return RefreshIndicator(
               onRefresh: () async {
-                forceRefresh = true;
-                setState(() {});
+                setState(() {
+                  forceRefresh = true;
+                });
               },
               child: snapshot.data!.isEmpty
                   ? ListView(
@@ -86,13 +87,17 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
       ),
     );
     if (res is bool) {
-      setState(() {});
+      setState(() {
+        forceRefresh = true;
+      });
     }
   }
 
   void deleteMark(MarkModel mark) async {
     await mark.delete();
-    setState(() {});
+    setState(() {
+      forceRefresh = true;
+    });
   }
 
   Future<void> editMark(MarkModel mark) async {
@@ -100,7 +105,9 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
       () => MarkPage(widget._lesson, mark, S.of(context).updateMarkTitle, editMode: true),
     );
     if (res is bool) {
-      setState(() {});
+      setState(() {
+        forceRefresh = true;
+      });
     }
   }
 }
