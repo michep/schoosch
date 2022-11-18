@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/studyperiod_model.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class StudentsTablePage extends StatelessWidget {
@@ -131,8 +133,8 @@ class StudentsTablePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('все оценки'),
+      appBar: const MAppBar(
+        'все оценки',
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -146,7 +148,14 @@ class StudentsTablePage extends StatelessWidget {
             }
             var curriculums = snapshot.data!;
             return FutureBuilder<Map<CurriculumModel, List<MarkModel>>>(
-              future: student.getMarksByCurriculums(curriculums),
+              future: student.getMarksByCurriculums(
+                  curriculums,
+                  StudyPeriodModel.fromMap('123123123', {
+                    'name': 'первая четверть',
+                    'from': '2022-09-01',
+                    'till': '2022-11-07',
+                    'type': 'semester',
+                  })),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
@@ -157,6 +166,14 @@ class StudentsTablePage extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        DropdownButton(
+                          items: [],
+                          onChanged: null,
+                        ),
+                      ],
+                    ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: _buildSubjectCells(curriculums),

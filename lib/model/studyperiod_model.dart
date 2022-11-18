@@ -20,7 +20,7 @@ class StudyPeriodModel {
             ? DateTime.tryParse(map['from'])!
             : throw 'from key should be datetime string in period $_id'
         : throw 'need from key in period $_id';
-    from = map['till'] != null
+    till = map['till'] != null
         ? DateTime.tryParse(map['till']) != null
             ? DateTime.tryParse(map['till'])!
             : throw 'till key should be datetime string in period $_id'
