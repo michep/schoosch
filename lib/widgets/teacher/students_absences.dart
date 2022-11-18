@@ -30,8 +30,9 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
             forceRefresh = false;
             return RefreshIndicator(
               onRefresh: () async {
-                forceRefresh = true;
-                setState(() {});
+                setState(() {
+                  forceRefresh = true;
+                });
               },
               child: snapshot.data!.isEmpty
                   ? ListView(
@@ -82,12 +83,16 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
         'person_id': stud.id,
         'date': widget._date.toIso8601String(),
       });
-      widget._lesson.createAbsence(abs).then((value) => setState(() {}));
+      widget._lesson.createAbsence(abs).then((value) => setState(() {
+        forceRefresh = true;
+      }));
     }
   }
 
   Future<void> deleteAbsence(AbsenceModel absence) async {
-    absence.delete(widget._lesson).then((value) => setState(() {}));
+    absence.delete(widget._lesson).then((value) => setState(() {
+      forceRefresh = true;
+    }));
   }
 }
 
