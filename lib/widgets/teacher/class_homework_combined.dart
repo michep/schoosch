@@ -53,44 +53,48 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                   forceRefresh = true;
                 });
               },
-              child: ListView(
-                key: PageStorageKey(widget.readOnly ? 'thislessonhws' : 'nextlessonhws'),
-                children: [
-                  const Text(
-                    'ДЗ классу',
-                    style: TextStyle(
-                      fontSize: 17,
+              child: (hws['class'] == null && hws.keys.where((element) => element != 'class').isEmpty)
+                  ? const Center(
+                      child: Text('Вы еще не задавали ДЗ'),
+                    )
+                  : ListView(
+                      key: PageStorageKey(widget.readOnly ? 'thislessonhws' : 'nextlessonhws'),
+                      children: [
+                        const Text(
+                          'ДЗ классу',
+                          style: TextStyle(
+                            fontSize: 17,
+                          ),
+                        ),
+                        ...(hws['class'] ?? []).map(
+                          (hw) {
+                            return ClassHomeworkTile(
+                              homework: hw,
+                              toggleHomeworkCompletion: toggleHomeworkCompletion,
+                              editHomework: editHomework,
+                              readOnly: widget.readOnly,
+                              forceRefresh: buildForceRefresh,
+                            );
+                          },
+                        ).toList(),
+                        const Text(
+                          'ДЗ личные',
+                          style: TextStyle(
+                            fontSize: 17,
+                          ),
+                        ),
+                        ...hws.keys.where((element) => element != 'class').map(
+                          (idx) {
+                            return StudentHomeworkTile(
+                              homeworks: hws[idx]!,
+                              toggleHomeworkCompletion: toggleHomeworkCompletion,
+                              editHomework: editHomework,
+                              readOnly: widget.readOnly,
+                            );
+                          },
+                        ).toList(),
+                      ],
                     ),
-                  ),
-                  ...(hws['class'] ?? []).map(
-                    (hw) {
-                      return ClassHomeworkTile(
-                        homework: hw,
-                        toggleHomeworkCompletion: toggleHomeworkCompletion,
-                        editHomework: editHomework,
-                        readOnly: widget.readOnly,
-                        forceRefresh: buildForceRefresh,
-                      );
-                    },
-                  ).toList(),
-                  const Text(
-                    'ДЗ личные',
-                    style: TextStyle(
-                      fontSize: 17,
-                    ),
-                  ),
-                  ...hws.keys.where((element) => element != 'class').map(
-                    (idx) {
-                      return StudentHomeworkTile(
-                        homeworks: hws[idx]!,
-                        toggleHomeworkCompletion: toggleHomeworkCompletion,
-                        editHomework: editHomework,
-                        readOnly: widget.readOnly,
-                      );
-                    },
-                  ).toList(),
-                ],
-              ),
             );
           },
         ),

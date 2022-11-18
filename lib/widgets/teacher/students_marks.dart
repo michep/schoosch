@@ -36,9 +36,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
                 });
               },
               child: snapshot.data!.isEmpty
-                  ? ListView(
-                      children: const [Center(child: Text('Вы еще не ставили оценок'))],
-                    )
+                  ? const Center(child: Text('Вы еще не ставили оценок'))
                   : ListView(
                       key: const PageStorageKey('marks'),
                       children: [
