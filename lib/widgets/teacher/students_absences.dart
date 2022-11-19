@@ -35,7 +35,11 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
                 });
               },
               child: snapshot.data!.isEmpty
-                  ? const Center(child: Text('На этом уроке нет отсутствующих'))
+                  ? ListView(
+                    children: const [
+                      Center(child: Text('На этом уроке нет отсутствующих')),
+                    ],
+                  )
                   : ListView(
                       key: const PageStorageKey('absence'),
                       children: [

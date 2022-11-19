@@ -35,7 +35,13 @@ class _StudentMarksState extends State<StudentMarks> {
             });
           },
           child: snapshot.data!.isEmpty
-              ?  const Center(child: Text('Нет оценок'))
+              ? ListView(
+                  children: const [
+                    Center(
+                      child: Text('Нет оценок'),
+                    ),
+                  ],
+                )
               : ListView(
                   children: [
                     ...snapshot.data!.map(
