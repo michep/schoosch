@@ -54,8 +54,12 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                 });
               },
               child: (hws['class'] == null && hws.keys.where((element) => element != 'class').isEmpty)
-                  ? const Center(
-                      child: Text('Вы еще не задавали ДЗ'),
+                  ? ListView(
+                      children: const [
+                        Center(
+                          child: Text('Вы еще не задавали ДЗ'),
+                        ),
+                      ],
                     )
                   : ListView(
                       key: PageStorageKey(widget.readOnly ? 'thislessonhws' : 'nextlessonhws'),
