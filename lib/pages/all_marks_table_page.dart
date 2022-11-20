@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class StudentsTablePage extends StatelessWidget {
@@ -131,8 +132,8 @@ class StudentsTablePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('все оценки'),
+      appBar: const MAppBar(
+        'все оценки',
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,

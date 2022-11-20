@@ -603,7 +603,7 @@ class ProxyStore extends getx.GetxController {
 
   Future<List<MarkModel>> getAllLessonMarks(LessonModel lesson, DateTime date) async {
     var res = await dio.getUri<List>(
-      baseUriFunc('/class/${lesson.aclass.id}/curriculum/${lesson.curriculumId}/mark/${date.toIso8601String()}'),
+      baseUriFunc('/class/${lesson.aclass.id}/curriculum/${lesson.curriculumId}/mark/${date.toIso8601String()}/${lesson.order}'),
     );
     var js = res.data!;
     return js.map((e) => MarkModel.fromMap(e['_id'], e)).toList();
