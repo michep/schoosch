@@ -627,9 +627,9 @@ class ProxyStore extends getx.GetxController {
     return js.map((e) => MarkModel.fromMap(e['_id'], e)).toList();
   }
 
-  Future<List<MarkModel>> getCurriculumMarksByStudents(CurriculumModel curriculum, List<StudentModel> students) async {
+  Future<List<MarkModel>> getCurriculumMarksByStudents(CurriculumModel curriculum, List<StudentModel> students, StudyPeriodModel period) async {
     var res = await dio.postUri<List>(
-      baseUriFunc('/curriculum/${curriculum.id}/students/mark'),
+      baseUriFunc('/curriculum/${curriculum.id}/students/mark/${period.from.toIso8601String()}/${period.till.toIso8601String()}'),
       options: Options(headers: {'Content-Type': 'application/json'}),
       data: students.map((e) => e.id).toList(),
     );
