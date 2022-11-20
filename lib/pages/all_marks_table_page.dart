@@ -149,13 +149,14 @@ class StudentsTablePage extends StatelessWidget {
             var curriculums = snapshot.data!;
             return FutureBuilder<Map<CurriculumModel, List<MarkModel>>>(
               future: student.getMarksByCurriculums(
-                  curriculums,
-                  StudyPeriodModel.fromMap('123123123', {
-                    'name': 'первая четверть',
-                    'from': '2022-09-01',
-                    'till': '2022-11-07',
-                    'type': 'semester',
-                  })),
+                curriculums,
+                StudyPeriodModel.fromMap('123123123', {
+                  'name': '2022 - 2023 год обучения',
+                  'from': '2022-09-01',
+                  'till': '2023-07-01',
+                  'type': 'semester',
+                }),
+              ),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(

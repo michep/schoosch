@@ -4,6 +4,7 @@ import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -149,7 +150,15 @@ class TeacherTablePage extends StatelessWidget {
             }
             var students = snapshot.data!;
             return FutureBuilder<Map<StudentModel, List<MarkModel>>>(
-              future: currentcur.getMarksByStudents(students),
+              future: currentcur.getMarksByStudents(
+                students,
+                StudyPeriodModel.fromMap('123123123', {
+                  'name': '2022 - 2023 год обучения',
+                  'from': '2022-09-01',
+                  'till': '2023-07-01',
+                  'type': 'semester',
+                }),
+              ),
               builder: (context, studsnapshot) {
                 if (!studsnapshot.hasData) {
                   return Center(
