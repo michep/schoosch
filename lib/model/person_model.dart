@@ -7,6 +7,7 @@ import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/mark_model.dart';
+import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class PersonModel {
@@ -147,9 +148,9 @@ class StudentModel extends PersonModel {
     return _curriculums;
   }
 
-  Future<Map<CurriculumModel, List<MarkModel>>> getMarksByCurriculums(List<CurriculumModel> curriculums) async {
+  Future<Map<CurriculumModel, List<MarkModel>>> getMarksByCurriculums(List<CurriculumModel> curriculums, StudyPeriodModel period) async {
     Map<CurriculumModel, List<MarkModel>> res = {};
-    var marks = await Get.find<ProxyStore>().getStudenMarksByCurriculums(this, curriculums);
+    var marks = await Get.find<ProxyStore>().getStudenMarksByCurriculums(this, curriculums, period);
     var splitted = Utils.splitMarksByCurriculum(marks);
     for (var studid in splitted.keys) {
       res[await splitted[studid]![0].curriculum] = splitted[studid]!;
