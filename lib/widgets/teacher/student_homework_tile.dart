@@ -10,12 +10,14 @@ class StudentHomeworkTile extends StatelessWidget {
   final List<HomeworkModel> homeworks;
   final void Function(HomeworkModel, CompletionFlagModel) toggleHomeworkCompletion;
   final void Function(HomeworkModel, bool) editHomework;
+  final void Function(HomeworkModel) delete;
 
   const StudentHomeworkTile({
     Key? key,
     required this.homeworks,
     required this.toggleHomeworkCompletion,
     required this.editHomework,
+    required this.delete,
     required this.readOnly,
     this.forceRefresh = false,
   }) : super(key: key);
@@ -36,6 +38,7 @@ class StudentHomeworkTile extends StatelessWidget {
                       homework: hw,
                       student: snapshot.data!,
                       editHomework: editHomework,
+                      delete: delete,
                       toggleHomeworkCompletion: toggleHomeworkCompletion,
                       readOnly: readOnly,
                       forceRefresh: forceRefresh,

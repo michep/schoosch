@@ -11,6 +11,7 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
   final bool readOnly;
   final bool forceRefresh;
   final void Function(HomeworkModel, bool) editHomework;
+  final void Function(HomeworkModel) delete;
   final void Function(HomeworkModel, CompletionFlagModel) toggleHomeworkCompletion;
 
   const StudentHomeworkCompetionTile({
@@ -18,6 +19,7 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
     required this.homework,
     required this.student,
     required this.editHomework,
+    required this.delete,
     required this.toggleHomeworkCompletion,
     required this.readOnly,
     this.forceRefresh = false,
@@ -78,7 +80,14 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () => editHomework(homework, true),
-                )
+                ),
+              if (!readOnly)
+                IconButton(
+                  onPressed: () => delete(homework),
+                  icon: const Icon(
+                    Icons.delete,
+                  ),
+                ),
             ],
           ),
         );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
+import 'package:schoosch/widgets/delete_dialog.dart';
 import 'package:schoosch/widgets/teacher/class_homework_completion_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -11,12 +12,14 @@ class ClassHomeworkTile extends StatelessWidget {
   final HomeworkModel homework;
   final void Function(HomeworkModel, CompletionFlagModel) toggleHomeworkCompletion;
   final void Function(HomeworkModel, bool) editHomework;
+  final void Function(HomeworkModel) delete;
 
   const ClassHomeworkTile({
     Key? key,
     required this.homework,
     required this.toggleHomeworkCompletion,
     required this.editHomework,
+    required this.delete,
     required this.readOnly,
     this.forceRefresh = false,
   }) : super(key: key);
@@ -53,9 +56,20 @@ class ClassHomeworkTile extends StatelessWidget {
           ),
           trailing: readOnly
               ? null
-              : IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () => editHomework(homework, false),
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () => editHomework(homework, false),
+                    ),
+                    IconButton(
+                      onPressed: () => delete(homework),
+                      icon: const Icon(
+                        Icons.delete,
+                      ),
+                    ),
+                  ],
                 ),
           children: [
             ...snapshot.data!.map(

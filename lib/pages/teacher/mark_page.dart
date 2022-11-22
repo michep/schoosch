@@ -68,16 +68,16 @@ class _MarkPageState extends State<MarkPage> {
                   onSaved: setMark,
                   validator: (value) => Utils.validateMark(value, S.of(context).errorMarkError),
                 ),
-                MarkTypeFormField(
-                  markType: markType,
-                  onChanged: (v) {
-                    if (v is MarkType) {
-                      setState(() {
-                        markType = v;
-                      });
-                    }
-                  },
-                ),
+                // MarkTypeFormField(
+                //   markType: markType,
+                //   onChanged: (v) {
+                //     if (v is MarkType) {
+                //       setState(() {
+                //         markType = v;
+                //       });
+                //     }
+                //   },
+                // ),
                 TextFormField(
                   decoration: InputDecoration(
                     label: Text(S.of(context).commentTitle),
@@ -140,7 +140,8 @@ class _MarkPageState extends State<MarkPage> {
           'date': widget.mark.date.toIso8601String(),
           'curriculum_id': widget.mark.curriculumId,
           'lesson_order': widget.mark.lessonOrder,
-          'type': markType.nameString,
+          // 'type': markType.nameString,
+          'type': 'regular',
           'comment': _commentcont.value.text,
           'mark': mark,
         },

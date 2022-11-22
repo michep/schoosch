@@ -104,4 +104,8 @@ class HomeworkModel {
   Future<String> save() {
     return Get.find<ProxyStore>().saveHomework(this);
   }
+
+  Future<void> delete() async {
+    await Get.find<ProxyStore>().deleteHomework(this);
+  }
 }
