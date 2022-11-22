@@ -436,6 +436,12 @@ class ProxyStore extends getx.GetxController {
     return js['id'];
   }
 
+  Future<void> deleteHomework(HomeworkModel homework) async {
+    await dio.deleteUri(
+      baseUriFunc('/homework/${homework.id}'),
+    );
+  }
+
   Future<void> createCompletion(HomeworkModel homework, StudentModel student) async {
     var data = {
       '_id': null,

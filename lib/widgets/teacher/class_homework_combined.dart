@@ -6,6 +6,7 @@ import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/homework_page.dart';
+import 'package:schoosch/widgets/delete_dialog.dart';
 import 'package:schoosch/widgets/fab_menu.dart';
 import 'package:schoosch/widgets/teacher/class_homework_tile.dart';
 import 'package:schoosch/widgets/teacher/student_homework_tile.dart';
@@ -76,6 +77,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                               homework: hw,
                               toggleHomeworkCompletion: toggleHomeworkCompletion,
                               editHomework: editHomework,
+                              delete: deleteHomework,
                               readOnly: widget.readOnly,
                               forceRefresh: buildForceRefresh,
                             );
@@ -93,6 +95,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                               homeworks: hws[idx]!,
                               toggleHomeworkCompletion: toggleHomeworkCompletion,
                               editHomework: editHomework,
+                              delete: deleteHomework,
                               readOnly: widget.readOnly,
                             );
                           },
@@ -174,6 +177,23 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
       ),
     );
     if (res is bool && res == true) {
+      setState(() {
+        forceRefresh = true;
+      });
+    }
+  }
+
+  void deleteHomework(HomeworkModel hw) async {
+    // showDialog(
+    //   context: context,
+    //   builder: (context) => DeleteDialog(hw: hw, context: context),
+    // ).whenComplete(
+    //   () => Navigator.of(context).pop(),
+    // );
+    var res = await Get.dialog<bool>(
+      DeleteDialog(hw: hw, context: context),
+    );
+    if(res is bool && res) {
       setState(() {
         forceRefresh = true;
       });
