@@ -125,7 +125,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Search for Free Lessons"),
         "freeTeachersTitle":
             MessageLookupByLibrary.simpleMessage("Search for Free Teachers"),
-        "fromTitle": MessageLookupByLibrary.simpleMessage("From time"),
+        "fromTimeTitle": MessageLookupByLibrary.simpleMessage("From time"),
+        "fromTitle": MessageLookupByLibrary.simpleMessage("From"),
         "homeworkTextTitle":
             MessageLookupByLibrary.simpleMessage("Homework Text"),
         "homeworkTitle": MessageLookupByLibrary.simpleMessage("Homework"),
@@ -139,6 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "markTypeRegular": MessageLookupByLibrary.simpleMessage("Regular"),
         "markTypeTest": MessageLookupByLibrary.simpleMessage("Test"),
         "markTypeTitle": MessageLookupByLibrary.simpleMessage("Mark type"),
+        "modelStatusTitle": MessageLookupByLibrary.simpleMessage("Статус"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "newClass": MessageLookupByLibrary.simpleMessage("New Class"),
         "newCurriculum": MessageLookupByLibrary.simpleMessage("New Curriculum"),
@@ -156,8 +158,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "peopleList":
             MessageLookupByLibrary.simpleMessage("Student, Teachers and other"),
         "periodSemester":
-            MessageLookupByLibrary.simpleMessage("учебный период"),
-        "periodYear": MessageLookupByLibrary.simpleMessage("учебный год"),
+            MessageLookupByLibrary.simpleMessage("study semester"),
+        "periodYear": MessageLookupByLibrary.simpleMessage("study year"),
         "personBirthday": MessageLookupByLibrary.simpleMessage("Birthday"),
         "personEmail": MessageLookupByLibrary.simpleMessage("Email"),
         "personFirstName": MessageLookupByLibrary.simpleMessage("First Name"),
@@ -196,12 +198,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "setMarkTitle": MessageLookupByLibrary.simpleMessage("Set Mark"),
         "setUncompleted":
             MessageLookupByLibrary.simpleMessage("Set as Uncompleted"),
+        "statusActive": MessageLookupByLibrary.simpleMessage("Active"),
+        "statusInactive": MessageLookupByLibrary.simpleMessage("Inactive"),
         "studentTitle": MessageLookupByLibrary.simpleMessage("Student"),
+        "studyPeriodTitle":
+            MessageLookupByLibrary.simpleMessage("Учебный период"),
+        "studyPeriodTypeTitle":
+            MessageLookupByLibrary.simpleMessage("Тип учебного периода"),
         "tabScheduleHomeworksTitle":
             MessageLookupByLibrary.simpleMessage("Schedule/HW"),
         "tabStudentsPerformance":
             MessageLookupByLibrary.simpleMessage("Performance"),
-        "tillTitle": MessageLookupByLibrary.simpleMessage("Till time"),
+        "tillTimeTitle": MessageLookupByLibrary.simpleMessage("Till time"),
+        "tillTitle": MessageLookupByLibrary.simpleMessage("Till"),
         "todateTitle": MessageLookupByLibrary.simpleMessage("TBD till"),
         "updateMarkTitle": MessageLookupByLibrary.simpleMessage("Update Mark"),
         "userProfileTitle":

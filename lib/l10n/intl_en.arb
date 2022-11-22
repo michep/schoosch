@@ -71,8 +71,10 @@
   "errorScheduleFromDateEmpty": "Start Date should be provided",
   "errorMarkError": "Mark shoud be defined",
   "errorHomeworkTextEmpty": "Homework text shold not be empty",
-  "fromTitle": "From time",
-  "tillTitle": "Till time",
+  "fromTimeTitle": "From time",
+  "tillTimeTitle": "Till time",
+  "fromTitle": "From",
+  "tillTitle": "Till",
   "markTitle": "Mark",
   "studentTitle": "Student",
   "commentTitle": "Comment",
@@ -119,6 +121,11 @@
   "setCompleted": "Set as Completed",
   "setUncompleted": "Set as Uncompleted",
   "errorCanNotBeUncompleted": "This completion is Confirmed and can not be set as Uncompleted",
-  "periodYear": "учебный год",
-  "periodSemester": "учебный период"
+  "periodYear": "study year",
+  "periodSemester": "study semester",
+  "statusInactive": "Inactive",
+  "statusActive": "Active",
+  "modelStatusTitle": "Статус",
+  "studyPeriodTypeTitle": "Тип учебного периода",
+  "studyPeriodTitle": "Учебный период"
 }
