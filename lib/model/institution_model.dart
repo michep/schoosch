@@ -5,6 +5,7 @@ import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 
 class InstitutionModel {
@@ -26,6 +27,22 @@ class InstitutionModel {
 
   Future<List<VenueModel>> get venues async {
     return Get.find<ProxyStore>().getAllVenues();
+  }
+
+  Future<List<StudyPeriodModel>> get studyperiods async {
+    return Get.find<ProxyStore>().getAllStudyPeriods();
+  }
+
+  Future<StudyPeriodModel?> get currentYearPeriod async {
+    return Get.find<ProxyStore>().getYearPeriodForDate(DateTime.now());
+  }
+
+  Future<StudyPeriodModel?> get currentSemesterPeriod async {
+    return Get.find<ProxyStore>().getSemesterPeriodForDate(DateTime.now());
+  }
+
+  Future<List<StudyPeriodModel>> get currentYearSemesterPeriods async {
+    return Get.find<ProxyStore>().getSemesterPeriodsForPeriod((await currentYearPeriod)!);
   }
 
   Future<List<PersonModel>> people() async {
