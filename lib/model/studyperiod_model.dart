@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
+import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class StudyPeriodModel {
@@ -8,13 +9,24 @@ class StudyPeriodModel {
   late final String name;
   late final DateTime from;
   late final DateTime till;
-  late final PeriodType type;
+  late final StudyPeriodType type;
+  late final ModelStatus status;
 
   String? get id => _id;
+
+  StudyPeriodModel.empty()
+      : this.fromMap(null, {
+          'name': '',
+          'type': StudyPeriodType.year.nameString,
+          'status': ModelStatus.active.nameInt,
+          'from': DateTime.now().toIso8601String(),
+          'till': DateTime.now().toIso8601String(),
+        });
 
   StudyPeriodModel.fromMap(this._id, Map<String, dynamic> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in period $id';
     map['type'] != null ? type = PeriodTypeExt._parse(map['type']) : throw 'need type key in period $id';
+    map['status'] != null ? status = ModelStatusExt.parse(map['status']) : throw 'need status key in period $id';
     from = map['from'] != null
         ? DateTime.tryParse(map['from']) != null
             ? DateTime.tryParse(map['from'])!
@@ -37,7 +49,8 @@ class StudyPeriodModel {
     res['name'] = name;
     res['from'] = from.toIso8601String();
     res['till'] = till.toIso8601String();
-    res['type'] = type._nameString;
+    res['type'] = type.nameString;
+    res['status'] = status.nameInt;
     return res;
   }
 
@@ -48,40 +61,40 @@ class StudyPeriodModel {
   }
 }
 
-enum PeriodType {
+enum StudyPeriodType {
   year,
   semester,
 }
 
-extension PeriodTypeExt on PeriodType {
+extension PeriodTypeExt on StudyPeriodType {
   static const _year = 'year';
   static const _semester = 'semester';
 
-  static PeriodType _parse(String value) {
+  static StudyPeriodType _parse(String value) {
     switch (value) {
       case _year:
-        return PeriodType.year;
+        return StudyPeriodType.year;
       case _semester:
-        return PeriodType.semester;
+        return StudyPeriodType.semester;
       default:
         throw 'unkown type';
     }
   }
 
-  String get _nameString {
+  String get nameString {
     switch (this) {
-      case PeriodType.year:
+      case StudyPeriodType.year:
         return _year;
-      case PeriodType.semester:
+      case StudyPeriodType.semester:
         return _semester;
     }
   }
 
   String localizedName(S S) {
     switch (this) {
-      case PeriodType.year:
+      case StudyPeriodType.year:
         return S.periodYear;
-      case PeriodType.semester:
+      case StudyPeriodType.semester:
         return S.periodSemester;
     }
   }

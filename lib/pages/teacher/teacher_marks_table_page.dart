@@ -8,16 +8,118 @@ import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class TeacherTablePage extends StatelessWidget {
+class TeacherTablePage extends StatefulWidget {
   final CurriculumModel currentcur;
   final ClassModel? aclass;
   final TeacherModel? teacher;
+  final List<StudyPeriodModel> periods;
+
   const TeacherTablePage({
     Key? key,
     required this.currentcur,
+    required this.periods,
     this.aclass,
     this.teacher,
   }) : super(key: key);
+
+  @override
+  State<TeacherTablePage> createState() => _TeacherTablePageState();
+}
+
+class _TeacherTablePageState extends State<TeacherTablePage> {
+  late StudyPeriodModel? selectedPeriod;
+
+  @override
+  void initState() {
+    selectedPeriod = widget.periods.firstWhere(
+      (element) => element.from.isBefore(DateTime.now()) && element.till.isAfter(DateTime.now()),
+      orElse: selectedPeriod = null,
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: MAppBar(
+        widget.currentcur.aliasOrName,
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: FutureBuilder<List<StudentModel>>(
+          future: widget.aclass != null ? widget.currentcur.classStudents(widget.aclass!) : widget.currentcur.students(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: Utils.progressIndicator(),
+              );
+            }
+            var students = snapshot.data!;
+            return FutureBuilder<Map<StudentModel, List<MarkModel>>>(
+              future: widget.currentcur.getMarksByStudents(
+                students,
+                selectedPeriod!,
+              ),
+              builder: (context, studsnapshot) {
+                if (!studsnapshot.hasData) {
+                  return Center(
+                    child: Utils.progressIndicator(),
+                  );
+                }
+                var data = studsnapshot.data!;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        DropdownButton<StudyPeriodModel>(
+                          value: selectedPeriod,
+                          items: [
+                            ...widget.periods
+                                .map((e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text(e.name),
+                                    ))
+                                .toList(),
+                          ],
+                          onChanged: (value) => setState(() {
+                            selectedPeriod = value;
+                          }),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _buildStudentCells(students),
+                    ),
+                    Flexible(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: _buildRows(data, students),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 8.0,
+                        top: 4,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _buildSummaryMarks(data, students),
+                      ),
+                    )
+                  ],
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
 
   List<Widget> _buildMarkCells(List<MarkModel> listmark) {
     listmark.sort((a, b) => b.date.compareTo(a.date));
@@ -129,76 +231,6 @@ class TeacherTablePage extends StatelessWidget {
                 data[liststud[index]]!,
               ),
             ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MAppBar(
-        currentcur.aliasOrName,
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: FutureBuilder<List<StudentModel>>(
-          future: aclass != null ? currentcur.classStudents(aclass!) : currentcur.students(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: Utils.progressIndicator(),
-              );
-            }
-            var students = snapshot.data!;
-            return FutureBuilder<Map<StudentModel, List<MarkModel>>>(
-              future: currentcur.getMarksByStudents(
-                students,
-                StudyPeriodModel.fromMap('123123123', {
-                  'name': '2022 - 2023 год обучения',
-                  'from': '2022-09-01',
-                  'till': '2023-07-01',
-                  'type': 'semester',
-                }),
-              ),
-              builder: (context, studsnapshot) {
-                if (!studsnapshot.hasData) {
-                  return Center(
-                    child: Utils.progressIndicator(),
-                  );
-                }
-                var data = studsnapshot.data!;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildStudentCells(students),
-                    ),
-                    Flexible(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: _buildRows(data, students),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 8.0,
-                        top: 4,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _buildSummaryMarks(data, students),
-                      ),
-                    )
-                  ],
-                );
-              },
-            );
-          },
-        ),
-      ),
     );
   }
 }

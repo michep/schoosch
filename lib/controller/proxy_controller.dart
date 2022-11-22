@@ -655,11 +655,36 @@ class ProxyStore extends getx.GetxController {
     );
   }
 
+  Future<List<StudyPeriodModel>> getAllStudyPeriods() async {
+    var res = await dio.getUri<List>(baseUriFunc('/period'));
+    var js = res.data!;
+    return js.map((data) => StudyPeriodModel.fromMap(data['_id'], data)).toList();
+  }
+
+  Future<StudyPeriodModel?> getYearPeriodForDate(DateTime date) async {
+    var res = await dio.getUri<List>(baseUriFunc('/period/year/${date.toIso8601String()}'));
+    var js = res.data!;
+    if (js.length != 1) return null;
+    return StudyPeriodModel.fromMap(js[0]['_id'], js[0]);
+  }
+
+  Future<StudyPeriodModel?> getSemesterPeriodForDate(DateTime date) async {
+    var res = await dio.getUri<Map<String, dynamic>>(baseUriFunc('/period/semester/${date.toIso8601String()}'));
+    var js = res.data!;
+    return StudyPeriodModel.fromMap(js['_id'], js);
+  }
+
+  Future<List<StudyPeriodModel>> getSemesterPeriodsForPeriod(StudyPeriodModel period) async {
+    var res = await dio.getUri<List>(baseUriFunc('/period/semester/${period.from.toIso8601String()}/${period.till.toIso8601String()}'));
+    var js = res.data!;
+    return js.map((data) => StudyPeriodModel.fromMap(data['_id'], data)).toList();
+  }
+
   Future<String> saveStudyPeriod(StudyPeriodModel period) async {
     var data = period.toMap(withId: true);
     data['institution_id'] = institution.id;
     var res = await dio.putUri<Map<String, dynamic>>(
-      baseUriFunc('/studyperiod'),
+      baseUriFunc('/period'),
       options: Options(headers: {'Content-Type': 'application/json'}),
       data: data,
     );
