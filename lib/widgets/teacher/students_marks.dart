@@ -5,6 +5,7 @@ import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/mark_page.dart';
+import 'package:schoosch/widgets/delete_dialog.dart';
 
 class StudentsMarksPage extends StatefulWidget {
   final LessonModel _lesson;
@@ -37,10 +38,10 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
               },
               child: snapshot.data!.isEmpty
                   ? ListView(
-                    children: const [
-                      Center(child: Text('Вы еще не ставили оценок')),
-                    ],
-                  )
+                      children: const [
+                        Center(child: Text('Вы еще не ставили оценок')),
+                      ],
+                    )
                   : ListView(
                       key: const PageStorageKey('marks'),
                       children: [
@@ -95,11 +96,23 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
     }
   }
 
+  // void deleteMark(MarkModel mark) async {
+  //   await mark.delete();
+  //   setState(() {
+  //     forceRefresh = true;
+  //   });
+  // }
+
   void deleteMark(MarkModel mark) async {
-    await mark.delete();
-    setState(() {
-      forceRefresh = true;
-    });
+    var res = await Get.dialog<bool>(DeleteDialog(
+      context: context,
+      mark: mark,
+    ));
+    if (res is bool && res) {
+      setState(() {
+        forceRefresh = true;
+      });
+    }
   }
 
   Future<void> editMark(MarkModel mark) async {

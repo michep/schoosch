@@ -42,20 +42,18 @@ class DeleteDialog extends StatelessWidget {
       ),
       actions: [
         ElevatedButton(
-          onPressed: () {
-            Get.back<bool>(result: false);
+          onPressed: hw != null ? () async {
+            await hw!.delete();
+            Get.back<bool>(result: true);
+          } : () async {
+            await mark!.delete();
+            Get.back<bool>(result: true);
           },
           child: const Text('Подтвердить'),
         ),
         ElevatedButton(
-          onPressed: () async {
-            hw != null
-                ? hw!.delete().whenComplete(() {
-                    Get.back<bool>(result: true);
-                  })
-                : mark!.delete().whenComplete(() {
-                    Get.back<bool>(result: true);
-                  });
+          onPressed: () {
+            Get.back<bool>(result: false);
           },
           child: const Text('Отмена'),
         ),
