@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
-import 'package:schoosch/widgets/delete_dialog.dart';
 import 'package:schoosch/widgets/teacher/class_homework_completion_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
