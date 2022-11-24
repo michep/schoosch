@@ -5,6 +5,7 @@ import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/mark_page.dart';
+import 'package:schoosch/widgets/delete_bottomscheet.dart';
 import 'package:schoosch/widgets/delete_dialog.dart';
 
 class StudentsMarksPage extends StatefulWidget {
@@ -51,7 +52,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
                             widget._lesson,
                             widget._date,
                             snapshot.data![e]!,
-                            deleteMark,
+                            deleteMarkWithSheet,
                             editMark,
                             widget.readOnly,
                             key: ValueKey(e),
@@ -108,6 +109,18 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
       context: context,
       mark: mark,
     ));
+    if (res is bool && res) {
+      setState(() {
+        forceRefresh = true;
+      });
+    }
+  }
+
+  void deleteMarkWithSheet(MarkModel mark) async {
+    var person = await mark.student;
+    var res = await Get.bottomSheet<bool>(
+      DeleteBottomSheet(person: person, mark: mark),
+    );
     if (res is bool && res) {
       setState(() {
         forceRefresh = true;

@@ -4,6 +4,8 @@ import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 
 class DeleteDialog extends StatelessWidget {
+
+  //TODO: make a bottom sheet
   const DeleteDialog({
     Key? key,
     this.hw,
