@@ -42,11 +42,12 @@ class _StudentWeekScheduleWidgetState extends State<StudentWeekScheduleWidget> {
             forceRefresh = true;
             setState(() {});
           },
-          child: ListView(
-            key: PageStorageKey(widget._week),
-            children: [
-              ...schedules.data!.map((schedule) => ClassDayScheduleTile(schedule, widget._student, widget._week.day(schedule.day - 1))),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ...schedules.data!.map((schedule) => StudentDayScheduleTile(schedule, widget._student, widget._week.day(schedule.day - 1))),
+              ],
+            ),
           ),
         );
       },
