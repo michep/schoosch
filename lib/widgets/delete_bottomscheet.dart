@@ -46,36 +46,34 @@ class DeleteBottomSheet extends StatelessWidget {
             ),
             const Text('Для:'),
             Text(
-              person.abbreviatedName,
+              person.fullName,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        await mark.delete();
-                        Get.back<bool>(result: true);
-                      },
-                      child: const Text('Подтвердить'),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.back<bool>(result: false);
-                      },
-                      child: const Text('Отмена'),
-                    ),
-                  ],
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      await mark.delete();
+                      Get.back<bool>(result: true);
+                    },
+                    child: const Text('Подтвердить'),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Get.back<bool>(result: false);
+                    },
+                    child: const Text('Отмена'),
+                  ),
+                ],
               ),
             ),
           ],

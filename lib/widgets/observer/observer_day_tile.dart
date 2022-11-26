@@ -6,6 +6,7 @@ import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
+import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/pages/observer/observer_lesson_page.dart';
 
@@ -51,7 +52,8 @@ class ObserverDayTile extends StatelessWidget {
                         les.curriculum,
                         les.lessontime,
                         les.venue,
-                        les.homeworkNextLessonForClassAndAllStudents(_date),
+                        les.homeworkThisLessonForClassAndAllStudents(_date),
+                        les.getAllMarks(_date),
                       ])
                     : Future.delayed(
                         const Duration(
@@ -70,6 +72,17 @@ class ObserverDayTile extends StatelessWidget {
                   var tim = les.type != LessonType.empty ? list[1] as LessontimeModel : null;
                   var ven = les.type != LessonType.empty ? list[2] as VenueModel : null;
                   var homws = les.type != LessonType.empty ? list[3] as Map<String, List<HomeworkModel>> : null;
+                  var marks = les.type != LessonType.empty ? list[4] as Map<String, List<MarkModel>> : null;
+                  String subt = '';
+                  if(homws!.isNotEmpty) {
+                    subt = 'есть домашнее задание';
+                  }
+                  if(marks!.isNotEmpty) {
+                    subt = 'есть оценки';
+                  }
+                  if(homws.isNotEmpty && marks.isNotEmpty) {
+                    subt = 'есть домашнее задание, есть оценки';
+                  }
                   return ListTile(
                     title: Text(
                       les.type != LessonType.empty ? cur!.aliasOrName : 'окно',
@@ -77,14 +90,15 @@ class ObserverDayTile extends StatelessWidget {
                     leading: Text(
                       les.order.toString(),
                     ),
-                    subtitle: les.type != LessonType.empty
-                        ? homws!.isEmpty
-                            ? null
-                            : const Text('есть домашнее задание')
-                        : null,
+                    // subtitle: les.type != LessonType.empty
+                    //     ? homws!.isEmpty
+                    //         ? null
+                    //         : const Text('есть домашнее задание')
+                    //     : null,
+                    subtitle: les.type != LessonType.empty ? Text(subt) : null,
                     onTap: les.type != LessonType.empty
                         ? () {
-                            onTap(les, cur!, ven!, tim!, homws!);
+                            onTap(les, cur!, ven!, tim!, homws);
                           }
                         : null,
                   );
