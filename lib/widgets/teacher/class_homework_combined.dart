@@ -6,6 +6,7 @@ import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/homework_page.dart';
+import 'package:schoosch/widgets/delete_bottomscheet.dart';
 import 'package:schoosch/widgets/delete_dialog.dart';
 import 'package:schoosch/widgets/fab_menu.dart';
 import 'package:schoosch/widgets/teacher/class_homework_tile.dart';
@@ -29,6 +30,7 @@ class ClassHomeworksCombinedPage extends StatefulWidget {
 
 class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage> {
   late bool forceRefresh;
+  bool canDelete = false;
 
   @override
   void initState() {
@@ -77,7 +79,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                               homework: hw,
                               toggleHomeworkCompletion: toggleHomeworkCompletion,
                               editHomework: editHomework,
-                              delete: deleteHomework,
+                              delete: deleteHomeworkkWithSheet,
                               readOnly: widget.readOnly,
                               forceRefresh: buildForceRefresh,
                             );
@@ -95,7 +97,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                               homeworks: hws[idx]!,
                               toggleHomeworkCompletion: toggleHomeworkCompletion,
                               editHomework: editHomework,
-                              delete: deleteHomework,
+                              delete: deleteHomeworkkWithSheet,
                               readOnly: widget.readOnly,
                             );
                           },
@@ -193,7 +195,24 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
     var res = await Get.dialog<bool>(
       DeleteDialog(hw: hw, context: context),
     );
-    if(res is bool && res) {
+    if (res is bool && res) {
+      setState(() {
+        forceRefresh = true;
+      });
+    }
+  }
+
+  void deleteHomeworkkWithSheet(HomeworkModel hw) async {
+    var person = await hw.student;
+    bool canDelete = (await hw.getAllCompletions()).isEmpty;
+    var res = await Get.bottomSheet<bool>(
+      DeleteBottomSheet(
+        person: person,
+        item: hw,
+        canDelete: canDelete,
+      ),
+    );
+    if (res is bool && res) {
       setState(() {
         forceRefresh = true;
       });

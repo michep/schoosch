@@ -1,20 +1,29 @@
 import "package:flutter/material.dart";
 import 'package:get/get.dart';
+import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class DeleteBottomSheet extends StatelessWidget {
-  final MarkModel mark;
+  // final MarkModel mark;
+  final dynamic item;
+  final StudentModel? person;
+  final bool canDelete;
   const DeleteBottomSheet({
     Key? key,
     required this.person,
-    required this.mark,
+    required this.item,
+    this.canDelete = false,
   }) : super(key: key);
-
-  final StudentModel person;
 
   @override
   Widget build(BuildContext context) {
+    String text = '';
+    if(item is MarkModel) {
+      text = (item as MarkModel).mark.toString();
+    } else if(item is HomeworkModel) {
+      text = (item as HomeworkModel).text;
+    }
     return BottomSheet(
       onClosing: () {},
       builder: (context) => Padding(
@@ -26,7 +35,7 @@ class DeleteBottomSheet extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children: canDelete ? [
             const Text(
               'Точно хотите удалить?',
               style: TextStyle(
@@ -38,7 +47,7 @@ class DeleteBottomSheet extends StatelessWidget {
             ),
             const Text('Оценку:'),
             Text(
-              mark.mark.toString(),
+              text,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
@@ -46,7 +55,7 @@ class DeleteBottomSheet extends StatelessWidget {
             ),
             const Text('Для:'),
             Text(
-              person.fullName,
+              person != null ? person!.fullName : 'Класса',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
@@ -59,7 +68,12 @@ class DeleteBottomSheet extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () async {
-                      await mark.delete();
+                      // await mark.delete();
+                      if(item is MarkModel) {
+                        await (item as MarkModel).delete();
+                      } else if(item is HomeworkModel) {
+                        await (item as HomeworkModel).delete();
+                      }
                       Get.back<bool>(result: true);
                     },
                     child: const Text('Подтвердить'),
@@ -73,6 +87,31 @@ class DeleteBottomSheet extends StatelessWidget {
                     },
                     child: const Text('Отмена'),
                   ),
+                ],
+              ),
+            ),
+          ] : [
+            const Text(
+              'Невозможно удалить.',
+              style: TextStyle(
+                fontSize: 24,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            // const Text('Оценку:'),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 10,),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                          onPressed: () {
+                            Get.back<bool>(result: false);
+                          },
+                          child: const Text('Отмена'),
+                        ),
                 ],
               ),
             ),

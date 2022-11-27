@@ -119,7 +119,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
   void deleteMarkWithSheet(MarkModel mark) async {
     var person = await mark.student;
     var res = await Get.bottomSheet<bool>(
-      DeleteBottomSheet(person: person, mark: mark),
+      DeleteBottomSheet(person: person, item: mark),
     );
     if (res is bool && res) {
       setState(() {
