@@ -3,6 +3,7 @@ import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class CurriculumModel {
@@ -89,9 +90,9 @@ class CurriculumModel {
     return _studentIds.isEmpty || _studentIds.contains(student.id);
   }
 
-  Future<Map<StudentModel, List<MarkModel>>> getMarksByStudents(List<StudentModel> students) async {
+  Future<Map<StudentModel, List<MarkModel>>> getMarksByStudents(List<StudentModel> students, StudyPeriodModel period) async {
     Map<StudentModel, List<MarkModel>> res = {};
-    var marks = await Get.find<ProxyStore>().getCurriculumMarksByStudents(this, students);
+    var marks = await Get.find<ProxyStore>().getCurriculumMarksByStudents(this, students, period);
     var splitted = Utils.splitMarksByStudent(marks);
     for (var studid in splitted.keys) {
       res[await splitted[studid]![0].student] = splitted[studid]!;

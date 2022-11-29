@@ -135,7 +135,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Поиск свободных уроков"),
         "freeTeachersTitle":
             MessageLookupByLibrary.simpleMessage("Поиск свободных учителей"),
-        "fromTitle": MessageLookupByLibrary.simpleMessage("Время начала"),
+        "fromTimeTitle": MessageLookupByLibrary.simpleMessage("Время начала"),
+        "fromTitle": MessageLookupByLibrary.simpleMessage("Начало"),
         "homeworkTextTitle":
             MessageLookupByLibrary.simpleMessage("Текст задания"),
         "homeworkTitle":
@@ -150,6 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "markTypeRegular": MessageLookupByLibrary.simpleMessage("Обычная"),
         "markTypeTest": MessageLookupByLibrary.simpleMessage("Проверочная"),
         "markTypeTitle": MessageLookupByLibrary.simpleMessage("Тип оценки"),
+        "modelStatusTitle": MessageLookupByLibrary.simpleMessage("Статус"),
         "name": MessageLookupByLibrary.simpleMessage("Название"),
         "newClass": MessageLookupByLibrary.simpleMessage("Новый учебный класс"),
         "newCurriculum":
@@ -215,12 +217,20 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Поставить оценку"),
         "setUncompleted":
             MessageLookupByLibrary.simpleMessage("отметить как невыполненное"),
+        "statusActive": MessageLookupByLibrary.simpleMessage("Активно"),
+        "statusInactive": MessageLookupByLibrary.simpleMessage("Неактивно"),
         "studentTitle": MessageLookupByLibrary.simpleMessage("Ученик"),
+        "studyPeriodTitle":
+            MessageLookupByLibrary.simpleMessage("Учебный период"),
+        "studyPeriodTypeTitle":
+            MessageLookupByLibrary.simpleMessage("Тип учебного периода"),
         "tabScheduleHomeworksTitle":
             MessageLookupByLibrary.simpleMessage("Расписание/ДЗ"),
         "tabStudentsPerformance":
             MessageLookupByLibrary.simpleMessage("Успеваемость"),
-        "tillTitle": MessageLookupByLibrary.simpleMessage("Время окончания"),
+        "tillTimeTitle":
+            MessageLookupByLibrary.simpleMessage("Время окончания"),
+        "tillTitle": MessageLookupByLibrary.simpleMessage("Окончание"),
         "todateTitle": MessageLookupByLibrary.simpleMessage("Выполнить к дате"),
         "updateMarkTitle":
             MessageLookupByLibrary.simpleMessage("Изменить оценку"),

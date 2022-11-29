@@ -771,19 +771,39 @@ class S {
   }
 
   /// `From time`
-  String get fromTitle {
+  String get fromTimeTitle {
     return Intl.message(
       'From time',
-      name: 'fromTitle',
+      name: 'fromTimeTitle',
       desc: '',
       args: [],
     );
   }
 
   /// `Till time`
-  String get tillTitle {
+  String get tillTimeTitle {
     return Intl.message(
       'Till time',
+      name: 'tillTimeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `From`
+  String get fromTitle {
+    return Intl.message(
+      'From',
+      name: 'fromTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Till`
+  String get tillTitle {
+    return Intl.message(
+      'Till',
       name: 'tillTitle',
       desc: '',
       args: [],
@@ -1250,21 +1270,71 @@ class S {
     );
   }
 
-  /// `учебный год`
+  /// `study year`
   String get periodYear {
     return Intl.message(
-      'учебный год',
+      'study year',
       name: 'periodYear',
       desc: '',
       args: [],
     );
   }
 
-  /// `учебный период`
+  /// `study semester`
   String get periodSemester {
     return Intl.message(
-      'учебный период',
+      'study semester',
       name: 'periodSemester',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Inactive`
+  String get statusInactive {
+    return Intl.message(
+      'Inactive',
+      name: 'statusInactive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active`
+  String get statusActive {
+    return Intl.message(
+      'Active',
+      name: 'statusActive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Статус`
+  String get modelStatusTitle {
+    return Intl.message(
+      'Статус',
+      name: 'modelStatusTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Тип учебного периода`
+  String get studyPeriodTypeTitle {
+    return Intl.message(
+      'Тип учебного периода',
+      name: 'studyPeriodTypeTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Учебный период`
+  String get studyPeriodTitle {
+    return Intl.message(
+      'Учебный период',
+      name: 'studyPeriodTitle',
       desc: '',
       args: [],
     );

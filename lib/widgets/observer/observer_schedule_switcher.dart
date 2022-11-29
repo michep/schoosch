@@ -63,15 +63,17 @@ class _ObserverScheduleState extends State<ObserverSchedule> {
                     forceRefresh = true;
                     setState(() {});
                   },
-                  child: ListView(
-                    children: [
-                      ...schedules.data!.map(
-                        (schedule) => ObserverDayTile(
-                          schedule,
-                          Week(year: idx ~/ 100, weekNumber: idx % 100).day(schedule.day - 1),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ...schedules.data!.map(
+                          (schedule) => ObserverDayTile(
+                            schedule,
+                            Week(year: idx ~/ 100, weekNumber: idx % 100).day(schedule.day - 1),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
