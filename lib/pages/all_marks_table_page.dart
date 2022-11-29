@@ -3,15 +3,121 @@ import 'package:intl/intl.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class StudentsTablePage extends StatelessWidget {
+class StudentsTablePage extends StatefulWidget {
   final StudentModel student;
+  final List<StudyPeriodModel> periods;
+
   const StudentsTablePage({
     Key? key,
     required this.student,
+    required this.periods,
   }) : super(key: key);
+
+  @override
+  State<StudentsTablePage> createState() => _StudentsTablePageState();
+}
+
+class _StudentsTablePageState extends State<StudentsTablePage> {
+  late StudyPeriodModel? selectedPeriod;
+
+  @override
+  void initState() {
+    selectedPeriod = widget.periods.firstWhere(
+      (element) => element.from.isBefore(DateTime.now()) && element.till.isAfter(DateTime.now()),
+      orElse: selectedPeriod = null,
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const MAppBar(
+        'все оценки',
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: FutureBuilder<List<CurriculumModel>>(
+          future: widget.student.curriculums(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: Utils.progressIndicator(),
+              );
+            }
+            var curriculums = snapshot.data!;
+            return FutureBuilder<Map<CurriculumModel, List<MarkModel>>>(
+              future: widget.student.getMarksByCurriculums(
+                curriculums,
+                selectedPeriod!,
+              ),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: Utils.progressIndicator(),
+                  );
+                }
+                var data = snapshot.data!;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        DropdownButton<StudyPeriodModel>(
+                          value: selectedPeriod,
+                          items: [
+                            ...widget.periods
+                                .map((e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text(e.name),
+                                    ))
+                                .toList(),
+                          ],
+                          onChanged: (value) => setState(() {
+                            selectedPeriod = value;
+                          }),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _buildSubjectCells(curriculums),
+                    ),
+                    Flexible(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: _buildRows(data, curriculums),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: 8,
+                        top: 4,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _buildSummaryMarks(
+                          data,
+                          curriculums,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
 
   List<Widget> _buildMarkCells(List<MarkModel> listmark) {
     return List.generate(
@@ -124,71 +230,6 @@ class StudentsTablePage extends StatelessWidget {
                     ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const MAppBar(
-        'все оценки',
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: FutureBuilder<List<CurriculumModel>>(
-          future: student.curriculums(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: Utils.progressIndicator(),
-              );
-            }
-            var curriculums = snapshot.data!;
-            return FutureBuilder<Map<CurriculumModel, List<MarkModel>>>(
-              future: student.getMarksByCurriculums(curriculums),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: Utils.progressIndicator(),
-                  );
-                }
-                var data = snapshot.data!;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildSubjectCells(curriculums),
-                    ),
-                    Flexible(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: _buildRows(data, curriculums),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 8,
-                        top: 4,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _buildSummaryMarks(
-                          data,
-                          curriculums,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/pages/all_marks_table_page.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
 import 'package:schoosch/pdf/pdf_preview.dart';
@@ -53,11 +54,11 @@ class MDrawer extends StatelessWidget {
       items.add(
         TextButton.icon(
           onPressed: () async {
-            // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
-            Get.to(() => StudentsTablePage(student: PersonModel.currentStudent!));
+            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+            Get.to(() => StudentsTablePage(student: PersonModel.currentStudent!, periods: periods));
           },
           icon: const Icon(Icons.table_chart_outlined),
-          label: const Text('все оценки'),
+          label: const Text('Все оценки'),
         ),
       );
     } else if (PersonModel.currentUser!.currentType == PersonType.teacher) {
@@ -68,7 +69,7 @@ class MDrawer extends StatelessWidget {
             Get.to(() => const CurriculumChoicePage());
           },
           icon: const Icon(Icons.table_chart_outlined),
-          label: const Text('ваши оценки'),
+          label: const Text('Ваши оценки'),
         ),
       );
     } else if (PersonModel.currentUser!.currentType == PersonType.parent) {
@@ -76,15 +77,13 @@ class MDrawer extends StatelessWidget {
         TextButton.icon(
           onPressed: () async {
             // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
-            StudentModel stud = await PersonModel.currentParent!.currentChild;
-            Get.to(
-              () => StudentsTablePage(
-                student: stud,
-              ),
-            );
+            var stud = await PersonModel.currentParent!.currentChild;
+            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+
+            Get.to(() => StudentsTablePage(student: stud, periods: periods));
           },
           icon: const Icon(Icons.table_chart_outlined),
-          label: const Text('успеваемость'),
+          label: const Text('Успеваемость'),
         ),
       );
     }

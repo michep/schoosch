@@ -40,10 +40,12 @@ class _TeacherScheduleWidgetState extends State<TeacherScheduleWidget> {
             forceRefresh = true;
             setState(() {});
           },
-          child: ListView(
-            children: [
-              ...schedules.data!.map((schedule) => TeacherDayScheduleTile(schedule, widget._week.day(schedule.day - 1))),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ...schedules.data!.map((schedule) => TeacherDayScheduleTile(schedule, widget._week.day(schedule.day - 1))),
+              ],
+            ),
           ),
         );
       },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/curriculum_model.dart';
+import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/teacher_marks_table_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
@@ -30,8 +31,12 @@ class CurriculumChoicePage extends StatelessWidget {
               itemBuilder: (_, index) {
                 return ListTile(
                   title: Text(snapshot.data![index].aliasOrName),
-                  onTap: () {
-                    Get.to(() => TeacherTablePage(currentcur: snapshot.data![index]));
+                  onTap: () async {
+                    var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+                    Get.to(() => TeacherTablePage(
+                          currentcur: snapshot.data![index],
+                          periods: periods,
+                        ));
                   },
                 );
               },

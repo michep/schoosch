@@ -8,6 +8,7 @@ import 'package:schoosch/pages/admin/daylessontime_list.dart';
 import 'package:schoosch/pages/admin/institution.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/class_choice_page.dart';
+import 'package:schoosch/pages/admin/studyperiod_list.dart';
 import 'package:schoosch/pages/admin/venue_list.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
 import 'package:schoosch/pages/about_page.dart';
@@ -31,6 +32,10 @@ class AdminDrawer extends StatelessWidget {
             TextButton(
               onPressed: _openVenuesPage,
               child: Text(loc.venueList),
+            ),
+            TextButton(
+              onPressed: _openStudyPeriodPage,
+              child: Text('Учебные периоды'),
             ),
             TextButton(
               onPressed: _openPeoplePage,
@@ -82,6 +87,11 @@ class AdminDrawer extends StatelessWidget {
   Future<void> _openVenuesPage() async {
     // Get.back();
     Get.to(() => VenueListPage(InstitutionModel.currentInstitution));
+  }
+
+  Future<void> _openStudyPeriodPage() async {
+    // Get.back();
+    Get.to(() => StudyPeriodListPage(InstitutionModel.currentInstitution));
   }
 
   Future<void> _openPeoplePage() async {

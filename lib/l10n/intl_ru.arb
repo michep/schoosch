@@ -71,8 +71,10 @@
   "errorScheduleFromDateEmpty": "Дата начала действия должна быть выбрана",
   "errorMarkError": "Нужно выбрать оценку",
   "errorHomeworkTextEmpty": "Текст задания не может быть пустым",
-  "fromTitle": "Время начала",
-  "tillTitle": "Время окончания",
+  "fromTimeTitle": "Время начала",
+  "tillTimeTitle": "Время окончания",
+  "fromTitle": "Начало",
+  "tillTitle": "Окончание",
   "markTitle": "Оценка",
   "studentTitle": "Ученик",
   "commentTitle": "Комментарий",
@@ -120,5 +122,10 @@
   "setUncompleted": "отметить как невыполненное",
   "errorCanNotBeUncompleted": "выполнение уже подтверждено, его нельзя отметить как невыполненное",
   "periodYear": "учебный год",
-  "periodSemester": "учебный период"
+  "periodSemester": "учебный период",
+  "statusInactive": "Неактивно",
+  "statusActive": "Активно",
+  "modelStatusTitle": "Статус",
+  "studyPeriodTypeTitle": "Тип учебного периода",
+  "studyPeriodTitle": "Учебный период"
 }

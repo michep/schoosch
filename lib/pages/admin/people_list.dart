@@ -56,39 +56,35 @@ class _PeopleListPageState extends State<PeopleListPage> {
                       ),
                     ),
                   ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: Text(loc.personType, style: TextStyle(color: Theme.of(context).hintColor)),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Text(loc.personType, style: TextStyle(color: Theme.of(context).hintColor)),
+                  ),
+                  DropdownButton<String>(
+                    value: _typeValue,
+                    onChanged: (value) => setState(() {
+                      _typeValue = value ?? 'all';
+                    }),
+                    items: [
+                      DropdownMenuItem(
+                        value: 'all',
+                        child: Text(loc.personTypeAll),
                       ),
-                      DropdownButton<String>(
-                        value: _typeValue,
-                        onChanged: (value) => setState(() {
-                          _typeValue = value ?? 'all';
-                        }),
-                        items: [
-                          DropdownMenuItem(
-                            value: 'all',
-                            child: Text(loc.personTypeAll),
-                          ),
-                          DropdownMenuItem(
-                            value: 'student',
-                            child: Text(loc.personTypeStudent),
-                          ),
-                          DropdownMenuItem(
-                            value: 'teacher',
-                            child: Text(loc.personTypeTeacher),
-                          ),
-                          DropdownMenuItem(
-                            value: 'observer',
-                            child: Text(loc.personTypeObserver),
-                          ),
-                          DropdownMenuItem(
-                            value: 'parent',
-                            child: Text(loc.personTypeParent),
-                          ),
-                        ],
+                      DropdownMenuItem(
+                        value: 'student',
+                        child: Text(loc.personTypeStudent),
+                      ),
+                      DropdownMenuItem(
+                        value: 'teacher',
+                        child: Text(loc.personTypeTeacher),
+                      ),
+                      DropdownMenuItem(
+                        value: 'observer',
+                        child: Text(loc.personTypeObserver),
+                      ),
+                      DropdownMenuItem(
+                        value: 'parent',
+                        child: Text(loc.personTypeParent),
                       ),
                     ],
                   ),

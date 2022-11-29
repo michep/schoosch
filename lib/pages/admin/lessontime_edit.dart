@@ -42,7 +42,7 @@ class _LessonTimePageState extends State<LessonTimePage> {
                   readOnly: true,
                   controller: _fromCont,
                   decoration: InputDecoration(
-                    label: Text(loc.fromTitle),
+                    label: Text(loc.fromTimeTitle),
                   ),
                   // validator: (value) => Utils.validaTimeNotEmptyeAndValid(value, loc.errorFromEmptyOrInvalid),
                   onTap: () async {
@@ -63,7 +63,7 @@ class _LessonTimePageState extends State<LessonTimePage> {
                   readOnly: true,
                   controller: _tillCont,
                   decoration: InputDecoration(
-                    label: Text(loc.tillTitle),
+                    label: Text(loc.tillTimeTitle),
                   ),
                   // validator: (value) => Utils.validaTimeNotEmptyeAndValid(value, loc.errorTillEmptyOrInvalid),
                   onTap: () async {

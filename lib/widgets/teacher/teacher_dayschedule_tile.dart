@@ -24,6 +24,8 @@ class TeacherDayScheduleTile extends StatelessWidget {
             return const SizedBox.shrink();
           }
           return ExpansionTile(
+            key: PageStorageKey(_date),
+            maintainState: true,
             title: Text(
               DateFormat('EEEE, d MMMM', 'ru').format(_date).capitalizeFirst!,
               style: const TextStyle(fontWeight: FontWeight.bold),
