@@ -44,79 +44,85 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
       appBar: MAppBar(
         widget.currentcur.aliasOrName,
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: FutureBuilder<List<StudentModel>>(
-          future: widget.aclass != null ? widget.currentcur.classStudents(widget.aclass!) : widget.currentcur.students(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: Utils.progressIndicator(),
-              );
-            }
-            var students = snapshot.data!;
-            return FutureBuilder<Map<StudentModel, List<MarkModel>>>(
-              future: widget.currentcur.getMarksByStudents(
-                students,
-                selectedPeriod!,
-              ),
-              builder: (context, studsnapshot) {
-                if (!studsnapshot.hasData) {
-                  return Center(
-                    child: Utils.progressIndicator(),
-                  );
-                }
-                var data = studsnapshot.data!;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        DropdownButton<StudyPeriodModel>(
-                          value: selectedPeriod,
-                          items: [
-                            ...widget.periods
-                                .map((e) => DropdownMenuItem(
-                                      value: e,
-                                      child: Text(e.name),
-                                    ))
-                                .toList(),
-                          ],
-                          onChanged: (value) => setState(() {
-                            selectedPeriod = value;
-                          }),
-                        ),
-                      ],
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: DropdownButton<StudyPeriodModel>(
+              value: selectedPeriod,
+              items: [
+                ...widget.periods
+                    .map((e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e.name),
+                        ))
+                    .toList(),
+              ],
+              onChanged: (value) => setState(() {
+                selectedPeriod = value;
+              }),
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: FutureBuilder<List<StudentModel>>(
+                future: widget.aclass != null ? widget.currentcur.classStudents(widget.aclass!) : widget.currentcur.students(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: Utils.progressIndicator(),
+                    );
+                  }
+                  var students = snapshot.data!;
+                  return FutureBuilder<Map<StudentModel, List<MarkModel>>>(
+                    future: widget.currentcur.getMarksByStudents(
+                      students,
+                      selectedPeriod!,
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildStudentCells(students),
-                    ),
-                    Flexible(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: _buildRows(data, students),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 8.0,
-                        top: 4,
-                      ),
-                      child: Row(
+                    builder: (context, studsnapshot) {
+                      if (!studsnapshot.hasData) {
+                        return Center(
+                          child: Utils.progressIndicator(),
+                        );
+                      }
+                      var data = studsnapshot.data!;
+                      return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: _buildSummaryMarks(data, students),
-                      ),
-                    )
-                  ],
-                );
-              },
-            );
-          },
-        ),
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: _buildStudentCells(students),
+                          ),
+                          Flexible(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: _buildRows(data, students),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 8.0,
+                              top: 4,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: _buildSummaryMarks(data, students),
+                            ),
+                          )
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

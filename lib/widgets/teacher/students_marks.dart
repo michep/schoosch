@@ -119,12 +119,39 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
   void deleteMarkWithSheet(MarkModel mark) async {
     var person = await mark.student;
     var res = await Get.bottomSheet<bool>(
-      DeleteBottomSheet(person: person, item: mark),
+      DeleteBottomSheet(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Оценку:'),
+            Text(
+              mark.mark.toString(),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                // fontSize: 18,
+              ),
+            ),
+            const Text('Для:'),
+            Text(
+              person.fullName,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                // fontSize: 18,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
     if (res is bool && res) {
-      setState(() {
-        forceRefresh = true;
-      });
+      mark.delete().whenComplete(
+            () => setState(
+              () {
+                forceRefresh = true;
+              },
+            ),
+          );
     }
   }
 
