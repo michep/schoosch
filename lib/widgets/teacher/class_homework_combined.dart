@@ -207,15 +207,39 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
     bool canDelete = (await hw.getAllCompletions()).isEmpty;
     var res = await Get.bottomSheet<bool>(
       DeleteBottomSheet(
-        person: person,
-        item: hw,
         canDelete: canDelete,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Д/З:'),
+            Text(
+              hw.text,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                // fontSize: 18,
+              ),
+            ),
+            const Text('Для:'),
+            Text(
+              person != null ? person.fullName : 'класса',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                // fontSize: 18,
+              ),
+            ),
+          ],
+        ),
       ),
     );
     if (res is bool && res) {
-      setState(() {
-        forceRefresh = true;
-      });
+      hw.delete().whenComplete(
+            () => setState(
+              () {
+                forceRefresh = true;
+              },
+            ),
+          );
     }
   }
 
