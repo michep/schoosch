@@ -151,11 +151,12 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
   String getSummaryMark(List<MarkModel> listmark) {
     int sum = 0;
     for (MarkModel mark in listmark) {
-      var times = 1;
-      if (mark.type == MarkType.exam || mark.type == MarkType.test) {
-        times = 2;
-      }
-      sum += mark.mark * times;
+      // var times = 1;
+      // if (mark.type == MarkType.exam || mark.type == MarkType.test) {
+      //   times = 2;
+      // }
+      // sum += mark.mark * times;
+      sum += mark.mark;
     }
     return (sum / listmark.length).toStringAsFixed(1);
   }
