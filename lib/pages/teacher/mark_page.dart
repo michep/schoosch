@@ -8,7 +8,7 @@ import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/mark_field.dart';
-import 'package:schoosch/widgets/mark_type_field.dart';
+// import 'package:schoosch/widgets/mark_type_field.dart';
 import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
