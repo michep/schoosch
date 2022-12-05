@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_auth.currentUser != null) {
       SchedulerBinding.instance.addPostFrameCallback((_) => _authenticated(_auth.currentUser!));
     }
-    _sub = _auth.authStateChanges$.listen(_authenticated);
+    _sub = _auth.authStateChanges$.distinct((a, b) => (a == null && b == null) || (a?.uid == b?.uid)).listen(_authenticated);
     super.initState();
   }
 
