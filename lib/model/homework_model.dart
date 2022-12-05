@@ -5,7 +5,7 @@ import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class HomeworkModel {
-  final String? id;
+  String? id;
   late DateTime date;
   late DateTime? todate;
   late String text;
@@ -101,7 +101,11 @@ class HomeworkModel {
     };
   }
 
-  Future<String> save() {
-    return Get.find<ProxyStore>().saveHomework(this);
+  Future<void> save() async {
+    id = await Get.find<ProxyStore>().saveHomework(this);
+  }
+
+  Future<void> delete() async {
+    await Get.find<ProxyStore>().deleteHomework(this);
   }
 }
