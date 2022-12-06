@@ -7,33 +7,43 @@ import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/teacher/teacher_lessonlist_tile.dart';
 
-class TeacherDayScheduleTile extends StatelessWidget {
+class TeacherDayScheduleTile extends StatefulWidget {
   final TeacherScheduleModel _schedule;
   final DateTime _date;
 
   const TeacherDayScheduleTile(this._schedule, this._date, {Key? key}) : super(key: key);
 
   @override
+  State<TeacherDayScheduleTile> createState() => _TeacherDayScheduleTileState();
+}
+
+class _TeacherDayScheduleTileState extends State<TeacherDayScheduleTile> with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     var cw = Get.find<CurrentWeek>();
 
     return FutureBuilder<List<LessonModel>>(
-        future: _schedule.teacherLessons(PersonModel.currentTeacher!, cw.currentWeek),
+        future: widget._schedule.teacherLessons(PersonModel.currentTeacher!, cw.currentWeek),
         builder: (context, snap) {
           if (!snap.hasData) {
             return const SizedBox.shrink();
           }
           return ExpansionTile(
-            key: PageStorageKey(_date),
+            key: PageStorageKey(widget._date),
             maintainState: true,
             title: Text(
-              DateFormat('EEEE, d MMMM', 'ru').format(_date).capitalizeFirst!,
+              DateFormat('EEEE, d MMMM', 'ru').format(widget._date).capitalizeFirst!,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             children: [
-              ...snap.data!.map((les) => TeacherLessonListTile(les, _date)),
+              ...snap.data!.map((les) => TeacherLessonListTile(les, widget._date)),
             ],
           );
         });
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

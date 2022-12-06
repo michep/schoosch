@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/curriculum_model.dart';
-import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -31,12 +30,7 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
                 widget._lesson.marksForStudentAsString(widget._student, widget._date),
                 widget._lesson.homeworkThisLessonForClassAndStudent(widget._student, widget._date),
               ])
-            : Future.delayed(
-                const Duration(
-                  milliseconds: 0,
-                ), () {
-                return [];
-              }),
+            : Future.value([]),
         builder: (context, snap) {
           if (!snap.hasData) {
             return const ListTile();
@@ -69,10 +63,11 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      if (hw!['class']!.isNotEmpty || hw['student']!.isNotEmpty) const Padding(
-                        padding: EdgeInsets.only(right: 8),
-                        child: Text('Д/З'),
-                      ),
+                      if (hw!['class']!.isNotEmpty || hw['student']!.isNotEmpty)
+                        const Padding(
+                          padding: EdgeInsets.only(right: 8),
+                          child: Text('Д/З'),
+                        ),
                       if (mar != '')
                         Container(
                           padding: const EdgeInsets.all(5),
@@ -82,7 +77,6 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
                           ),
                           child: Text(mar!),
                         ),
-                      
                     ],
                   ),
             subtitle: widget._lesson.type == LessonType.empty ? null : Text('${tim!.formatPeriod()}, ${ven!.name}'),

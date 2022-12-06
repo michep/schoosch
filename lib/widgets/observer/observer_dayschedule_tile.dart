@@ -10,29 +10,22 @@ import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/pages/observer/observer_lesson_page.dart';
 
-class ObserverDayTile extends StatelessWidget {
+class ObserverDayScheduleTile extends StatefulWidget {
   final ClassScheduleModel _schedule;
   final DateTime _date;
-  const ObserverDayTile(this._schedule, this._date, {Key? key}) : super(key: key);
-
-  void onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim, Map<String, List<HomeworkModel>> homw) {
-    Get.to(
-      () => ObserverLessonPage(
-        lesson: les,
-        curriculum: cur,
-        venue: ven,
-        time: tim,
-        date: _date,
-        homeworks: homw,
-      ),
-    );
-  }
+  const ObserverDayScheduleTile(this._schedule, this._date, {Key? key}) : super(key: key);
 
   @override
+  State<ObserverDayScheduleTile> createState() => _ObserverDayScheduleTileState();
+}
+
+class _ObserverDayScheduleTileState extends State<ObserverDayScheduleTile> with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return FutureBuilder<List<LessonModel>>(
-      future: _schedule.classLessons(
-        date: _date,
+      future: widget._schedule.classLessons(
+        date: widget._date,
         needsEmpty: true,
       ),
       builder: (context, snap) {
@@ -40,10 +33,10 @@ class ObserverDayTile extends StatelessWidget {
           return const SizedBox.shrink();
         }
         return ExpansionTile(
-          key: PageStorageKey(_date),
+          key: PageStorageKey(widget._date),
           maintainState: true,
           title: Text(
-            DateFormat('EEEE, d MMMM', 'ru').format(_date).capitalizeFirst!,
+            DateFormat('EEEE, d MMMM', 'ru').format(widget._date).capitalizeFirst!,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           children: [
@@ -54,8 +47,8 @@ class ObserverDayTile extends StatelessWidget {
                         les.curriculum,
                         les.lessontime,
                         les.venue,
-                        les.homeworkThisLessonForClassAndAllStudents(_date),
-                        les.getAllMarks(_date),
+                        les.homeworkThisLessonForClassAndAllStudents(widget._date),
+                        les.getAllMarks(widget._date),
                       ])
                     : Future.delayed(
                         const Duration(
@@ -76,13 +69,13 @@ class ObserverDayTile extends StatelessWidget {
                   var homws = les.type != LessonType.empty ? list[3] as Map<String, List<HomeworkModel>> : null;
                   var marks = les.type != LessonType.empty ? list[4] as Map<String, List<MarkModel>> : null;
                   String subt = '';
-                  if(homws!.isNotEmpty) {
+                  if (homws!.isNotEmpty) {
                     subt = 'есть домашнее задание';
                   }
-                  if(marks!.isNotEmpty) {
+                  if (marks!.isNotEmpty) {
                     subt = 'есть оценки';
                   }
-                  if(homws.isNotEmpty && marks.isNotEmpty) {
+                  if (homws.isNotEmpty && marks.isNotEmpty) {
                     subt = 'есть домашнее задание, есть оценки';
                   }
                   return ListTile(
@@ -112,4 +105,20 @@ class ObserverDayTile extends StatelessWidget {
       },
     );
   }
+
+  void onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim, Map<String, List<HomeworkModel>> homw) {
+    Get.to(
+      () => ObserverLessonPage(
+        lesson: les,
+        curriculum: cur,
+        venue: ven,
+        time: tim,
+        date: widget._date,
+        homeworks: homw,
+      ),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }

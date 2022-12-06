@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:isoweek/isoweek.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/teacher/teacher_dayschedule_tile.dart';
@@ -27,25 +28,30 @@ class _TeacherScheduleWidgetState extends State<TeacherScheduleWidget> {
           return Utils.progressIndicator();
         }
         if (schedules.data!.isEmpty) {
-          return const Center(
+          return Center(
             child: Text(
-              'нет расписания на эту неделю',
-              style: TextStyle(fontSize: 16),
+              S.of(context).noWeekSchedule,
+              style: const TextStyle(fontSize: 16),
             ),
           );
         }
         forceRefresh = false;
         return RefreshIndicator(
           onRefresh: () async {
-            forceRefresh = true;
-            setState(() {});
+            setState(() {
+              forceRefresh = true;
+            });
           },
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                ...schedules.data!.map((schedule) => TeacherDayScheduleTile(schedule, widget._week.day(schedule.day - 1))),
-              ],
-            ),
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              ...schedules.data!.map(
+                (schedule) => TeacherDayScheduleTile(
+                  schedule,
+                  widget._week.day(schedule.day - 1),
+                ),
+              ),
+            ],
           ),
         );
       },

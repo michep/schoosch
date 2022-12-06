@@ -3,28 +3,25 @@ import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
-import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/widgets/student/student_dayschedule_tile.dart';
+import 'package:schoosch/widgets/observer/observer_dayschedule_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class StudentWeekScheduleWidget extends StatefulWidget {
+class ObserverScheduleWidget extends StatefulWidget {
   final ClassModel _class;
   final Week _week;
-  final StudentModel _student;
-
-  const StudentWeekScheduleWidget(this._student, this._class, this._week, {Key? key}) : super(key: key);
+  const ObserverScheduleWidget(this._class, this._week, {Key? key}) : super(key: key);
 
   @override
-  State<StudentWeekScheduleWidget> createState() => _StudentWeekScheduleWidgetState();
+  State<ObserverScheduleWidget> createState() => _ObserverScheduleWidgetState();
 }
 
-class _StudentWeekScheduleWidgetState extends State<StudentWeekScheduleWidget> {
+class _ObserverScheduleWidgetState extends State<ObserverScheduleWidget> {
   bool forceRefresh = false;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<StudentScheduleModel>>(
-      future: widget._class.getStudentSchedulesWeek(widget._week, widget._student, forceRefresh: forceRefresh),
+    return FutureBuilder<List<ClassScheduleModel>>(
+      future: widget._class.getClassSchedulesWeek(widget._week, forceRefresh: forceRefresh),
       builder: (context, schedules) {
         if (!schedules.hasData) {
           return Utils.progressIndicator();
@@ -48,9 +45,8 @@ class _StudentWeekScheduleWidgetState extends State<StudentWeekScheduleWidget> {
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
               ...schedules.data!.map(
-                (schedule) => StudentDayScheduleTile(
+                (schedule) => ObserverDayScheduleTile(
                   schedule,
-                  widget._student,
                   widget._week.day(schedule.day - 1),
                 ),
               ),
