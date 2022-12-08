@@ -1,9 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
-import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/admin/admin_page.dart';
-import 'package:schoosch/pages/home_page.dart';
 
 class FAuth extends GetxController {
   late final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -37,14 +34,11 @@ class FAuth extends GetxController {
   }
 
   void _authenticated(User? user) async {
-    var proxy = Get.find<ProxyStore>();
-
     if (user != null) {
-      proxy.logEvent({
+      Get.find<ProxyStore>().logEvent({
         'event': 'LOGIN',
         'useremail': user.email,
       });
-      PersonModel.currentUser!.currentType == PersonType.admin ? Get.offAll(() => const AdminPage()) : Get.offAll(() => const HomePage());
     }
   }
 }
