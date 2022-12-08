@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +60,13 @@ class MyApp extends StatelessWidget {
       onGenerateTitle: (context) => S.of(context).appTiile,
       debugShowCheckedModeBanner: false,
       theme: darkTheme,
-      home: _homePageSelector(),
+      home: StreamBuilder<User?>(
+        stream: Get.find<FAuth>().authStream$,
+        builder: (context, snapshot) {
+          if(snapshot.connectionState == ConnectionState.waiting) return const SizedBox.shrink();
+          return _homePageSelector();
+        }
+      ),
     );
   }
 
