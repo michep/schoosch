@@ -76,10 +76,15 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
                     );
                   }
                   var students = snapshot.data!;
-                  return FutureBuilder<Map<StudentModel, List<LessonMarkModel>>>(
-                    future: widget.currentcur.getLessonMarksByStudents(
-                      students,
-                      selectedPeriod!,
+                  return FutureBuilder<List>(
+                    future: Future.wait(
+                      [
+                        widget.currentcur.getLessonMarksByStudents(
+                          students,
+                          selectedPeriod!,
+                        ),
+                        widget.currentcur.getPeriodMarksByStudents(students, selectedPeriod!),
+                      ],
                     ),
                     builder: (context, studsnapshot) {
                       if (!studsnapshot.hasData) {
@@ -87,7 +92,8 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
                           child: Utils.progressIndicator(),
                         );
                       }
-                      var data = studsnapshot.data!;
+                      var data = studsnapshot.data![0];
+                      var dataPeriods = studsnapshot.data![1];
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -112,6 +118,16 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: _buildSummaryMarks(data, students),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 8.0,
+                              top: 4,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: _buildPeriodMarks(dataPeriods, students),
                             ),
                           )
                         ],
@@ -216,6 +232,41 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildPeriodMarks(Map<StudentModel, PeriodMarkModel> data, List<StudentModel> liststud) {
+    return List.generate(liststud.length, (index) {
+      bool hasMark = data.keys.contains(liststud[index]);
+      return Container(
+        alignment: Alignment.center,
+        width: 120.0,
+        height: 60.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: hasMark
+              ? Border.all(
+                  color: Colors.grey,
+                )
+              : null,
+          color: hasMark ? Colors.black54 : Theme.of(context).colorScheme.secondary,
+        ),
+        margin: const EdgeInsets.all(4.0),
+        child: GestureDetector(
+          onTap: hasMark ? null : () {},
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('балл за период'),
+              hasMark ? Text(
+                  // getSummaryMark(
+                  //   data.values.toList()[index],
+                  // ),
+                  data[liststud[index]]!.mark.toStringAsFixed(1)) : const Icon(Icons.add),
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   List<Widget> _buildRows(Map<StudentModel, List<LessonMarkModel>> data, List<StudentModel> liststud) {
