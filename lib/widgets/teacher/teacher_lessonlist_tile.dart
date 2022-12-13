@@ -26,7 +26,7 @@ class _TeacherLessonListTileState extends State<TeacherLessonListTile> {
           widget._lesson.lessontime,
           widget._lesson.homeworkThisLessonForClassAndAllStudents(widget._date),
           widget._lesson.homeworkNextLessonForClassAndAllStudents(widget._date),
-          widget._lesson.getAllMarks(widget._date),
+          widget._lesson.getAllLessonMarks(widget._date),
         ]),
         builder: (context, snap) {
           if (!snap.hasData) {
@@ -47,23 +47,33 @@ class _TeacherLessonListTileState extends State<TeacherLessonListTile> {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if(hwtoday.isNotEmpty) const Icon(
-                  Icons.arrow_downward_rounded,
-                  size: 16,
+                if (hwtoday.isNotEmpty)
+                  const Icon(
+                    Icons.arrow_downward_rounded,
+                    size: 16,
+                  ),
+                const SizedBox(
+                  width: 8,
                 ),
-                const SizedBox(width: 8,),
-                if(hwnext.isNotEmpty) const Icon(
-                  Icons.arrow_upward_rounded,
-                  size: 16,
+                if (hwnext.isNotEmpty)
+                  const Icon(
+                    Icons.arrow_upward_rounded,
+                    size: 16,
+                  ),
+                const SizedBox(
+                  width: 8,
                 ),
-                const SizedBox(width: 8,),
-                if(mar.isNotEmpty) const Icon(
-                  Icons.thumb_up_off_alt_rounded,
-                  size: 16,
-                ),
+                if (mar.isNotEmpty)
+                  const Icon(
+                    Icons.thumb_up_off_alt_rounded,
+                    size: 16,
+                  ),
               ],
             ),
-            subtitle: Text('${tim.formatPeriod()}, ${ven.name}, ${widget._lesson.aclass.name}', style: const TextStyle(overflow: TextOverflow.ellipsis),),
+            subtitle: Text(
+              '${tim.formatPeriod()}, ${ven.name}, ${widget._lesson.aclass.name}',
+              style: const TextStyle(overflow: TextOverflow.ellipsis),
+            ),
             tileColor: widget._lesson.type == LessonType.replacment
                 ? Colors.grey.withOpacity(0.1)
                 : widget._lesson.type == LessonType.replaced

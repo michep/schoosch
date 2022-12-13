@@ -4,6 +4,9 @@ import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 
 class DeleteDialog extends StatelessWidget {
+  final HomeworkModel? hw;
+  final MarkModel? mark;
+  final BuildContext context;
 
   //TODO: make a bottom sheet
   const DeleteDialog({
@@ -12,10 +15,6 @@ class DeleteDialog extends StatelessWidget {
     this.mark,
     required this.context,
   }) : super(key: key);
-
-  final HomeworkModel? hw;
-  final MarkModel? mark;
-  final BuildContext context;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class DeleteDialog extends StatelessWidget {
         children: [
           Text(hw != null ? 'Домашнее задание:' : 'Оценку:'),
           Text(
-            hw != null ? hw!.text : mark!.mark.toString(),
+            hw != null ? hw!.text : mark!.toString(),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
@@ -44,13 +43,15 @@ class DeleteDialog extends StatelessWidget {
       ),
       actions: [
         ElevatedButton(
-          onPressed: hw != null ? () async {
-            await hw!.delete();
-            Get.back<bool>(result: true);
-          } : () async {
-            await mark!.delete();
-            Get.back<bool>(result: true);
-          },
+          onPressed: hw != null
+              ? () async {
+                  await hw!.delete();
+                  Get.back<bool>(result: true);
+                }
+              : () async {
+                  await mark!.delete();
+                  Get.back<bool>(result: true);
+                },
           child: const Text('Подтвердить'),
         ),
         ElevatedButton(

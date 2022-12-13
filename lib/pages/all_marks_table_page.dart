@@ -71,8 +71,8 @@ class _StudentsTablePageState extends State<StudentsTablePage> {
                     );
                   }
                   var curriculums = snapshot.data!;
-                  return FutureBuilder<Map<CurriculumModel, List<MarkModel>>>(
-                    future: widget.student.getMarksByCurriculums(
+                  return FutureBuilder<Map<CurriculumModel, List<LessonMarkModel>>>(
+                    future: widget.student.getLessonMarksByCurriculums(
                       curriculums,
                       selectedPeriod!,
                     ),
@@ -125,7 +125,7 @@ class _StudentsTablePageState extends State<StudentsTablePage> {
     );
   }
 
-  List<Widget> _buildMarkCells(List<MarkModel> listmark) {
+  List<Widget> _buildMarkCells(List<LessonMarkModel> listmark) {
     return List.generate(
       listmark.length,
       (index) => Container(
@@ -148,7 +148,7 @@ class _StudentsTablePageState extends State<StudentsTablePage> {
     );
   }
 
-  String getSummaryMark(List<MarkModel> listmark) {
+  String getSummaryMark(List<LessonMarkModel> listmark) {
     int sum = 0;
 
     for (MarkModel mark in listmark) {
@@ -185,7 +185,7 @@ class _StudentsTablePageState extends State<StudentsTablePage> {
     );
   }
 
-  List<Widget> _buildRows(Map<CurriculumModel, List<MarkModel>> data, List<CurriculumModel> listcur) {
+  List<Widget> _buildRows(Map<CurriculumModel, List<LessonMarkModel>> data, List<CurriculumModel> listcur) {
     return List.generate(
       listcur.length,
       (index) => data[listcur[index]] == null
@@ -209,7 +209,7 @@ class _StudentsTablePageState extends State<StudentsTablePage> {
   }
 
   List<Widget> _buildSummaryMarks(
-    Map<CurriculumModel, List<MarkModel>> data,
+    Map<CurriculumModel, List<LessonMarkModel>> data,
     List<CurriculumModel> curs,
   ) {
     return List.generate(

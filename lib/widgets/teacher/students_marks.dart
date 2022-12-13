@@ -26,8 +26,8 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        FutureBuilder<Map<String, List<MarkModel>>>(
-          future: widget._lesson.getAllMarks(widget._date, forceRefresh: forceRefresh),
+        FutureBuilder<Map<String, List<LessonMarkModel>>>(
+          future: widget._lesson.getAllLessonMarks(widget._date, forceRefresh: forceRefresh),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const SizedBox.shrink();
             forceRefresh = false;
@@ -81,7 +81,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
     var res = await Get.to<bool>(
       () => MarkPage(
         widget._lesson,
-        MarkModel.empty(
+        LessonMarkModel.empty(
           PersonModel.currentUser!.id!,
           widget._lesson.curriculumId!,
           widget._lesson.order,
@@ -104,7 +104,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
   //   });
   // }
 
-  void deleteMark(MarkModel mark) async {
+  void deleteMark(LessonMarkModel mark) async {
     var res = await Get.dialog<bool>(DeleteDialog(
       context: context,
       mark: mark,
@@ -116,7 +116,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
     }
   }
 
-  void deleteMarkWithSheet(MarkModel mark) async {
+  void deleteMarkWithSheet(LessonMarkModel mark) async {
     var person = await mark.student;
     var res = await Get.bottomSheet<bool>(
       DeleteBottomSheet(
@@ -155,7 +155,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
     }
   }
 
-  Future<void> editMark(MarkModel mark) async {
+  Future<void> editMark(LessonMarkModel mark) async {
     var res = await Get.to<bool>(
       () => MarkPage(widget._lesson, mark, S.of(context).updateMarkTitle, editMode: true),
     );
@@ -171,9 +171,9 @@ class MarkListTile extends StatefulWidget {
   final String studentId;
   final LessonModel lesson;
   final DateTime date;
-  final void Function(MarkModel) deleteFunc;
-  final Future<void> Function(MarkModel) editFunc;
-  final List<MarkModel> marks;
+  final void Function(LessonMarkModel) deleteFunc;
+  final Future<void> Function(LessonMarkModel) editFunc;
+  final List<LessonMarkModel> marks;
   final bool readOnly;
 
   const MarkListTile(this.studentId, this.lesson, this.date, this.marks, this.deleteFunc, this.editFunc, this.readOnly, {Key? key}) : super(key: key);
@@ -212,7 +212,7 @@ class _MarkListTileState extends State<MarkListTile> {
     );
   }
 
-  String marksString(List<MarkModel?> marks) {
+  String marksString(List<LessonMarkModel?> marks) {
     List<String> ms = [];
     for (var m in marks) {
       ms.add(m!.toString());
@@ -222,9 +222,9 @@ class _MarkListTileState extends State<MarkListTile> {
 }
 
 class MarkTile extends StatelessWidget {
-  final MarkModel mark;
-  final void Function(MarkModel) deleteFunc;
-  final Future<void> Function(MarkModel) editFunc;
+  final LessonMarkModel mark;
+  final void Function(LessonMarkModel) deleteFunc;
+  final Future<void> Function(LessonMarkModel) editFunc;
   final bool readOnly;
 
   const MarkTile(this.mark, this.deleteFunc, this.editFunc, this.readOnly, {Key? key}) : super(key: key);

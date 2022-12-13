@@ -24,8 +24,8 @@ class _StudentMarksState extends State<StudentMarks> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<MarkModel>?>(
-      future: widget._lesson.marksForStudent(widget._student, widget._date, forceRefresh: forceRefresh),
+    return FutureBuilder<List<LessonMarkModel>?>(
+      future: widget._lesson.lessonMarksForStudent(widget._student, widget._date, forceRefresh: forceRefresh),
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const SizedBox.shrink();
         return RefreshIndicator(

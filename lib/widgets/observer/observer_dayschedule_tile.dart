@@ -48,7 +48,7 @@ class _ObserverDayScheduleTileState extends State<ObserverDayScheduleTile> with 
                         les.lessontime,
                         les.venue,
                         les.homeworkThisLessonForClassAndAllStudents(widget._date),
-                        les.getAllMarks(widget._date),
+                        les.getAllLessonMarks(widget._date),
                       ])
                     : Future.delayed(
                         const Duration(
@@ -67,7 +67,7 @@ class _ObserverDayScheduleTileState extends State<ObserverDayScheduleTile> with 
                   var tim = les.type != LessonType.empty ? list[1] as LessontimeModel : null;
                   var ven = les.type != LessonType.empty ? list[2] as VenueModel : null;
                   var homws = les.type != LessonType.empty ? list[3] as Map<String, List<HomeworkModel>> : null;
-                  var marks = les.type != LessonType.empty ? list[4] as Map<String, List<MarkModel>> : null;
+                  var marks = les.type != LessonType.empty ? list[4] as Map<String, List<LessonMarkModel>> : null;
                   String subt = '';
                   if (homws!.isNotEmpty) {
                     subt = 'есть домашнее задание';

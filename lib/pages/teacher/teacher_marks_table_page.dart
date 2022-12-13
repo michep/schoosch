@@ -76,8 +76,8 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
                     );
                   }
                   var students = snapshot.data!;
-                  return FutureBuilder<Map<StudentModel, List<MarkModel>>>(
-                    future: widget.currentcur.getMarksByStudents(
+                  return FutureBuilder<Map<StudentModel, List<LessonMarkModel>>>(
+                    future: widget.currentcur.getLessonMarksByStudents(
                       students,
                       selectedPeriod!,
                     ),
@@ -127,7 +127,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
     );
   }
 
-  List<Widget> _buildMarkCells(List<MarkModel> listmark) {
+  List<Widget> _buildMarkCells(List<LessonMarkModel> listmark) {
     listmark.sort((a, b) => b.date.compareTo(a.date));
     return List.generate(
       listmark.length,
@@ -148,7 +148,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
     );
   }
 
-  String getSummaryMark(List<MarkModel> listmark) {
+  String getSummaryMark(List<LessonMarkModel> listmark) {
     int sum = 0;
     for (MarkModel mark in listmark) {
       // var times = 1;
@@ -183,7 +183,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
     );
   }
 
-  List<Widget> _buildSummaryMarks(Map<StudentModel, List<MarkModel>> data, List<StudentModel> liststud) {
+  List<Widget> _buildSummaryMarks(Map<StudentModel, List<LessonMarkModel>> data, List<StudentModel> liststud) {
     return List.generate(
       liststud.length,
       (index) => Container(
@@ -218,7 +218,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
     );
   }
 
-  List<Widget> _buildRows(Map<StudentModel, List<MarkModel>> data, List<StudentModel> liststud) {
+  List<Widget> _buildRows(Map<StudentModel, List<LessonMarkModel>> data, List<StudentModel> liststud) {
     return List.generate(
       liststud.length,
       (index) => data[liststud[index]] == null
