@@ -107,7 +107,6 @@ class ProfilePage extends StatelessWidget {
 
   void _logout() async {
     await Get.find<FAuth>().logout();
-    Get.offAll(() => const LoginPage());
   }
 
   Widget _changeTypeW(BuildContext context, PersonModel user) {

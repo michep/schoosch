@@ -63,9 +63,9 @@ class MyApp extends StatelessWidget {
       home: StreamBuilder<User?>(
         stream: Get.find<FAuth>().authStream$,
         builder: (context, snapshot) {
-          if(snapshot.connectionState == ConnectionState.waiting) return const SizedBox.shrink();
+          if (snapshot.connectionState == ConnectionState.waiting) return const SizedBox.shrink();
           return _homePageSelector();
-        }
+        },
       ),
     );
   }
