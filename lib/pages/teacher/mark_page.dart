@@ -15,7 +15,7 @@ import 'package:schoosch/widgets/utils.dart';
 class MarkPage extends StatefulWidget {
   final String title;
   final LessonModel lesson;
-  final MarkModel mark;
+  final LessonMarkModel mark;
   final bool editMode;
 
   const MarkPage(this.lesson, this.mark, this.title, {Key? key, this.editMode = false}) : super(key: key);
@@ -132,7 +132,7 @@ class _MarkPageState extends State<MarkPage> {
 
   void save() async {
     if (_formKey.currentState!.validate()) {
-      var nmark = MarkModel.fromMap(
+      var nmark = LessonMarkModel.fromMap(
         widget.mark.id,
         {
           'teacher_id': widget.mark.teacherId,

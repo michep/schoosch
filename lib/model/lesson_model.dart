@@ -47,7 +47,7 @@ class LessonModel {
   bool _homeworksThisLessonLoaded = false;
   final Map<String, List<HomeworkModel>> _homeworksNextLesson = {};
   bool _homeworksNextLessonLoaded = false;
-  final Map<String, List<MarkModel>> _marks = {};
+  final Map<String, List<LessonMarkModel>> _marks = {};
   bool _marksLoaded = false;
   CurriculumModel? _curriculum;
   bool _curriculumLoaded = false;
@@ -95,9 +95,9 @@ class LessonModel {
       _lessontimeLoaded = true;
     }
     if (map.containsKey('mark') && map['mark'] is List) {
-      var m = (map['mark'] as List).map<MarkModel>((e) {
+      var m = (map['mark'] as List).map<LessonMarkModel>((e) {
         var data = e as Map<String, dynamic>;
-        return MarkModel.fromMap(data['_id'], data);
+        return LessonMarkModel.fromMap(data['_id'], data);
       }).toList();
       _marks.addAll(Utils.splitMarksByStudent(m));
       _marksLoaded = true;
@@ -238,7 +238,7 @@ class LessonModel {
     return _homeworksNextLesson;
   }
 
-  Future<Map<String, List<MarkModel>>> getAllMarks(DateTime date, {bool forceRefresh = false}) async {
+  Future<Map<String, List<LessonMarkModel>>> getAllLessonMarks(DateTime date, {bool forceRefresh = false}) async {
     if (!_marksLoaded || forceRefresh) {
       var m = await Get.find<ProxyStore>().getAllLessonMarks(this, date);
       _marks.clear();
@@ -248,9 +248,9 @@ class LessonModel {
     return _marks;
   }
 
-  Future<List<MarkModel>> marksForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
+  Future<List<LessonMarkModel>> lessonMarksForStudent(StudentModel student, DateTime date, {bool forceRefresh = false}) async {
     if (!_marksLoaded || forceRefresh) {
-      getAllMarks(date, forceRefresh: forceRefresh);
+      getAllLessonMarks(date, forceRefresh: forceRefresh);
     }
     return _marks[student.id!] == null ? [] : _marks[student.id!]!;
   }
@@ -266,12 +266,12 @@ class LessonModel {
     return res;
   }
 
-  Future<void> saveMark(MarkModel mark) async {
+  Future<void> saveMark(LessonMarkModel mark) async {
     await mark.save();
   }
 
   Future<String> marksForStudentAsString(StudentModel student, DateTime date) async {
-    var ms = await marksForStudent(student, date);
+    var ms = await lessonMarksForStudent(student, date);
     return ms.map((e) => e.toString()).join('; ');
   }
 
