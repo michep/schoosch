@@ -112,6 +112,8 @@ class CurriculumModel {
           'mark': 4,
       },)
     };
+    //TODO: create an API function for this!!!!
+
     // var marks = await Get.find<ProxyStore>().getCurriculumMarksByStudents(this, students, period);
     // var splitted = Utils.splitMarksByStudent(marks);
     // for (var studid in splitted.keys) {

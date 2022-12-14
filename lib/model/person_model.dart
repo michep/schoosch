@@ -158,6 +158,27 @@ class StudentModel extends PersonModel {
     return res;
   }
 
+  Future<Map<CurriculumModel, List<PeriodMarkModel>>> getAllPeriodsMarks(List<CurriculumModel> curriculums, List<StudyPeriodModel> periods) async {
+    Map<CurriculumModel, List<PeriodMarkModel>> res = {};
+    for (var cur in curriculums) {
+      var marks = <PeriodMarkModel>[];
+      for (var i in periods) {
+        marks.add(PeriodMarkModel.fromMap('7865872538', {
+        'teacher_id': 'yujgkjb',
+          'student_id': _id,
+          'curriculum_id': cur.id,
+          'period_id': i.id,
+          'type': 'period',
+          'comment': '',
+          'mark': 5,
+      },));
+      }
+      res[cur] = marks;
+    }
+
+    return res;
+  }
+
   //TODO: unrem, first finish in ProxyStore
   // Future<void> changeViewType() {
   //   return Get.find<ProxyStore>().changePersonView(this);
