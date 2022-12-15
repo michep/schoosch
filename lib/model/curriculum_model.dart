@@ -93,7 +93,7 @@ class CurriculumModel {
   Future<Map<StudentModel, List<LessonMarkModel>>> getLessonMarksByStudents(List<StudentModel> students, StudyPeriodModel period) async {
     Map<StudentModel, List<LessonMarkModel>> res = {};
     var marks = await Get.find<ProxyStore>().getCurriculumLessonMarksByStudents(this, students, period);
-    var splitted = Utils.splitMarksByStudent(marks);
+    var splitted = Utils.splitLessonMarksByStudent(marks);
     for (var studid in splitted.keys) {
       res[await splitted[studid]![0].student] = splitted[studid]!;
     }
@@ -101,27 +101,14 @@ class CurriculumModel {
   }
 
   Future<Map<StudentModel, PeriodMarkModel>> getPeriodMarksByStudents(List<StudentModel> students, StudyPeriodModel period) async {
-    Map<StudentModel, PeriodMarkModel> res = {
-      students[1]: PeriodMarkModel.fromMap('7865872538', {
-        'teacher_id': 'yujgkjb',
-          'student_id': students[1].id,
-          'curriculum_id': _id,
-          'period_id': period.id,
-          'type': 'period',
-          'comment': '',
-          'mark': 4,
-      },)
-    };
-    //TODO: create an API function for this!!!!
-
-    // var marks = await Get.find<ProxyStore>().getCurriculumMarksByStudents(this, students, period);
-    // var splitted = Utils.splitMarksByStudent(marks);
-    // for (var studid in splitted.keys) {
-    //   res[await splitted[studid]![0].student] = splitted[studid]!;
-    // }
+    Map<StudentModel, PeriodMarkModel> res = {};
+    var marks = await Get.find<ProxyStore>().getCurriculumPeriodMarksByStudents(this, students, period);
+    var splitted = Utils.splitPeriodMarksByStudent(marks);
+    for (var studid in splitted.keys) {
+      res[await splitted[studid]!.student] = splitted[studid]!;
+    }
     return res;
   }
-
 
   Map<String, dynamic> toMap({bool withId = false, bool recursive = false}) {
     Map<String, dynamic> res = {};
