@@ -623,17 +623,17 @@ class ProxyStore extends getx.GetxController {
     return js.map((e) => LessonMarkModel.fromMap(e['_id'], e)).toList();
   }
 
-  Future<List<LessonMarkModel>> getStudenLessonMarksByCurriculums(StudentModel student, List<CurriculumModel> curriculum, StudyPeriodModel period) async {
+  Future<List<LessonMarkModel>> getStudentLessonMarksByCurriculums(StudentModel student, List<CurriculumModel> curriculums, StudyPeriodModel period) async {
     var res = await dio.postUri<List>(
       baseUriFunc('/student/${student.id}/curriculums/mark/${period.from.toIso8601String()}/${period.till.toIso8601String()}'),
       options: Options(headers: {'Content-Type': 'application/json'}),
-      data: curriculum.map((e) => e.id).toList(),
+      data: curriculums.map((e) => e.id).toList(),
     );
     var js = res.data!;
     return js.map((e) => LessonMarkModel.fromMap(e['_id'], e)).toList();
   }
 
-  Future<List<LessonMarkModel>> getCurriculumMarksByStudents(CurriculumModel curriculum, List<StudentModel> students, StudyPeriodModel period) async {
+  Future<List<LessonMarkModel>> getCurriculumLessonMarksByStudents(CurriculumModel curriculum, List<StudentModel> students, StudyPeriodModel period) async {
     var res = await dio.postUri<List>(
       baseUriFunc('/curriculum/${curriculum.id}/students/mark/${period.from.toIso8601String()}/${period.till.toIso8601String()}'),
       options: Options(headers: {'Content-Type': 'application/json'}),
@@ -641,6 +641,26 @@ class ProxyStore extends getx.GetxController {
     );
     var js = res.data!;
     return js.map((e) => LessonMarkModel.fromMap(e['_id'], e)).toList();
+  }
+
+  Future<List<PeriodMarkModel>> getCurriculumPeriodMarksByStudents(CurriculumModel curriculum, List<StudentModel> students, StudyPeriodModel period) async {
+    var res = await dio.postUri<List>(
+      baseUriFunc('/curriculum/${curriculum.id}/students/mark/period/${period.id}'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: students.map((e) => e.id).toList(),
+    );
+    var js = res.data!;
+    return js.map((e) => PeriodMarkModel.fromMap(e['_id'], e)).toList();
+  }
+
+  Future<List<PeriodMarkModel>> getStudentPeriodMarksByCurriculums(StudentModel student, List<CurriculumModel> curriculums, StudyPeriodModel period) async {
+    var res = await dio.postUri<List>(
+      baseUriFunc('/student/${student.id}/curriculums/mark/period/${period.id}'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: curriculums.map((e) => e.id).toList(),
+    );
+    var js = res.data!;
+    return js.map((e) => PeriodMarkModel.fromMap(e['_id'], e)).toList();
   }
 
   Future<String> saveLessonMark(LessonMarkModel mark) async {

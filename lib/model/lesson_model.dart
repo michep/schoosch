@@ -99,7 +99,7 @@ class LessonModel {
         var data = e as Map<String, dynamic>;
         return LessonMarkModel.fromMap(data['_id'], data);
       }).toList();
-      _marks.addAll(Utils.splitMarksByStudent(m));
+      _marks.addAll(Utils.splitLessonMarksByStudent(m));
       _marksLoaded = true;
     }
 
@@ -242,7 +242,7 @@ class LessonModel {
     if (!_marksLoaded || forceRefresh) {
       var m = await Get.find<ProxyStore>().getAllLessonMarks(this, date);
       _marks.clear();
-      _marks.addAll(Utils.splitMarksByStudent(m));
+      _marks.addAll(Utils.splitLessonMarksByStudent(m));
       _marksLoaded = true;
     }
     return _marks;

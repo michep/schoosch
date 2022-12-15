@@ -92,10 +92,20 @@ class CurriculumModel {
 
   Future<Map<StudentModel, List<LessonMarkModel>>> getLessonMarksByStudents(List<StudentModel> students, StudyPeriodModel period) async {
     Map<StudentModel, List<LessonMarkModel>> res = {};
-    var marks = await Get.find<ProxyStore>().getCurriculumMarksByStudents(this, students, period);
-    var splitted = Utils.splitMarksByStudent(marks);
+    var marks = await Get.find<ProxyStore>().getCurriculumLessonMarksByStudents(this, students, period);
+    var splitted = Utils.splitLessonMarksByStudent(marks);
     for (var studid in splitted.keys) {
       res[await splitted[studid]![0].student] = splitted[studid]!;
+    }
+    return res;
+  }
+
+  Future<Map<StudentModel, PeriodMarkModel>> getPeriodMarksByStudents(List<StudentModel> students, StudyPeriodModel period) async {
+    Map<StudentModel, PeriodMarkModel> res = {};
+    var marks = await Get.find<ProxyStore>().getCurriculumPeriodMarksByStudents(this, students, period);
+    var splitted = Utils.splitPeriodMarksByStudent(marks);
+    for (var studid in splitted.keys) {
+      res[await splitted[studid]!.student] = splitted[studid]!;
     }
     return res;
   }
