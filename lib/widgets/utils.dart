@@ -71,7 +71,7 @@ class Utils {
     return '';
   }
 
-  static Map<String, List<LessonMarkModel>> splitMarksByStudent(List<LessonMarkModel> marks) {
+  static Map<String, List<LessonMarkModel>> splitLessonMarksByStudent(List<LessonMarkModel> marks) {
     Map<String, List<LessonMarkModel>> res = {};
     for (var m in marks) {
       if (res[m.studentId] == null) res[m.studentId] = [];
@@ -80,11 +80,27 @@ class Utils {
     return res;
   }
 
-  static Map<String, List<LessonMarkModel>> splitMarksByCurriculum(List<LessonMarkModel> marks) {
+  static Map<String, List<LessonMarkModel>> splitLessonMarksByCurriculum(List<LessonMarkModel> marks) {
     Map<String, List<LessonMarkModel>> res = {};
     for (var m in marks) {
       if (res[m.curriculumId] == null) res[m.curriculumId] = [];
       res[m.curriculumId]!.add(m);
+    }
+    return res;
+  }
+
+  static Map<String, PeriodMarkModel> splitPeriodMarksByStudent(List<PeriodMarkModel> marks) {
+    Map<String, PeriodMarkModel> res = {};
+    for (var m in marks) {
+      res[m.studentId] = m;
+    }
+    return res;
+  }
+
+  static Map<String, PeriodMarkModel> splitPeriodMarksByCurriculum(List<PeriodMarkModel> marks) {
+    Map<String, PeriodMarkModel> res = {};
+    for (var m in marks) {
+      res[m.curriculumId] = m;
     }
     return res;
   }
