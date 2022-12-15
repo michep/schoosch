@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
+import 'package:schoosch/pages/teacher/period_mark_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -123,7 +126,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
                           Padding(
                             padding: const EdgeInsets.only(
                               bottom: 8.0,
-                              top: 4,
+                              top: 0,
                             ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,16 +255,38 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
         ),
         margin: const EdgeInsets.all(4.0),
         child: GestureDetector(
-          onTap: hasMark ? null : () {},
+          onTap: hasMark
+              ? () async {
+                  await editMark(data[liststud[index]]!);
+                }
+              : () async {
+                  PeriodMarkModel mark = PeriodMarkModel.empty(
+                    PersonModel.currentTeacher!.id!,
+                    widget.currentcur.id!,
+                    selectedPeriod!.id!,
+                  );
+                  await addPeriodMark(
+                    liststud[index],
+                    mark,
+                  );
+                },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text('балл за период'),
-              hasMark ? Text(
-                  // getSummaryMark(
-                  //   data.values.toList()[index],
-                  // ),
-                  data[liststud[index]]!.mark.toStringAsFixed(1)) : const Icon(Icons.add),
+              hasMark
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text(data[liststud[index]]!.mark.toStringAsFixed(1)),
+                        const Icon(
+                          Icons.edit,
+                          size: 16,
+                        ),
+                      ],
+                    )
+                  : const Icon(Icons.add),
             ],
           ),
         ),
@@ -290,5 +315,35 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
               ),
             ),
     );
+  }
+
+  Future<void> addPeriodMark(
+    StudentModel student,
+    PeriodMarkModel mark,
+  ) async {
+    var res = await Get.to(
+      () => PeriodMarkPage(
+        student.id!,
+        mark,
+        S.of(context).setMarkTitle,
+      ),
+    );
+    if (res is bool) {
+      setState(() {});
+      if (res) {
+        print('Added mark successfully!');
+      }
+    }
+  }
+
+  Future<void> editMark(PeriodMarkModel mark) async {
+    var res = await Get.to<bool>(
+      () => PeriodMarkPage(mark.studentId, mark, S.of(context).updateMarkTitle, editMode: true),
+    );
+    if (res is bool) {
+      setState(() {
+        // forceRefresh = true;
+      });
+    }
   }
 }
