@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/teacher/teacher_class_choice_page.dart';
+import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/pages/teacher/teacher_marks_table_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class CurriculumChoicePage extends StatelessWidget {
-  const CurriculumChoicePage({Key? key}) : super(key: key);
+class ClassChoicePage extends StatelessWidget {
+  final CurriculumModel curriculum;
+  // final List<StudyPeriodModel> periods;
+  const ClassChoicePage({Key? key, required this.curriculum,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +22,8 @@ class CurriculumChoicePage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: FutureBuilder<List<CurriculumModel>>(
-          future: PersonModel.currentTeacher!.curriculums(),
+        child: FutureBuilder<List<ClassModel>>(
+          future: curriculum.classes(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Utils.progressIndicator();
@@ -31,18 +34,15 @@ class CurriculumChoicePage extends StatelessWidget {
             return ListView.builder(
               itemBuilder: (_, index) {
                 return ListTile(
-                  title: Text(snapshot.data![index].aliasOrName),
+                  title: Text(snapshot.data![index].name),
                   onTap: () async {
                     var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
-                    // Get.to(() => TeacherTablePage(
-                    //       currentcur: snapshot.data![index],
-                    //       periods: periods,
-                    //     ));
-                    Get.to(
-                      () => ClassChoicePage(
-                        curriculum: snapshot.data![index],
-                      ),
-                    );
+                    Get.to(() => TeacherTablePage(
+                          // currentcur: snapshot.data![index],
+                          currentcur: curriculum,
+                          periods: periods,
+                          aclass: snapshot.data![index],
+                        ));
                   },
                 );
               },
