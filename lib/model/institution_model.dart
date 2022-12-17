@@ -45,9 +45,9 @@ class InstitutionModel {
     return _yearPeriod;
   }
 
-  Future<StudyPeriodModel?> get currentSemesterPeriod async {
-    return Get.find<ProxyStore>().getSemesterPeriodForDate(DateTime.now());
-  }
+  // Future<StudyPeriodModel?> get currentSemesterPeriod async {
+  //   return Get.find<ProxyStore>().getSemesterPeriodForDate(DateTime.now());
+  // }
 
   Future<List<StudyPeriodModel>> get currentYearSemesterPeriods async {
     if (!_semesterPeriodsLoaded) {
@@ -59,6 +59,10 @@ class InstitutionModel {
       _semesterPeriodsLoaded = true;
     }
     return _semesterPeriods;
+  }
+
+  Future<List<StudyPeriodModel>> get currentYearAndSemestersPeriods async {
+    return [...(await currentYearSemesterPeriods), (await currentYearPeriod)!];
   }
 
   Future<List<PersonModel>> people() async {
