@@ -65,7 +65,7 @@ class MDrawer extends StatelessWidget {
       items.add(
         TextButton.icon(
           onPressed: () async {
-            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+            var periods = await InstitutionModel.currentInstitution.currentYearAndSemestersPeriods;
             Get.to(() => StudentPeriodicMarksScreen(student: PersonModel.currentStudent!, periods: periods));
           },
           icon: const Icon(Icons.power_input_rounded),
