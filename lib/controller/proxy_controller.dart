@@ -668,10 +668,10 @@ class ProxyStore extends getx.GetxController {
     var periods = await currentInstitution!.currentYearSemesterPeriods;
     periods.add((await currentInstitution!.currentYearPeriod)!);
     var res = await dio.postUri<List>(
-      baseUriFunc('/student/${student.id}/curriculums/mark/periods}'),
+      baseUriFunc('/student/${student.id}/curriculums/mark/periods'),
       options: Options(headers: {'Content-Type': 'application/json'}),
       data: {
-        'curriculums': curriculums.map((e) => e.id).toList(), 
+        'curriculums': curriculums.map((e) => e.id).toList(),
         'periods': periods.map((e) => e.id).toList(),
       },
     );
@@ -687,8 +687,6 @@ class ProxyStore extends getx.GetxController {
   //637d44cc6586e2b97e585f94 1
   //637d44e06586e2b97e585f95 2
   //637d44ad6586e2b97e585f93 year
-
-
 
   Future<String> saveLessonMark(LessonMarkModel mark) async {
     var data = mark.toMap(withId: true);

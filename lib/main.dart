@@ -23,7 +23,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var fauth = FAuth();
-  var proxy = ProxyStore((path) => Uri.https('10.20.30.96:8187', path));
+  var proxy = ProxyStore((path) => Uri.http('localhost:8187', path));
   var curweek = CurrentWeek(Week.current());
   var prefs = PrefsController();
   await prefs.init();
@@ -63,9 +63,9 @@ class MyApp extends StatelessWidget {
       home: StreamBuilder<User?>(
         stream: Get.find<FAuth>().authStream$,
         builder: (context, snapshot) {
-          if(snapshot.connectionState == ConnectionState.waiting) return const SizedBox.shrink();
+          if (snapshot.connectionState == ConnectionState.waiting) return const SizedBox.shrink();
           return _homePageSelector();
-        }
+        },
       ),
     );
   }
