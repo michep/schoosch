@@ -663,6 +663,33 @@ class ProxyStore extends getx.GetxController {
     return js.map((e) => PeriodMarkModel.fromMap(e['_id'], e)).toList();
   }
 
+  Future<List<PeriodMarkModel>> getStudentAllPerioddMarks(StudentModel student, List<CurriculumModel> curriculums) async {
+    // var year = await currentInstitution!.currentYearPeriod;
+    var periods = await currentInstitution!.currentYearSemesterPeriods;
+    periods.add((await currentInstitution!.currentYearPeriod)!);
+    var res = await dio.postUri<List>(
+      baseUriFunc('/student/${student.id}/curriculums/mark/periods}'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {
+        'curriculums': curriculums.map((e) => e.id).toList(), 
+        'periods': periods.map((e) => e.id).toList(),
+      },
+    );
+    var js = res.data!;
+    return js.map((e) => PeriodMarkModel.fromMap(e['_id'], e)).toList();
+  }
+
+  //637102cdc77fccc0ea9d0324
+  //6378fe0f836d36dc1d7b68e7
+
+  //637100c9ae30991818734d1e institution
+
+  //637d44cc6586e2b97e585f94 1
+  //637d44e06586e2b97e585f95 2
+  //637d44ad6586e2b97e585f93 year
+
+
+
   Future<String> saveLessonMark(LessonMarkModel mark) async {
     var data = mark.toMap(withId: true);
     data['institution_id'] = institution.id;
@@ -716,6 +743,12 @@ class ProxyStore extends getx.GetxController {
     var res = await dio.getUri<List>(baseUriFunc('/period/semester/${period.from.toIso8601String()}/${period.till.toIso8601String()}'));
     var js = res.data!;
     return js.map((data) => StudyPeriodModel.fromMap(data['_id'], data)).toList();
+  }
+
+  Future<StudyPeriodModel> getStudyPeriod(String id) async {
+    var res = await dio.getUri<Map<String, dynamic>>(baseUriFunc('/period/$id'));
+    var js = res.data!;
+    return StudyPeriodModel.fromMap(js['_id'], js);
   }
 
   Future<String> saveStudyPeriod(StudyPeriodModel period) async {

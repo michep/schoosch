@@ -105,6 +105,15 @@ class Utils {
     return res;
   }
 
+  static Map<String, List<PeriodMarkModel>> splitPeriodMarksListByCurriculum(List<PeriodMarkModel> marks) {
+    Map<String, List<PeriodMarkModel>> res = {};
+    for (var m in marks) {
+      if (res[m.curriculumId] == null) res[m.curriculumId] = [];
+      res[m.curriculumId]!.add(m);
+    }
+    return res;
+  }
+
   static Future<void> openLink(String adress) async {
     final url = Uri.parse(adress);
     if (!(await launchUrl(url))) {

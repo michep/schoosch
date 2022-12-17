@@ -34,7 +34,6 @@ class StudentPeriodicMarksScreen extends StatelessWidget {
             return FutureBuilder<Map<CurriculumModel, List<PeriodMarkModel>>>(
               future: student.getAllPeriodsMarks(
                 curriculums,
-                periods,
               ),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
