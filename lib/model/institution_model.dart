@@ -15,6 +15,10 @@ class InstitutionModel {
   final Map<String, String> attributes = {};
   final List<CurriculumModel> _curriculums = [];
   bool _curriculumsLoaded = false;
+  bool _yearPeriodLoaded = false;
+  bool _semesterPeriodsLoaded = false;
+  late final StudyPeriodModel? _yearPeriod;
+  final List<StudyPeriodModel> _semesterPeriods = [];
 
   final Map<String, Uint8List> _files = {};
 
@@ -34,7 +38,11 @@ class InstitutionModel {
   }
 
   Future<StudyPeriodModel?> get currentYearPeriod async {
-    return Get.find<ProxyStore>().getYearPeriodForDate(DateTime.now());
+    if (!_yearPeriodLoaded) {
+      _yearPeriod = await Get.find<ProxyStore>().getYearPeriodForDate(DateTime.now());
+      _yearPeriodLoaded = true;
+    }
+    return _yearPeriod;
   }
 
   Future<StudyPeriodModel?> get currentSemesterPeriod async {
@@ -42,7 +50,15 @@ class InstitutionModel {
   }
 
   Future<List<StudyPeriodModel>> get currentYearSemesterPeriods async {
-    return Get.find<ProxyStore>().getSemesterPeriodsForPeriod((await currentYearPeriod)!);
+    if (!_semesterPeriodsLoaded) {
+      _semesterPeriods.addAll(
+        await Get.find<ProxyStore>().getSemesterPeriodsForPeriod(
+          (await currentYearPeriod)!,
+        ),
+      );
+      _semesterPeriodsLoaded = true;
+    }
+    return _semesterPeriods;
   }
 
   Future<List<PersonModel>> people() async {

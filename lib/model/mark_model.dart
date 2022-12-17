@@ -4,6 +4,7 @@ import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/studyperiod_model.dart';
 
 class MarkModel {
   String? id;
@@ -162,10 +163,20 @@ extension MarkTypeExt on MarkType {
 
 class PeriodMarkModel extends MarkModel {
   late String periodId;
+  late StudyPeriodModel? _period;
   final String type = 'period';
 
   PeriodMarkModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map) {
     periodId = map['period_id'] != null ? map['period_id'] as String : throw 'need period_id key in mark $id';
+
+    if (map.containsKey('period') && map['period'] is Map) {
+      _period = StudyPeriodModel.fromMap((map['period'] as Map<String, dynamic>)['_id'] as String, map['period'] as Map<String, dynamic>);
+    }
+  }
+
+  Future<StudyPeriodModel> get period async {
+    _period ??= (await Get.find<ProxyStore>().getStudyPeriod(periodId));
+    return _period!;
   }
 
   PeriodMarkModel.empty(String teacherId, String curriculumId, String periodId)
