@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
+import 'package:schoosch/pages/home_page.dart';
+import 'package:schoosch/pages/login_page.dart';
 
 class FAuth extends GetxController {
   late final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -8,37 +11,49 @@ class FAuth extends GetxController {
   User? get currentUser => _auth.currentUser;
   String? token;
   late Stream<User?> authStream$;
+  late StreamSubscription<User?> sub;
 
   @override
-  onInit() {
+  void onInit() {
     super.onInit();
     _auth.idTokenChanges().listen((user) {
       user == null ? token = null : user.getIdToken().then((value) => token = value);
     });
 
-    authStream$ = _auth.authStateChanges().asyncMap<User?>((user) async {
-      var proxy = Get.find<ProxyStore>();
-      if (user == null) {
-        proxy.resetCurrentUser();
-      }
-      if (user != null && proxy.currentUser == null) {
-        await proxy.init(user.email!);
-      }
-      return user;
-    });
-    authStream$.listen(_authenticated);
+    authStream$ = _auth.authStateChanges().asyncMap<User?>(_asyncMap);
+    sub = authStream$.distinct().listen(_authChanged);
+  }
+
+  @override
+  void onClose() {
+    sub.cancel();
   }
 
   Future<void> logout() {
     return _auth.signOut();
   }
 
-  void _authenticated(User? user) async {
+  Future<User?> _asyncMap(User? user) async {
+    var proxy = Get.find<ProxyStore>();
+    if (user == null) {
+      proxy.resetCurrentUser();
+    }
+    if (user != null && proxy.currentUser == null) {
+      await proxy.init(user.email!);
+    }
+    return user;
+  }
+
+  void _authChanged(User? user) async {
+    var proxy = Get.find<ProxyStore>();
     if (user != null) {
-      Get.find<ProxyStore>().logEvent({
+      proxy.logEvent({
         'event': 'LOGIN',
         'useremail': user.email,
       });
+      return Get.offAll(() => const HomePage());
+    } else {
+      return Get.offAll(() => const LoginPage());
     }
   }
 }
