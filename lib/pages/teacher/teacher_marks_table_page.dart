@@ -36,7 +36,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
   void initState() {
     selectedPeriod = widget.periods.firstWhere(
       (element) => element.from.isBefore(DateTime.now()) && element.till.isAfter(DateTime.now()),
-      orElse: selectedPeriod = null,
+      orElse: () => widget.periods[widget.periods.length - 1],
     );
     super.initState();
   }

@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
+import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/pages/admin/admin_page.dart';
 import 'package:schoosch/pages/home_page.dart';
 import 'package:schoosch/pages/login_page.dart';
 
@@ -51,7 +53,11 @@ class FAuth extends GetxController {
         'event': 'LOGIN',
         'useremail': user.email,
       });
-      return Get.offAll(() => const HomePage());
+      if (proxy.currentUser!.currentType == PersonType.admin) {
+        return Get.offAll(() => const AdminPage());
+      } else {
+        return Get.offAll(() => const HomePage());
+      }
     } else {
       return Get.offAll(() => const LoginPage());
     }
