@@ -110,6 +110,40 @@ class CurriculumModel {
     return res;
   }
 
+  Future<Map<StudentModel, List<PeriodMarkModel>>> getAllPeriodsMarksByStudents(
+    List<StudentModel> students,
+    List<StudyPeriodModel> periods,
+    TeacherModel teacher,
+  ) async {
+    Map<StudentModel, List<PeriodMarkModel>> res = {};
+    // var marks = await Get.find<ProxyStore>().getCurriculumPeriodMarksByStudents(this, students, period);
+    // var splitted = Utils.splitPeriodMarksByStudent(marks);
+    // for (var studid in splitted.keys) {
+    //   res[await splitted[studid]!.student] = splitted[studid]!;
+    // }
+    for (StudentModel stud in students) {
+      List<PeriodMarkModel> marks = [];
+      for (var period in periods) {
+        marks.add(
+          PeriodMarkModel.fromMap(
+            id,
+            {
+              'teacher_id': teacher.id,
+              'student_id': '',
+              'curriculum_id': _id,
+              'period_id': period.id,
+              'type': period.type == StudyPeriodType.semester ? 'period' : 'year',
+              'comment': '',
+              'mark': 5,
+            },
+          ),
+        );
+      }
+      res[stud] = marks;
+    }
+    return res;
+  }
+
   Map<String, dynamic> toMap({bool withId = false, bool recursive = false}) {
     Map<String, dynamic> res = {};
     if (withId) res['_id'] = id;

@@ -102,19 +102,14 @@ class StudentPeriodicMarksScreen extends StatelessWidget {
     );
   }
 
-  String getSummaryMark(List<LessonMarkModel> listmark) {
-    int sum = 0;
+  // String getSummaryMark(List<LessonMarkModel> listmark) {
+  //   int sum = 0;
 
-    for (MarkModel mark in listmark) {
-      // var times = 1;
-      // if (mark.type == MarkType.exam || mark.type == MarkType.test) {
-      //   times = 2;
-      // }
-      // sum += mark.mark * times;
-      sum += mark.mark;
-    }
-    return (sum / listmark.length).toStringAsFixed(1);
-  }
+  //   for (MarkModel mark in listmark) {
+  //     sum += mark.mark;
+  //   }
+  //   return (sum / listmark.length).toStringAsFixed(1);
+  // }
 
   List<Widget> _buildSubjectCells(List<CurriculumModel> listcur) {
     return [
@@ -198,38 +193,38 @@ class StudentPeriodicMarksScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildSummaryMarks(
-    Map<CurriculumModel, List<LessonMarkModel>> data,
-    List<CurriculumModel> curs,
-  ) {
-    return List.generate(
-      curs.length,
-      (index) => Container(
-        alignment: Alignment.center,
-        width: 120.0,
-        height: 60.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Colors.grey,
-          ),
-          color: Colors.black54,
-        ),
-        margin: const EdgeInsets.all(4.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('средний'),
-            Text(
-              data[curs[index]] == null
-                  ? 'нет данных'
-                  : getSummaryMark(
-                      data[curs[index]]!,
-                    ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // List<Widget> _buildSummaryMarks(
+  //   Map<CurriculumModel, List<LessonMarkModel>> data,
+  //   List<CurriculumModel> curs,
+  // ) {
+  //   return List.generate(
+  //     curs.length,
+  //     (index) => Container(
+  //       alignment: Alignment.center,
+  //       width: 120.0,
+  //       height: 60.0,
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(12),
+  //         border: Border.all(
+  //           color: Colors.grey,
+  //         ),
+  //         color: Colors.black54,
+  //       ),
+  //       margin: const EdgeInsets.all(4.0),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         children: [
+  //           const Text('средний'),
+  //           Text(
+  //             data[curs[index]] == null
+  //                 ? 'нет данных'
+  //                 : getSummaryMark(
+  //                     data[curs[index]]!,
+  //                   ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }
