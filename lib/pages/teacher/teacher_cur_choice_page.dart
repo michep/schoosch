@@ -4,12 +4,12 @@ import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/teacher_class_choice_page.dart';
-import 'package:schoosch/pages/teacher/teacher_marks_table_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class CurriculumChoicePage extends StatelessWidget {
-  const CurriculumChoicePage({Key? key}) : super(key: key);
+  final bool isYear;
+  const CurriculumChoicePage({Key? key, this.isYear = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +38,13 @@ class CurriculumChoicePage extends StatelessWidget {
                     //       currentcur: snapshot.data![index],
                     //       periods: periods,
                     //     ));
-                    Get.to(
-                      () => ClassChoicePage(
-                        curriculum: snapshot.data![index],
-                      ),
-                    );
+                  
+                        Get.to(
+                            () => ClassChoicePage(
+                              curriculum: snapshot.data![index],
+                              isYear: isYear,
+                            ),
+                          );
                   },
                 );
               },

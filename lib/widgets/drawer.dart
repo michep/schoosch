@@ -83,6 +83,20 @@ class MDrawer extends StatelessWidget {
           label: const Text('Ваши оценки'),
         ),
       );
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
+            Get.to(
+              () => const CurriculumChoicePage(
+                isYear: true,
+              ),
+            );
+          },
+          icon: const Icon(Icons.power_input_rounded),
+          label: const Text('Годовые оценки'),
+        ),
+      );
     } else if (PersonModel.currentUser!.currentType == PersonType.parent) {
       items.add(
         TextButton.icon(
