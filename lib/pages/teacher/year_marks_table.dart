@@ -92,26 +92,6 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
                         ),
                       ),
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(
-                    //     bottom: 8.0,
-                    //     top: 4,
-                    //   ),
-                    //   child: Row(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: _buildSummaryMarks(data, students),
-                    //   ),
-                    // ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(
-                    //     bottom: 8.0,
-                    //     top: 0,
-                    //   ),
-                    //   child: Row(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: _buildPeriodMarks(dataPeriods, students),
-                    //   ),
-                    // )
                   ],
                 );
               },
@@ -122,57 +102,82 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
     );
   }
 
-  List<Widget> _buildMarkCells(List<PeriodMarkModel> listmark) {
+  List<Widget> _buildMarkCells(List<PeriodMarkModel?> listmark, StudentModel stud) {
     // listmark.sort((a, b) => b.date.compareTo(a.date));
     return List.generate(
-          // listmark.length,
-          widget.periods.length - 1,
-          (index) => Container(
-            alignment: Alignment.center,
-            width: 90.0,
-            height: 70.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.black54,
-            ),
-            margin: const EdgeInsets.all(4.0),
-            child: listmark.length >= index
+      listmark.length,
+      // widget.periods.length,
+      (index) => Container(
+        alignment: Alignment.center,
+        width: 90.0,
+        height: 70.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: index == listmark.length - 1
+              ? listmark[index] == null
+                  ? Theme.of(context).colorScheme.secondary
+                  : Colors.black
+              : Colors.black54,
+        ),
+        margin: const EdgeInsets.all(4.0),
+        child: index == listmark.length - 1
+            ? GestureDetector(
+                onTap: listmark[index] == null
+                    ? () async {
+                        PeriodMarkModel mark = PeriodMarkModel.empty(
+                          PersonModel.currentTeacher!.id!,
+                          widget.currentcur.id!,
+                          widget.periods.last.id!,
+                        );
+                        await addPeriodMark(
+                          stud,
+                          mark,
+                        );
+                      }
+                    : () async {
+                        await editMark(listmark[index]!);
+                      },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Годовая'),
+                    listmark[index] != null
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                listmark[index]!.mark.toStringAsFixed(1),
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                              const Icon(
+                                Icons.edit,
+                                size: 16,
+                              ),
+                            ],
+                          )
+                        : const Icon(
+                            Icons.add,
+                          ),
+                  ],
+                ),
+              )
+            : listmark[index] != null
                 ? Center(
                     child: Text(
-                      listmark[index].mark.toString(),
+                      listmark[index]!.mark.toString(),
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
                     ),
                   )
                 : null,
-          ),
-        ) +
-        [
-          Container(
-            alignment: Alignment.center,
-            width: 90.0,
-            height: 70.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            margin: const EdgeInsets.all(4.0),
-            child: const Icon(Icons.add),
-          )
-        ];
-    ;
+      ),
+    );
   }
-
-  // String getSummaryMark(List<LessonMarkModel> listmark) {
-  //   int sum = 0;
-  //   for (MarkModel mark in listmark) {
-  //     // var times = 1;
-  //     // if (mark.type == MarkType.exam || mark.type == MarkType.test) {
-  //     //   times = 2;
-  //     // }
-  //     // sum += mark.mark * times;
-  //     sum += mark.mark;
-  //   }
-  //   return (sum / listmark.length).toStringAsFixed(1);
-  // }
 
   List<Widget> _buildStudentCells(List<StudentModel> liststud) {
     return [
@@ -205,99 +210,7 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
         );
   }
 
-  // List<Widget> _buildSummaryMarks(Map<StudentModel, List<LessonMarkModel>> data, List<StudentModel> liststud) {
-  //   return List.generate(
-  //     liststud.length,
-  //     (index) => Container(
-  //       alignment: Alignment.center,
-  //       width: 120.0,
-  //       height: 60.0,
-  //       decoration: BoxDecoration(
-  //         borderRadius: BorderRadius.circular(12),
-  //         border: Border.all(
-  //           color: Colors.grey,
-  //         ),
-  //         color: Colors.black54,
-  //       ),
-  //       margin: const EdgeInsets.all(4.0),
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.center,
-  //         children: [
-  //           const Text('средний'),
-  //           Text(
-  //             // getSummaryMark(
-  //             //   data.values.toList()[index],
-  //             // ),
-  //             data[liststud[index]] == null
-  //                 ? 'нет данных'
-  //                 : getSummaryMark(
-  //                     data[liststud[index]]!,
-  //                   ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // List<Widget> _buildPeriodMarks(Map<StudentModel, PeriodMarkModel> data, List<StudentModel> liststud) {
-  //   return List.generate(liststud.length, (index) {
-  //     bool hasMark = data.keys.contains(liststud[index]);
-  //     return Container(
-  //       alignment: Alignment.center,
-  //       width: 120.0,
-  //       height: 60.0,
-  //       decoration: BoxDecoration(
-  //         borderRadius: BorderRadius.circular(12),
-  //         border: hasMark
-  //             ? Border.all(
-  //                 color: Colors.grey,
-  //               )
-  //             : null,
-  //         color: hasMark ? Colors.black54 : Theme.of(context).colorScheme.secondary,
-  //       ),
-  //       margin: const EdgeInsets.all(4.0),
-  //       child: GestureDetector(
-  //         onTap: hasMark
-  //             ? () async {
-  //                 await editMark(data[liststud[index]]!);
-  //               }
-  //             : () async {
-  //                 PeriodMarkModel mark = PeriodMarkModel.empty(
-  //                   PersonModel.currentTeacher!.id!,
-  //                   widget.currentcur.id!,
-  //                   selectedPeriod!.id!,
-  //                 );
-  //                 await addPeriodMark(
-  //                   liststud[index],
-  //                   mark,
-  //                 );
-  //               },
-  //         child: Column(
-  //           mainAxisAlignment: MainAxisAlignment.center,
-  //           children: [
-  //             const Text('балл за период'),
-  //             hasMark
-  //                 ? Row(
-  //                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //                     mainAxisSize: MainAxisSize.max,
-  //                     children: [
-  //                       Text(data[liststud[index]]!.mark.toStringAsFixed(1)),
-  //                       const Icon(
-  //                         Icons.edit,
-  //                         size: 16,
-  //                       ),
-  //                     ],
-  //                   )
-  //                 : const Icon(Icons.add),
-  //           ],
-  //         ),
-  //       ),
-  //     );
-  //   });
-  // }
-
-  List<Widget> _buildRows(Map<StudentModel, List<PeriodMarkModel>> data, List<StudentModel> liststud) {
+  List<Widget> _buildRows(Map<StudentModel, List<PeriodMarkModel?>> data, List<StudentModel> liststud) {
     return <Widget>[
           Row(children: _buildPeriodCells()),
         ] +
@@ -316,9 +229,7 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
                   child: const Text('нет оценок.'),
                 )
               : Row(
-                  children: _buildMarkCells(
-                    data[liststud[index]]!,
-                  ),
+                  children: _buildMarkCells(data[liststud[index]]!, liststud[index]),
                 ),
         );
   }
