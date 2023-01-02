@@ -15,6 +15,7 @@ class TeacherYearMarksTable extends StatefulWidget {
   final ClassModel? aclass;
   final TeacherModel? teacher;
   final List<StudyPeriodModel> periods;
+  final bool readOnly;
 
   const TeacherYearMarksTable({
     Key? key,
@@ -22,6 +23,7 @@ class TeacherYearMarksTable extends StatefulWidget {
     required this.periods,
     this.aclass,
     this.teacher,
+    this.readOnly = false,
   }) : super(key: key);
 
   @override
@@ -114,29 +116,31 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: index == listmark.length - 1
-              ? listmark[index] == null
-                  ? Theme.of(context).colorScheme.secondary
-                  : Colors.black
+              ? widget.readOnly || !(listmark[index] == null)
+                  ? Colors.black54
+                  : Theme.of(context).colorScheme.secondary
               : Colors.black54,
         ),
         margin: const EdgeInsets.all(4.0),
         child: index == listmark.length - 1
             ? GestureDetector(
-                onTap: listmark[index] == null
-                    ? () async {
-                        PeriodMarkModel mark = PeriodMarkModel.empty(
-                          PersonModel.currentTeacher!.id!,
-                          widget.currentcur.id!,
-                          widget.periods.last.id!,
-                        );
-                        await addPeriodMark(
-                          stud,
-                          mark,
-                        );
-                      }
-                    : () async {
-                        await editMark(listmark[index]!);
-                      },
+                onTap: widget.readOnly
+                    ? null
+                    : listmark[index] == null
+                        ? () async {
+                            PeriodMarkModel mark = PeriodMarkModel.empty(
+                              PersonModel.currentTeacher!.id!,
+                              widget.currentcur.id!,
+                              widget.periods.last.id!,
+                            );
+                            await addPeriodMark(
+                              stud,
+                              mark,
+                            );
+                          }
+                        : () async {
+                            await editMark(listmark[index]!);
+                          },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -153,10 +157,11 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
                                   fontSize: 20,
                                 ),
                               ),
-                              const Icon(
-                                Icons.edit,
-                                size: 16,
-                              ),
+                              if (widget.readOnly)
+                                const Icon(
+                                  Icons.edit,
+                                  size: 16,
+                                ),
                             ],
                           )
                         : const Icon(
