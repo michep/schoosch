@@ -16,6 +16,7 @@ class TeacherTablePage extends StatefulWidget {
   final ClassModel? aclass;
   final TeacherModel? teacher;
   final List<StudyPeriodModel> periods;
+  final bool readOnly;
 
   const TeacherTablePage({
     Key? key,
@@ -23,6 +24,7 @@ class TeacherTablePage extends StatefulWidget {
     required this.periods,
     this.aclass,
     this.teacher,
+    this.readOnly = false,
   }) : super(key: key);
 
   @override
@@ -251,25 +253,27 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
                   color: Colors.grey,
                 )
               : null,
-          color: hasMark ? Colors.black54 : Theme.of(context).colorScheme.secondary,
+          color: widget.readOnly || hasMark ? Colors.black54 : Theme.of(context).colorScheme.secondary,
         ),
         margin: const EdgeInsets.all(4.0),
         child: GestureDetector(
-          onTap: hasMark
-              ? () async {
-                  await editMark(data[liststud[index]]!);
-                }
-              : () async {
-                  PeriodMarkModel mark = PeriodMarkModel.empty(
-                    PersonModel.currentTeacher!.id!,
-                    widget.currentcur.id!,
-                    selectedPeriod!.id!,
-                  );
-                  await addPeriodMark(
-                    liststud[index],
-                    mark,
-                  );
-                },
+          onTap: widget.readOnly
+              ? null
+              : hasMark
+                  ? () async {
+                      await editMark(data[liststud[index]]!);
+                    }
+                  : () async {
+                      PeriodMarkModel mark = PeriodMarkModel.empty(
+                        PersonModel.currentTeacher!.id!,
+                        widget.currentcur.id!,
+                        selectedPeriod!.id!,
+                      );
+                      await addPeriodMark(
+                        liststud[index],
+                        mark,
+                      );
+                    },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -280,10 +284,11 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Text(data[liststud[index]]!.mark.toStringAsFixed(1)),
-                        const Icon(
-                          Icons.edit,
-                          size: 16,
-                        ),
+                        if (widget.readOnly)
+                          const Icon(
+                            Icons.edit,
+                            size: 16,
+                          ),
                       ],
                     )
                   : const Icon(Icons.add),

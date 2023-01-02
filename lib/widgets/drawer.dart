@@ -7,6 +7,7 @@ import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/pages/all_marks_table_page.dart';
 import 'package:schoosch/pages/student/student_periods_marks.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
+import 'package:schoosch/pages/teacher/year_marks_table.dart';
 import 'package:schoosch/pdf/pdf_preview.dart';
 import 'package:schoosch/pdf/pdf_classesweekschedule.dart';
 import 'package:schoosch/pdf/pdf_theme.dart';
@@ -111,15 +112,31 @@ class MDrawer extends StatelessWidget {
           label: const Text('Успеваемость'),
         ),
       );
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
+            var stud = await PersonModel.currentParent!.currentChild;
+            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+
+            Get.to(() => StudentPeriodicMarksScreen(
+                  periods: periods,
+                  student: stud,
+                ));
+          },
+          icon: const Icon(Icons.table_chart_outlined),
+          label: const Text('Успеваемость'),
+        ),
+      );
     }
     // if(PersonModel.currentUser!.currentType == PersonType.observer) {
     //   items.add(
     //   TextButton.icon(
     //     onPressed: () {
-    //       Get.to(() => const FreeTeachersPage());
+    //       Get.to(() => TeacherYearMarksTable(currentcur: currentcur, periods: periods));
     //     },
-    //     icon: const Icon(Icons.free_cancellation_outlined),
-    //     label: const Text('свободные уроки'),
+    //     icon: const Icon(Icons.power_input_rounded),
+    //     label: const Text('Итоговые оценки'),
     //   ),
     // );
     // }
