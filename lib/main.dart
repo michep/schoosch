@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/gestures.dart';
@@ -43,8 +44,21 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Get.find<FAuth>().startListen();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,21 +75,8 @@ class MyApp extends StatelessWidget {
       onGenerateTitle: (context) => S.of(context).appTiile,
       debugShowCheckedModeBanner: false,
       theme: darkTheme,
-      home: StreamBuilder<User?>(
-        stream: Get.find<FAuth>().authStream$,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return const SizedBox.shrink();
-          return _homePageSelector();
-        },
-      ),
+      home: const SizedBox.shrink(),
     );
-  }
-
-  Widget _homePageSelector() {
-    if (PersonModel.currentUser == null) return const LoginPage();
-    if (PersonModel.currentUser!.currentType == PersonType.admin) return const AdminPage();
-
-    return const HomePage();
   }
 }
 
