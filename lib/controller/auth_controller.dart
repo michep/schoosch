@@ -13,7 +13,7 @@ class FAuth extends GetxController {
   User? get currentUser => _auth.currentUser;
   String? token;
   late Stream<User?> authStream$;
-  late StreamSubscription<User?> sub;
+  StreamSubscription<User?>? sub;
 
   @override
   void onInit() {
@@ -23,12 +23,16 @@ class FAuth extends GetxController {
     });
 
     authStream$ = _auth.authStateChanges().asyncMap<User?>(_asyncMap);
-    sub = authStream$.distinct().listen(_authChanged);
   }
 
   @override
   void onClose() {
-    sub.cancel();
+    sub?.cancel();
+  }
+
+  void startListen() {
+    sub?.cancel();
+    sub = authStream$.distinct().listen(_authChanged);
   }
 
   Future<void> logout() {
