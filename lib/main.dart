@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +13,6 @@ import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/firebase_options.dart';
 import 'package:schoosch/generated/l10n.dart';
-import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/admin/admin_page.dart';
-import 'package:schoosch/pages/home_page.dart';
-import 'package:schoosch/pages/login_page.dart';
 import 'package:schoosch/theme.dart';
 
 Future<void> main() async {

@@ -7,7 +7,6 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
 import 'package:schoosch/pages/home_page.dart';
-import 'package:schoosch/pages/login_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
 class ProfilePage extends StatelessWidget {

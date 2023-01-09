@@ -125,7 +125,8 @@
   "periodSemester": "study semester",
   "statusInactive": "Inactive",
   "statusActive": "Active",
-  "modelStatusTitle": "Статус",
-  "studyPeriodTypeTitle": "Тип учебного периода",
-  "studyPeriodTitle": "Учебный период"
+  "modelStatusTitle": "Status",
+  "studyPeriodTypeTitle": "Study Period Type",
+  "studyPeriodTitle": "Study Period",
+  "studyPeriodList": "Study Periods"
 }

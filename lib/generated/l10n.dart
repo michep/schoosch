@@ -1310,31 +1310,41 @@ class S {
     );
   }
 
-  /// `Статус`
+  /// `Status`
   String get modelStatusTitle {
     return Intl.message(
-      'Статус',
+      'Status',
       name: 'modelStatusTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Тип учебного периода`
+  /// `Study Period Type`
   String get studyPeriodTypeTitle {
     return Intl.message(
-      'Тип учебного периода',
+      'Study Period Type',
       name: 'studyPeriodTypeTitle',
       desc: '',
       args: [],
     );
   }
 
-  /// `Учебный период`
+  /// `Study Period`
   String get studyPeriodTitle {
     return Intl.message(
-      'Учебный период',
+      'Study Period',
       name: 'studyPeriodTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Study Periods`
+  String get studyPeriodList {
+    return Intl.message(
+      'Study Periods',
+      name: 'studyPeriodList',
       desc: '',
       args: [],
     );

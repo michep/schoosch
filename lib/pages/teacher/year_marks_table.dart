@@ -284,9 +284,6 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
     );
     if (res is bool) {
       setState(() {});
-      if (res) {
-        print('Added mark successfully!');
-      }
     }
   }
 

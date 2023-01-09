@@ -127,5 +127,6 @@
   "statusActive": "Активно",
   "modelStatusTitle": "Статус",
   "studyPeriodTypeTitle": "Тип учебного периода",
-  "studyPeriodTitle": "Учебный период"
+  "studyPeriodTitle": "Учебный период",
+  "studyPeriodList": "Учебные периоды"
 }
