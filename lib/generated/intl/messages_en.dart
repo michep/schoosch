@@ -140,7 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "markTypeRegular": MessageLookupByLibrary.simpleMessage("Regular"),
         "markTypeTest": MessageLookupByLibrary.simpleMessage("Test"),
         "markTypeTitle": MessageLookupByLibrary.simpleMessage("Mark type"),
-        "modelStatusTitle": MessageLookupByLibrary.simpleMessage("Статус"),
+        "modelStatusTitle": MessageLookupByLibrary.simpleMessage("Status"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "newClass": MessageLookupByLibrary.simpleMessage("New Class"),
         "newCurriculum": MessageLookupByLibrary.simpleMessage("New Curriculum"),
@@ -201,10 +201,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "statusActive": MessageLookupByLibrary.simpleMessage("Active"),
         "statusInactive": MessageLookupByLibrary.simpleMessage("Inactive"),
         "studentTitle": MessageLookupByLibrary.simpleMessage("Student"),
+        "studyPeriodList":
+            MessageLookupByLibrary.simpleMessage("Study Periods"),
         "studyPeriodTitle":
-            MessageLookupByLibrary.simpleMessage("Учебный период"),
+            MessageLookupByLibrary.simpleMessage("Study Period"),
         "studyPeriodTypeTitle":
-            MessageLookupByLibrary.simpleMessage("Тип учебного периода"),
+            MessageLookupByLibrary.simpleMessage("Study Period Type"),
         "tabScheduleHomeworksTitle":
             MessageLookupByLibrary.simpleMessage("Schedule/HW"),
         "tabStudentsPerformance":

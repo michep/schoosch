@@ -35,7 +35,7 @@ class AdminDrawer extends StatelessWidget {
             ),
             TextButton(
               onPressed: _openStudyPeriodPage,
-              child: Text('Учебные периоды'),
+              child: Text(loc.studyPeriodList),
             ),
             TextButton(
               onPressed: _openPeoplePage,

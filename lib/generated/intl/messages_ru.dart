@@ -220,6 +220,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "statusActive": MessageLookupByLibrary.simpleMessage("Активно"),
         "statusInactive": MessageLookupByLibrary.simpleMessage("Неактивно"),
         "studentTitle": MessageLookupByLibrary.simpleMessage("Ученик"),
+        "studyPeriodList":
+            MessageLookupByLibrary.simpleMessage("Учебные периоды"),
         "studyPeriodTitle":
             MessageLookupByLibrary.simpleMessage("Учебный период"),
         "studyPeriodTypeTitle":

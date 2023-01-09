@@ -330,9 +330,6 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
     );
     if (res is bool) {
       setState(() {});
-      if (res) {
-        print('Added mark successfully!');
-      }
     }
   }
 
