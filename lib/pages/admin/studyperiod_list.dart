@@ -26,7 +26,7 @@ class _StudyPeriodListPageState extends State<StudyPeriodListPage> {
     var loc = S.of(context);
     return Scaffold(
       appBar: MAppBar(
-        loc.venueList,
+        loc.studyPeriodList,
         actions: [IconButton(onPressed: _newStudyPeriod, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
