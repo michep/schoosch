@@ -6,6 +6,7 @@ import 'package:schoosch/controller/day_controller.dart';
 class CurrentWeek extends GetxController {
   late final Rx<Week> _currentWeek = Rx(Week.current());
   late final PageController _pageController;
+  int? prevIdx;
 
   Week get currentWeek => _currentWeek.value;
 
@@ -17,6 +18,20 @@ class CurrentWeek extends GetxController {
   }
 
   void setIdx(int idx) {
+    var idxYear = idx ~/ 100;
+    var idxWeek = idx % 100;
+
+    if (idxWeek == 0) {
+      _currentWeek.value = Week(year: idxYear - 1, weekNumber: 52);
+      if (_pageController.hasClients) _pageController.jumpToPage((idxYear - 1) * 100 + 52);
+      idx = currentWeek.year * 100 + currentWeek.weekNumber;
+      return;
+    } else if (idxWeek == 53) {
+      _currentWeek.value = Week(year: idxYear + 1, weekNumber: 1);
+      if (_pageController.hasClients) _pageController.jumpToPage((idxYear + 1) * 100 + 1);
+      idx = currentWeek.year * 100 + currentWeek.weekNumber;
+      return;
+    }
     _currentWeek.value = Week(year: idx ~/ 100, weekNumber: idx % 100);
     if (_pageController.hasClients) {
       _pageController.animateToPage(
@@ -25,6 +40,7 @@ class CurrentWeek extends GetxController {
         curve: Curves.easeOutExpo,
       );
     }
+    prevIdx = idx;
   }
 
   void next() {
