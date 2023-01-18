@@ -19,6 +19,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var fauth = FAuth();
+  await fauth.init();
   var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org:8182', path));
   // var proxy = ProxyStore((path) => Uri.http('localhost:8182', path));
   var curweek = CurrentWeek(Week.current());
