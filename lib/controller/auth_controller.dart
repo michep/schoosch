@@ -15,13 +15,8 @@ class FAuth extends GetxController {
   late Stream<User?> authStream$;
   StreamSubscription<User?>? sub;
 
-  @override
-  void onInit() {
-    super.onInit();
-    _auth.idTokenChanges().listen((user) {
-      user == null ? token = null : user.getIdToken().then((value) => token = value);
-    });
-
+  Future<void> init() async {
+    await Future.delayed(const Duration(minutes: 0), _refreshToken);
     authStream$ = _auth.authStateChanges().asyncMap<User?>(_asyncMap);
   }
 
@@ -42,9 +37,11 @@ class FAuth extends GetxController {
   Future<User?> _asyncMap(User? user) async {
     var proxy = Get.find<ProxyStore>();
     if (user == null) {
+      token = null;
       proxy.resetCurrentUser();
     }
     if (user != null && proxy.currentUser == null) {
+      token = await user.getIdToken(true);
       await proxy.init(user.email!);
     }
     return user;
@@ -65,5 +62,10 @@ class FAuth extends GetxController {
     } else {
       return Get.offAll(() => const LoginPage());
     }
+  }
+
+  void _refreshToken() async {
+    token = await _auth.currentUser?.getIdToken(true);
+    Future.delayed(const Duration(minutes: 30), _refreshToken);
   }
 }

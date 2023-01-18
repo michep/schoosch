@@ -44,6 +44,16 @@ class ProxyStore extends getx.GetxController {
         return handler.next(options);
       },
     ));
+    // dio.interceptors.add(InterceptorsWrapper(
+    //   onError: (e, handler) {
+    //     getx.Get.showSnackbar(getx.GetSnackBar(
+    //       title: 'Error',
+    //       message: e.message,
+    //       duration: const Duration(seconds: 10),
+    //     ));
+    //     return handler.next(e);
+    //   },
+    // ));
     institution = await _geInstitutionIdByUserEmail(userEmail);
     _currentUser = await _getPersonByEmail(userEmail);
   }
