@@ -155,7 +155,7 @@ class StudentPeriodicMarksScreen extends StatelessWidget {
               ? Container(
                   alignment: Alignment.center,
                   width: 120.0,
-                  height: 60.0,
+                  height: 70.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.black54,
