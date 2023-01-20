@@ -6,7 +6,6 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/all_marks_table_page.dart';
 import 'package:schoosch/pages/student/student_periods_marks.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
-import 'package:schoosch/pages/teacher/year_marks_table.dart';
 import 'package:schoosch/pdf/pdf_preview.dart';
 import 'package:schoosch/pdf/pdf_classesweekschedule.dart';
 import 'package:schoosch/pdf/pdf_theme.dart';
@@ -69,7 +68,7 @@ class MDrawer extends StatelessWidget {
             Get.to(() => StudentPeriodicMarksScreen(student: PersonModel.currentStudent!, periods: periods));
           },
           icon: const Icon(Icons.power_input_rounded),
-          label: const Text('Периодические'),
+          label: const Text('Итоговые оценки'),
         ),
       );
     } else if (PersonModel.currentUser!.currentType == PersonType.teacher) {
@@ -94,7 +93,7 @@ class MDrawer extends StatelessWidget {
             );
           },
           icon: const Icon(Icons.power_input_rounded),
-          label: const Text('Годовые оценки'),
+          label: const Text('Итоговые оценки'),
         ),
       );
     } else if (PersonModel.currentUser!.currentType == PersonType.parent) {
@@ -124,7 +123,7 @@ class MDrawer extends StatelessWidget {
                 ));
           },
           icon: const Icon(Icons.table_chart_outlined),
-          label: const Text('Успеваемость'),
+          label: const Text('Итоговые оценки'),
         ),
       );
     }
