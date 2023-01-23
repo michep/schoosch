@@ -21,7 +21,7 @@ class ClassChoicePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MAppBar(
-        'Предмет',
+        'Класс',
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
