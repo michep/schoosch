@@ -2,10 +2,8 @@ import 'package:schoosch/generated/l10n.dart';
 
 enum ModelStatus {
   inactive,
-  active,
-}
+  active;
 
-extension ModelStatusExt on ModelStatus {
   static const _inactive = 0;
   static const _active = 1;
 

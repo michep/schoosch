@@ -6,6 +6,51 @@ import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 
+enum MarkType {
+  regular,
+  test,
+  exam;
+
+  static const _regular = 'regular';
+  static const _test = 'test';
+  static const _exam = 'exam';
+
+  static MarkType _parse(String value) {
+    switch (value) {
+      case _regular:
+        return MarkType.regular;
+      case _test:
+        return MarkType.test;
+      case _exam:
+        return MarkType.exam;
+      default:
+        throw 'unkown type';
+    }
+  }
+
+  String get nameString {
+    switch (this) {
+      case MarkType.regular:
+        return _regular;
+      case MarkType.test:
+        return _test;
+      case MarkType.exam:
+        return _exam;
+    }
+  }
+
+  String localizedName(S S) {
+    switch (this) {
+      case MarkType.regular:
+        return S.markTypeRegular;
+      case MarkType.test:
+        return S.markTypeTest;
+      case MarkType.exam:
+        return S.markTypeExam;
+    }
+  }
+}
+
 class MarkModel {
   String? id;
   late String teacherId;
@@ -78,7 +123,7 @@ class LessonMarkModel extends MarkModel {
   LessonMarkModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map) {
     date = map['date'] != null ? DateTime.tryParse(map['date'])! : throw 'need date key in mark $id';
     lessonOrder = map['lesson_order'] != null ? map['lesson_order'] as int : throw 'need lesson_order key in mark $id';
-    type = map['type'] != null ? MarkTypeExt._parse(map['type'] as String) : throw 'need type key in mark $id';
+    type = map['type'] != null ? MarkType._parse(map['type'] as String) : throw 'need type key in mark $id';
 
     if (map.containsKey('curriculum') && map['curriculum'] is Map) {
       _curriculum = CurriculumModel.fromMap((map['curriculum'] as Map<String, dynamic>)['_id'] as String, map['curriculum'] as Map<String, dynamic>);
@@ -111,53 +156,6 @@ class LessonMarkModel extends MarkModel {
       res = res += '²';
     }
     return res;
-  }
-}
-
-enum MarkType {
-  regular,
-  test,
-  exam,
-}
-
-extension MarkTypeExt on MarkType {
-  static const _regular = 'regular';
-  static const _test = 'test';
-  static const _exam = 'exam';
-
-  static MarkType _parse(String value) {
-    switch (value) {
-      case _regular:
-        return MarkType.regular;
-      case _test:
-        return MarkType.test;
-      case _exam:
-        return MarkType.exam;
-      default:
-        throw 'unkown type';
-    }
-  }
-
-  String get nameString {
-    switch (this) {
-      case MarkType.regular:
-        return _regular;
-      case MarkType.test:
-        return _test;
-      case MarkType.exam:
-        return _exam;
-    }
-  }
-
-  String localizedName(S S) {
-    switch (this) {
-      case MarkType.regular:
-        return S.markTypeRegular;
-      case MarkType.test:
-        return S.markTypeTest;
-      case MarkType.exam:
-        return S.markTypeExam;
-    }
   }
 }
 

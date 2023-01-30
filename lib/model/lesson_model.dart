@@ -16,10 +16,8 @@ enum LessonType {
   normal,
   replaced,
   replacment,
-  empty,
-}
+  empty;
 
-extension LessonTypeExt on LessonType {
   static LessonType getType(int? i) {
     switch (i) {
       case 0:
@@ -70,7 +68,7 @@ class LessonModel {
         });
 
   LessonModel.fromMap(this.aclass, this.schedule, this._id, Map<String, Object?> map) {
-    type = map['type'] != null ? LessonTypeExt.getType((map['type'] as int)) : LessonType.normal;
+    type = map['type'] != null ? LessonType.getType((map['type'] as int)) : LessonType.normal;
     order = map['order'] != null ? map['order'] as int : throw 'need order key in lesson $_id';
     curriculumId = map['curriculum_id'] != null
         ? map['curriculum_id'] as String
