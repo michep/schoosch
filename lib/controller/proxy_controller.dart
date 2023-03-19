@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
-import 'package:dio/adapter.dart';
+import 'package:dio/io.dart';
 import 'package:get/get.dart' as getx;
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/auth_controller.dart';
@@ -31,8 +31,8 @@ class ProxyStore extends getx.GetxController {
   ProxyStore(this.baseUriFunc);
 
   Future<void> init(String userEmail) async {
-    if (dio.httpClientAdapter is DefaultHttpClientAdapter) {
-      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
+    if (dio.httpClientAdapter is IOHttpClientAdapter) {
+      (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (HttpClient client) {
         client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
         return client;
       };
