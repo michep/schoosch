@@ -1,4 +1,4 @@
-import 'package:datetime_picker_formfield_new/datetime_picker_formfield_new.dart';
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';

@@ -12,19 +12,19 @@ import 'package:schoosch/widgets/mark_field.dart';
 import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class MarkPage extends StatefulWidget {
+class StudentMarkPage extends StatefulWidget {
   final String title;
   final LessonModel lesson;
   final LessonMarkModel mark;
   final bool editMode;
 
-  const MarkPage(this.lesson, this.mark, this.title, {Key? key, this.editMode = false}) : super(key: key);
+  const StudentMarkPage(this.lesson, this.mark, this.title, {Key? key, this.editMode = false}) : super(key: key);
 
   @override
-  State<MarkPage> createState() => _MarkPageState();
+  State<StudentMarkPage> createState() => _StudentMarkPageState();
 }
 
-class _MarkPageState extends State<MarkPage> {
+class _StudentMarkPageState extends State<StudentMarkPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _commentcont = TextEditingController();
   final TextEditingController _studentcont = TextEditingController();
