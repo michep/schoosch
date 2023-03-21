@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/widgets/autocomplete.dart' as autocomlete;
 
 typedef TitleFunc<T> = String Function(T? value);
 typedef FutureFunc<T> = Future<T?> Function();
@@ -59,14 +58,13 @@ class SelectableValueDropdownFormFieldState<T extends Object> extends State<Sele
 
   @override
   Widget build(BuildContext context) {
-    return autocomlete.RawAutocomplete<T>(
+    return RawAutocomplete<T>(
       textEditingController: _controller,
       focusNode: _focusNode,
       optionsViewBuilder: optionsViewBuilder,
       fieldViewBuilder: fieldViewBuilder,
       optionsBuilder: optionsBuilder,
       onSelected: (option) => _setValue(option),
-      initialValueFuture: widget.initFutureFunc,
     );
   }
 
@@ -123,12 +121,12 @@ class SelectableValueDropdownFormFieldState<T extends Object> extends State<Sele
             itemBuilder: (BuildContext context, int index) {
               final T option = options.elementAt(index);
               return InkWell(
-                onTapDown: (details) {
+                onTap: () {
                   onSelected(option);
                 },
                 child: Builder(
                   builder: (BuildContext context) {
-                    final bool highlight = autocomlete.AutocompleteHighlightedOption.of(context) == index;
+                    final bool highlight = AutocompleteHighlightedOption.of(context) == index;
                     if (highlight) {
                       SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
                         Scrollable.ensureVisible(context, alignment: 0.5);
