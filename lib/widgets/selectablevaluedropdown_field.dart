@@ -123,7 +123,7 @@ class SelectableValueDropdownFormFieldState<T extends Object> extends State<Sele
             itemBuilder: (BuildContext context, int index) {
               final T option = options.elementAt(index);
               return InkWell(
-                onTap: () {
+                onTapDown: (details) {
                   onSelected(option);
                 },
                 child: Builder(
