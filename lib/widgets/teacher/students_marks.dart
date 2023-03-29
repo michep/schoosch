@@ -116,6 +116,13 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
       () => ClassMarkPage(
         widget._lesson,
         'Оценки классу',
+        widget._date,
+        LessonMarkModel.empty(
+          PersonModel.currentUser!.id!,
+          widget._lesson.curriculumId!,
+          widget._lesson.order,
+          widget._date,
+        ),
       ),
     );
     if (res is bool) {
