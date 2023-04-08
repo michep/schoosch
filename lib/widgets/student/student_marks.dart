@@ -50,7 +50,7 @@ class _StudentMarksState extends State<StudentMarks> {
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: Colors.red,
+                              color: getBorderColor(e.toString()),
                               width: 1.5,
                             ),
                             borderRadius: BorderRadius.circular(4),
@@ -72,5 +72,16 @@ class _StudentMarksState extends State<StudentMarks> {
         );
       },
     );
+  }
+
+  Color getBorderColor(String firstMark) {
+    switch (firstMark) {
+      case '5': return Colors.green;
+      case '4': return Colors.lime;
+      case '3': return Colors.yellow;
+      case '2': return Colors.red;
+      case '1': return Colors.red;
+      default: return Colors.red;
+    }
   }
 }

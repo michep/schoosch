@@ -21,6 +21,8 @@ class ClassMarkPage extends StatefulWidget {
 }
 
 class _ClassMarkPageState extends State<ClassMarkPage> {
+  final TextEditingController _name = TextEditingController();
+
   @override
   void initState() {
     //
@@ -33,33 +35,62 @@ class _ClassMarkPageState extends State<ClassMarkPage> {
     return Scaffold(
       appBar: MAppBar(widget.title),
       body: SafeArea(
-        child: FutureBuilder<List<StudentModel>>(
-          future: _initStudents(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: Utils.progressIndicator());
-            }
-            if (snapshot.data!.isEmpty) {
-              return const Center(
-                child: Text('В классе нет учеников.'),
-              );
-            }
-            List<StudentModel> studs = snapshot.data!;
-            return ListView.builder(
-              itemCount: studs.length,
-              itemBuilder: (context, index) {
-                return MarkStudentTile(
-                  student: studs[index],
-                  lesson: widget.lesson,
-                  date: widget.date,
-                  mark: widget.mark,
-                );
-              },
-            );
-          },
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20.0, right: 10, left: 10),
+          child: Column(
+            children: [
+              TextField(
+                onChanged: (_) => setState(() {}),
+                controller: _name,
+                decoration: InputDecoration(
+                  label: Text(loc.personName),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () => setState(() {
+                      _name.value = TextEditingValue.empty;
+                    }),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              FutureBuilder<List<StudentModel>>(
+                future: _initStudents(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: Utils.progressIndicator());
+                  }
+                  if (snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text('В классе нет учеников.'),
+                    );
+                  }
+                  List<StudentModel> studs = snapshot.data!.where(_filter).toList();
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: studs.length,
+                      itemBuilder: (context, index) {
+                        return MarkStudentTile(
+                          student: studs[index],
+                          lesson: widget.lesson,
+                          date: widget.date,
+                          mark: widget.mark,
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  bool _filter(PersonModel person) {
+    return person.fullName.toUpperCase().contains(_name.text.toUpperCase());
   }
 
   Future<List<StudentModel>> _initStudents() async {
