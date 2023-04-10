@@ -32,57 +32,63 @@ class _ClassMarkPageState extends State<ClassMarkPage> {
   @override
   Widget build(BuildContext context) {
     var loc = S.of(context);
-    return Scaffold(
-      appBar: MAppBar(widget.title),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20.0, right: 10, left: 10),
-          child: Column(
-            children: [
-              TextField(
-                onChanged: (_) => setState(() {}),
-                controller: _name,
-                decoration: InputDecoration(
-                  label: Text(loc.personName),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () => setState(() {
-                      _name.value = TextEditingValue.empty;
-                    }),
+    return WillPopScope(
+      onWillPop: () async {
+        Get.back<bool>(result: true);
+        return true;
+      },
+      child: Scaffold(
+        appBar: MAppBar(widget.title),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20.0, right: 10, left: 10),
+            child: Column(
+              children: [
+                TextField(
+                  onChanged: (_) => setState(() {}),
+                  controller: _name,
+                  decoration: InputDecoration(
+                    label: Text(loc.personName),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () => setState(() {
+                        _name.value = TextEditingValue.empty;
+                      }),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              FutureBuilder<List<StudentModel>>(
-                future: _initStudents(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: Utils.progressIndicator());
-                  }
-                  if (snapshot.data!.isEmpty) {
-                    return const Center(
-                      child: Text('В классе нет учеников.'),
+                const SizedBox(
+                  height: 10,
+                ),
+                FutureBuilder<List<StudentModel>>(
+                  future: _initStudents(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(child: Utils.progressIndicator());
+                    }
+                    if (snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text('В классе нет учеников.'),
+                      );
+                    }
+                    List<StudentModel> studs = snapshot.data!.where(_filter).toList();
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: studs.length,
+                        itemBuilder: (context, index) {
+                          return MarkStudentTile(
+                            student: studs[index],
+                            lesson: widget.lesson,
+                            date: widget.date,
+                            mark: widget.mark,
+                          );
+                        },
+                      ),
                     );
-                  }
-                  List<StudentModel> studs = snapshot.data!.where(_filter).toList();
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: studs.length,
-                      itemBuilder: (context, index) {
-                        return MarkStudentTile(
-                          student: studs[index],
-                          lesson: widget.lesson,
-                          date: widget.date,
-                          mark: widget.mark,
-                        );
-                      },
-                    ),
-                  );
-                },
-              ),
-            ],
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
