@@ -4,9 +4,11 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/teacher/mark_page.dart';
+import 'package:schoosch/pages/teacher/class_mark_page.dart';
+import 'package:schoosch/pages/teacher/student_mark_page.dart';
 import 'package:schoosch/widgets/delete_bottomscheet.dart';
 import 'package:schoosch/widgets/delete_dialog.dart';
+import 'package:schoosch/widgets/fab_menu.dart';
 
 class StudentsMarksPage extends StatefulWidget {
   final LessonModel _lesson;
@@ -67,9 +69,21 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
           visible: !widget.readOnly,
           child: Align(
             alignment: Alignment.bottomRight,
-            child: FloatingActionButton(
-              onPressed: addMark,
-              child: const Icon(Icons.add),
+            child: FABMenu(
+              children: [
+                FABmenuchild(
+                  icon: Icons.groups_rounded,
+                  onPressed: addClassMark,
+                  title: 'Классу',
+                ),
+                FABmenuchild(
+                  icon: Icons.person_rounded,
+                  onPressed: addStudentMark,
+                  title: 'Ученику',
+                ),
+              ],
+              colorClosed: Theme.of(context).colorScheme.secondary,
+              colorOpen: Theme.of(context).colorScheme.background,
             ),
           ),
         ),
@@ -77,9 +91,9 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
     );
   }
 
-  Future<void> addMark() async {
+  Future<void> addStudentMark() async {
     var res = await Get.to<bool>(
-      () => MarkPage(
+      () => StudentMarkPage(
         widget._lesson,
         LessonMarkModel.empty(
           PersonModel.currentUser!.id!,
@@ -97,12 +111,26 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
     }
   }
 
-  // void deleteMark(MarkModel mark) async {
-  //   await mark.delete();
-  //   setState(() {
-  //     forceRefresh = true;
-  //   });
-  // }
+  Future<void> addClassMark() async {
+    var res = await Get.to<bool>(
+      () => ClassMarkPage(
+        widget._lesson,
+        'Оценки классу',
+        widget._date,
+        LessonMarkModel.empty(
+          PersonModel.currentUser!.id!,
+          widget._lesson.curriculumId!,
+          widget._lesson.order,
+          widget._date,
+        ),
+      ),
+    );
+    if (res is bool) {
+      setState(() {
+        forceRefresh = true;
+      });
+    }
+  }
 
   void deleteMark(LessonMarkModel mark) async {
     var res = await Get.dialog<bool>(DeleteDialog(
@@ -157,7 +185,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
 
   Future<void> editMark(LessonMarkModel mark) async {
     var res = await Get.to<bool>(
-      () => MarkPage(widget._lesson, mark, S.of(context).updateMarkTitle, editMode: true),
+      () => StudentMarkPage(widget._lesson, mark, S.of(context).updateMarkTitle, editMode: true),
     );
     if (res is bool) {
       setState(() {

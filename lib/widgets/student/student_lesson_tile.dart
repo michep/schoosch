@@ -126,7 +126,7 @@ class StudentLessonTile extends StatelessWidget {
                           padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: Colors.red, width: 1.5),
+                            border: Border.all(color: getBorderColor(mar!.split('; ').first), width: 1.5),
                           ),
                           child: Text(mar!),
                         ),
@@ -142,5 +142,16 @@ class StudentLessonTile extends StatelessWidget {
 
   void _onTap() {
     Get.to(() => StudentLessonPage(student, lesson, cur!, ven!, tim!, date));
+  }
+
+  Color getBorderColor(String firstMark) {
+    switch (firstMark) {
+      case '5': return Colors.green;
+      case '4': return Colors.lime;
+      case '3': return Colors.yellow;
+      case '2': return Colors.red;
+      case '1': return Colors.red;
+      default: return Colors.red;
+    }
   }
 }
