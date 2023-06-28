@@ -13,7 +13,7 @@ class CurriculumSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isYear = false;
+    // bool isYear = false;
     return FutureBuilder<List<CurriculumModel>>(
       future: _class.curriculums(),
       builder: (context, snapshot) {

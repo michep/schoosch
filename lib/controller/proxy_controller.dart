@@ -21,7 +21,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 
-class ProxyStore extends getx.GetxController {
+class ProxyStore {
   late InstitutionModel institution;
   PersonModel? _currentUser;
   ClassModel? currentObserverClass;

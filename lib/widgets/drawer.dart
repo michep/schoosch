@@ -4,6 +4,7 @@ import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/all_marks_table_page.dart';
+import 'package:schoosch/pages/chat/chat_list_page.dart';
 import 'package:schoosch/pages/student/student_periods_marks.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
 import 'package:schoosch/pdf/pdf_preview.dart';
@@ -178,6 +179,15 @@ class MDrawer extends StatelessWidget {
         ),
       );
     }
+    items.add(
+      TextButton.icon(
+        onPressed: () async {
+          Get.to(() => const ChatListPage());
+        },
+        icon: const Icon(Icons.chat_outlined),
+        label: const Text('Сообщения'),
+      ),
+    );
     return items;
   }
 }

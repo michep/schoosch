@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/day_controller.dart';
 
-class CurrentWeek extends GetxController {
+class CurrentWeek {
   late final Rx<Week> _currentWeek = Rx(Week.current());
   late final PageController _pageController;
   int? prevIdx;

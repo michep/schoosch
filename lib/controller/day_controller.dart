@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/week_controller.dart';
 
-class CurrentDay extends GetxController {
+class CurrentDay {
   late final Rx<DateTime> _currentDay = Rx(DateTime.now());
   late final PageController _pageController;
 

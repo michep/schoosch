@@ -37,6 +37,7 @@ dependencies:
   firebase_ui_auth: ^1.0.5
   firebase_auth: ^4.1.2
   firebase_ui_localizations: ^1.0.1
+  web_socket_channel: ^2.4.0
 
 dev_dependencies:
   flutter_test:

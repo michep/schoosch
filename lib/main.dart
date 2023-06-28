@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
+import 'package:schoosch/controller/socket_controller.dart';
 import 'package:schoosch/controller/day_controller.dart';
 import 'package:schoosch/controller/auth_controller.dart';
 import 'package:schoosch/controller/prefs_controller.dart';
@@ -20,18 +21,30 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var fauth = FAuth();
   await fauth.init();
-  var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org:8182', path));
-  // var proxy = ProxyStore((path) => Uri.http('localhost:8182', path));
+  Get.put<FAuth>(fauth);
+  // var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org:8182', path));
+
+  // var proxy = ProxyStore((path) => Uri.https('localhost:8182', path));
+  // var chat = ChatController((path) => Uri(scheme: 'wss', host: 'localhost', port: 8182, path: path));
+
+  var proxy = ProxyStore((path) => Uri.http('10.0.2.2:8182', path));
+  Get.put<ProxyStore>(proxy);
+
   var curweek = CurrentWeek(Week.current());
+  Get.put<CurrentWeek>(curweek);
+
   var prefs = PrefsController();
   await prefs.init();
-  // var bcont = BlueprintController();
-  Get.put<FAuth>(fauth);
-  Get.put<ProxyStore>(proxy);
-  Get.put<CurrentWeek>(curweek);
-  Get.put<CurrentDay>(CurrentDay(DateTime.now()));
   Get.put<PrefsController>(prefs);
+
+  // var bcont = BlueprintController();
+
+  Get.put<CurrentDay>(CurrentDay(DateTime.now()));
   // Get.put<BlueprintController>(bcont);
+
+  var chat = SocketController((path) => Uri(scheme: 'ws', host: '10.0.2.2', port: 8182, path: path));
+  Get.put<SocketController>(chat);
+
   if (fauth.currentUser != null) {
     await proxy.init(fauth.currentUser!.email!);
     // await bcont.init();
@@ -51,7 +64,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<FAuth>().startListen();
     });
   }
