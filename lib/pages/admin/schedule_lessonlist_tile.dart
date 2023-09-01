@@ -38,7 +38,7 @@ class _ScheduleLessonListTileState extends State<ScheduleLessonListTile> {
         if (!snap.hasData) {
           return const ListTile();
         }
-        var list = snap.data! as List<dynamic>;
+        var list = snap.data!;
         var cur = list[0] as CurriculumModel;
         var ven = list[1] as VenueModel;
         // var tim = list[2] as LessontimeModel;
