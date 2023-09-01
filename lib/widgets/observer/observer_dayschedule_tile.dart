@@ -62,7 +62,7 @@ class _ObserverDayScheduleTileState extends State<ObserverDayScheduleTile> with 
                   if (!snapshot.hasData) {
                     return const ListTile();
                   }
-                  var list = snapshot.data! as List<dynamic>;
+                  var list = snapshot.data!;
                   var cur = les.type != LessonType.empty ? list[0] as CurriculumModel : null;
                   var tim = les.type != LessonType.empty ? list[1] as LessontimeModel : null;
                   var ven = les.type != LessonType.empty ? list[2] as VenueModel : null;

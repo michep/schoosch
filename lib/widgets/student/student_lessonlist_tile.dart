@@ -35,7 +35,7 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
           if (!snap.hasData) {
             return const ListTile();
           }
-          var list = snap.data! as List<dynamic>;
+          var list = snap.data!;
           var cur = widget._lesson.type != LessonType.empty ? list[0] as CurriculumModel : null;
           var ven = widget._lesson.type != LessonType.empty ? list[1] as VenueModel : null;
           var tim = widget._lesson.type != LessonType.empty ? list[2] as LessontimeModel : null;
@@ -91,12 +91,18 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
 
   Color getBorderColor(String firstMark) {
     switch (firstMark) {
-      case '5': return Colors.green;
-      case '4': return Colors.lime;
-      case '3': return Colors.yellow;
-      case '2': return Colors.red;
-      case '1': return Colors.red;
-      default: return Colors.red;
+      case '5':
+        return Colors.green;
+      case '4':
+        return Colors.lime;
+      case '3':
+        return Colors.yellow;
+      case '2':
+        return Colors.red;
+      case '1':
+        return Colors.red;
+      default:
+        return Colors.red;
     }
   }
 }

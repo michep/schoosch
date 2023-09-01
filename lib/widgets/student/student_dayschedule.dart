@@ -87,7 +87,7 @@ class _StudentDayScheduleWidgetState extends State<StudentDayScheduleWidget> {
                           if (!snap.hasData) {
                             return const ListTile();
                           }
-                          var list = snap.data! as List<dynamic>;
+                          var list = snap.data!;
                           var cur = lesson.type != LessonType.empty ? list[0] as CurriculumModel : null;
                           var ven = lesson.type != LessonType.empty ? list[1] as VenueModel : null;
                           var tim = lesson.type != LessonType.empty ? list[2] as LessontimeModel : null;

@@ -47,7 +47,7 @@ class ProfilePage extends StatelessWidget {
             future: Future.wait([user.asParent!.currentChild, user.asParent!.children()]),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return const SizedBox.shrink();
-              var list = snapshot.data! as List<dynamic>;
+              var list = snapshot.data!;
               var currentChild = list[0] as StudentModel;
               var children = list[1] as List<StudentModel>;
               return ListTile(
