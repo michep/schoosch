@@ -8,6 +8,7 @@ import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/mark_field.dart';
+import 'package:schoosch/widgets/mark_type_field.dart';
 // import 'package:schoosch/widgets/mark_type_field.dart';
 import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -68,16 +69,17 @@ class _StudentMarkPageState extends State<StudentMarkPage> {
                   onSaved: setMark,
                   validator: (value) => Utils.validateMark(value, S.of(context).errorMarkError),
                 ),
-                // MarkTypeFormField(
-                //   markType: markType,
-                //   onChanged: (v) {
-                //     if (v is MarkType) {
-                //       setState(() {
-                //         markType = v;
-                //       });
-                //     }
-                //   },
-                // ),
+                MarkTypeFormField(
+                  markType: markType,
+                  validator:(value) => Utils.validateType(value, S.of(context).errorUnknownMarkType),
+                  onChanged: (v) {
+                    if (v is MarkType) {
+                      setState(() {
+                        markType = v;
+                      });
+                    }
+                  },
+                ),
                 TextFormField(
                   decoration: InputDecoration(
                     label: Text(S.of(context).commentTitle),
@@ -140,8 +142,8 @@ class _StudentMarkPageState extends State<StudentMarkPage> {
           'date': widget.mark.date.toIso8601String(),
           'curriculum_id': widget.mark.curriculumId,
           'lesson_order': widget.mark.lessonOrder,
-          // 'type': markType.nameString,
-          'type': 'regular',
+          'type': markType.nameString,
+          // 'type': 'regular',
           'comment': _commentcont.value.text,
           'mark': mark,
         },

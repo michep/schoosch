@@ -1230,6 +1230,16 @@ class S {
     );
   }
 
+  ///`unknown mark type`
+  String get errorUnknownMarkType {
+    return Intl.message(
+      'unknown mark type',
+      name: 'errorUnknownMarkType',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Personal Homework`
   String get personalHomeworkTitle {
     return Intl.message(

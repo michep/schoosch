@@ -68,7 +68,6 @@ class MarkModel {
     curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in mark $id';
     comment = map['comment'] != null ? map['comment'] as String : '';
     mark = map['mark'] != null ? map['mark'] as int : throw 'need mark key in mark $id';
-
     if (map.containsKey('teacher') && map['teacher'] is Map) {
       _teacher = TeacherModel.fromMap((map['teacher'] as Map<String, dynamic>)['_id'] as String, map['teacher'] as Map<String, dynamic>);
     }
