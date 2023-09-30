@@ -39,6 +39,10 @@ class Utils {
     return (mark == null || mark < 1 || mark > 5) ? error : null;
   }
 
+  static String? validateType(MarkType? type, String error) {
+    return (type == null) ? error : null;
+  }
+
   static Future<void> showErrorSnackbar(String text) async {
     Get.snackbar(
       'Ошибка',
