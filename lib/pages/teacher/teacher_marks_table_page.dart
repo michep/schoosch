@@ -170,24 +170,9 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
   }
 
   String getSummaryMark(List<LessonMarkModel> listmark) {
-    int sum = 0;
+    double sum = 0;
     for (LessonMarkModel mark in listmark) {
-      var times = 1;
-      switch(mark.type) {
-        case MarkType.regular:
-          times = 1;
-          break;
-        case MarkType.test:
-          times = 2;
-          break;
-        case MarkType.exam:
-          times = 3;
-          break;
-        default:
-          times = 1;
-          break;
-      }
-      sum += mark.mark * times;
+      sum += mark.mark * mark.type.weight;
       // sum += mark.mark;
     }
     return (sum / listmark.length).toStringAsFixed(1);
@@ -235,9 +220,6 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
           children: [
             const Text('средний'),
             Text(
-              // getSummaryMark(
-              //   data.values.toList()[index],
-              // ),
               data[liststud[index]] == null
                   ? 'нет данных'
                   : getSummaryMark(
