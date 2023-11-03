@@ -21,6 +21,7 @@ dependencies:
   google_sign_in: ^6.1.4
   flutter_rating_bar: ^4.0.0
   drag_and_drop_lists: ^0.3.2+2
+  chips_choice: ^3.0.1
   dropdown_search: ^5.0.1
   flutter_native_splash: ^2.0.1+1
   directed_graph: ^0.3.6

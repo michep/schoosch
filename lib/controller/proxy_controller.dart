@@ -17,12 +17,14 @@ import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
+import 'package:schoosch/model/marktype_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 
 class ProxyStore extends getx.GetxController {
   late InstitutionModel institution;
+  late List<MarkType> marktypes;
   PersonModel? _currentUser;
   ClassModel? currentObserverClass;
   final Dio dio = Dio();
@@ -56,7 +58,9 @@ class ProxyStore extends getx.GetxController {
     //   },
     // ));
     institution = await _geInstitutionIdByUserEmail(userEmail);
+    marktypes = await getAllMarktypes();
     _currentUser = await _getPersonByEmail(userEmail);
+
   }
 
   void fixdate(Response response, ResponseInterceptorHandler handler) {
@@ -616,6 +620,12 @@ class ProxyStore extends getx.GetxController {
     await dio.deleteUri(
       baseUriFunc('/absence/${absence.id}'),
     );
+  }
+
+  Future<List<MarkType>> getAllMarktypes() async {
+    var res = await dio.getUri<List>(baseUriFunc('/marktype/'));
+    var js = res.data!;
+    return js.map((e) => MarkType.fromMap(e['_id'], e)).toList();
   }
 
   Future<List<LessonMarkModel>> getAllLessonMarks(LessonModel lesson, DateTime date) async {

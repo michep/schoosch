@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/mark_model.dart';
+import 'package:schoosch/model/marktype_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/mark_field.dart';
 // import 'package:schoosch/widgets/mark_type_field.dart';
