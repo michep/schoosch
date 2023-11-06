@@ -60,7 +60,6 @@ class ProxyStore extends getx.GetxController {
     institution = await _geInstitutionIdByUserEmail(userEmail);
     marktypes = await getAllMarktypes();
     _currentUser = await _getPersonByEmail(userEmail);
-
   }
 
   void fixdate(Response response, ResponseInterceptorHandler handler) {
@@ -623,7 +622,7 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<MarkType>> getAllMarktypes() async {
-    var res = await dio.getUri<List>(baseUriFunc('/marktype/'));
+    var res = await dio.getUri<List>(baseUriFunc('/marktype'));
     var js = res.data!;
     return js.map((e) => MarkType.fromMap(e['_id'], e)).toList();
   }

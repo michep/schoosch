@@ -10,7 +10,7 @@ import 'package:schoosch/widgets/drawer.dart';
 class ObserverPage extends StatefulWidget {
   final ClassModel _class;
 
-  const ObserverPage(this._class, {Key? key}) : super(key: key);
+  const ObserverPage(this._class, {super.key});
 
   @override
   State<ObserverPage> createState() => _ObserverPageState();

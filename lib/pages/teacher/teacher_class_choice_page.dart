@@ -15,7 +15,7 @@ class ClassChoicePage extends StatelessWidget {
   final CurriculumModel curriculum;
   // final List<StudyPeriodModel> periods;
   final bool isYear;
-  const ClassChoicePage({Key? key, required this.curriculum, this.isYear = false}) : super(key: key);
+  const ClassChoicePage({super.key, required this.curriculum, this.isYear = false});
 
   @override
   Widget build(BuildContext context) {

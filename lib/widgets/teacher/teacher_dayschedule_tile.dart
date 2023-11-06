@@ -11,7 +11,7 @@ class TeacherDayScheduleTile extends StatefulWidget {
   final TeacherScheduleModel _schedule;
   final DateTime _date;
 
-  const TeacherDayScheduleTile(this._schedule, this._date, {Key? key}) : super(key: key);
+  const TeacherDayScheduleTile(this._schedule, this._date, {super.key});
 
   @override
   State<TeacherDayScheduleTile> createState() => _TeacherDayScheduleTileState();
@@ -44,6 +44,5 @@ class _TeacherDayScheduleTileState extends State<TeacherDayScheduleTile> with Au
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

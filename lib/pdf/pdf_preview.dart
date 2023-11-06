@@ -9,8 +9,8 @@ class Preview extends StatelessWidget {
   const Preview({
     required this.generate,
     required this.format,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

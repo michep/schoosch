@@ -17,7 +17,7 @@ class LessonPage extends StatefulWidget {
   final LessonModel _lesson;
   final String _title;
 
-  const LessonPage(this._lesson, this._title, {Key? key}) : super(key: key);
+  const LessonPage(this._lesson, this._title, {super.key});
 
   @override
   State<LessonPage> createState() => _LessonPageState();

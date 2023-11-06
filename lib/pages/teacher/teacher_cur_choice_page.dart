@@ -8,7 +8,7 @@ import 'package:schoosch/widgets/utils.dart';
 
 class CurriculumChoicePage extends StatelessWidget {
   final bool isYear;
-  const CurriculumChoicePage({Key? key, this.isYear = false}) : super(key: key);
+  const CurriculumChoicePage({super.key, this.isYear = false});
 
   @override
   Widget build(BuildContext context) {

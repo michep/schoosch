@@ -13,14 +13,14 @@ class StudentHomeworkTile extends StatelessWidget {
   final void Function(HomeworkModel) delete;
 
   const StudentHomeworkTile({
-    Key? key,
+    super.key,
     required this.homeworks,
     required this.toggleHomeworkCompletion,
     required this.editHomework,
     required this.delete,
     required this.readOnly,
     this.forceRefresh = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class StudentHomeworkTile extends StatelessWidget {
                       readOnly: readOnly,
                       forceRefresh: forceRefresh,
                     ))
-                .toList(),
+                ,
           ],
         );
       },

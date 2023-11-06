@@ -18,13 +18,13 @@ class TeacherYearMarksTable extends StatefulWidget {
   final bool readOnly;
 
   const TeacherYearMarksTable({
-    Key? key,
+    super.key,
     required this.currentcur,
     required this.periods,
     this.aclass,
     this.teacher,
     this.readOnly = false,
-  }) : super(key: key);
+  });
 
   @override
   State<TeacherYearMarksTable> createState() => _TeacherYearMarksTableState();

@@ -20,8 +20,8 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var fauth = FAuth();
   await fauth.init();
-  // var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org:8182', path))
-  var proxy = ProxyStore((path) => Uri.http('localhost:8182', path));
+  // var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org:8182', path)); //real
+  var proxy = ProxyStore((path) => Uri.http('localhost:8182', path)); // local
   var curweek = CurrentWeek(Week.current());
   var prefs = PrefsController();
   await prefs.init();
@@ -37,17 +37,17 @@ Future<void> main() async {
     // await bcont.init();
   }
 
-  runApp(const MyApp());
+  runApp(const SchooschApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class SchooschApp extends StatefulWidget {
+  const SchooschApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<SchooschApp> createState() => _SchooschAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _SchooschAppState extends State<SchooschApp> {
   @override
   void initState() {
     super.initState();

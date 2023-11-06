@@ -22,8 +22,7 @@ class ObserverLessonPage extends StatefulWidget {
   final Map<String, List<HomeworkModel>> homeworks;
 
   const ObserverLessonPage(
-      {Key? key, required this.lesson, required this.homeworks, required this.curriculum, required this.venue, required this.time, required this.date})
-      : super(key: key);
+      {super.key, required this.lesson, required this.homeworks, required this.curriculum, required this.venue, required this.time, required this.date});
 
   @override
   State<ObserverLessonPage> createState() => _ObserverLessonPageState();

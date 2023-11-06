@@ -12,10 +12,10 @@ class StudentsTablePage extends StatefulWidget {
   final List<StudyPeriodModel> periods;
 
   const StudentsTablePage({
-    Key? key,
+    super.key,
     required this.student,
     required this.periods,
-  }) : super(key: key);
+  });
 
   @override
   State<StudentsTablePage> createState() => _StudentsTablePageState();
@@ -52,7 +52,7 @@ class _StudentsTablePageState extends State<StudentsTablePage> {
                           value: e,
                           child: Text(e.name),
                         ))
-                    .toList(),
+                    ,
               ],
               onChanged: (value) => setState(() {
                 selectedPeriod = value;

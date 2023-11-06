@@ -7,7 +7,7 @@ import 'package:schoosch/widgets/utils.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class RatePage extends StatefulWidget {
-  const RatePage(this._aclass, {Key? key}) : super(key: key);
+  const RatePage(this._aclass, {super.key});
   final Future<ClassModel?> _aclass;
 
   @override

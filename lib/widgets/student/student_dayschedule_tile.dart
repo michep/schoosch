@@ -11,7 +11,7 @@ class StudentDayScheduleTile extends StatefulWidget {
   final StudentModel _student;
   final DateTime _date;
 
-  const StudentDayScheduleTile(this._schedule, this._student, this._date, {Key? key}) : super(key: key);
+  const StudentDayScheduleTile(this._schedule, this._student, this._date, {super.key});
 
   @override
   State<StudentDayScheduleTile> createState() => _StudentDayScheduleTileState();

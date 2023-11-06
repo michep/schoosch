@@ -16,7 +16,7 @@ import 'package:schoosch/widgets/teacher/teacher_schedule_switcher.dart';
 import 'package:schoosch/widgets/week_selector.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

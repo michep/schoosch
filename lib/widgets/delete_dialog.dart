@@ -10,11 +10,11 @@ class DeleteDialog extends StatelessWidget {
 
   //TODO: make a bottom sheet
   const DeleteDialog({
-    Key? key,
+    super.key,
     this.hw,
     this.mark,
     required this.context,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

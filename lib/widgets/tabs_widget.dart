@@ -4,7 +4,7 @@ import 'package:schoosch/widgets/tab_chip.dart';
 class TabsWidget extends StatefulWidget {
   final Map<String, Widget> pages;
   final bool isScrollable;
-  const TabsWidget({Key? key, required this.pages, required this.isScrollable}) : super(key: key);
+  const TabsWidget({super.key, required this.pages, required this.isScrollable});
 
   @override
   State<TabsWidget> createState() => _TabsWidgetState();

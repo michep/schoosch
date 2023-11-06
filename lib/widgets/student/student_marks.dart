@@ -7,7 +7,7 @@ class StudentMarks extends StatefulWidget {
   final LessonModel _lesson;
   final DateTime _date;
   final StudentModel _student;
-  const StudentMarks(this._lesson, this._date, this._student, {Key? key}) : super(key: key);
+  const StudentMarks(this._lesson, this._date, this._student, {super.key});
 
   @override
   State<StudentMarks> createState() => _StudentMarksState();

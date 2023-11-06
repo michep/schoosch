@@ -4,7 +4,7 @@ class TabChip extends StatelessWidget {
   final String text;
   final int pos;
   final int current;
-  const TabChip({Key? key, required this.current, required this.pos, required this.text}) : super(key: key);
+  const TabChip({super.key, required this.current, required this.pos, required this.text});
 
   @override
   Widget build(BuildContext context) {

@@ -20,7 +20,7 @@ class TeacherLessonPage extends StatefulWidget {
   final LessontimeModel time;
   final TeacherModel teacher;
 
-  const TeacherLessonPage(this.lesson, this.curriculum, this.venue, this.time, this.date, this.teacher, {Key? key}) : super(key: key);
+  const TeacherLessonPage(this.lesson, this.curriculum, this.venue, this.time, this.date, this.teacher, {super.key});
 
   @override
   State<TeacherLessonPage> createState() => _TeacherLessonPageState();

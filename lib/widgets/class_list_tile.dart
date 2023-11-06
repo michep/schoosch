@@ -7,7 +7,7 @@ import 'package:schoosch/pages/observer/observer_page.dart';
 class ClassListTile extends StatelessWidget {
   final ClassModel _class;
 
-  const ClassListTile(this._class, {Key? key}) : super(key: key);
+  const ClassListTile(this._class, {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -12,7 +12,7 @@ class PeopleListPage extends StatefulWidget {
   final String type;
   final String? title;
 
-  const PeopleListPage(this.peopleFutureFunc, {this.selectionMode = false, this.type = 'all', this.title, Key? key}) : super(key: key);
+  const PeopleListPage(this.peopleFutureFunc, {this.selectionMode = false, this.type = 'all', this.title, super.key});
   @override
   State<PeopleListPage> createState() => _PeopleListPageState();
 }

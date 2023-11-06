@@ -4,7 +4,7 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/profile_page.dart';
 
 class MAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const MAppBar(this._title, {this.showProfile = false, this.showSendNotif = false, Key? key, this.actions}) : super(key: key);
+  const MAppBar(this._title, {this.showProfile = false, this.showSendNotif = false, super.key, this.actions});
 
   final String _title;
   final bool showProfile;

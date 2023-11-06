@@ -19,7 +19,7 @@ class ScheduleLessonsPage extends StatefulWidget {
   final ClassScheduleModel _schedule;
   final String _title;
 
-  const ScheduleLessonsPage(this._aclass, this._schedule, this._title, {Key? key}) : super(key: key);
+  const ScheduleLessonsPage(this._aclass, this._schedule, this._title, {super.key});
 
   @override
   State<ScheduleLessonsPage> createState() => _VenuePageState();

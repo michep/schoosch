@@ -14,7 +14,7 @@ class PeriodMarkPage extends StatefulWidget {
   final bool editMode;
   final String studentId;
 
-  const PeriodMarkPage(this.studentId, this.mark, this.title, {Key? key, this.editMode = false}) : super(key: key);
+  const PeriodMarkPage(this.studentId, this.mark, this.title, {super.key, this.editMode = false});
 
   @override
   State<PeriodMarkPage> createState() => _PeriodMarkPageState();
@@ -128,15 +128,18 @@ class _PeriodMarkPageState extends State<PeriodMarkPage> {
 
   void save() async {
     if (_formKey.currentState!.validate()) {
-      var nmark = PeriodMarkModel.fromMap(widget.mark.id, {
-        'teacher_id': widget.mark.teacherId,
+      var nmark = PeriodMarkModel.fromMap(
+        widget.mark.id,
+        {
+          'teacher_id': widget.mark.teacherId,
           'student_id': widget.studentId,
           'curriculum_id': widget.mark.curriculumId,
           'period_id': widget.mark.periodId,
           'type': 'period',
           'comment': '',
           'mark': mark,
-      },);
+        },
+      );
       await nmark.save();
       Get.back<bool>(result: true);
     }

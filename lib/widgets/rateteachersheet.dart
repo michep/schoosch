@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class RateSheet extends StatefulWidget {
   final TeacherModel _teacher;
 
-  const RateSheet(this._teacher, {Key? key}) : super(key: key);
+  const RateSheet(this._teacher, {super.key});
 
   @override
   RateSheetState createState() => RateSheetState();

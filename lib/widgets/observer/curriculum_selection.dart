@@ -9,7 +9,7 @@ import 'package:schoosch/widgets/utils.dart';
 
 class CurriculumSelection extends StatelessWidget {
   final ClassModel _class;
-  const CurriculumSelection(this._class, {Key? key}) : super(key: key);
+  const CurriculumSelection(this._class, {super.key});
 
   @override
   Widget build(BuildContext context) {

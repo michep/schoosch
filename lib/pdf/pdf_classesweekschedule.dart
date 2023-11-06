@@ -73,7 +73,7 @@ class PDFClassesWeekSchedule {
               children: [
                 _emptyCell(),
                 _emptyCell(),
-                ...data.keys.map((e) => _cell(text: e.name, fontWeight: pw.FontWeight.bold, fontSize: 10)).toList(),
+                ...data.keys.map((e) => _cell(text: e.name, fontWeight: pw.FontWeight.bold, fontSize: 10)),
               ],
             ));
 

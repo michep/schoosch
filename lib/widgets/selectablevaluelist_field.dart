@@ -27,8 +27,8 @@ class SelectableValueListFormField<T> extends StatefulWidget {
     required this.setElementFunc,
     required this.removeElementFunc,
     this.listValidatorFunc,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   SelectableValueListFormFieldState<T> createState() => SelectableValueListFormFieldState<T>();

@@ -12,7 +12,7 @@ class StudentLessonListTile extends StatefulWidget {
   final StudentModel _student;
   final DateTime _date;
 
-  const StudentLessonListTile(this._student, this._lesson, this._date, {Key? key}) : super(key: key);
+  const StudentLessonListTile(this._student, this._lesson, this._date, {super.key});
 
   @override
   State<StudentLessonListTile> createState() => _StudentLessonListTileState();

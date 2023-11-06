@@ -19,13 +19,13 @@ class TeacherTablePage extends StatefulWidget {
   final bool readOnly;
 
   const TeacherTablePage({
-    Key? key,
+    super.key,
     required this.currentcur,
     required this.periods,
     this.aclass,
     this.teacher,
     this.readOnly = false,
-  }) : super(key: key);
+  });
 
   @override
   State<TeacherTablePage> createState() => _TeacherTablePageState();
@@ -57,12 +57,10 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
             child: DropdownButton<StudyPeriodModel>(
               value: selectedPeriod,
               items: [
-                ...widget.periods
-                    .map((e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(e.name),
-                        ))
-                    .toList(),
+                ...widget.periods.map((e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e.name),
+                    )),
               ],
               onChanged: (value) => setState(() {
                 selectedPeriod = value;

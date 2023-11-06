@@ -15,7 +15,7 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
   final void Function(HomeworkModel, CompletionFlagModel) toggleHomeworkCompletion;
 
   const StudentHomeworkCompetionTile({
-    Key? key,
+    super.key,
     required this.homework,
     required this.student,
     required this.editHomework,
@@ -23,7 +23,7 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
     required this.toggleHomeworkCompletion,
     required this.readOnly,
     this.forceRefresh = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(Object context) {

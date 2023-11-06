@@ -12,7 +12,7 @@ import 'package:schoosch/pdf/pdf_theme.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
 
 class MDrawer extends StatelessWidget {
-  const MDrawer({Key? key}) : super(key: key);
+  const MDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {

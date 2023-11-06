@@ -15,7 +15,7 @@ class ClassListPage extends StatefulWidget {
   final bool selectionMode;
   final ClassListMode listMode;
 
-  const ClassListPage(this._institution, {this.selectionMode = false, this.listMode = ClassListMode.classes, Key? key}) : super(key: key);
+  const ClassListPage(this._institution, {this.selectionMode = false, this.listMode = ClassListMode.classes, super.key});
 
   @override
   State<ClassListPage> createState() => _ClassListPageState();
