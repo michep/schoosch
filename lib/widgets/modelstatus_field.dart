@@ -5,7 +5,7 @@ import 'package:schoosch/model/status_enum.dart';
 class ModelStatusFormField extends StatelessWidget {
   final void Function(ModelStatus?) onChanged;
   final ModelStatus status;
-  const ModelStatusFormField({Key? key, required this.status, required this.onChanged}) : super(key: key);
+  const ModelStatusFormField({super.key, required this.status, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {

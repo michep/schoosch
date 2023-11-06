@@ -22,7 +22,7 @@ class HomeworkPage extends StatefulWidget {
   final bool isPersonalHomework;
   final List<String> studentIds;
 
-  const HomeworkPage(this.lesson, this.curriculum, this.homework, this.studentIds, {Key? key, this.isPersonalHomework = true}) : super(key: key);
+  const HomeworkPage(this.lesson, this.curriculum, this.homework, this.studentIds, {super.key, this.isPersonalHomework = true});
 
   @override
   State<HomeworkPage> createState() => _HomeworkPageState();

@@ -4,7 +4,7 @@ import 'package:schoosch/pages/admin/admin_drawer.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
 class AdminPage extends StatelessWidget {
-  const AdminPage({Key? key}) : super(key: key);
+  const AdminPage({super.key});
 
   @override
   Widget build(BuildContext context) {

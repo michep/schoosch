@@ -7,11 +7,11 @@ class MarkFormField extends StatefulWidget {
   final String? Function(int?)? validator;
 
   const MarkFormField({
-    Key? key,
+    super.key,
     required this.mark,
     required this.onSaved,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   State<MarkFormField> createState() => _MarkFormFieldState();

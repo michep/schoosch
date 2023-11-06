@@ -17,7 +17,7 @@ class StudentLessonTile extends StatelessWidget {
   final LessontimeModel? tim;
   final String? mar;
   const StudentLessonTile({
-    Key? key,
+    super.key,
     required this.lesson,
     required this.student,
     required this.date,
@@ -25,7 +25,7 @@ class StudentLessonTile extends StatelessWidget {
     this.ven,
     this.tim,
     this.mar,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

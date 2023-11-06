@@ -7,7 +7,7 @@ class MarkTypeFormField extends StatelessWidget {
   final void Function(MarkType?) onChanged;
   final MarkType markType;
   final String? Function(MarkType?)? validator;
-  const MarkTypeFormField({Key? key, required this.markType, required this.onChanged, this.validator}) : super(key: key);
+  const MarkTypeFormField({super.key, required this.markType, required this.onChanged, this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -33,20 +33,20 @@ class MarkTypeFormField extends StatelessWidget {
           //     value: markType,
           //     onChanged: onChanged),
           child: ChipsChoice<MarkType>.single(
-                      value: markType,
-                      onChanged: onChanged,
-                      choiceItems: C2Choice.listFrom<MarkType, MarkType>(
-                        source: MarkType.getAllMarktypes(),
-                        value: (i, v) => v,
-                        label: (i, v) => v.name,
-                      ),
-                      choiceStyle: C2ChipStyle.toned(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(5),
-                        ),
-                      ),
-                      wrapped: true,
-                    ),
+            value: markType,
+            onChanged: onChanged,
+            choiceItems: C2Choice.listFrom<MarkType, MarkType>(
+              source: MarkType.getAllMarktypes(),
+              value: (i, v) => v,
+              label: (i, v) => v.name,
+            ),
+            choiceStyle: C2ChipStyle.toned(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(5),
+              ),
+            ),
+            wrapped: true,
+          ),
         );
       }),
     );

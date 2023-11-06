@@ -5,11 +5,11 @@ class FABMenu extends StatefulWidget {
   final Color colorClosed;
   final Color colorOpen;
   const FABMenu({
-    Key? key,
+    super.key,
     required this.children,
     required this.colorClosed,
     required this.colorOpen,
-  }) : super(key: key);
+  });
 
   @override
   State<FABMenu> createState() => _FABMenuState();

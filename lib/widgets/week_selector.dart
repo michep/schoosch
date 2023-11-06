@@ -5,7 +5,7 @@ import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class WeekSelector extends StatelessWidget {
-  WeekSelector({Key? key}) : super(key: key);
+  WeekSelector({super.key});
 
   final cw = Get.find<CurrentWeek>();
 

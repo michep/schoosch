@@ -11,7 +11,7 @@ class DayLessontimePage extends StatefulWidget {
   final DayLessontimeModel _dayLessontime;
   final String _title;
 
-  const DayLessontimePage(this._dayLessontime, this._title, {Key? key}) : super(key: key);
+  const DayLessontimePage(this._dayLessontime, this._title, {super.key});
 
   @override
   State<DayLessontimePage> createState() => _DayLessontimePageState();

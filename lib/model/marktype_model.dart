@@ -26,9 +26,7 @@ class MarkType {
     institutionId = '';
   }
 
-  MarkType.fromId(String id) {
-
-  }
+  MarkType.fromId(String id);
 
   static List<MarkType> getAllMarktypes() {
     return Get.find<ProxyStore>().marktypes;

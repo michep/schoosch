@@ -6,7 +6,7 @@ import 'package:schoosch/widgets/appbar.dart';
 class InstitutionPage extends StatelessWidget {
   final InstitutionModel institution;
 
-  const InstitutionPage(this.institution, {Key? key}) : super(key: key);
+  const InstitutionPage(this.institution, {super.key});
 
   @override
   Widget build(BuildContext context) {

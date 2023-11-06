@@ -14,7 +14,7 @@ class StudyPeriodPage extends StatefulWidget {
   final StudyPeriodModel _period;
   final String _title;
 
-  const StudyPeriodPage(this._period, this._title, {Key? key}) : super(key: key);
+  const StudyPeriodPage(this._period, this._title, {super.key});
 
   @override
   State<StudyPeriodPage> createState() => _StudyPeriodPageState();

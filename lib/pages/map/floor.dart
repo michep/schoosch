@@ -8,7 +8,7 @@ class Floor extends StatefulWidget {
   final String? chosenRoom;
   final List<NodeModel?>? nodepath;
 
-  const Floor(this.blueprints, this.chosenRoom, this.nodepath, {Key? key}) : super(key: key);
+  const Floor(this.blueprints, this.chosenRoom, this.nodepath, {super.key});
 
   @override
   FloorState createState() => FloorState();

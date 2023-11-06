@@ -28,8 +28,8 @@ class SelectableValueDropdownFormField<T extends Object> extends StatefulWidget 
     required this.callback,
     this.detailsFunc,
     this.validatorFunc,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   SelectableValueDropdownFormFieldState<T> createState() => SelectableValueDropdownFormFieldState<T>();

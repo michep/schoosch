@@ -8,7 +8,7 @@ class LessonTimeTile extends StatefulWidget {
   final bool _isLast;
   final void Function() _deleteFunc;
 
-  const LessonTimeTile(this._lessontime, this._isLast, this._deleteFunc, {Key? key}) : super(key: key);
+  const LessonTimeTile(this._lessontime, this._isLast, this._deleteFunc, {super.key});
 
   @override
   State<LessonTimeTile> createState() => _LessonTimeTileState();

@@ -10,10 +10,10 @@ class StudentPeriodicMarksScreen extends StatelessWidget {
   final List<StudyPeriodModel> periods;
   final StudentModel student;
   const StudentPeriodicMarksScreen({
-    Key? key,
+    super.key,
     required this.periods,
     required this.student,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

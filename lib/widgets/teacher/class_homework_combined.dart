@@ -21,8 +21,7 @@ class ClassHomeworksCombinedPage extends StatefulWidget {
 
   final bool readOnly;
 
-  const ClassHomeworksCombinedPage(this._teacher, this._curriculum, this._date, this._lesson, this._hwsFuture, {Key? key, this.readOnly = false})
-      : super(key: key);
+  const ClassHomeworksCombinedPage(this._teacher, this._curriculum, this._date, this._lesson, this._hwsFuture, {super.key, this.readOnly = false});
 
   @override
   State<ClassHomeworksCombinedPage> createState() => _ClassHomeworksCombinedPageState();
@@ -84,7 +83,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                               forceRefresh: buildForceRefresh,
                             );
                           },
-                        ).toList(),
+                        ),
                         const Text(
                           'ДЗ личные',
                           style: TextStyle(
@@ -101,7 +100,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                               readOnly: widget.readOnly,
                             );
                           },
-                        ).toList(),
+                        ),
                       ],
                     ),
             );

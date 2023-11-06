@@ -9,7 +9,7 @@ class VenuePage extends StatefulWidget {
   final VenueModel _venue;
   final String _title;
 
-  const VenuePage(this._venue, this._title, {Key? key}) : super(key: key);
+  const VenuePage(this._venue, this._title, {super.key});
 
   @override
   State<VenuePage> createState() => _VenuePageState();

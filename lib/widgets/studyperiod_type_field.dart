@@ -5,7 +5,7 @@ import 'package:schoosch/model/studyperiod_model.dart';
 class StudyPeriodTypeFormField extends StatelessWidget {
   final void Function(StudyPeriodType?) onChanged;
   final StudyPeriodType periodType;
-  const StudyPeriodTypeFormField({Key? key, required this.periodType, required this.onChanged}) : super(key: key);
+  const StudyPeriodTypeFormField({super.key, required this.periodType, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {

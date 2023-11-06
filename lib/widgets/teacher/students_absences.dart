@@ -11,7 +11,7 @@ class StudentsAbsencePage extends StatefulWidget {
   final DateTime _date;
   final bool readOnly;
 
-  const StudentsAbsencePage(this._date, this._lesson, {Key? key, this.readOnly = false}) : super(key: key);
+  const StudentsAbsencePage(this._date, this._lesson, {super.key, this.readOnly = false});
 
   @override
   State<StudentsAbsencePage> createState() => _StudentsAbsencePageState();
@@ -49,7 +49,7 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
                                   deleteAbsence,
                                   widget.readOnly,
                                 ))
-                            .toList()
+                            
                       ],
                     ),
             );
@@ -103,7 +103,7 @@ class AbsenceListTile extends StatelessWidget {
   final Future<void> Function(AbsenceModel) deleteAbsenceFunc;
   final bool readOnly;
 
-  const AbsenceListTile(this.absence, this.deleteAbsenceFunc, this.readOnly, {Key? key}) : super(key: key);
+  const AbsenceListTile(this.absence, this.deleteAbsenceFunc, this.readOnly, {super.key});
 
   @override
   Widget build(BuildContext context) {

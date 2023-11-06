@@ -20,7 +20,7 @@ class StudentMarkPage extends StatefulWidget {
   final LessonMarkModel mark;
   final bool editMode;
 
-  const StudentMarkPage(this.lesson, this.mark, this.title, {Key? key, this.editMode = false}) : super(key: key);
+  const StudentMarkPage(this.lesson, this.mark, this.title, {super.key, this.editMode = false});
 
   @override
   State<StudentMarkPage> createState() => _StudentMarkPageState();
@@ -72,7 +72,7 @@ class _StudentMarkPageState extends State<StudentMarkPage> {
                 ),
                 MarkTypeFormField(
                   markType: markType,
-                  validator:(value) => Utils.validateType(value, S.of(context).errorUnknownMarkType),
+                  validator: (value) => Utils.validateType(value, S.of(context).errorUnknownMarkType),
                   onChanged: (v) {
                     if (v is MarkType) {
                       setState(() {

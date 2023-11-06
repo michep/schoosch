@@ -14,7 +14,7 @@ class ClassMarkPage extends StatefulWidget {
   final LessonModel lesson;
   final DateTime date;
   final LessonMarkModel mark;
-  const ClassMarkPage(this.lesson, this.title, this.date, this.mark, {Key? key}) : super(key: key);
+  const ClassMarkPage(this.lesson, this.title, this.date, this.mark, {super.key});
 
   @override
   State<ClassMarkPage> createState() => _ClassMarkPageState();

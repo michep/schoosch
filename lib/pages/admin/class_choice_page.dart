@@ -9,7 +9,7 @@ import 'package:schoosch/widgets/utils.dart';
 class ClassChoicePage extends StatefulWidget {
   final InstitutionModel _institution;
   final bool forReplacements;
-  const ClassChoicePage(this._institution, this.forReplacements, {Key? key}) : super(key: key);
+  const ClassChoicePage(this._institution, this.forReplacements, {super.key});
 
   @override
   State<ClassChoicePage> createState() => _ClassChoicePageState();
