@@ -3,17 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/marktype_model.dart';
 
-class MarkTypeFormField extends StatelessWidget {
+class MarkTypeFormField extends StatefulWidget {
   final void Function(MarkType?) onChanged;
   final MarkType markType;
   final String? Function(MarkType?)? validator;
-  const MarkTypeFormField({super.key, required this.markType, required this.onChanged, this.validator});
+  const MarkTypeFormField({
+    super.key,
+    required this.markType,
+    required this.onChanged,
+    this.validator,
+  });
+
+  @override
+  State<MarkTypeFormField> createState() => _MarkTypeFormFieldState();
+}
+
+class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
+  String? errorText;
 
   @override
   Widget build(BuildContext context) {
     var loc = S.of(context);
     return FormField<MarkType>(
-      validator: validator,
+      validator: validate,
       builder: ((state) {
         return InputDecorator(
           decoration: InputDecoration(
@@ -33,8 +45,12 @@ class MarkTypeFormField extends StatelessWidget {
           //     value: markType,
           //     onChanged: onChanged),
           child: ChipsChoice<MarkType>.single(
-            value: markType,
-            onChanged: onChanged,
+            value: state.value ?? widget.markType,
+            onChanged: (v) {
+              widget.onChanged(v);
+              state.didChange(v);
+              state.save();
+            },
             choiceItems: C2Choice.listFrom<MarkType, MarkType>(
               source: MarkType.getAllMarktypes(),
               value: (i, v) => v,
@@ -50,5 +66,13 @@ class MarkTypeFormField extends StatelessWidget {
         );
       }),
     );
+  }
+
+  String? validate(MarkType? mark) {
+    var err = widget.validator?.call(mark);
+    setState(() {
+      errorText = err;
+    });
+    return err;
   }
 }
