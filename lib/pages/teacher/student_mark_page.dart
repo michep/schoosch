@@ -75,9 +75,7 @@ class _StudentMarkPageState extends State<StudentMarkPage> {
                   validator: (value) => Utils.validateType(value, S.of(context).errorUnknownMarkType),
                   onChanged: (v) {
                     if (v is MarkType) {
-                      setState(() {
-                        markType = v;
-                      });
+                      markType = v;
                     }
                   },
                 ),
@@ -143,7 +141,7 @@ class _StudentMarkPageState extends State<StudentMarkPage> {
           'date': widget.mark.date.toIso8601String(),
           'curriculum_id': widget.mark.curriculumId,
           'lesson_order': widget.mark.lessonOrder,
-          'type': markType.id,
+          'type': markType,
           // 'type': 'regular',
           'comment': _commentcont.value.text,
           'mark': mark,
