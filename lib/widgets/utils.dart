@@ -41,7 +41,7 @@ class Utils {
   }
 
   static String? validateType(MarkType? type, String error) {
-    return (type == null) ? error : null;
+    return (type == null || type.id == 'emptytype123') ? error : null;
   }
 
   static Future<void> showErrorSnackbar(String text) async {
