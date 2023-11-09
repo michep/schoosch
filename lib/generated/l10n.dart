@@ -280,6 +280,75 @@ class S {
     );
   }
 
+  ///`Mark type`
+  String get marktypesList {
+    return Intl.message(
+      'Mark type',
+      name: 'marktypesList',
+      desc: '',
+      args: [],
+    );
+  }
+
+  ///`Mark name`
+  String get marktypeName {
+    return Intl.message(
+      'Marktype name',
+      name: 'marktypeName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  ///`Mark label`
+  String get marktypeLabel {
+    return Intl.message(
+      'Marktype label',
+      name: 'marktypeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  ///`Mark status`
+  String get marktypeStatus {
+    return Intl.message(
+      'Marktype status',
+      name: 'marktypeStatus',
+      desc: '',
+      args: [],
+    );
+  }
+
+  ///`Mark type`
+  String get marktypeWeight {
+    return Intl.message(
+      'Marktype weight',
+      name: 'marktypeWeight',
+      desc: '',
+      args: [],
+    );
+  }
+
+  ///`Mark type`
+  String get errorWeightEmpty {
+    return Intl.message(
+      'Marktype should have a weight.',
+      name: 'errorWeightEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  String get errorMarktypeStatus{
+    return Intl.message(
+      'Marktype should have a status (1 or 0)',
+      name: 'errorMarktypeStatus',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `{classname} schedule`
   String classScheduleName(Object classname) {
     return Intl.message(

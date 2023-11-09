@@ -4,6 +4,7 @@ import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
+import 'package:schoosch/model/marktype_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/model/venue_model.dart';
@@ -31,6 +32,10 @@ class InstitutionModel {
 
   Future<List<VenueModel>> get venues async {
     return Get.find<ProxyStore>().getAllVenues();
+  }
+
+  Future<List<MarkType>> get marktypes async {
+    return Get.find<ProxyStore>().getAllMarktypes();
   }
 
   Future<List<StudyPeriodModel>> get studyperiods async {

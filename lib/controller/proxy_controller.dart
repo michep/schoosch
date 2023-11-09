@@ -76,6 +76,8 @@ class ProxyStore extends getx.GetxController {
 
   PersonModel? get currentUser => _currentUser;
   InstitutionModel? get currentInstitution => institution;
+  
+  MarkType? typeFromId(String id) => marktypes.firstWhere((element) => element.id == id);
 
   Future<InstitutionModel> _geInstitutionIdByUserEmail(String email) async {
     var res = await dio.getUri<Map<String, dynamic>>(baseUriFunc('/institution/email/$email'));
@@ -625,6 +627,24 @@ class ProxyStore extends getx.GetxController {
     var res = await dio.getUri<List>(baseUriFunc('/marktype'));
     var js = res.data!;
     return js.map((e) => MarkType.fromMap(e['_id'], e)).toList();
+  }
+
+  Future<String> saveMarktype(MarkType mt) async {
+    var data = mt.toMap();
+    data['institution_id'] = institution.id;
+    var res = await dio.putUri<Map<String, dynamic>>(
+      baseUriFunc('/marktype'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: data,
+    );
+    var js = res.data!;
+    return js['id'];
+  }
+
+  Future<void> deleteMarktype(MarkType mt) async {
+    await dio.deleteUri(
+      baseUriFunc('/marktype/${mt.id}'),
+    );
   }
 
   Future<List<LessonMarkModel>> getAllLessonMarks(LessonModel lesson, DateTime date) async {
