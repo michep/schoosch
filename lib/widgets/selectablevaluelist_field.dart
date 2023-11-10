@@ -51,13 +51,12 @@ class SelectableValueListFormFieldState<T> extends State<SelectableValueListForm
       builder: (fieldstate) => ExpansionTile(
         controlAffinity: ListTileControlAffinity.leading,
         title: Text('${widget.title} (${_dataList.length})'),
-        subtitle: fieldstate.hasError
-            ? Text(fieldstate.errorText!, style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.error))
-            : const SizedBox.shrink(),
+        subtitle:
+            fieldstate.hasError ? Text(fieldstate.errorText!, style: TextStyle(fontSize: 12, color: Get.theme.colorScheme.error)) : const SizedBox.shrink(),
         trailing: IconButton(
           icon: Icon(
             Icons.add,
-            color: Theme.of(context).primaryColor,
+            color: Get.theme.primaryColor,
           ),
           onPressed: _addData,
         ),

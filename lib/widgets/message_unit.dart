@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/model/message_model.dart';
 
 class MessageUnit extends StatelessWidget {
@@ -25,7 +26,7 @@ class MessageUnit extends StatelessWidget {
             bottomLeft: const Radius.circular(12),
             bottomRight: const Radius.circular(12),
           ),
-          color: Theme.of(context).colorScheme.primary,
+          color: Get.theme.colorScheme.primary,
         ),
         child: Text(message.message!),
       ),

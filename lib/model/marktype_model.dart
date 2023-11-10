@@ -1,16 +1,17 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
+import 'package:schoosch/model/status_enum.dart';
 
 class MarkType {
   String? _id;
-  late int status;
+  late StatusModel status;
   late String name;
   late String label;
   late double weight;
   late String institutionId;
 
   MarkType.fromMap(this._id, Map<String, dynamic> map) {
-    status = map['status'] != null ? map['status'] as int : (throw 'required status in marktype $_id');
+    map['status'] != null ? status = StatusModel.parse(map['status']) : throw 'need status key in marktype $id';
     name = map['name'] != null ? map['name'] as String : (throw 'required name in marktype $_id');
     label = map['label'] != null ? map['label'] as String : (throw 'required label in marktype $_id');
     weight = map['weight'] != null ? map['weight'] as double : (throw 'required weight amount in marktype $_id');
@@ -20,8 +21,8 @@ class MarkType {
   String? get id => _id;
 
   MarkType.empty() {
-    _id = 'emptytype123';
-    status = 1;
+    _id = '';
+    status = StatusModel.active;
     name = 'regular';
     label = 'обычная';
     weight = 1.0;
@@ -31,7 +32,7 @@ class MarkType {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> res = {};
     res['_id'] = _id;
-    res['status'] = status;
+    res['status'] = status.nameInt;
     res['name'] = name;
     res['label'] = label;
     res['weight'] = weight;

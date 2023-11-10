@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
@@ -85,7 +86,7 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
                   style: const TextStyle(fontSize: 17),
                 ),
                 Text(
-                  '${widget.lesson.order} ${S.of(context).lesson}',
+                  '${widget.lesson.order} ${AppLocalizations.of(context)!.lesson}',
                   style: const TextStyle(fontSize: 17),
                 ),
                 Text(
@@ -119,7 +120,7 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: Theme.of(context).colorScheme.primary,
+        color: Get.theme.colorScheme.primary,
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
         child: GNav(
           onTabChange: (i) => setState(() {
@@ -127,28 +128,28 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
           }),
           gap: 8,
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
-          activeColor: Theme.of(context).colorScheme.onBackground,
+          color: Get.theme.colorScheme.onBackground.withOpacity(0.5),
+          activeColor: Get.theme.colorScheme.onBackground,
           tabActiveBorder: Border.all(
-            color: Theme.of(context).colorScheme.onBackground,
+            color: Get.theme.colorScheme.onBackground,
           ),
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           tabs: [
             GButton(
               icon: Icons.menu_book_rounded,
-              text: S.of(context).currentLessonHomeworks,
+              text: AppLocalizations.of(context)!.currentLessonHomeworks,
             ),
             GButton(
               icon: Icons.person_off_rounded,
-              text: S.of(context).currentLessonAbsences,
+              text: AppLocalizations.of(context)!.currentLessonAbsences,
             ),
             GButton(
               icon: Icons.thumb_up_alt_rounded,
-              text: S.of(context).currentLessonMarks,
+              text: AppLocalizations.of(context)!.currentLessonMarks,
             ),
             GButton(
               icon: Icons.edit_note_rounded,
-              text: S.of(context).nextLessonHomeworks,
+              text: AppLocalizations.of(context)!.nextLessonHomeworks,
             ),
           ],
         ),

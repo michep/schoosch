@@ -1,18 +1,18 @@
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 
-enum ModelStatus {
+enum StatusModel {
   inactive,
   active;
 
   static const _inactive = 0;
   static const _active = 1;
 
-  static ModelStatus parse(int value) {
+  static StatusModel parse(int value) {
     switch (value) {
       case _inactive:
-        return ModelStatus.inactive;
+        return StatusModel.inactive;
       case _active:
-        return ModelStatus.active;
+        return StatusModel.active;
       default:
         throw 'unkown type';
     }
@@ -20,18 +20,18 @@ enum ModelStatus {
 
   int get nameInt {
     switch (this) {
-      case ModelStatus.inactive:
+      case StatusModel.inactive:
         return _inactive;
-      case ModelStatus.active:
+      case StatusModel.active:
         return _active;
     }
   }
 
-  String localizedName(S S) {
+  String localizedName(AppLocalizations S) {
     switch (this) {
-      case ModelStatus.inactive:
+      case StatusModel.inactive:
         return S.statusInactive;
-      case ModelStatus.active:
+      case StatusModel.active:
         return S.statusActive;
     }
   }

@@ -79,7 +79,7 @@ class StudentLessonTile extends StatelessWidget {
                         style: TextStyle(
                             // fontWeight: FontWeight.bold,
                             fontSize: 14,
-                            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7)),
+                            color: Get.theme.colorScheme.onBackground.withOpacity(0.7)),
                       ),
                     const SizedBox(
                       height: 2,
@@ -107,9 +107,9 @@ class StudentLessonTile extends StatelessWidget {
                                   style: TextStyle(
                                     overflow: TextOverflow.ellipsis,
                                     fontSize: 14,
-                                    color: Theme.of(context).colorScheme.onBackground.withOpacity(
-                                          0.7,
-                                        ),
+                                    color: Get.theme.colorScheme.onBackground.withOpacity(
+                                      0.7,
+                                    ),
                                   ),
                                 )
                               : const SizedBox.shrink();
@@ -146,12 +146,18 @@ class StudentLessonTile extends StatelessWidget {
 
   Color getBorderColor(String firstMark) {
     switch (firstMark) {
-      case '5': return Colors.green;
-      case '4': return Colors.lime;
-      case '3': return Colors.yellow;
-      case '2': return Colors.red;
-      case '1': return Colors.red;
-      default: return Colors.red;
+      case '5':
+        return Colors.green;
+      case '4':
+        return Colors.lime;
+      case '3':
+        return Colors.yellow;
+      case '2':
+        return Colors.red;
+      case '1':
+        return Colors.red;
+      default:
+        return Colors.red;
     }
   }
 }

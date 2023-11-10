@@ -15,7 +15,7 @@ class MAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(_title),
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Get.theme.primaryColor,
       foregroundColor: Colors.white,
       actions: [
         if (showProfile)

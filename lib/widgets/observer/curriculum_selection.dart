@@ -82,7 +82,7 @@ class CurriculumSelection extends StatelessWidget {
 //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 //       children: [
 //         ElevatedButton(
-//             style: ElevatedButton.styleFrom(backgroundColor: widget.isYear ? Colors.transparent : Theme.of(context).colorScheme.primary),
+//             style: ElevatedButton.styleFrom(backgroundColor: widget.isYear ? Colors.transparent : Get.theme.colorScheme.primary),
 //             onPressed: () {
 //               setState(() {
 //                 widget.isYear = false;
@@ -90,7 +90,7 @@ class CurriculumSelection extends StatelessWidget {
 //             },
 //             child: Text('Четвертные')),
 //         ElevatedButton(
-//             style: ElevatedButton.styleFrom(backgroundColor: !widget.isYear ? Colors.transparent : Theme.of(context).colorScheme.primary),
+//             style: ElevatedButton.styleFrom(backgroundColor: !widget.isYear ? Colors.transparent : Get.theme.colorScheme.primary),
 //             onPressed: () {
 //               setState(() {
 //                 widget.isYear = true;

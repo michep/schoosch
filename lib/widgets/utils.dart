@@ -17,6 +17,10 @@ class Utils {
     return (value == null || value.isEmpty) ? error : null;
   }
 
+  static String? validateNumNotEmpty(String? value, String error) {
+    return (value == null || value.isEmpty || !value.isNum) ? error : null;
+  }
+
   static String? validateTextAndvAlueNotEmpty<T>(String? textValue, T? value, String error) {
     return (textValue == null || textValue.isEmpty || value == null) ? error : null;
   }
@@ -41,7 +45,7 @@ class Utils {
   }
 
   static String? validateType(MarkType? type, String error) {
-    return (type == null || type.id == 'emptytype123') ? error : null;
+    return (type == null || type.id == '') ? error : null;
   }
 
   static Future<void> showErrorSnackbar(String text) async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -31,7 +31,7 @@ class _ClassMarkPageState extends State<ClassMarkPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = S.of(context);
+    var loc = AppLocalizations.of(context)!;
     return WillPopScope(
       onWillPop: () async {
         Get.back<bool>(result: true);

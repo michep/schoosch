@@ -1,6 +1,6 @@
 // import 'package:flutter/material.dart';
 // import 'package:intl/intl.dart';
-// import 'package:schoosch/generated/l10n.dart';
+// import 'package:flutter_gen/gen_l10n/l10n.dart';
 // import 'package:schoosch/model/class_model.dart';
 // import 'package:schoosch/widgets/utils.dart';
 
@@ -22,7 +22,7 @@
 
 //   @override
 //   Widget build(BuildContext context) {
-//     var loc = S.of(context);
+//     var loc = AppLocalizations.of(context)!;
 //     return Scaffold(
 //       appBar: AppBar(),
 //       body: SafeArea(

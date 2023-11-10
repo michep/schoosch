@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -36,20 +36,18 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
               },
               child: snapshot.data!.isEmpty
                   ? ListView(
-                    children: const [
-                      Center(child: Text('На этом уроке нет отсутствующих')),
-                    ],
-                  )
+                      children: const [
+                        Center(child: Text('На этом уроке нет отсутствующих')),
+                      ],
+                    )
                   : ListView(
                       key: const PageStorageKey('absence'),
                       children: [
-                        ...snapshot.data!
-                            .map((absence) => AbsenceListTile(
-                                  absence,
-                                  deleteAbsence,
-                                  widget.readOnly,
-                                ))
-                            
+                        ...snapshot.data!.map((absence) => AbsenceListTile(
+                              absence,
+                              deleteAbsence,
+                              widget.readOnly,
+                            ))
                       ],
                     ),
             );
@@ -75,7 +73,7 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
         widget._lesson.aclass.students,
         selectionMode: true,
         type: 'student',
-        title: S.of(context).classStudentsTitle,
+        title: AppLocalizations.of(context)!.classStudentsTitle,
       ),
       transition: Transition.rightToLeft,
     );
@@ -86,15 +84,15 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
         'date': widget._date.toIso8601String(),
       });
       widget._lesson.createAbsence(abs).then((value) => setState(() {
-        forceRefresh = true;
-      }));
+            forceRefresh = true;
+          }));
     }
   }
 
   Future<void> deleteAbsence(AbsenceModel absence) async {
     absence.delete(widget._lesson).then((value) => setState(() {
-      forceRefresh = true;
-    }));
+          forceRefresh = true;
+        }));
   }
 }
 

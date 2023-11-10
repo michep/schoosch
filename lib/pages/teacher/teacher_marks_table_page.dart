@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
@@ -244,7 +244,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
                   color: Colors.grey,
                 )
               : null,
-          color: widget.readOnly || hasMark ? Colors.black54 : Theme.of(context).colorScheme.secondary,
+          color: widget.readOnly || hasMark ? Colors.black54 : Get.theme.colorScheme.secondary,
         ),
         margin: const EdgeInsets.all(4.0),
         child: GestureDetector(
@@ -321,7 +321,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
       () => PeriodMarkPage(
         student.id!,
         mark,
-        S.of(context).setMarkTitle,
+        AppLocalizations.of(context)!.setMarkTitle,
       ),
     );
     if (res is bool) {
@@ -331,7 +331,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
 
   Future<void> editMark(PeriodMarkModel mark) async {
     var res = await Get.to<bool>(
-      () => PeriodMarkPage(mark.studentId, mark, S.of(context).updateMarkTitle, editMode: true),
+      () => PeriodMarkPage(mark.studentId, mark, AppLocalizations.of(context)!.updateMarkTitle, editMode: true),
     );
     if (res is bool) {
       setState(() {

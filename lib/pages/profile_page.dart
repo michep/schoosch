@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/controller/auth_controller.dart';
 import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
 import 'package:schoosch/pages/home_page.dart';
@@ -18,7 +18,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MAppBar(
-        S.of(context).userProfileTitle,
+        AppLocalizations.of(context)!.userProfileTitle,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -112,7 +112,7 @@ class ProfilePage extends StatelessWidget {
     return ListTile(
       title: Text(
         user.currentType.localizedName(
-          S.of(context),
+          AppLocalizations.of(context)!,
         ),
       ),
       trailing: user.types.length > 1
@@ -145,7 +145,7 @@ class ProfilePage extends StatelessWidget {
           children: [
             ...user.types.map((e) => ElevatedButton(
                   onPressed: () => _changeType(user, e),
-                  child: Text(e.localizedName(S.of(context))),
+                  child: Text(e.localizedName(AppLocalizations.of(context)!)),
                 )),
           ],
         ),
