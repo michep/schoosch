@@ -1,56 +1,9 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
-import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/marktype_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
-
-enum MarkTypeEnum {
-  regular,
-  test,
-  exam;
-
-  static const _regular = 'regular';
-  static const _test = 'test';
-  static const _exam = 'exam';
-
-  static MarkTypeEnum _parse(String value) {
-    switch (value) {
-      case _regular:
-        return MarkTypeEnum.regular;
-      case _test:
-        return MarkTypeEnum.test;
-      case _exam:
-        return MarkTypeEnum.exam;
-      default:
-        throw 'unkown type';
-    }
-  }
-
-  String get nameString {
-    switch (this) {
-      case MarkTypeEnum.regular:
-        return _regular;
-      case MarkTypeEnum.test:
-        return _test;
-      case MarkTypeEnum.exam:
-        return _exam;
-    }
-  }
-
-  String localizedName(S S) {
-    switch (this) {
-      case MarkTypeEnum.regular:
-        return S.markTypeRegular;
-      case MarkTypeEnum.test:
-        return S.markTypeTest;
-      case MarkTypeEnum.exam:
-        return S.markTypeExam;
-    }
-  }
-}
 
 class MarkModel {
   String? id;
@@ -123,7 +76,11 @@ class LessonMarkModel extends MarkModel {
   LessonMarkModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map) {
     date = map['date'] != null ? DateTime.tryParse(map['date'])! : throw 'need date key in mark $id';
     lessonOrder = map['lesson_order'] != null ? map['lesson_order'] as int : throw 'need lesson_order key in mark $id';
-    type = map['type_id'] != null ? map['type_id'] == 'regular' ? MarkType.empty() : MarkType.fromId(map['type_id']) : throw 'need type key in mark $id';
+    type = map['type_id'] != null
+        ? map['type_id'] == 'regular'
+            ? MarkType.empty()
+            : MarkType.fromId(map['type_id'])
+        : throw 'need type key in mark $id';
 
     if (map.containsKey('curriculum') && map['curriculum'] is Map) {
       _curriculum = CurriculumModel.fromMap((map['curriculum'] as Map<String, dynamic>)['_id'] as String, map['curriculum'] as Map<String, dynamic>);

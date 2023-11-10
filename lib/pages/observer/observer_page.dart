@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/widgets/observer/curriculum_selection.dart';
 import 'package:schoosch/widgets/observer/observer_schedule_switcher.dart';
@@ -37,7 +38,7 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
         child: MDrawer(),
       ),
       appBar: MAppBar(
-        S.of(context).observedClassTitle(widget._class.name),
+        AppLocalizations.of(context)!.observedClassTitle(widget._class.name),
         showProfile: true,
       ),
       body: SafeArea(
@@ -54,7 +55,7 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
         ),
       ),
       bottomNavigationBar: Container(
-        color: Theme.of(context).colorScheme.primary,
+        color: Get.theme.colorScheme.primary,
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
         child: GNav(
           onTabChange: (i) => setState(() {
@@ -62,20 +63,20 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
           }),
           gap: 8,
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
-          activeColor: Theme.of(context).colorScheme.onBackground,
+          color: Get.theme.colorScheme.onBackground.withOpacity(0.5),
+          activeColor: Get.theme.colorScheme.onBackground,
           tabActiveBorder: Border.all(
-            color: Theme.of(context).colorScheme.onBackground,
+            color: Get.theme.colorScheme.onBackground,
           ),
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           tabs: [
             GButton(
               icon: Icons.schema_rounded,
-              text: S.of(context).tabScheduleHomeworksTitle,
+              text: AppLocalizations.of(context)!.tabScheduleHomeworksTitle,
             ),
             GButton(
               icon: Icons.school_rounded,
-              text: S.of(context).tabStudentsPerformance,
+              text: AppLocalizations.of(context)!.tabStudentsPerformance,
             ),
           ],
         ),

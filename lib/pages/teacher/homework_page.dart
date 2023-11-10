@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
@@ -61,9 +61,9 @@ class _HomeworkPageState extends State<HomeworkPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = S.of(context);
+    var loc = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: MAppBar(S.of(context).homeworkTitle),
+      appBar: MAppBar(AppLocalizations.of(context)!.homeworkTitle),
       body: SafeArea(
         child: Form(
           key: _formKey,
@@ -88,17 +88,17 @@ class _HomeworkPageState extends State<HomeworkPage> {
                     titleFunc: (value) => value?.fullName ?? '',
                     listFunc: () => PeopleListPage(widget.lesson.aclass.students, selectionMode: true, type: 'student', title: loc.classStudentsTitle),
                     detailsFunc: () => PersonPage(_student!, _student!.fullName),
-                    validatorFunc: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorStudentEmpty),
+                    validatorFunc: (value) => Utils.validateTextNotEmpty(value, AppLocalizations.of(context)!.errorStudentEmpty),
                     callback: (value) => _setStudent(value),
                   ),
                 TextFormField(
                   decoration: InputDecoration(
-                    label: Text(S.of(context).homeworkTextTitle),
+                    label: Text(AppLocalizations.of(context)!.homeworkTextTitle),
                   ),
                   controller: _commentcont,
                   maxLines: 3,
                   scrollController: _scrollcon,
-                  validator: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty),
+                  validator: (value) => Utils.validateTextNotEmpty(value, AppLocalizations.of(context)!.errorHomeworkTextEmpty),
                 ),
                 DateTimeField(
                   controller: _todatecont,

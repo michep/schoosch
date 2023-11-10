@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/marktype_model.dart';
+import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/modelstatus_field.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class MarktypePage extends StatefulWidget {
@@ -20,18 +22,21 @@ class _MarktypePageState extends State<MarktypePage> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _label = TextEditingController();
   final TextEditingController _weight = TextEditingController();
-  final TextEditingController _status = TextEditingController();
+  late StatusModel _status;
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     _name.value = TextEditingValue(text: widget._type.name);
+    _label.value = TextEditingValue(text: widget._type.label);
+    _weight.value = TextEditingValue(text: widget._type.weight.toString());
+    _status = widget._type.status;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var loc = S.of(context);
+    var loc = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: MAppBar(
         widget._title,
@@ -52,41 +57,35 @@ class _MarktypePageState extends State<MarktypePage> {
                 TextFormField(
                   controller: _name,
                   decoration: InputDecoration(
-                    label: Text(loc.marktypeName),
+                    label: Text(loc.name),
                   ),
                   validator: (value) => Utils.validateTextNotEmpty(value, loc.errorNameEmpty),
                 ),
                 TextFormField(
                   controller: _label,
                   decoration: InputDecoration(
-                    label: Text(loc.marktypeLabel),
+                    label: Text(loc.markTypeLabel),
                   ),
-                  validator: (value) => Utils.validateTextNotEmpty(value, loc.errorNameEmpty),
+                  validator: (value) => Utils.validateTextNotEmpty(value, loc.errorMarkTypeLabelEmpty),
                 ),
-                TextFormField(
-                  controller: _status,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    label: Text(loc.marktypeStatus),
-                  ),
-                  validator: (value) {
-                    if (value != null) {
-                      if (value == '1' || value == '0') {
-                        return null;
-                      } 
+                ModelStatusFormField(
+                  status: _status,
+                  onChanged: (v) {
+                    if (v is StatusModel) {
+                      setState(() {
+                        _status = v;
+                      });
                     }
-                    return loc.errorMarktypeStatus;
                   },
                 ),
                 TextFormField(
                   controller: _weight,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    label: Text(loc.marktypeWeight),
+                    label: Text(loc.markTypeWeight),
                   ),
-                  validator: (value) => Utils.validateTextNotEmpty(value, loc.errorWeightEmpty),
+                  validator: (value) => Utils.validateNumNotEmpty(value, loc.errorMarkTypeWeightEmpty),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -108,7 +107,7 @@ class _MarktypePageState extends State<MarktypePage> {
       Map<String, dynamic> map = {};
       map['name'] = _name.text;
       map['label'] = _label.text;
-      map['status'] = int.parse(_status.text);
+      map['status'] = _status.nameInt;
       map['weight'] = double.parse(_weight.text);
       map['institution_id'] = type.institutionId;
       var ntype = MarkType.fromMap(type.id, map);

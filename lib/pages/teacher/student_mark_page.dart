@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/marktype_model.dart';
@@ -45,7 +45,7 @@ class _StudentMarkPageState extends State<StudentMarkPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = S.of(context);
+    var loc = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: MAppBar(widget.title),
       body: SafeArea(
@@ -68,11 +68,11 @@ class _StudentMarkPageState extends State<StudentMarkPage> {
                 MarkFormField(
                   mark: widget.mark.mark,
                   onSaved: setMark,
-                  validator: (value) => Utils.validateMark(value, S.of(context).errorMarkError),
+                  validator: (value) => Utils.validateMark(value, AppLocalizations.of(context)!.errorMarkError),
                 ),
                 MarkTypeFormField(
                   markType: widget.mark.type,
-                  validator: (value) => Utils.validateType(value, S.of(context).errorUnknownMarkType),
+                  validator: (value) => Utils.validateType(value, AppLocalizations.of(context)!.errorUnknownMarkType),
                   onChanged: (v) {
                     if (v is MarkType) {
                       markType = v;
@@ -81,7 +81,7 @@ class _StudentMarkPageState extends State<StudentMarkPage> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(
-                    label: Text(S.of(context).commentTitle),
+                    label: Text(AppLocalizations.of(context)!.commentTitle),
                   ),
                   controller: _commentcont,
                   scrollController: _scrollcon,

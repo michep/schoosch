@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/pages/admin/daylessontime_edit.dart';
@@ -22,10 +22,10 @@ class _DayLessontimeListPageState extends State<DayLessontimeListPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = S.of(context);
+    var loc = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: MAppBar(
-        S.of(context).dayLessontimeList,
+        AppLocalizations.of(context)!.dayLessontimeList,
         actions: widget.selectionMode ? [] : [IconButton(onPressed: _newDayLessontime, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(

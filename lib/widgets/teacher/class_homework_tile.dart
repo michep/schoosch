@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/widgets/teacher/class_homework_completion_tile.dart';
@@ -31,8 +32,8 @@ class ClassHomeworkTile extends StatelessWidget {
         if (snapshot.connectionState != ConnectionState.done) return const SizedBox.shrink();
         return ExpansionTile(
           key: PageStorageKey(homework.id),
-          iconColor: ListTileTheme.of(context).iconColor,
-          textColor: ListTileTheme.of(context).textColor,
+          iconColor: Get.theme.listTileTheme.iconColor,
+          textColor: Get.theme.listTileTheme.textColor,
           controlAffinity: ListTileControlAffinity.leading,
           // leading: Text(
           //   Utils.formatDatetime(
@@ -49,7 +50,7 @@ class ClassHomeworkTile extends StatelessWidget {
           subtitle: Text(
             '${Utils.formatDatetime(homework.date)} - ${Utils.formatDatetime(homework.todate!)}',
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+              color: Get.theme.colorScheme.onBackground.withOpacity(0.7),
               fontSize: 13,
             ),
           ),

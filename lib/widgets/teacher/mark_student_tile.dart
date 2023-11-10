@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -21,7 +22,7 @@ class _MarkStudentTileState extends State<MarkStudentTile> {
 
   @override
   Widget build(BuildContext context) {
-    var selStyle = ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary));
+    var selStyle = ButtonStyle(backgroundColor: MaterialStateProperty.all(Get.theme.colorScheme.secondary));
     return Card(
       color: Colors.black.withOpacity(0.3),
       child: Padding(

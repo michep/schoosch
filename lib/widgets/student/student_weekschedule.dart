@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:isoweek/isoweek.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -32,7 +32,7 @@ class _StudentWeekScheduleWidgetState extends State<StudentWeekScheduleWidget> {
         if (schedules.data!.isEmpty) {
           return Center(
             child: Text(
-              S.of(context).noWeekSchedule,
+              AppLocalizations.of(context)!.noWeekSchedule,
               style: const TextStyle(fontSize: 16),
             ),
           );

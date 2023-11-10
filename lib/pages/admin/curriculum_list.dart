@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -23,7 +23,7 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = S.of(context);
+    var loc = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: MAppBar(
         loc.curriculumList,
@@ -108,7 +108,7 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
 
   Future<void> _newCurriculum() async {
     var ncurr = CurriculumModel.empty();
-    var res = await Get.to<CurriculumModel>(() => CurriculumPage(ncurr, S.of(context).newCurriculum));
+    var res = await Get.to<CurriculumModel>(() => CurriculumPage(ncurr, AppLocalizations.of(context)!.newCurriculum));
     if (res is CurriculumModel) {
       setState(() {});
     }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 
 class StudyPeriodTypeFormField extends StatelessWidget {
@@ -9,7 +9,7 @@ class StudyPeriodTypeFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var loc = S.of(context);
+    var loc = AppLocalizations.of(context)!;
     return FormField<String>(
       builder: ((state) {
         return InputDecorator(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/pages/admin/lessontime_tile.dart';
@@ -36,7 +36,7 @@ class _DayLessontimePageState extends State<DayLessontimePage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = S.of(context);
+    var loc = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: MAppBar(
         widget._title,

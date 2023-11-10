@@ -2,7 +2,7 @@ import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
@@ -26,7 +26,7 @@ class _StudyPeriodPageState extends State<StudyPeriodPage> {
   late DateTime? _from;
   late DateTime? _till;
   late StudyPeriodType _periodType;
-  late ModelStatus _status;
+  late StatusModel _status;
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _StudyPeriodPageState extends State<StudyPeriodPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = S.of(context);
+    var loc = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: MAppBar(
         widget._title,
@@ -114,7 +114,7 @@ class _StudyPeriodPageState extends State<StudyPeriodPage> {
                 ModelStatusFormField(
                   status: _status,
                   onChanged: (v) {
-                    if (v is ModelStatus) {
+                    if (v is StatusModel) {
                       setState(() {
                         _status = v;
                       });
