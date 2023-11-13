@@ -261,17 +261,29 @@ class MarkTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        mark.comment,
+        mark.comment != '' ? mark.comment : 'Комментария нет.',
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
       ),
       leading: Text(mark.toString()),
-      subtitle: FutureBuilder<PersonModel>(
-        future: mark.teacher,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return const SizedBox.shrink();
-          return Text(snapshot.data!.fullName);
-        },
+      subtitle: Row(
+        children: [
+          Text(
+            mark.type.label,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          FutureBuilder<PersonModel>(
+            future: mark.teacher,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return const SizedBox.shrink();
+              return Text(snapshot.data!.fullName);
+            },
+          ),
+        ],
       ),
       trailing: readOnly
           ? null
