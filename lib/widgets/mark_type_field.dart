@@ -1,4 +1,3 @@
-import 'package:chips_choice/chips_choice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/model/marktype_model.dart';
@@ -24,6 +23,7 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
   @override
   Widget build(BuildContext context) {
     var loc = AppLocalizations.of(context)!;
+    List<MarkType> types = MarkType.getAllMarktypes();
     return FormField<MarkType>(
       validator: validate,
       builder: ((state) {
@@ -31,37 +31,42 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
           decoration: InputDecoration(
             label: Text(loc.markTypeTitle),
           ),
-          // child: DropdownButton<MarkType>(
-          //     isExpanded: true,
-          //     underline: const SizedBox.shrink(),
-          //     items: [
-          //       ...MarkType.values.toList().map(
-          //             (e) => DropdownMenuItem(
-          //               value: e,
-          //               child: Text(e.localizedName(loc)),
-          //             ),
-          //           ),
-          //     ],
-          //     value: markType,
-          //     onChanged: onChanged),
-          child: ChipsChoice<MarkType>.single(
-            value: state.value ?? widget.markType,
-            onChanged: (v) {
-              widget.onChanged(v);
-              state.didChange(v);
-              state.save();
-            },
-            choiceItems: C2Choice.listFrom<MarkType, MarkType>(
-              source: MarkType.getAllMarktypes(),
-              value: (i, v) => v,
-              label: (i, v) => v.name,
-            ),
-            choiceStyle: C2ChipStyle.toned(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(5),
+
+          // child: ChipsChoice<MarkType>.single(
+          //   value: state.value ?? widget.markType,
+          //   onChanged: (v) {
+          //     widget.onChanged(v);
+          //     state.didChange(v);
+          //     state.save();
+          //   },
+          //   choiceItems: C2Choice.listFrom<MarkType, MarkType>(
+          //     source: MarkType.getAllMarktypes(),
+          //     value: (i, v) => v,
+          //     label: (i, v) => v.name,
+          //   ),
+          //   choiceStyle: C2ChipStyle.toned(
+          //     borderRadius: const BorderRadius.all(
+          //       Radius.circular(5),
+          //     ),
+          //   ),
+          //   wrapped: true,
+          // ),
+
+          child: Wrap(
+            spacing: 5.0,
+            children: [
+              ...types.map(
+                (e) => ChoiceChip(
+                  label: Text(e.name),
+                  selected: e == state.value,
+                  onSelected: (bool selected) {
+                    widget.onChanged(e);
+                    state.didChange(e);
+                    state.save();
+                  },
+                ),
               ),
-            ),
-            wrapped: true,
+            ],
           ),
         );
       }),

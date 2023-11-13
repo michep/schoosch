@@ -160,6 +160,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(DateFormat.Md().format(listmark[index].date)),
+            Text(listmark[index].type.weight.toStringAsFixed(1)),
             Text(listmark[index].mark.toString()),
           ],
         ),
@@ -169,11 +170,14 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
 
   String getSummaryMark(List<LessonMarkModel> listmark) {
     double sum = 0;
+    double kolvo = 0;
     for (LessonMarkModel mark in listmark) {
-      sum += mark.mark * mark.type.weight;
+      double times = mark.type.weight * 10;
+      sum += mark.mark * times;
+      kolvo += times;
       // sum += mark.mark;
     }
-    return (sum / listmark.length).toStringAsFixed(1);
+    return (sum / kolvo).toStringAsFixed(1);
   }
 
   List<Widget> _buildStudentCells(List<StudentModel> liststud) {
