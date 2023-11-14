@@ -47,12 +47,12 @@ class PDFClassesWeekSchedule {
               ),
             ],
           ),
-          footer: (context) => pw.Row(
-            mainAxisAlignment: pw.MainAxisAlignment.end,
-            children: [
-              pw.Text((day + 1).toString()),
-            ],
-          ),
+          // footer: (context) => pw.Row(
+          //   mainAxisAlignment: pw.MainAxisAlignment.end,
+          //   children: [
+          //     pw.Text((day + 1).toString()),
+          //   ],
+          // ),
           build: (context) {
             var oneDayAllClasseseLessons = data.keys.map(
               (aclass) {
