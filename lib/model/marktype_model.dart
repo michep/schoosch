@@ -8,14 +8,14 @@ class MarkType {
   late String name;
   late String label;
   late double weight;
-  late String institutionId;
+  // late String institutionId;
 
   MarkType.fromMap(this._id, Map<String, dynamic> map) {
     map['status'] != null ? status = StatusModel.parse(map['status']) : throw 'need status key in marktype $id';
     name = map['name'] != null ? map['name'] as String : (throw 'required name in marktype $_id');
     label = map['label'] != null ? map['label'] as String : (throw 'required label in marktype $_id');
     weight = map['weight'] != null ? map['weight'] as double : (throw 'required weight amount in marktype $_id');
-    institutionId = map['institution_id'] != null ? map['institution_id'] as String : (throw 'required status in marktype $_id');
+    // institutionId = map['institution_id'] != null ? map['institution_id'] as String : (throw 'required status in marktype $_id');
   }
 
   String? get id => _id;
@@ -23,10 +23,10 @@ class MarkType {
   MarkType.empty() {
     _id = '';
     status = StatusModel.active;
-    name = 'regular';
-    label = 'обычная';
+    name = 'Без типа';
+    label = 'без типа';
     weight = 1.0;
-    institutionId = Get.find<ProxyStore>().institution.id;
+    // institutionId = Get.find<ProxyStore>().institution.id;
   }
 
   Map<String, dynamic> toMap() {
@@ -36,7 +36,7 @@ class MarkType {
     res['name'] = name;
     res['label'] = label;
     res['weight'] = weight;
-    res['institution_id'] = institutionId;
+    // res['institution_id'] = institutionId;
     return res;
   }
 
