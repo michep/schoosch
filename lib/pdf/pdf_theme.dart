@@ -11,8 +11,17 @@ Future<ThemeData> getTheme() async {
   );
 }
 
-PdfPageFormat get defaultPdfPageFormat {
+PdfPageFormat get landscapePdfPageFormat {
   return PdfPageFormat.a4.landscape.copyWith(
+    marginLeft: 1 * PdfPageFormat.cm,
+    marginTop: 1 * PdfPageFormat.cm,
+    marginRight: 1 * PdfPageFormat.cm,
+    marginBottom: 1 * PdfPageFormat.cm,
+  );
+}
+
+PdfPageFormat get portraitPdfPageFormat {
+  return PdfPageFormat.a4.portrait.copyWith(
     marginLeft: 1 * PdfPageFormat.cm,
     marginTop: 1 * PdfPageFormat.cm,
     marginRight: 1 * PdfPageFormat.cm,

@@ -164,8 +164,8 @@ class MDrawer extends StatelessWidget {
             var cw = Get.find<CurrentWeek>().currentWeek;
 
             Get.to(
-              () => Preview(
-                format: defaultPdfPageFormat,
+              () => PDFPreview(
+                format: landscapePdfPageFormat,
                 generate: PDFClassesWeekSchedule(
                   classes: classes.sublist(4),
                   week: cw,
