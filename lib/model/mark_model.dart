@@ -68,7 +68,7 @@ class LessonMarkModel extends MarkModel {
           'curriculum_id': curriculumId,
           'date': date.toIso8601String(),
           'lesson_order': lessonOrder,
-          'type_id': 'regular',
+          'type_id': null,
           'comment': '',
           'mark': 0,
         });
