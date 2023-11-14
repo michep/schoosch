@@ -108,7 +108,7 @@ class _MarktypePageState extends State<MarktypePage> {
       map['label'] = _label.text;
       map['status'] = _status.nameInt;
       map['weight'] = double.parse(_weight.text);
-      map['institution_id'] = type.institutionId;
+      // map['institution_id'] = type.institutionId;
       var ntype = MarkType.fromMap(type.id, map);
       await ntype.save();
       Get.back<MarkType>(result: ntype);
