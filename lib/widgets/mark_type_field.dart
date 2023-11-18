@@ -30,6 +30,7 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
         return InputDecorator(
           decoration: InputDecoration(
             label: Text(loc.markTypeTitle),
+            errorText: errorText,
           ),
 
           // child: ChipsChoice<MarkType>.single(
