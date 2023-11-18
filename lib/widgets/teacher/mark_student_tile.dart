@@ -114,9 +114,10 @@ class _MarkStudentTileState extends State<MarkStudentTile> {
                 return SizedBox(
                   height: 40,
                   child: GridView.count(
-                    crossAxisCount: 10,
+                    crossAxisCount: 8,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
+                    childAspectRatio: 1.3,
                     children: [
                       ...marks.map(
                         (e) => Container(
@@ -126,8 +127,15 @@ class _MarkStudentTileState extends State<MarkStudentTile> {
                             color: Colors.black,
                           ),
                           child: Center(
-                            child: Text(
-                              e.mark.toString(),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '${e.mark.toString()};',
+                                ),
+                                const SizedBox(width: 3,),
+                                Text(e.type.label),
+                              ],
                             ),
                           ),
                         ),
@@ -166,7 +174,7 @@ class _MarkStudentTileState extends State<MarkStudentTile> {
           'curriculum_id': widget.mark.curriculumId,
           'lesson_order': widget.mark.lessonOrder,
           // 'type': markType.nameString,
-          'type': 'regular',
+          'type_id': widget.mark.type.id,
           'comment': '',
           'mark': value,
         },
