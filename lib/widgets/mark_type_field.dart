@@ -25,6 +25,7 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
     var loc = AppLocalizations.of(context)!;
     List<MarkType> types = MarkType.getAllMarktypes();
     return FormField<MarkType>(
+      initialValue: widget.markType,
       validator: validate,
       builder: ((state) {
         return InputDecorator(
