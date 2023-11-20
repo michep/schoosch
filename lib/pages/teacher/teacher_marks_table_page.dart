@@ -168,7 +168,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
                 ),
                 const SizedBox(width: 4,),
                 Text(
-                  '(x${listmark[index].type.weight.toStringAsFixed(1)})',
+                  listmark[index].type != null ? '(x${listmark[index].type.weight.toStringAsFixed(1)})' : 'x1',
                 ),
               ],
             )
