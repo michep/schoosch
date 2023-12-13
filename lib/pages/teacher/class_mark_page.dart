@@ -36,11 +36,9 @@ class _ClassMarkPageState extends State<ClassMarkPage> {
   @override
   Widget build(BuildContext context) {
     var loc = AppLocalizations.of(context)!;
-    return WillPopScope(
-      onWillPop: () async {
-        Get.back<bool>(result: true);
-        return true;
-      },
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) => Get.back<bool>(result: true),
       child: Scaffold(
         appBar: MAppBar(widget.title),
         body: SafeArea(

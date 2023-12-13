@@ -156,28 +156,28 @@ class MDrawer extends StatelessWidget {
     //     label: const Text('о приложении'),
     //   ),
     // );
-    if (PersonModel.currentUser!.types.contains(PersonType.admin)) {
-      items.add(
-        TextButton.icon(
-          onPressed: () async {
-            var classes = await InstitutionModel.currentInstitution.classes;
-            var cw = Get.find<CurrentWeek>().currentWeek;
+    // if (PersonModel.currentUser!.types.contains(PersonType.admin)) {
+    items.add(
+      TextButton.icon(
+        onPressed: () async {
+          var classes = await InstitutionModel.currentInstitution.classes;
+          var cw = Get.find<CurrentWeek>().currentWeek;
 
-            Get.to(
-              () => PDFPreview(
-                format: landscapePdfPageFormat,
-                generate: PDFClassesWeekSchedule(
-                  classes: classes.sublist(4),
-                  week: cw,
-                ).generate,
-              ),
-            );
-          },
-          icon: const Icon(Icons.table_chart_outlined),
-          label: const Text('Печать расписания'),
-        ),
-      );
-    }
+          Get.to(
+            () => PDFPreview(
+              format: landscapePdfPageFormat,
+              generate: PDFClassesWeekSchedule(
+                classes: classes.where((element) => element.grade > 4).toList(),
+                week: cw,
+              ).generate,
+            ),
+          );
+        },
+        icon: const Icon(Icons.table_chart_outlined),
+        label: const Text('Печать расписания'),
+      ),
+    );
+    // }
     return items;
   }
 }

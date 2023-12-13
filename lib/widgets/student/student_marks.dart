@@ -71,12 +71,11 @@ class _StudentMarksState extends State<StudentMarks> {
                         // ),
                         subtitle: Row(
                           children: [
-                            if (e.type != null)
-                              Text(
-                                e.type.label,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
+                            Text(
+                              e.type.label,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                             const SizedBox(
                               width: 10,
                             ),

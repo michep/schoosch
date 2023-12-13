@@ -347,7 +347,7 @@ class _PersonPageState extends State<PersonPage> {
       map['middlename'] = _middlename.text == '' ? null : _middlename.text;
       map['lastname'] = _lastname.text;
       map['email'] = _email.text;
-      map['birthday'] = _birthday != null ? _birthday! : null;
+      map['birthday'] = _birthday;
 
       var nperson = PersonModel.fromMap(person.id, map);
       await nperson.save();
