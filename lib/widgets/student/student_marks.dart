@@ -60,10 +60,31 @@ class _StudentMarksState extends State<StudentMarks> {
                             style: const TextStyle(fontSize: 20),
                           ),
                         ),
-                        title: Text(e.comment),
-                        subtitle: FutureBuilder<PersonModel>(
-                          future: e.teacher,
-                          builder: ((context, snapshot) => snapshot.hasData ? Text(snapshot.data!.fullName) : const Text('')),
+                        title: Text(
+                          e.comment != '' ? e.comment : 'Комментария нет.',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                        // subtitle: FutureBuilder<PersonModel>(
+                        //   future: e.teacher,
+                        //   builder: ((context, snapshot) => snapshot.hasData ? Text(snapshot.data!.fullName) : const Text('')),
+                        // ),
+                        subtitle: Row(
+                          children: [
+                            if (e.type != null)
+                              Text(
+                                e.type.label,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            FutureBuilder<PersonModel>(
+                              future: e.teacher,
+                              builder: ((context, snapshot) => snapshot.hasData ? Text(snapshot.data!.fullName) : const Text('')),
+                            ),
+                          ],
                         ),
                       ),
                     )
@@ -76,12 +97,18 @@ class _StudentMarksState extends State<StudentMarks> {
 
   Color getBorderColor(String firstMark) {
     switch (firstMark) {
-      case '5': return Colors.green;
-      case '4': return Colors.lime;
-      case '3': return Colors.yellow;
-      case '2': return Colors.red;
-      case '1': return Colors.red;
-      default: return Colors.red;
+      case '5':
+        return Colors.green;
+      case '4':
+        return Colors.lime;
+      case '3':
+        return Colors.yellow;
+      case '2':
+        return Colors.red;
+      case '1':
+        return Colors.red;
+      default:
+        return Colors.red;
     }
   }
 }
