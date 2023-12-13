@@ -25,11 +25,13 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
     var loc = AppLocalizations.of(context)!;
     List<MarkType> types = MarkType.getAllMarktypes();
     return FormField<MarkType>(
+      initialValue: widget.markType,
       validator: validate,
       builder: ((state) {
         return InputDecorator(
           decoration: InputDecoration(
             label: Text(loc.markTypeTitle),
+            errorText: errorText,
           ),
 
           // child: ChipsChoice<MarkType>.single(
