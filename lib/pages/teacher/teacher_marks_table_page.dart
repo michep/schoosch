@@ -16,7 +16,7 @@ import 'package:schoosch/widgets/utils.dart';
 
 class TeacherTablePage extends StatefulWidget {
   final CurriculumModel currentcur;
-  final ClassModel? aclass;
+  final ClassModel aclass;
   final TeacherModel? teacher;
   final List<StudyPeriodModel> periods;
   final bool readOnly;
@@ -25,7 +25,7 @@ class TeacherTablePage extends StatefulWidget {
     super.key,
     required this.currentcur,
     required this.periods,
-    this.aclass,
+    required this.aclass,
     this.teacher,
     this.readOnly = false,
   });
@@ -91,7 +91,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: FutureBuilder<List<StudentModel>>(
-                future: widget.aclass != null ? widget.currentcur.classStudents(widget.aclass!) : widget.currentcur.students(),
+                future: widget.currentcur.classStudents(widget.aclass),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Center(
@@ -176,17 +176,19 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(DateFormat.Md().format(listmark[index].date), style: const TextStyle(fontSize: 12),),
+            Text(
+              DateFormat('dd.MM.yy').format(listmark[index].date),
+              style: const TextStyle(fontSize: 12),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  listmark[index].mark.toString(), style: const TextStyle(fontWeight: FontWeight.bold,),
+                  listmark[index].mark.toString(),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(width: 4,),
-                Text(
-                  listmark[index].type != null ? '(x${listmark[index].type.weight.toStringAsFixed(1)})' : 'x1',
-                ),
+                const SizedBox(width: 4),
+                Text('(x${listmark[index].type.weight.toStringAsFixed(1)})'),
               ],
             )
             // Text(listmark[index].type.weight.toStringAsFixed(1)),

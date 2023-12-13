@@ -8,17 +8,17 @@ import 'package:schoosch/pdf/pdf_theme.dart';
 
 class PDFClassCurriculumPeriodMarks {
   final StudyPeriodModel period;
-  final ClassModel? aclass;
+  final ClassModel aclass;
   final CurriculumModel curriculum;
 
   PDFClassCurriculumPeriodMarks({
     required this.period,
     required this.curriculum,
-    this.aclass,
+    required this.aclass,
   });
 
   Future<Uint8List> generate(PdfPageFormat format) async {
-    var students = aclass != null ? await curriculum.classStudents(aclass!) : await curriculum.students();
+    var students = await curriculum.classStudents(aclass);
     var marks = await curriculum.getLessonMarksByStudents(students, period);
     var periodMarks = await curriculum.getPeriodMarksByStudents(students, period);
 
@@ -28,22 +28,7 @@ class PDFClassCurriculumPeriodMarks {
     doc.addPage(
       pw.MultiPage(
         pageFormat: format,
-        header: (context) => pw.Row(
-          children: [
-            if (aclass != null)
-              pw.Text(
-                aclass!.name,
-                style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-              ),
-            pw.Text(
-              curriculum.name,
-              style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-            ),
-            pw.Text(
-              period.name,
-            ),
-          ],
-        ),
+        header: (context) => _header(),
         build: (context) {
           List<pw.TableRow> rows = [];
 
@@ -51,8 +36,8 @@ class PDFClassCurriculumPeriodMarks {
             rows.add(
               pw.TableRow(
                 children: [
-                  _cell(text: student.fullName),
-                  if (marks[student] != null) ...marks[student]!.map((e) => _cell(text: e.mark.toString(), fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                  _studentNameCell(text: student.fullName),
+                  if (marks[student] != null) ...marks[student]!.map((e) => _markCell(text: e.mark.toString(), fontWeight: pw.FontWeight.bold, fontSize: 10)),
                 ],
               ),
             );
@@ -60,11 +45,6 @@ class PDFClassCurriculumPeriodMarks {
 
           return [
             pw.Table(
-              defaultColumnWidth: const pw.FractionColumnWidth(0.10),
-              columnWidths: {
-                0: const pw.FractionColumnWidth(0.03),
-                1: const pw.FractionColumnWidth(0.10),
-              },
               border: pw.TableBorder.all(color: PdfColors.black),
               children: rows,
             ),
@@ -76,7 +56,45 @@ class PDFClassCurriculumPeriodMarks {
     return doc.save();
   }
 
-  pw.Widget _cell({
+  pw.Widget _header() {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.only(bottom: 8),
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            aclass.name,
+            style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+          ),
+          pw.Row(
+            children: [
+              pw.Text(
+                curriculum.name,
+                style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+              ),
+              pw.SizedBox(width: 10),
+              pw.Text(
+                period.name,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  pw.Widget _studentNameCell({required String text}) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.all(2),
+      child: pw.SizedBox(
+        //constraints: const pw.BoxConstraints(minWidth: 30, maxWidth: 50),
+        width: 10,
+        child: pw.Text(text),
+      ),
+    );
+  }
+
+  pw.Widget _markCell({
     required String text,
     double? fontSize,
     pw.FontWeight? fontWeight,

@@ -268,7 +268,7 @@ class MarkTile extends StatelessWidget {
       leading: Text(mark.toString()),
       subtitle: Row(
         children: [
-          if(mark.type != null) Text(
+          Text(
             mark.type.label,
             overflow: TextOverflow.ellipsis,
             maxLines: 1,

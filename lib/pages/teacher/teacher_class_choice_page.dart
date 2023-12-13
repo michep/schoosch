@@ -52,7 +52,6 @@ class ClassChoicePage extends StatelessWidget {
                             ),
                           )
                         : Get.to(() => TeacherTablePage(
-                              // currentcur: snapshot.data![index],
                               currentcur: curriculum,
                               periods: periods,
                               aclass: snapshot.data![index],
