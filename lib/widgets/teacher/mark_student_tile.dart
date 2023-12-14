@@ -112,9 +112,9 @@ class _MarkStudentTileState extends State<MarkStudentTile> {
                 }
                 List<LessonMarkModel> marks = snapshot.data!;
                 return SizedBox(
-                  height: MediaQuery.of(context).size.width / 9,
+                  height: 80,
                   child: GridView.count(
-                    crossAxisCount: 8,
+                    crossAxisCount: (MediaQuery.of(context).size.width / 100).ceil(),
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
                     childAspectRatio: 1.3,
