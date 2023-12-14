@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
@@ -34,7 +34,7 @@ class _CreateReplacementState extends State<CreateReplacement> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
@@ -212,7 +212,7 @@ class _CreateReplacementState extends State<CreateReplacement> {
           return true;
         } else {
           newTeacher = null;
-          Utils.showErrorSnackbar(AppLocalizations.of(context)!.errorPersonIsNotATeacher);
+          Utils.showErrorSnackbar(S.of(context).errorPersonIsNotATeacher);
           return false;
         }
       }

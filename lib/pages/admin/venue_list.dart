@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/pages/admin/venue_edit.dart';
@@ -23,7 +23,7 @@ class _VenueListPageState extends State<VenueListPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     return Scaffold(
       appBar: MAppBar(
         loc.venueList,
@@ -102,7 +102,7 @@ class _VenueListPageState extends State<VenueListPage> {
 
   Future<void> _newVenue() async {
     var nvenue = VenueModel.empty();
-    var res = await Get.to<VenueModel>(() => VenuePage(nvenue, AppLocalizations.of(context)!.newVenue));
+    var res = await Get.to<VenueModel>(() => VenuePage(nvenue, S.of(context).newVenue));
     if (res is VenueModel) {
       setState(() {});
     }

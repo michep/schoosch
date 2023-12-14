@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
@@ -86,7 +86,7 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
                   style: const TextStyle(fontSize: 17),
                 ),
                 Text(
-                  '${widget.lesson.order} ${AppLocalizations.of(context)!.lesson}',
+                  '${widget.lesson.order} ${S.of(context).lesson}',
                   style: const TextStyle(fontSize: 17),
                 ),
                 Text(
@@ -137,19 +137,19 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
           tabs: [
             GButton(
               icon: Icons.menu_book_rounded,
-              text: AppLocalizations.of(context)!.currentLessonHomeworks,
+              text: S.of(context).currentLessonHomeworks,
             ),
             GButton(
               icon: Icons.person_off_rounded,
-              text: AppLocalizations.of(context)!.currentLessonAbsences,
+              text: S.of(context).currentLessonAbsences,
             ),
             GButton(
               icon: Icons.thumb_up_alt_rounded,
-              text: AppLocalizations.of(context)!.currentLessonMarks,
+              text: S.of(context).currentLessonMarks,
             ),
             GButton(
               icon: Icons.edit_note_rounded,
-              text: AppLocalizations.of(context)!.nextLessonHomeworks,
+              text: S.of(context).nextLessonHomeworks,
             ),
           ],
         ),

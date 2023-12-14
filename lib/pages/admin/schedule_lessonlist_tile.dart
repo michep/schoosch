@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/venue_model.dart';
@@ -67,7 +67,7 @@ class _ScheduleLessonListTileState extends State<ScheduleLessonListTile> {
   }
 
   Future<void> _onTap(LessonModel lesson) async {
-    var res = await Get.to<LessonModel>(() => LessonPage(lesson, AppLocalizations.of(context)!.lessonName), transition: Transition.rightToLeft);
+    var res = await Get.to<LessonModel>(() => LessonPage(lesson, S.of(context).lessonName), transition: Transition.rightToLeft);
     if (res is LessonModel) {
       setState(() {
         this.lesson = res;

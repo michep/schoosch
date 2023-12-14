@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
@@ -50,7 +50,7 @@ class _StudentLessonPageState extends State<StudentLessonPage> with SingleTicker
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MAppBar(AppLocalizations.of(context)!.lessonTitle),
+      appBar: MAppBar(S.of(context).lessonTitle),
       body: PageStorage(
         bucket: bucket,
         child: SafeArea(
@@ -120,11 +120,11 @@ class _StudentLessonPageState extends State<StudentLessonPage> with SingleTicker
           tabs: [
             GButton(
               icon: Icons.menu_book_rounded,
-              text: AppLocalizations.of(context)!.currentLessonHomeworks,
+              text: S.of(context).currentLessonHomeworks,
             ),
             GButton(
               icon: Icons.thumb_up_alt_rounded,
-              text: AppLocalizations.of(context)!.currentLessonMarks,
+              text: S.of(context).currentLessonMarks,
             ),
           ],
         ),

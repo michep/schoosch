@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/marktype_model.dart';
 import 'package:schoosch/pages/admin/marktype_edit.dart';
@@ -23,7 +23,7 @@ class _MarktypeListPageState extends State<MarktypeListPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     return Scaffold(
       appBar: MAppBar(
         loc.venueList,
@@ -102,7 +102,7 @@ class _MarktypeListPageState extends State<MarktypeListPage> {
 
   Future<void> _newMarktype() async {
     var ntype = MarkType.empty();
-    var res = await Get.to<MarkType>(() => MarktypePage(ntype, AppLocalizations.of(context)!.newMarkType));
+    var res = await Get.to<MarkType>(() => MarktypePage(ntype, S.of(context).newMarkType));
     if (res is MarkType) {
       setState(() {});
     }

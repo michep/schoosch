@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -101,7 +101,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
           widget._lesson.order,
           widget._date,
         ),
-        AppLocalizations.of(context)!.setMarkTitle,
+        S.of(context).setMarkTitle,
       ),
     );
     if (res is bool) {
@@ -185,7 +185,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
 
   Future<void> editMark(LessonMarkModel mark) async {
     var res = await Get.to<bool>(
-      () => StudentMarkPage(widget._lesson, mark, AppLocalizations.of(context)!.updateMarkTitle, editMode: true),
+      () => StudentMarkPage(widget._lesson, mark, S.of(context).updateMarkTitle, editMode: true),
     );
     if (res is bool) {
       setState(() {

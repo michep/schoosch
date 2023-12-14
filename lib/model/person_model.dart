@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart' as isoweek;
 import 'package:schoosch/controller/proxy_controller.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
@@ -58,7 +58,7 @@ enum PersonType {
     }
   }
 
-  String localizedName(AppLocalizations S) {
+  String localizedName(S S) {
     switch (this) {
       case PersonType.admin:
         return S.roleAdmin;

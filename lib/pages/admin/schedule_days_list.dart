@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/pages/admin/schedule_lessons_edit.dart';
@@ -21,7 +21,7 @@ class _VenueListPageState extends State<ScheduleDaysListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MAppBar(
-        AppLocalizations.of(context)!.classScheduleName(widget._aclass.name),
+        S.of(context).classScheduleName(widget._aclass.name),
       ),
       body: SafeArea(
         child: ListView.builder(

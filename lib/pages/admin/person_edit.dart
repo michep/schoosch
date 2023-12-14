@@ -2,7 +2,7 @@ import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -55,7 +55,7 @@ class _PersonPageState extends State<PersonPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     return Scaffold(
       appBar: MAppBar(
         widget._title,
@@ -225,7 +225,7 @@ class _PersonPageState extends State<PersonPage> {
   }
 
   bool _addChild(PersonModel? value) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     if (value == null) return false;
     if (value.asStudent == null) {
       Utils.showErrorSnackbar(loc.errorPersonIsNotAStudent);
@@ -244,7 +244,7 @@ class _PersonPageState extends State<PersonPage> {
   bool _setChild(PersonModel value) {
     StudentModel sm;
     if (!value.types.contains(PersonType.student)) {
-      Utils.showErrorSnackbar(AppLocalizations.of(context)!.errorPersonIsNotAStudent);
+      Utils.showErrorSnackbar(S.of(context).errorPersonIsNotAStudent);
       return false;
     }
 
@@ -277,7 +277,7 @@ class _PersonPageState extends State<PersonPage> {
   }
 
   bool _addClass(ClassModel? value) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     if (value == null) return false;
     if (_classes.contains(value)) {
       Utils.showErrorSnackbar(loc.errorStudentAlreadyPresent);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/institution_model.dart';
@@ -42,7 +42,7 @@ class _ClassPageState extends State<ClassPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     return Scaffold(
       appBar: MAppBar(
         widget._title,
@@ -162,7 +162,7 @@ class _ClassPageState extends State<ClassPage> {
           return true;
         } else {
           _master = null;
-          Utils.showErrorSnackbar(AppLocalizations.of(context)!.errorPersonIsNotATeacher);
+          Utils.showErrorSnackbar(S.of(context).errorPersonIsNotATeacher);
           return false;
         }
       }
@@ -174,7 +174,7 @@ class _ClassPageState extends State<ClassPage> {
 
   String? _gradeValidator(String? value) {
     String? err;
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     err = Utils.validateTextNotEmpty(value, loc.errorClassGradeEmpty);
     if (err != null) return err;
     int? g = int.tryParse(value!);
@@ -204,7 +204,7 @@ class _ClassPageState extends State<ClassPage> {
   }
 
   bool _addChild(PersonModel? value) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     if (value == null) return false;
     if (value.asStudent == null) {
       Utils.showErrorSnackbar(loc.errorPersonIsNotAStudent);
@@ -222,7 +222,7 @@ class _ClassPageState extends State<ClassPage> {
 
   bool _setChild(PersonModel value) {
     StudentModel sm;
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     if (!value.types.contains(PersonType.student)) {
       Utils.showErrorSnackbar(loc.errorPersonIsNotAStudent);
       return false;
