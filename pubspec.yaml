@@ -24,7 +24,7 @@ dependencies:
   chips_choice: ^3.0.1
   dropdown_search: ^5.0.1
   flutter_native_splash: ^2.0.1+1
-  directed_graph: ^0.4.0
+  # directed_graph: ^0.4.0
   flex_color_scheme: ^7.1.2
   flutter_linkify: ^6.0.0
   url_launcher: ^6.1.5
