@@ -1,4 +1,4 @@
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 
 enum StatusModel {
   inactive,
@@ -27,7 +27,7 @@ enum StatusModel {
     }
   }
 
-  String localizedName(AppLocalizations S) {
+  String localizedName(S S) {
     switch (this) {
       case StatusModel.inactive:
         return S.statusInactive;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MAppBar(
-        AppLocalizations.of(context)!.loginPageTitle,
+        S.of(context).loginPageTitle,
       ),
       body: SignInScreen(
         providers: [

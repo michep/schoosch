@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/marktype_model.dart';
 
 class MarkTypeFormField extends StatefulWidget {
@@ -22,7 +22,7 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     List<MarkType> types = MarkType.getAllMarktypes();
     return FormField<MarkType>(
       initialValue: widget.markType,

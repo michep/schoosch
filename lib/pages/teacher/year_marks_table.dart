@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
@@ -284,7 +284,7 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
       () => PeriodMarkPage(
         student.id!,
         mark,
-        AppLocalizations.of(context)!.setMarkTitle,
+        S.of(context).setMarkTitle,
       ),
     );
     if (res is bool) {
@@ -294,7 +294,7 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
 
   Future<void> editMark(PeriodMarkModel mark) async {
     var res = await Get.to<bool>(
-      () => PeriodMarkPage(mark.studentId, mark, AppLocalizations.of(context)!.updateMarkTitle, editMode: true),
+      () => PeriodMarkPage(mark.studentId, mark, S.of(context).updateMarkTitle, editMode: true),
     );
     if (res is bool) {
       setState(() {

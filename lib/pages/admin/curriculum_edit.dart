@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -38,7 +38,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     return Scaffold(
       appBar: MAppBar(
         widget._title,
@@ -138,7 +138,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
           return true;
         } else {
           _master = null;
-          Utils.showErrorSnackbar(AppLocalizations.of(context)!.errorPersonIsNotATeacher);
+          Utils.showErrorSnackbar(S.of(context).errorPersonIsNotATeacher);
           return false;
         }
       }
@@ -156,7 +156,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
   }
 
   bool _addStudent(PersonModel? value) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     if (value == null) return false;
     if (value.asStudent == null) {
       Utils.showErrorSnackbar(loc.errorPersonIsNotAStudent);
@@ -175,7 +175,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
   bool _setStudent(PersonModel value) {
     StudentModel sm;
     if (!value.types.contains(PersonType.student)) {
-      Utils.showErrorSnackbar(AppLocalizations.of(context)!.errorPersonIsNotAStudent);
+      Utils.showErrorSnackbar(S.of(context).errorPersonIsNotAStudent);
       return false;
     }
 

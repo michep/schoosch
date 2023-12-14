@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/pages/admin/studyperiod_edit.dart';
@@ -23,7 +23,7 @@ class _StudyPeriodListPageState extends State<StudyPeriodListPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     return Scaffold(
       appBar: MAppBar(
         loc.studyPeriodList,

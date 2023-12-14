@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/widgets/observer/curriculum_selection.dart';
 import 'package:schoosch/widgets/observer/observer_schedule_switcher.dart';
@@ -38,7 +38,7 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
         child: MDrawer(),
       ),
       appBar: MAppBar(
-        AppLocalizations.of(context)!.observedClassTitle(widget._class.name),
+        S.of(context).observedClassTitle(widget._class.name),
         showProfile: true,
       ),
       body: SafeArea(
@@ -72,11 +72,11 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
           tabs: [
             GButton(
               icon: Icons.schema_rounded,
-              text: AppLocalizations.of(context)!.tabScheduleHomeworksTitle,
+              text: S.of(context).tabScheduleHomeworksTitle,
             ),
             GButton(
               icon: Icons.school_rounded,
-              text: AppLocalizations.of(context)!.tabStudentsPerformance,
+              text: S.of(context).tabStudentsPerformance,
             ),
           ],
         ),

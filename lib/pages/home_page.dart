@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:schoosch/controller/day_controller.dart';
 import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/observer/class_selection.dart';
 import 'package:schoosch/widgets/appbar.dart';
@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
         child: MDrawer(),
       ),
       appBar: MAppBar(
-        AppLocalizations.of(context)!.appBarTitle,
+        S.of(context).appBarTitle,
         showProfile: true,
         showSendNotif: false,
       ),
@@ -104,6 +104,6 @@ class HomePage extends StatelessWidget {
       });
     }
     if (user.currentType == PersonType.observer) return ClassSelection(PersonModel.currentObserver!);
-    return Center(child: Text(AppLocalizations.of(context)!.errorUnknownPersonType));
+    return Center(child: Text(S.of(context).errorUnknownPersonType));
   }
 }

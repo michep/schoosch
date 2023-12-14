@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/pages/admin/create_replacement.dart';
@@ -20,7 +20,7 @@ class _ClassChoicePageState extends State<ClassChoicePage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     return Scaffold(
       appBar: MAppBar(
         loc.classList,

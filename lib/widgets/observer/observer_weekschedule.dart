@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:isoweek/isoweek.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/widgets/observer/observer_dayschedule_tile.dart';
@@ -29,7 +29,7 @@ class _ObserverScheduleWidgetState extends State<ObserverScheduleWidget> {
         if (schedules.data!.isEmpty) {
           return Center(
             child: Text(
-              AppLocalizations.of(context)!.noWeekSchedule,
+              S.of(context).noWeekSchedule,
               style: const TextStyle(fontSize: 16),
             ),
           );

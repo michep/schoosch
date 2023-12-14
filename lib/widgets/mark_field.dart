@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:get/get.dart';
 
 class MarkFormField extends StatefulWidget {
@@ -31,7 +31,7 @@ class _MarkFormFieldState extends State<MarkFormField> {
         var selStyle = ButtonStyle(backgroundColor: MaterialStateProperty.all(Get.theme.colorScheme.secondary));
         return InputDecorator(
           decoration: InputDecoration(
-            label: Text(AppLocalizations.of(context)!.markTitle),
+            label: Text(S.of(context).markTitle),
             errorText: errorText,
           ),
           child: Row(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -73,7 +73,7 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
         widget._lesson.aclass.students,
         selectionMode: true,
         type: 'student',
-        title: AppLocalizations.of(context)!.classStudentsTitle,
+        title: S.of(context).classStudentsTitle,
       ),
       transition: Transition.rightToLeft,
     );

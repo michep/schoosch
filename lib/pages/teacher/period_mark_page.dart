@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/marktype_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
@@ -39,7 +39,7 @@ class _PeriodMarkPageState extends State<PeriodMarkPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     return Scaffold(
       appBar: MAppBar(widget.title),
       body: SafeArea(
@@ -62,7 +62,7 @@ class _PeriodMarkPageState extends State<PeriodMarkPage> {
                 MarkFormField(
                   mark: widget.mark.mark,
                   onSaved: setMark,
-                  validator: (value) => Utils.validateMark(value, AppLocalizations.of(context)!.errorMarkError),
+                  validator: (value) => Utils.validateMark(value, S.of(context).errorMarkError),
                 ),
                 // MarkTypeFormField(
                 //   markType: markType,
@@ -76,7 +76,7 @@ class _PeriodMarkPageState extends State<PeriodMarkPage> {
                 // ),
                 // TextFormField(
                 //   decoration: InputDecoration(
-                //     label: Text(AppLocalizations.of(context)!.commentTitle),
+                //     label: Text(S.of(context).commentTitle),
                 //   ),
                 //   controller: _commentcont,
                 //   scrollController: _scrollcon,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/marktype_model.dart';
@@ -35,7 +35,7 @@ class _ClassMarkPageState extends State<ClassMarkPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     return PopScope(
       canPop: true,
       onPopInvoked: (didPop) => Get.back<bool>(result: true),
@@ -70,7 +70,7 @@ class _ClassMarkPageState extends State<ClassMarkPage> {
                       widget.mark.type = marktype!;
                     }
                   },
-                  validator: (value) => Utils.validateType(value, AppLocalizations.of(context)!.errorUnknownMarkType),
+                  validator: (value) => Utils.validateType(value, S.of(context).errorUnknownMarkType),
                 ),
                 const SizedBox(
                   height: 10,

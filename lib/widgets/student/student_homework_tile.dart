@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -29,7 +29,7 @@ class _StudentHomeworkTileState extends State<StudentHomeworkTile> {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              widget.isClass ? AppLocalizations.of(context)!.classHomeworkTitle : AppLocalizations.of(context)!.personalHomeworkTitle,
+              widget.isClass ? S.of(context).classHomeworkTitle : S.of(context).personalHomeworkTitle,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
             ),
           ),
@@ -78,10 +78,10 @@ class _StudentHomeworkTileState extends State<StudentHomeworkTile> {
                 Get.back();
               },
               label: Text(c == null
-                  ? AppLocalizations.of(context)!.setCompleted
+                  ? S.of(context).setCompleted
                   : c.status == CompletionStatus.completed
-                      ? AppLocalizations.of(context)!.setUncompleted
-                      : AppLocalizations.of(context)!.errorCanNotBeUncompleted),
+                      ? S.of(context).setUncompleted
+                      : S.of(context).errorCanNotBeUncompleted),
               icon: Icon(c == null
                   ? Icons.add
                   : c.status == CompletionStatus.completed

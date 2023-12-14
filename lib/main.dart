@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,6 @@ import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/firebase_options.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:schoosch/theme.dart';
 
 Future<void> main() async {
@@ -59,16 +59,16 @@ class _SchooschAppState extends State<SchooschApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      supportedLocales: AppLocalizations.supportedLocales,
+      supportedLocales: S.delegate.supportedLocales,
       localizationsDelegates: [
-        ...AppLocalizations.localizationsDelegates,
+        S.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         FirebaseUILocalizations.delegate,
       ],
       locale: const Locale('ru'),
       scrollBehavior: AppScrollBehavior(),
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTiile,
+      onGenerateTitle: (context) => S.of(context).appTiile,
       debugShowCheckedModeBanner: false,
       theme: darkTheme,
       home: const SizedBox.shrink(),

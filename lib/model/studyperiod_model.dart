@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -31,7 +31,7 @@ enum StudyPeriodType {
     }
   }
 
-  String localizedName(AppLocalizations S) {
+  String localizedName(S S) {
     switch (this) {
       case StudyPeriodType.year:
         return S.periodYear;

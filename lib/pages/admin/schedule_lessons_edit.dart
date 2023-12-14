@@ -5,7 +5,7 @@ import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
@@ -57,7 +57,7 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     return Scaffold(
       appBar: MAppBar(
         widget._title,
@@ -180,7 +180,7 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
   Widget _title(int order) {
     return Padding(
       padding: order == 1 ? const EdgeInsets.only(top: 16) : const EdgeInsets.only(top: 0),
-      child: Text(AppLocalizations.of(context)!.scheduleLessonOrder(order)),
+      child: Text(S.of(context).scheduleLessonOrder(order)),
     );
   }
 
@@ -188,7 +188,7 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
     return Padding(
       padding: const EdgeInsets.only(left: 16),
       child: ListTile(
-        title: Text(AppLocalizations.of(context)!.scheduleNoLesson),
+        title: Text(S.of(context).scheduleNoLesson),
       ),
     );
   }
@@ -212,7 +212,7 @@ class _VenuePageState extends State<ScheduleLessonsPage> {
 
   Future<void> _newLesson() async {
     var nlesson = LessonModel.empty(widget._aclass, widget._schedule, _lessons.length + 1);
-    var res = await Get.to<LessonModel>(() => LessonPage(nlesson, AppLocalizations.of(context)!.lesson));
+    var res = await Get.to<LessonModel>(() => LessonPage(nlesson, S.of(context).lesson));
     if (res is LessonModel) {
       setState(() {
         _lessons[_lessons.length + 1] = [];

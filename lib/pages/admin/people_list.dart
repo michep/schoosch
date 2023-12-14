@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
 import 'package:schoosch/widgets/appbar.dart';
@@ -29,10 +29,10 @@ class _PeopleListPageState extends State<PeopleListPage> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = AppLocalizations.of(context)!;
+    var loc = S.of(context);
     return Scaffold(
       appBar: MAppBar(
-        widget.title ?? AppLocalizations.of(context)!.peopleList,
+        widget.title ?? S.of(context).peopleList,
         actions: [IconButton(onPressed: _newPerson, icon: const Icon(Icons.add))],
       ),
       body: SafeArea(
@@ -169,7 +169,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
         default:
           return;
       }
-      var res = await Get.to<PersonModel>(() => PersonPage(nperson, AppLocalizations.of(context)!.newPerson(type)));
+      var res = await Get.to<PersonModel>(() => PersonPage(nperson, S.of(context).newPerson(type)));
       if (res is PersonModel) {
         setState(() {});
       }
