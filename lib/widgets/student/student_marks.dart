@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -71,10 +72,13 @@ class _StudentMarksState extends State<StudentMarks> {
                         // ),
                         subtitle: Row(
                           children: [
-                            Text(
-                              e.type.label,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                            Chip(
+                              backgroundColor: Get.theme.colorScheme.primary,
+                              label: Text(
+                                e.type.label,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
                             ),
                             const SizedBox(
                               width: 10,
