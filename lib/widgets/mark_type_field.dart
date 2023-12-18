@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:schoosch/generated/l10n.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/model/marktype_model.dart';
 
 class MarkTypeFormField extends StatefulWidget {
@@ -61,6 +62,8 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
                 (e) => ChoiceChip(
                   label: Text(e.name),
                   selected: e == state.value,
+                  selectedColor: Get.theme.colorScheme.secondary,
+                  backgroundColor: Get.theme.colorScheme.primary,
                   onSelected: (bool selected) {
                     widget.onChanged(e);
                     state.didChange(e);

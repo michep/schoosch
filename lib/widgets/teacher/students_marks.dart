@@ -268,10 +268,13 @@ class MarkTile extends StatelessWidget {
       leading: Text(mark.toString()),
       subtitle: Row(
         children: [
-          Text(
-            mark.type.label,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
+          Chip(
+            backgroundColor: Get.theme.colorScheme.primary,
+            label: Text(
+              mark.type.label,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
           ),
           const SizedBox(
             width: 10,
