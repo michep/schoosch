@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/curriculum_model.dart';
+import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/marktype_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
@@ -76,7 +77,7 @@ class LessonMarkModel extends MarkModel {
   LessonMarkModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map) {
     date = map['date'] != null ? DateTime.tryParse(map['date'])! : throw 'need date key in mark $id';
     lessonOrder = map['lesson_order'] != null ? map['lesson_order'] as int : throw 'need lesson_order key in mark $id';
-    type = map['type_id'] != null ? MarkType.fromId(map['type_id']) : MarkType.empty();
+    type = map['type_id'] != null ? InstitutionModel.currentInstitution.getMarkTypeFromId(map['type_id']) : MarkType.empty();
 
     if (map.containsKey('curriculum') && map['curriculum'] is Map) {
       _curriculum = CurriculumModel.fromMap((map['curriculum'] as Map<String, dynamic>)['_id'] as String, map['curriculum'] as Map<String, dynamic>);

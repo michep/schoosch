@@ -176,17 +176,19 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(DateFormat.Md().format(listmark[index].date), style: const TextStyle(fontSize: 12),),
+            Text(
+              DateFormat.Md().format(listmark[index].date),
+              style: const TextStyle(fontSize: 12),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  listmark[index].mark.toString(), style: const TextStyle(fontWeight: FontWeight.bold,),
+                  listmark[index].mark.toString(),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(width: 4,),
-                Text(
-                  listmark[index].type != null ? '(x${listmark[index].type.weight.toStringAsFixed(1)})' : 'x1',
-                ),
+                const SizedBox(width: 4),
+                Text('(x${listmark[index].type.weight.toStringAsFixed(1)})'),
               ],
             )
             // Text(listmark[index].type.weight.toStringAsFixed(1)),
