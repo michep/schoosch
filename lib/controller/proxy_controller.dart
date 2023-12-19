@@ -24,7 +24,6 @@ import 'package:schoosch/model/venue_model.dart';
 
 class ProxyStore extends getx.GetxController {
   late InstitutionModel institution;
-  late List<MarkType> marktypes;
   PersonModel? _currentUser;
   ClassModel? currentObserverClass;
   final Dio dio = Dio();
@@ -58,7 +57,7 @@ class ProxyStore extends getx.GetxController {
     //   },
     // ));
     institution = await _geInstitutionIdByUserEmail(userEmail);
-    marktypes = await getAllMarktypes();
+    await institution.prefetchMarkTypes();
     _currentUser = await _getPersonByEmail(userEmail);
   }
 
@@ -76,8 +75,6 @@ class ProxyStore extends getx.GetxController {
 
   PersonModel? get currentUser => _currentUser;
   InstitutionModel? get currentInstitution => institution;
-  
-  MarkType? typeFromId(String id) => marktypes.firstWhere((element) => element.id == id, orElse: () => MarkType.empty(),);
 
   Future<InstitutionModel> _geInstitutionIdByUserEmail(String email) async {
     var res = await dio.getUri<Map<String, dynamic>>(baseUriFunc('/institution/email/$email'));

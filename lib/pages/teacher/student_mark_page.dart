@@ -78,6 +78,7 @@ class _StudentMarkPageState extends State<StudentMarkPage> {
                       markType = v;
                     }
                   },
+                  editMode: widget.editMode,
                 ),
                 TextFormField(
                   decoration: InputDecoration(

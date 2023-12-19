@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/marktype_model.dart';
 
 class MarkTypeFormField extends StatefulWidget {
   final void Function(MarkType?) onChanged;
   final MarkType markType;
   final String? Function(MarkType?)? validator;
+  final bool editMode;
+
   const MarkTypeFormField({
     super.key,
     required this.markType,
     required this.onChanged,
     this.validator,
+    this.editMode = false,
   });
 
   @override
@@ -24,7 +28,7 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
   @override
   Widget build(BuildContext context) {
     var loc = AppLocalizations.of(context)!;
-    List<MarkType> types = MarkType.getAllMarktypes();
+    List<MarkType> types = InstitutionModel.currentInstitution.marktypesSync;
     return FormField<MarkType>(
       initialValue: widget.markType,
       validator: validate,
@@ -41,7 +45,7 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
               ...types.map(
                 (e) => chip(state, e),
               ),
-              if (!types.contains(widget.markType))
+              if (widget.editMode && !types.contains(widget.markType))
                 chip(
                   state,
                   widget.markType,
