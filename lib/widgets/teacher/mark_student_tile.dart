@@ -113,15 +113,22 @@ class _MarkStudentTileState extends State<MarkStudentTile> {
                 List<LessonMarkModel> marks = snapshot.data!;
                 return SizedBox(
                   height: 80,
-                  child: GridView.count(
-                    crossAxisCount: (MediaQuery.of(context).size.width / 100).ceil(),
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                    childAspectRatio: 1.3,
+                  width: double.infinity,
+                  // child: GridView.count(
+                  //   crossAxisCount: (MediaQuery.of(context).size.width / 100).ceil(),
+                  //   mainAxisSpacing: 10,
+                  //   crossAxisSpacing: 10,
+                  //   childAspectRatio: 1.3,
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
+                    alignment: WrapAlignment.start,
                     children: [
                       ...marks.map(
                         (e) => Container(
                           // padding: const EdgeInsets.all(3),
+                          height: 60,
+                          width: 80,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.black,

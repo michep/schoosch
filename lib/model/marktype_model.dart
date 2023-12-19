@@ -21,10 +21,10 @@ class MarkType {
   String? get id => _id;
 
   MarkType.empty() {
-    _id = '';
+    _id = 'emptyid';
     status = StatusModel.active;
-    name = 'Без типа';
-    label = 'без типа';
+    name = 'пустой тип';
+    label = 'пустой тип';
     weight = 1.0;
     // institutionId = Get.find<ProxyStore>().institution.id;
   }
