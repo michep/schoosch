@@ -7,9 +7,9 @@ import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/pages/teacher/period_mark_page.dart';
-import 'package:schoosch/pdf/pdf_classcurriculumperiodmarks.dart';
-import 'package:schoosch/pdf/pdf_preview.dart';
-import 'package:schoosch/pdf/pdf_theme.dart';
+// import 'package:schoosch/pdf/pdf_classcurriculumperiodmarks.dart';
+// import 'package:schoosch/pdf/pdf_preview.dart';
+// import 'package:schoosch/pdf/pdf_theme.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/tablemarkcell.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -51,23 +51,23 @@ class _TeacherMarksTablePageState extends State<TeacherMarksTablePage> {
     return Scaffold(
       appBar: MAppBar(
         widget.currentcur.aliasOrName,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Get.to(
-                () => PDFPreview(
-                  format: landscapePdfPageFormat,
-                  generate: PDFClassCurriculumPeriodMarks(
-                    period: selectedPeriod!,
-                    curriculum: widget.currentcur,
-                    aclass: widget.aclass,
-                  ).generate,
-                ),
-              );
-            },
-            icon: const Icon(Icons.print_outlined),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       Get.to(
+        //         () => PDFPreview(
+        //           format: landscapePdfPageFormat,
+        //           generate: PDFClassCurriculumPeriodMarks(
+        //             period: selectedPeriod!,
+        //             curriculum: widget.currentcur,
+        //             aclass: widget.aclass,
+        //           ).generate,
+        //         ),
+        //       );
+        //     },
+        //     icon: const Icon(Icons.print_outlined),
+        //   ),
+        // ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
