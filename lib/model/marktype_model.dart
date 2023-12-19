@@ -21,10 +21,10 @@ class MarkType {
   String? get id => _id;
 
   MarkType.empty() {
-    _id = '';
+    _id = null;
     status = StatusModel.active;
     name = 'Без типа';
-    label = 'без типа';
+    label = 'БТ';
     weight = 1.0;
     // institutionId = Get.find<ProxyStore>().institution.id;
   }
@@ -38,15 +38,6 @@ class MarkType {
     res['weight'] = weight;
     // res['institution_id'] = institutionId;
     return res;
-  }
-
-  static MarkType fromId(String id) {
-    MarkType t = Get.find<ProxyStore>().typeFromId(id)!;
-    return t;
-  }
-
-  static List<MarkType> getAllMarktypes() {
-    return Get.find<ProxyStore>().marktypes;
   }
 
   Future<MarkType> save() async {

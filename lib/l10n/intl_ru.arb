@@ -107,7 +107,7 @@
   "markTypeLabel": "Короткое название",
   "errorMarkTypeWeightEmpty": "Вес не может быть пустым и должен быть числом",
   "errorMarkTypeLabelEmpty": "Короткое название не может быть пустым",
-  "errorUnknownMarkType": "Неизвестный Тип оценки",
+  "errorUnknownMarkType": "Нужно выбрать Тип оценки",
   "roleAdmin": "Администратор",
   "roleTeacher": "Учитель",
   "roleParent": "Родитель",

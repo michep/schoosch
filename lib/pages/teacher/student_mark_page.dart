@@ -72,12 +72,13 @@ class _StudentMarkPageState extends State<StudentMarkPage> {
                 ),
                 MarkTypeFormField(
                   markType: widget.mark.type,
-                  validator: (value) => Utils.validateType(value, S.of(context).errorUnknownMarkType),
+                  validator: (value) => Utils.validateMarkType(value, S.of(context).errorUnknownMarkType),
                   onChanged: (v) {
                     if (v is MarkType) {
                       markType = v;
                     }
                   },
+                  editMode: widget.editMode,
                 ),
                 TextFormField(
                   decoration: InputDecoration(

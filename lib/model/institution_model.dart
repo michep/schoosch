@@ -20,6 +20,7 @@ class InstitutionModel {
   bool _semesterPeriodsLoaded = false;
   late final StudyPeriodModel? _yearPeriod;
   final List<StudyPeriodModel> _semesterPeriods = [];
+  final List<MarkType> _markTypes = [];
 
   final Map<String, Uint8List> _files = {};
 
@@ -29,6 +30,10 @@ class InstitutionModel {
   }
 
   static InstitutionModel get currentInstitution => Get.find<ProxyStore>().currentInstitution!;
+
+  Future<void> prefetchMarkTypes() async {
+    _markTypes.addAll(await Get.find<ProxyStore>().getAllMarktypes());
+  }
 
   Future<List<VenueModel>> get venues async {
     return Get.find<ProxyStore>().getAllVenues();
@@ -102,6 +107,15 @@ class InstitutionModel {
       _files.addAll({filename: data});
     }
     return _files[filename]!;
+  }
+
+  List<MarkType> get marktypesSync => _markTypes;
+
+  MarkType getMarkTypeFromId(String id) {
+    return _markTypes.firstWhere(
+      (element) => element.id == id,
+      orElse: () => MarkType.empty(),
+    );
   }
 
   // Future<void> createChatRoom(PersonModel other) async {

@@ -1130,10 +1130,10 @@ class S {
     );
   }
 
-  /// `Unknown Mark type`
+  /// `Mark type should be selected`
   String get errorUnknownMarkType {
     return Intl.message(
-      'Unknown Mark type',
+      'Mark type should be selected',
       name: 'errorUnknownMarkType',
       desc: '',
       args: [],

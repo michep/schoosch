@@ -51,7 +51,7 @@ class ClassChoicePage extends StatelessWidget {
                               teacher: PersonModel.currentTeacher,
                             ),
                           )
-                        : Get.to(() => TeacherTablePage(
+                        : Get.to(() => TeacherMarksTablePage(
                               currentcur: curriculum,
                               periods: periods,
                               aclass: snapshot.data![index],

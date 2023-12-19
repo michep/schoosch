@@ -64,6 +64,7 @@ class _SchooschAppState extends State<SchooschApp> {
         S.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
         FirebaseUILocalizations.delegate,
       ],
       locale: const Locale('ru'),

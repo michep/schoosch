@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
@@ -12,16 +11,17 @@ import 'package:schoosch/pdf/pdf_classcurriculumperiodmarks.dart';
 import 'package:schoosch/pdf/pdf_preview.dart';
 import 'package:schoosch/pdf/pdf_theme.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/tablemarkcell.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class TeacherTablePage extends StatefulWidget {
+class TeacherMarksTablePage extends StatefulWidget {
   final CurriculumModel currentcur;
   final ClassModel aclass;
   final TeacherModel? teacher;
   final List<StudyPeriodModel> periods;
   final bool readOnly;
 
-  const TeacherTablePage({
+  const TeacherMarksTablePage({
     super.key,
     required this.currentcur,
     required this.periods,
@@ -31,10 +31,10 @@ class TeacherTablePage extends StatefulWidget {
   });
 
   @override
-  State<TeacherTablePage> createState() => _TeacherTablePageState();
+  State<TeacherMarksTablePage> createState() => _TeacherMarksTablePageState();
 }
 
-class _TeacherTablePageState extends State<TeacherTablePage> {
+class _TeacherMarksTablePageState extends State<TeacherMarksTablePage> {
   late StudyPeriodModel? selectedPeriod;
 
   @override
@@ -167,48 +167,8 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
     listmark.sort((a, b) => b.date.compareTo(a.date));
     return List.generate(
       listmark.length,
-      (index) => Container(
-        alignment: Alignment.center,
-        width: 120.0,
-        height: 60.0,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.black54),
-        margin: const EdgeInsets.all(4.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              DateFormat('dd.MM.yy').format(listmark[index].date),
-              style: const TextStyle(fontSize: 12),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  listmark[index].mark.toString(),
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(width: 4),
-                Text('(x${listmark[index].type.weight.toStringAsFixed(1)})'),
-              ],
-            )
-            // Text(listmark[index].type.weight.toStringAsFixed(1)),
-            // Text(listmark[index].mark.toString()),
-          ],
-        ),
-      ),
+      (index) => TableMarkCell(lessonmark: listmark[index]),
     );
-  }
-
-  String getSummaryMark(List<LessonMarkModel> listmark) {
-    double sum = 0;
-    double kolvo = 0;
-    for (LessonMarkModel mark in listmark) {
-      double times = mark.type.weight * 10;
-      sum += mark.mark * times;
-      kolvo += times;
-      // sum += mark.mark;
-    }
-    return (sum / kolvo).toStringAsFixed(1);
   }
 
   List<Widget> _buildStudentCells(List<StudentModel> liststud) {
@@ -253,11 +213,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
           children: [
             const Text('средний'),
             Text(
-              data[liststud[index]] == null
-                  ? 'нет данных'
-                  : getSummaryMark(
-                      data[liststud[index]]!,
-                    ),
+              data[liststud[index]] == null ? 'нет данных' : Utils.calculateWeightedAverageMark(data[liststud[index]]!).toStringAsFixed(1),
             ),
           ],
         ),

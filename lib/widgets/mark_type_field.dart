@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/marktype_model.dart';
 
 class MarkTypeFormField extends StatefulWidget {
   final void Function(MarkType?) onChanged;
   final MarkType markType;
   final String? Function(MarkType?)? validator;
+  final bool editMode;
+
   const MarkTypeFormField({
     super.key,
     required this.markType,
     required this.onChanged,
     this.validator,
+    this.editMode = false,
   });
 
   @override
@@ -24,7 +28,7 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
   @override
   Widget build(BuildContext context) {
     var loc = S.of(context);
-    List<MarkType> types = MarkType.getAllMarktypes();
+    List<MarkType> types = InstitutionModel.currentInstitution.marktypesSync;
     return FormField<MarkType>(
       initialValue: widget.markType,
       validator: validate,
@@ -34,43 +38,19 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
             label: Text(loc.markTypeTitle),
             errorText: errorText,
           ),
-
-          // child: ChipsChoice<MarkType>.single(
-          //   value: state.value ?? widget.markType,
-          //   onChanged: (v) {
-          //     widget.onChanged(v);
-          //     state.didChange(v);
-          //     state.save();
-          //   },
-          //   choiceItems: C2Choice.listFrom<MarkType, MarkType>(
-          //     source: MarkType.getAllMarktypes(),
-          //     value: (i, v) => v,
-          //     label: (i, v) => v.name,
-          //   ),
-          //   choiceStyle: C2ChipStyle.toned(
-          //     borderRadius: const BorderRadius.all(
-          //       Radius.circular(5),
-          //     ),
-          //   ),
-          //   wrapped: true,
-          // ),
-
           child: Wrap(
             spacing: 5.0,
+            runSpacing: 5.0,
             children: [
               ...types.map(
-                (e) => ChoiceChip(
-                  label: Text(e.name),
-                  selected: e == state.value,
-                  selectedColor: Get.theme.colorScheme.secondary,
-                  backgroundColor: Get.theme.colorScheme.primary,
-                  onSelected: (bool selected) {
-                    widget.onChanged(e);
-                    state.didChange(e);
-                    state.save();
-                  },
-                ),
+                (e) => chip(state, e),
               ),
+              if (widget.editMode && !types.contains(widget.markType))
+                chip(
+                  state,
+                  widget.markType,
+                  deprecated: true,
+                )
             ],
           ),
         );
@@ -85,4 +65,16 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
     });
     return err;
   }
+
+  Widget chip(FormFieldState<MarkType> state, MarkType mt, {bool deprecated = false}) => ChoiceChip(
+        label: Text(mt.name),
+        selected: mt == state.value,
+        selectedColor: !deprecated ? Get.theme.colorScheme.secondary : Get.theme.colorScheme.secondary.withOpacity(0.5),
+        backgroundColor: !deprecated ? Get.theme.colorScheme.primary : Get.theme.colorScheme.primary.withOpacity(0.5),
+        onSelected: (bool selected) {
+          widget.onChanged(mt);
+          state.didChange(mt);
+          state.save();
+        },
+      );
 }

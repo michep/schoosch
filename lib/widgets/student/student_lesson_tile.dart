@@ -141,7 +141,14 @@ class StudentLessonTile extends StatelessWidget {
   }
 
   void _onTap() {
-    Get.to(() => StudentLessonPage(student, lesson, cur!, ven!, tim!, date));
+    Get.to(() => StudentLessonPage(
+          student: student,
+          lesson: lesson,
+          curriculum: cur!,
+          venue: ven!,
+          time: tim!,
+          date: date,
+        ));
   }
 
   Color getBorderColor(String firstMark) {

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/all_marks_table_page.dart';
+import 'package:schoosch/pages/student_marks_table_page.dart';
 import 'package:schoosch/pages/student/student_periods_marks.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
 import 'package:schoosch/pdf/pdf_preview.dart';
@@ -55,7 +55,7 @@ class MDrawer extends StatelessWidget {
         TextButton.icon(
           onPressed: () async {
             var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
-            Get.to(() => StudentsTablePage(student: PersonModel.currentStudent!, periods: periods));
+            Get.to(() => StudentMarksTablePage(student: PersonModel.currentStudent!, periods: periods));
           },
           icon: const Icon(Icons.table_chart_outlined),
           label: const Text('Все оценки'),
@@ -104,7 +104,7 @@ class MDrawer extends StatelessWidget {
             var stud = await PersonModel.currentParent!.currentChild;
             var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
 
-            Get.to(() => StudentsTablePage(student: stud, periods: periods));
+            Get.to(() => StudentMarksTablePage(student: stud, periods: periods));
           },
           icon: const Icon(Icons.table_chart_outlined),
           label: const Text('Успеваемость'),

@@ -132,7 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorTeacherEmpty": MessageLookupByLibrary.simpleMessage(
             "Преподаватель должен быть выбран"),
         "errorUnknownMarkType":
-            MessageLookupByLibrary.simpleMessage("Неизвестный Тип оценки"),
+            MessageLookupByLibrary.simpleMessage("Нужно выбрать Тип оценки"),
         "errorUnknownPersonType":
             MessageLookupByLibrary.simpleMessage("unknown person type"),
         "errorVenueEmpty":
