@@ -44,8 +44,8 @@ class Utils {
     return (mark == null || mark < 1 || mark > 5) ? error : null;
   }
 
-  static String? validateType(MarkType? type, String error) {
-    return (type == null || type.id == '') ? error : null;
+  static String? validateMarkType(MarkType? type, String error) {
+    return (type == null || type.id == null) ? error : null;
   }
 
   static Future<void> showErrorSnackbar(String text) async {
@@ -53,6 +53,7 @@ class Utils {
       'Ошибка',
       text,
       snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Get.theme.scaffoldBackgroundColor,
       colorText: Colors.red,
       animationDuration: const Duration(milliseconds: 500),
     );
@@ -133,5 +134,17 @@ class Utils {
         ),
       );
     }
+  }
+
+  static double calculateWeightedAverageMark(List<LessonMarkModel> listmarks) {
+    double sum = 0;
+    double kolvo = 0;
+    for (LessonMarkModel mark in listmarks) {
+      double times = mark.type.weight;
+      sum += mark.mark * times;
+      kolvo += times;
+      // sum += mark.mark;
+    }
+    return (sum / kolvo);
   }
 }

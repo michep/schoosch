@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/widgets/marktype_chip.dart';
 
 class StudentMarks extends StatefulWidget {
   final LessonModel _lesson;
@@ -66,20 +66,9 @@ class _StudentMarksState extends State<StudentMarks> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
-                        // subtitle: FutureBuilder<PersonModel>(
-                        //   future: e.teacher,
-                        //   builder: ((context, snapshot) => snapshot.hasData ? Text(snapshot.data!.fullName) : const Text('')),
-                        // ),
                         subtitle: Row(
                           children: [
-                            Chip(
-                              backgroundColor: Get.theme.colorScheme.primary,
-                              label: Text(
-                                e.type.label,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            ),
+                            MarkTypeChip(marktype: e.type),
                             const SizedBox(
                               width: 10,
                             ),

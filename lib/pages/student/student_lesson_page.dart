@@ -13,13 +13,22 @@ import 'package:schoosch/widgets/utils.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class StudentLessonPage extends StatefulWidget {
-  final StudentModel _student;
-  final DateTime _date;
-  final LessonModel _lesson;
-  final CurriculumModel _curriculum;
-  final VenueModel _venue;
-  final LessontimeModel _time;
-  const StudentLessonPage(this._student, this._lesson, this._curriculum, this._venue, this._time, this._date, {super.key});
+  final StudentModel student;
+  final DateTime date;
+  final LessonModel lesson;
+  final CurriculumModel curriculum;
+  final VenueModel venue;
+  final LessontimeModel time;
+
+  const StudentLessonPage({
+    required this.student,
+    required this.lesson,
+    required this.curriculum,
+    required this.venue,
+    required this.time,
+    required this.date,
+    super.key,
+  });
 
   @override
   State<StudentLessonPage> createState() => _StudentLessonPageState();
@@ -34,14 +43,14 @@ class _StudentLessonPageState extends State<StudentLessonPage> with SingleTicker
   void initState() {
     pages = [
       StudentHomeworks(
-        widget._lesson,
-        widget._date,
-        widget._student,
+        widget.lesson,
+        widget.date,
+        widget.student,
       ),
       StudentMarks(
-        widget._lesson,
-        widget._date,
-        widget._student,
+        widget.lesson,
+        widget.date,
+        widget.student,
       ),
     ];
     super.initState();
@@ -61,23 +70,23 @@ class _StudentLessonPageState extends State<StudentLessonPage> with SingleTicker
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${widget._curriculum.aliasOrName} ${widget._lesson.type == LessonType.replacment ? '(замена)' : ''}',
+                  '${widget.curriculum.aliasOrName} ${widget.lesson.type == LessonType.replacment ? '(замена)' : ''}',
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 Text(
-                  Utils.formatDatetime(widget._date),
+                  Utils.formatDatetime(widget.date),
                   style: const TextStyle(fontSize: 17),
                 ),
                 Text(
-                  '${widget._lesson.order} урок',
+                  '${widget.lesson.order} урок',
                   style: const TextStyle(fontSize: 17),
                 ),
                 Text(
-                  widget._time.formatPeriod(),
+                  widget.time.formatPeriod(),
                   style: const TextStyle(fontSize: 17),
                 ),
                 FutureBuilder<TeacherModel?>(
-                  future: widget._curriculum.master,
+                  future: widget.curriculum.master,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData || snapshot.data == null) return const SizedBox.shrink();
                     return Text(

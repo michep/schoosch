@@ -87,6 +87,13 @@ class _TeacherLessonListTileState extends State<TeacherLessonListTile> {
   void _onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim) async {
     var master = await cur.master;
     // Get.to(() => TeacherLessonPage(les, cur, ven, tim, widget._date, master!));
-    Get.to(() => TeacherLessonPage(les, cur, ven, tim, widget._date, master!));
+    Get.to(() => TeacherLessonPage(
+          lesson: les,
+          curriculum: cur,
+          venue: ven,
+          time: tim,
+          date: widget._date,
+          teacher: master!,
+        ));
   }
 }

@@ -9,6 +9,7 @@ import 'package:schoosch/pages/teacher/student_mark_page.dart';
 import 'package:schoosch/widgets/delete_bottomscheet.dart';
 import 'package:schoosch/widgets/delete_dialog.dart';
 import 'package:schoosch/widgets/fab_menu.dart';
+import 'package:schoosch/widgets/marktype_chip.dart';
 
 class StudentsMarksPage extends StatefulWidget {
   final LessonModel _lesson;
@@ -112,7 +113,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
   }
 
   Future<void> addClassMark() async {
-    var res = await Get.to<bool>(
+    await Get.to<bool>(
       () => ClassMarkPage(
         widget._lesson,
         'Оценки классу',
@@ -125,11 +126,11 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
         ),
       ),
     );
-    if (res is bool) {
-      setState(() {
-        forceRefresh = true;
-      });
-    }
+    // if (res is bool) {
+    setState(() {
+      forceRefresh = true;
+    });
+    // }
   }
 
   void deleteMark(LessonMarkModel mark) async {
@@ -268,14 +269,7 @@ class MarkTile extends StatelessWidget {
       leading: Text(mark.toString()),
       subtitle: Row(
         children: [
-          Chip(
-            backgroundColor: Get.theme.colorScheme.primary,
-            label: Text(
-              mark.type.label,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-          ),
+          MarkTypeChip(marktype: mark.type),
           const SizedBox(
             width: 10,
           ),

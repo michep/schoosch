@@ -121,8 +121,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Student should be selected"),
         "errorTeacherEmpty":
             MessageLookupByLibrary.simpleMessage("Teacher should be selected"),
-        "errorUnknownMarkType":
-            MessageLookupByLibrary.simpleMessage("Unknown Mark type"),
+        "errorUnknownMarkType": MessageLookupByLibrary.simpleMessage(
+            "Mark type should be selected"),
         "errorUnknownPersonType":
             MessageLookupByLibrary.simpleMessage("unknown person type"),
         "errorVenueEmpty":

@@ -107,7 +107,7 @@
   "markTypeLabel": "Short Label",
   "errorMarkTypeWeightEmpty": "Mark type Weight should not be empty and need to be a number",
   "errorMarkTypeLabelEmpty": "Mark type Label should not be empty",
-  "errorUnknownMarkType": "Unknown Mark type",
+  "errorUnknownMarkType": "Mark type should be selected",
   "roleAdmin": "Administrator",
   "roleTeacher": "Teacher",
   "roleParent": "Parnet",

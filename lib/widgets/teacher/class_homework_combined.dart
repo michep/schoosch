@@ -185,12 +185,6 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
   }
 
   void deleteHomework(HomeworkModel hw) async {
-    // showDialog(
-    //   context: context,
-    //   builder: (context) => DeleteDialog(hw: hw, context: context),
-    // ).whenComplete(
-    //   () => Navigator.of(context).pop(),
-    // );
     var res = await Get.dialog<bool>(
       DeleteDialog(hw: hw, context: context),
     );

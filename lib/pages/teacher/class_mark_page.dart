@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
@@ -36,14 +35,12 @@ class _ClassMarkPageState extends State<ClassMarkPage> {
   @override
   Widget build(BuildContext context) {
     var loc = S.of(context);
-    return PopScope(
-      canPop: true,
-      onPopInvoked: (didPop) => Get.back<bool>(result: true),
-      child: Scaffold(
-        appBar: MAppBar(widget.title),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20.0, right: 10, left: 10),
+    return Scaffold(
+      appBar: MAppBar(widget.title),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20.0, right: 10, left: 10),
+          child: SingleChildScrollView(
             child: Column(
               children: [
                 TextField(
@@ -70,7 +67,7 @@ class _ClassMarkPageState extends State<ClassMarkPage> {
                       widget.mark.type = marktype!;
                     }
                   },
-                  validator: (value) => Utils.validateType(value, S.of(context).errorUnknownMarkType),
+                  validator: (value) => Utils.validateMarkType(value, S.of(context).errorUnknownMarkType),
                 ),
                 const SizedBox(
                   height: 10,
@@ -87,19 +84,20 @@ class _ClassMarkPageState extends State<ClassMarkPage> {
                       );
                     }
                     List<StudentModel> studs = snapshot.data!.where(_filter).toList();
-                    return Expanded(
-                      child: ListView.builder(
-                        itemCount: studs.length,
-                        itemBuilder: (context, index) {
-                          return MarkStudentTile(
-                            student: studs[index],
-                            lesson: widget.lesson,
-                            date: widget.date,
-                            mark: widget.mark,
-                          );
-                        },
-                      ),
+                    // return Expanded(
+                    return ListView.builder(
+                      itemCount: studs.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return MarkStudentTile(
+                          student: studs[index],
+                          lesson: widget.lesson,
+                          date: widget.date,
+                          mark: widget.mark,
+                        );
+                      },
                     );
+                    // );
                   },
                 ),
               ],
