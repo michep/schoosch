@@ -77,7 +77,7 @@ class ProxyStore extends getx.GetxController {
   PersonModel? get currentUser => _currentUser;
   InstitutionModel? get currentInstitution => institution;
   
-  MarkType? typeFromId(String id) => marktypes.firstWhere((element) => element.id == id);
+  MarkType? typeFromId(String id) => marktypes.firstWhere((element) => element.id == id, orElse: () => MarkType.empty(),);
 
   Future<InstitutionModel> _geInstitutionIdByUserEmail(String email) async {
     var res = await dio.getUri<Map<String, dynamic>>(baseUriFunc('/institution/email/$email'));

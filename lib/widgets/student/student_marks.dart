@@ -73,12 +73,15 @@ class _StudentMarksState extends State<StudentMarks> {
                         subtitle: Row(
                           children: [
                             if (e.type != null)
-                              Chip(
-                                backgroundColor: Get.theme.colorScheme.primary,
-                                label: Text(
-                                  e.type.label,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
+                              Tooltip(
+                                message: e.type.name,
+                                child: Chip(
+                                  backgroundColor: Get.theme.colorScheme.primary,
+                                  label: Text(
+                                    e.type.label,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
                                 ),
                               ),
                             const SizedBox(

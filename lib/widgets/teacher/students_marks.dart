@@ -269,12 +269,15 @@ class MarkTile extends StatelessWidget {
       subtitle: Row(
         children: [
           if (mark.type != null)
-            Chip(
-              backgroundColor: Get.theme.colorScheme.primary,
-              label: Text(
-                mark.type.label,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+            Tooltip(
+              message: mark.type.name,
+              child: Chip(
+                backgroundColor: Get.theme.colorScheme.primary,
+                label: Text(
+                  mark.type.label,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
             ),
           const SizedBox(
