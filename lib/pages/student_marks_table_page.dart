@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
+import 'package:schoosch/pdf/pdf_preview.dart';
+import 'package:schoosch/pdf/pdf_studentperiodmarks.dart';
+import 'package:schoosch/pdf/pdf_theme.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/tablemarkcell.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -36,8 +40,24 @@ class _StudentMarksTablePageState extends State<StudentMarksTablePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MAppBar(
+      appBar: MAppBar(
         'все оценки',
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.to(
+                () => PDFPreview(
+                  format: landscapePdfPageFormat,
+                  generate: PDFStudentPeriodMarks(
+                    period: selectedPeriod!,
+                    student: widget.student,
+                  ).generate,
+                ),
+              );
+            },
+            icon: const Icon(Icons.print_outlined),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

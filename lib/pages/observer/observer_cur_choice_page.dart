@@ -8,21 +8,26 @@ import 'package:schoosch/pages/teacher/class_cur_year_marks_table_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class ClassChoicePage extends StatelessWidget {
-  final CurriculumModel curriculum;
+class ObserverCurriculumChoicePage extends StatelessWidget {
   final bool isYear;
-  const ClassChoicePage({super.key, required this.curriculum, this.isYear = false});
+  final ClassModel aclass;
+
+  const ObserverCurriculumChoicePage({
+    required this.aclass,
+    this.isYear = false,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MAppBar(
-        'Класс',
+        'Предмет',
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: FutureBuilder<List<ClassModel>>(
-          future: curriculum.classes(),
+        child: FutureBuilder<List<CurriculumModel>>(
+          future: aclass.curriculums(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Utils.progressIndicator();
@@ -34,7 +39,7 @@ class ClassChoicePage extends StatelessWidget {
               itemCount: snapshot.data!.length,
               itemBuilder: (_, index) {
                 return ListTile(
-                  title: Text(snapshot.data![index].name),
+                  title: Text(snapshot.data![index].aliasOrName),
                   onTap: () async {
                     var periods = isYear
                         ? await InstitutionModel.currentInstitution.currentYearAndSemestersPeriods
@@ -42,15 +47,15 @@ class ClassChoicePage extends StatelessWidget {
                     isYear
                         ? Get.to(
                             () => ClassCurriculumYearMarksTable(
-                              currentcur: curriculum,
+                              currentcur: snapshot.data![index],
                               periods: periods,
-                              aclass: snapshot.data![index],
+                              aclass: aclass,
                             ),
                           )
                         : Get.to(() => ClassCurriculumMarksTablePage(
-                              currentcur: curriculum,
+                              currentcur: snapshot.data![index],
                               periods: periods,
-                              aclass: snapshot.data![index],
+                              aclass: aclass,
                             ));
                   },
                 );

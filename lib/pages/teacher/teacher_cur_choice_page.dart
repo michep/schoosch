@@ -6,9 +6,15 @@ import 'package:schoosch/pages/teacher/teacher_class_choice_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class CurriculumChoicePage extends StatelessWidget {
+class TeacherCurriculumChoicePage extends StatelessWidget {
   final bool isYear;
-  const CurriculumChoicePage({super.key, this.isYear = false});
+  final TeacherModel teacher;
+
+  const TeacherCurriculumChoicePage({
+    required this.teacher,
+    this.isYear = false,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +25,7 @@ class CurriculumChoicePage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: FutureBuilder<List<CurriculumModel>>(
-          future: PersonModel.currentTeacher!.curriculums(),
+          future: teacher.curriculums(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Utils.progressIndicator();
@@ -28,6 +34,7 @@ class CurriculumChoicePage extends StatelessWidget {
               return const Text('нет доступных предметов.');
             }
             return ListView.builder(
+              itemCount: snapshot.data!.length,
               itemBuilder: (_, index) {
                 return ListTile(
                   title: Text(snapshot.data![index].aliasOrName),
@@ -47,7 +54,6 @@ class CurriculumChoicePage extends StatelessWidget {
                   },
                 );
               },
-              itemCount: snapshot.data!.length,
             );
           },
         ),

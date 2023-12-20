@@ -20,7 +20,7 @@ class PDFClassCurriculumPeriodMarks {
   Future<Uint8List> generate(PdfPageFormat format) async {
     var students = await curriculum.classStudents(aclass);
     var marks = await curriculum.getLessonMarksByStudents(students, period);
-    var periodMarks = await curriculum.getPeriodMarksByStudents(students, period);
+    // var periodMarks = await curriculum.getPeriodMarksByStudents(students, period);
 
     var doc = pw.Document(
       theme: await getTheme(),
@@ -37,7 +37,12 @@ class PDFClassCurriculumPeriodMarks {
               pw.TableRow(
                 children: [
                   _studentNameCell(text: student.fullName),
-                  if (marks[student] != null) ...marks[student]!.map((e) => _markCell(text: e.mark.toString(), fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                  if (marks[student] != null)
+                    ...marks[student]!.map((e) => _markCell(
+                          text: e.mark.toString(),
+                          fontWeight: pw.FontWeight.bold,
+                          fontSize: 10,
+                        )),
                 ],
               ),
             );
