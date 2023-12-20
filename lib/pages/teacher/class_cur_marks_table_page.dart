@@ -264,7 +264,7 @@ class _ClassCurriculumMarksTablePageState extends State<ClassCurriculumMarksTabl
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Text(data[liststud[index]]!.mark.toStringAsFixed(1)),
-                        if (widget.readOnly)
+                        if (!widget.readOnly)
                           const Icon(
                             Icons.edit,
                             size: 16,
