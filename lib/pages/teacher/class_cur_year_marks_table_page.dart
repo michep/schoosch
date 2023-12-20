@@ -168,7 +168,7 @@ class _ClassCurriculumYearMarksTableState extends State<ClassCurriculumYearMarks
                                   fontSize: 20,
                                 ),
                               ),
-                              if (widget.readOnly)
+                              if (!widget.readOnly)
                                 const Icon(
                                   Icons.edit,
                                   size: 16,

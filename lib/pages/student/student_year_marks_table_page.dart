@@ -174,18 +174,34 @@ class StudentYearMarksTablePage extends StatelessWidget {
           color: Colors.black54,
         ),
         margin: const EdgeInsets.all(4.0),
-        child: Center(
-          child: listmark[index] != null
-              ? Center(
-                  child: Text(
-                    listmark[index]!.mark.toString(),
-                    style: const TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                )
-              : null,
-        ),
+        child: index == listmark.length - 1
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Годовая'),
+                  listmark[index] != null
+                      ? Text(
+                          listmark[index]!.mark.toStringAsFixed(1),
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              )
+            : Center(
+                child: listmark[index] != null
+                    ? Center(
+                        child: Text(
+                          listmark[index]!.mark.toString(),
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      )
+                    : null,
+              ),
       ),
     );
   }

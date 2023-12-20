@@ -119,13 +119,10 @@ class MDrawer extends StatelessWidget {
         TextButton.icon(
           onPressed: () async {
             // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
-            var stud = await PersonModel.currentParent!.currentChild;
-            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+            var student = await PersonModel.currentParent!.currentChild;
+            var periods = await InstitutionModel.currentInstitution.currentYearAndSemestersPeriods;
 
-            Get.to(() => StudentYearMarksTablePage(
-                  periods: periods,
-                  student: stud,
-                ));
+            Get.to(() => StudentYearMarksTablePage(student: student, periods: periods));
           },
           icon: const Icon(Icons.table_chart_outlined),
           label: const Text('Итоговые оценки'),
