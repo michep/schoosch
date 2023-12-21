@@ -14,27 +14,25 @@ import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/tablemarkcell.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class TeacherMarksTablePage extends StatefulWidget {
+class ClassCurriculumMarksTablePage extends StatefulWidget {
   final CurriculumModel currentcur;
   final ClassModel aclass;
-  final TeacherModel? teacher;
   final List<StudyPeriodModel> periods;
   final bool readOnly;
 
-  const TeacherMarksTablePage({
+  const ClassCurriculumMarksTablePage({
     super.key,
     required this.currentcur,
     required this.periods,
     required this.aclass,
-    this.teacher,
     this.readOnly = false,
   });
 
   @override
-  State<TeacherMarksTablePage> createState() => _TeacherMarksTablePageState();
+  State<ClassCurriculumMarksTablePage> createState() => _ClassCurriculumMarksTablePageState();
 }
 
-class _TeacherMarksTablePageState extends State<TeacherMarksTablePage> {
+class _ClassCurriculumMarksTablePageState extends State<ClassCurriculumMarksTablePage> {
   late StudyPeriodModel? selectedPeriod;
 
   @override
@@ -266,7 +264,7 @@ class _TeacherMarksTablePageState extends State<TeacherMarksTablePage> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Text(data[liststud[index]]!.mark.toStringAsFixed(1)),
-                        if (widget.readOnly)
+                        if (!widget.readOnly)
                           const Icon(
                             Icons.edit,
                             size: 16,

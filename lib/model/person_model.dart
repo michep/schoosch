@@ -234,38 +234,35 @@ class StudentModel extends PersonModel {
     return res;
   }
 
-  Future<Map<CurriculumModel, List<PeriodMarkModel>>> getAllPeriodsMarks(List<CurriculumModel> curriculums) async {
-    Map<CurriculumModel, List<PeriodMarkModel>> res = {};
-    // for (var cur in curriculums) {
-    //   var marks = <PeriodMarkModel>[];
-    //   for (var i in periods) {
-    //     marks.add(PeriodMarkModel.fromMap('7865872538', {
-    //     'teacher_id': 'yujgkjb',
-    //       'student_id': _id,
-    //       'curriculum_id': cur.id,
-    //       'period_id': i.id,
-    //       'type': 'period',
-    //       'comment': '',
-    //       'mark': 5,
-    //   },));
-    //   }
-    //   res[cur] = marks;
-    // }
-
+  Future<Map<CurriculumModel, List<PeriodMarkModel?>>> getAllPeriodsMarks(
+    List<CurriculumModel> curriculums,
+    List<StudyPeriodModel> periods,
+  ) async {
+    Map<CurriculumModel, List<PeriodMarkModel?>> res = {};
     var marks = await Get.find<ProxyStore>().getStudentAllPerioddMarks(this, curriculums);
     var splitted = Utils.splitPeriodMarksListByCurriculum(marks);
     for (var currid in splitted.keys) {
       var curr = await splitted[currid]![0].curriculum;
-      res[curr] = splitted[currid]!;
-      // res[curr]!.sort((a, b) (await a.period));
+      List<PeriodMarkModel?> vals = [];
+      for (StudyPeriodModel per in periods) {
+        PeriodMarkModel permark = splitted[currid]!.firstWhere(
+          (element) => element.periodId == per.id,
+          orElse: () => PeriodMarkModel.empty(
+            '',
+            _id!,
+            per.id!,
+          ),
+        );
+        if (permark.mark != 0) {
+          vals.add(permark);
+        } else {
+          vals.add(null);
+        }
+      }
+      res[curr] = vals;
     }
     return res;
   }
-
-  //TODO: unrem, first finish in ProxyStore
-  // Future<void> changeViewType() {
-  //   return Get.find<ProxyStore>().changePersonView(this);
-  // }
 }
 
 class TeacherModel extends PersonModel {

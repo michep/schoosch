@@ -1,15 +1,14 @@
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 
 class VenueModel {
   late String? _id;
   late String name;
-  late int? floor;
-  late String? type;
-  List<Offset> coords = [];
-  late Offset _labelOffset;
-  late var path = Path();
+  // late int? floor;
+  // late String? type;
+  // List<Offset> coords = [];
+  // late Offset _labelOffset;
+  // late var path = Path();
 
   String? get id => _id;
 
@@ -67,28 +66,28 @@ class VenueModel {
     if (_id != null) return Get.find<ProxyStore>().deleteVenue(this);
   }
 
-  void _initPath() {
-    path.moveTo(coords[0].dx, coords[0].dy);
-    for (int i = 1; i <= coords.length; i++) {
-      path.lineTo(coords[i - 1].dx, coords[i - 1].dy);
-    }
-    path.close();
-  }
+  // void _initPath() {
+  //   path.moveTo(coords[0].dx, coords[0].dy);
+  //   for (int i = 1; i <= coords.length; i++) {
+  //     path.lineTo(coords[i - 1].dx, coords[i - 1].dy);
+  //   }
+  //   path.close();
+  // }
 
-  void paint(Canvas canvas, Color color) {
-    var paint = Paint()
-      ..strokeJoin = StrokeJoin.round
-      ..color = color
-      ..strokeWidth = 5
-      ..style = PaintingStyle.stroke;
-    canvas.drawPath(path, paint);
+  // void paint(Canvas canvas, Color color) {
+  //   var paint = Paint()
+  //     ..strokeJoin = StrokeJoin.round
+  //     ..color = color
+  //     ..strokeWidth = 5
+  //     ..style = PaintingStyle.stroke;
+  //   canvas.drawPath(path, paint);
 
-    var ts = TextSpan(
-      text: name,
-      style: const TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-    );
-    var tp = TextPainter(text: ts, textDirection: TextDirection.ltr)..layout(maxWidth: 200);
+  //   var ts = TextSpan(
+  //     text: name,
+  //     style: const TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+  //   );
+  //   var tp = TextPainter(text: ts, textDirection: TextDirection.ltr)..layout(maxWidth: 200);
 
-    tp.paint(canvas, Offset(_labelOffset.dx - tp.width / 2, _labelOffset.dy - tp.height / 2));
-  }
+  //   tp.paint(canvas, Offset(_labelOffset.dx - tp.width / 2, _labelOffset.dy - tp.height / 2));
+  // }
 }

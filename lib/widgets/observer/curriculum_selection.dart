@@ -4,7 +4,7 @@ import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/teacher/teacher_marks_table_page.dart';
+import 'package:schoosch/pages/teacher/class_cur_marks_table_page.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class CurriculumSelection extends StatelessWidget {
@@ -31,34 +31,35 @@ class CurriculumSelection extends StatelessWidget {
             // ),
             Expanded(
               child: ListView.builder(
+                itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   var cur = snapshot.data!.elementAt(index);
                   return FutureBuilder<TeacherModel?>(
-                      future: cur.master,
-                      builder: (context, teachersnap) {
-                        if (!teachersnap.hasData) {
-                          return const SizedBox.shrink();
-                        }
-                        var teacher = teachersnap.data!;
-                        return ListTile(
-                          title: Text(cur.name),
-                          subtitle: Text(teacher.abbreviatedName),
-                          onTap: () async {
-                            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
-                            Get.to(
-                              () => TeacherMarksTablePage(
-                                currentcur: cur,
-                                periods: periods,
-                                aclass: _class,
-                                teacher: teacher,
-                                readOnly: true,
-                              ),
-                            );
-                          },
-                        );
-                      });
+                    future: cur.master,
+                    builder: (context, teachersnap) {
+                      if (!teachersnap.hasData) {
+                        return const SizedBox.shrink();
+                      }
+                      var teacher = teachersnap.data!;
+                      return ListTile(
+                        title: Text(cur.name),
+                        subtitle: Text(teacher.abbreviatedName),
+                        onTap: () async {
+                          var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+                          Get.to(
+                            () => ClassCurriculumMarksTablePage(
+                              currentcur: cur,
+                              periods: periods,
+                              aclass: _class,
+                              // teacher: teacher,
+                              readOnly: true,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  );
                 },
-                itemCount: snapshot.data!.length,
               ),
             )
           ],
