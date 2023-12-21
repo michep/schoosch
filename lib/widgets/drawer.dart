@@ -60,7 +60,7 @@ class MDrawer extends StatelessWidget {
             Get.to(() => StudentMarksTablePage(student: PersonModel.currentStudent!, periods: periods));
           },
           icon: const Icon(Icons.table_chart_outlined),
-          label: const Text('Все оценки'),
+          label: const Text('Успеваемость'),
         ),
       );
       items.add(
@@ -124,7 +124,7 @@ class MDrawer extends StatelessWidget {
 
             Get.to(() => StudentYearMarksTablePage(student: student, periods: periods));
           },
-          icon: const Icon(Icons.table_chart_outlined),
+          icon: const Icon(Icons.power_input_rounded),
           label: const Text('Итоговые оценки'),
         ),
       );

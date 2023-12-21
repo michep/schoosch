@@ -24,7 +24,7 @@ class StudentYearMarksTablePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MAppBar(
-        'Оценки по периодам',
+        'Итоговые оценки',
         actions: [
           IconButton(
             onPressed: () {

@@ -41,7 +41,7 @@ class _StudentMarksTablePageState extends State<StudentMarksTablePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MAppBar(
-        'все оценки',
+        'Все оценки',
         actions: [
           IconButton(
             onPressed: () {
