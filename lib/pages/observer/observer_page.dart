@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
@@ -79,6 +80,25 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.dialog(
+            const AlertDialog(
+              backgroundColor: Colors.red,
+              title: Text(
+                "С новым годом!",
+                style: TextStyle(color: Colors.white),
+              ),
+              content: Text(
+                "Команда Schoosch поздравлет вас с новым годом!\nХороших праздников :)",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          );
+        },
+        backgroundColor: Colors.red,
+        child: const Icon(Icons.ac_unit_rounded),
       ),
     );
   }
