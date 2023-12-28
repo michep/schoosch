@@ -13,7 +13,7 @@ class MarkTypeChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: marktype.name,
+      message: '${marktype.name} (x${marktype.weight.toStringAsFixed(1)})',
       child: Chip(
         backgroundColor: Get.theme.colorScheme.primary,
         label: Text(
