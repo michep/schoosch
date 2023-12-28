@@ -40,27 +40,25 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: (PersonModel.currentUser!.currentType != PersonType.admin)
-          ? FloatingActionButton(
-              onPressed: () {
-                Get.dialog(
-                  const AlertDialog(
-                    backgroundColor: Colors.red,
-                    title: Text(
-                      "С новым годом!",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    content: Text(
-                      "Команда Schoosch поздравлет вас с новым годом!\nХороших праздников :)",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                );
-              },
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.dialog(
+            const AlertDialog(
               backgroundColor: Colors.red,
-              child: const Icon(Icons.ac_unit_rounded),
-            )
-          : null,
+              title: Text(
+                "С новым годом!",
+                style: TextStyle(color: Colors.white),
+              ),
+              content: Text(
+                "Команда Schoosch поздравлет вас с новым годом!\nХороших праздников :)",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          );
+        },
+        backgroundColor: Colors.red,
+        child: const Icon(Icons.ac_unit_rounded),
+      ),
     );
   }
 
