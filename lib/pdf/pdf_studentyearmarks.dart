@@ -44,7 +44,7 @@ class PDFStudentYearMarks {
             rows.add(
               pw.TableRow(
                 children: [
-                  PdfWidgets.nameCell(text: student.fullName),
+                  PdfWidgets.nameCell(text: cur.aliasOrName),
                   if (periodMarks[cur] != null)
                     ...periodMarks[cur]!.map((e) => PdfWidgets.periodMarkCell(
                           mark: e,
