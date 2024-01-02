@@ -54,7 +54,7 @@ class PDFClassCurriculumPeriodMarks {
               children: [
                 ...students.map(
                   (e) => PdfWidgets.summaryMarkCell(
-                    value: Utils.calculateWeightedAverageMark(marks[e]!).toStringAsFixed(1),
+                    value: marks[e] != null ? Utils.calculateWeightedAverageMark(marks[e]!).toStringAsFixed(1) : 'нет данных',
                   ),
                 ),
               ],
@@ -86,25 +86,34 @@ class PDFClassCurriculumPeriodMarks {
   void buildMarksByRows(Map<StudentModel, List<LessonMarkModel>> data, List<StudentModel> studlist, List<pw.TableRow> rows) {
     int maxlen = 0;
     for (StudentModel i in studlist) {
-      maxlen = max(maxlen, data[i]!.length);
+      if (data[i] != null) maxlen = max(maxlen, data[i]!.length);
     }
-    for (int i = 0; i < maxlen; i++) {
-      List<pw.Widget> cells = [];
-      for (StudentModel s in studlist) {
-        if (data[s] != null) {
-          LessonMarkModel? mark = i >= data[s]!.length ? null : data[s]![i];
-          cells.add(
-            PdfWidgets.lessonMarkCell(
-              mark: mark,
-            ),
-          );
-        }
+    List<pw.Widget> cells = [];
+    if (maxlen == 0) {
+      for (StudentModel _ in studlist) {
+        cells.add(PdfWidgets.nameCell(text: 'нет оценок.'));
       }
-      rows.add(
-        pw.TableRow(
-          children: cells,
-        ),
-      );
+      rows.add(pw.TableRow(children: cells));
+    } else {
+      for (int i = 0; i < maxlen; i++) {
+        for (StudentModel s in studlist) {
+          if (data[s] != null) {
+            LessonMarkModel? mark = i >= data[s]!.length ? null : data[s]![i];
+            cells.add(
+              PdfWidgets.lessonMarkCell(
+                mark: mark,
+              ),
+            );
+          } else {
+            cells.add(PdfWidgets.nameCell(text: 'нет оценок.'));
+          }
+        }
+        rows.add(
+          pw.TableRow(
+            children: cells,
+          ),
+        );
+      }
     }
   }
 
