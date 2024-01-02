@@ -11,7 +11,7 @@ class DayLessontimeListPage extends StatefulWidget {
   final InstitutionModel _institution;
   final bool selectionMode;
 
-  const DayLessontimeListPage(this._institution, {this.selectionMode = false, Key? key}) : super(key: key);
+  const DayLessontimeListPage(this._institution, {this.selectionMode = false, super.key});
 
   @override
   State<DayLessontimeListPage> createState() => _DayLessontimeListPageState();

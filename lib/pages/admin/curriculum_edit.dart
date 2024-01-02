@@ -15,7 +15,7 @@ class CurriculumPage extends StatefulWidget {
   final CurriculumModel _curriculum;
   final String _title;
 
-  const CurriculumPage(this._curriculum, this._title, {Key? key}) : super(key: key);
+  const CurriculumPage(this._curriculum, this._title, {super.key});
 
   @override
   State<CurriculumPage> createState() => _CurriculumPageState();

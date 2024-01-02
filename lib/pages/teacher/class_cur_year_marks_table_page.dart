@@ -7,30 +7,31 @@ import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/pages/teacher/period_mark_page.dart';
+import 'package:schoosch/pdf/pdf_classcurriculumyearmarks.dart';
+import 'package:schoosch/pdf/pdf_preview.dart';
+import 'package:schoosch/pdf/pdf_theme.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class TeacherYearMarksTable extends StatefulWidget {
+class ClassCurriculumYearMarksTable extends StatefulWidget {
   final CurriculumModel currentcur;
-  final ClassModel? aclass;
-  final TeacherModel? teacher;
+  final ClassModel aclass;
   final List<StudyPeriodModel> periods;
   final bool readOnly;
 
-  const TeacherYearMarksTable({
-    Key? key,
+  const ClassCurriculumYearMarksTable({
+    super.key,
     required this.currentcur,
     required this.periods,
-    this.aclass,
-    this.teacher,
+    required this.aclass,
     this.readOnly = false,
-  }) : super(key: key);
+  });
 
   @override
-  State<TeacherYearMarksTable> createState() => _TeacherYearMarksTableState();
+  State<ClassCurriculumYearMarksTable> createState() => _ClassCurriculumYearMarksTableState();
 }
 
-class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
+class _ClassCurriculumYearMarksTableState extends State<ClassCurriculumYearMarksTable> {
   late StudyPeriodModel? selectedPeriod;
 
   @override
@@ -47,11 +48,28 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
     return Scaffold(
       appBar: MAppBar(
         widget.currentcur.aliasOrName,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.to(
+                () => PDFPreview(
+                  format: landscapePdfPageFormat,
+                  generate: PDFClassCurriculumYearMarks(
+                    curriculum: widget.currentcur,
+                    periods: widget.periods,
+                    aclass: widget.aclass,
+                  ).generate,
+                ),
+              );
+            },
+            icon: const Icon(Icons.print_outlined),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: FutureBuilder<List<StudentModel>>(
-          future: widget.aclass != null ? widget.currentcur.classStudents(widget.aclass!) : widget.currentcur.students(),
+          future: widget.currentcur.classStudents(widget.aclass),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(
@@ -59,16 +77,10 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
               );
             }
             var students = snapshot.data!;
-            return FutureBuilder<List>(
-              future: Future.wait(
-                [
-                  // widget.currentcur.getLessonMarksByStudents(students, selectedPeriod!),
-                  widget.currentcur.getAllPeriodsMarksByStudents(
-                    students,
-                    widget.periods,
-                    widget.teacher!,
-                  ),
-                ],
+            return FutureBuilder(
+              future: widget.currentcur.getAllPeriodsMarksByStudents(
+                students,
+                widget.periods,
               ),
               builder: (context, studsnapshot) {
                 if (!studsnapshot.hasData) {
@@ -76,8 +88,7 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
                     child: Utils.progressIndicator(),
                   );
                 }
-                // var data = studsnapshot.data![0];
-                var dataPeriods = studsnapshot.data![0];
+                var dataPeriods = studsnapshot.data!;
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -118,7 +129,7 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
           color: index == listmark.length - 1
               ? widget.readOnly || !(listmark[index] == null)
                   ? Colors.black54
-                  : Theme.of(context).colorScheme.secondary
+                  : Get.theme.colorScheme.secondary
               : Colors.black54,
         ),
         margin: const EdgeInsets.all(4.0),
@@ -157,7 +168,7 @@ class _TeacherYearMarksTableState extends State<TeacherYearMarksTable> {
                                   fontSize: 20,
                                 ),
                               ),
-                              if (widget.readOnly)
+                              if (!widget.readOnly)
                                 const Icon(
                                   Icons.edit,
                                   size: 16,

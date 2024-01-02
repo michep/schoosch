@@ -64,7 +64,7 @@
 //                         decoration: !isSelected
 //                             ? null
 //                             : BoxDecoration(
-//                                 border: Border.all(color: Theme.of(context).primaryColor),
+//                                 border: Border.all(color: Get.theme.primaryColor),
 //                                 borderRadius: BorderRadius.circular(5),
 //                                 color: Colors.white,
 //                               ),

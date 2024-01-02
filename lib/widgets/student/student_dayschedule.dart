@@ -18,7 +18,7 @@ class StudentDayScheduleWidget extends StatefulWidget {
   final DateTime _currentdate;
   final StudentModel _student;
 
-  const StudentDayScheduleWidget(this._student, this._class, this._week, this._currentdate, {Key? key}) : super(key: key);
+  const StudentDayScheduleWidget(this._student, this._class, this._week, this._currentdate, {super.key});
 
   @override
   State<StudentDayScheduleWidget> createState() => _StudentDayScheduleWidgetState();

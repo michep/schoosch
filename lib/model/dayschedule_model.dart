@@ -77,7 +77,7 @@ class ClassScheduleModel extends DayScheduleModel {
 }
 
 class StudentScheduleModel extends ClassScheduleModel {
-  StudentScheduleModel.fromMap(ClassModel aclass, String id, Map<String, Object?> map) : super.fromMap(aclass, id, map);
+  StudentScheduleModel.fromMap(super.aclass, String super.id, Map<String, Object?> super.map) : super.fromMap();
 
   Future<List<LessonModel>> studentLessons(StudentModel student, {DateTime? date}) async {
     if (!_lessonsLoaded) {
@@ -89,7 +89,7 @@ class StudentScheduleModel extends ClassScheduleModel {
 }
 
 class TeacherScheduleModel extends DayScheduleModel {
-  TeacherScheduleModel.fromMap(String id, Map<String, Object?> map) : super.fromMap(id, map);
+  TeacherScheduleModel.fromMap(String super.id, Map<String, Object?> super.map) : super.fromMap();
 
   Future<List<LessonModel>> teacherLessons(TeacherModel teacher, Week week) async {
     return _lessons;

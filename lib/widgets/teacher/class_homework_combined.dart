@@ -21,8 +21,7 @@ class ClassHomeworksCombinedPage extends StatefulWidget {
 
   final bool readOnly;
 
-  const ClassHomeworksCombinedPage(this._teacher, this._curriculum, this._date, this._lesson, this._hwsFuture, {Key? key, this.readOnly = false})
-      : super(key: key);
+  const ClassHomeworksCombinedPage(this._teacher, this._curriculum, this._date, this._lesson, this._hwsFuture, {super.key, this.readOnly = false});
 
   @override
   State<ClassHomeworksCombinedPage> createState() => _ClassHomeworksCombinedPageState();
@@ -84,7 +83,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                               forceRefresh: buildForceRefresh,
                             );
                           },
-                        ).toList(),
+                        ),
                         const Text(
                           'ДЗ личные',
                           style: TextStyle(
@@ -101,7 +100,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                               readOnly: widget.readOnly,
                             );
                           },
-                        ).toList(),
+                        ),
                       ],
                     ),
             );
@@ -129,8 +128,8 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                   title: 'Личное',
                 ),
               ],
-              colorClosed: Theme.of(context).colorScheme.secondary,
-              colorOpen: Theme.of(context).colorScheme.background,
+              colorClosed: Get.theme.colorScheme.secondary,
+              colorOpen: Get.theme.colorScheme.background,
             ),
           ),
         ),
@@ -186,12 +185,6 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
   }
 
   void deleteHomework(HomeworkModel hw) async {
-    // showDialog(
-    //   context: context,
-    //   builder: (context) => DeleteDialog(hw: hw, context: context),
-    // ).whenComplete(
-    //   () => Navigator.of(context).pop(),
-    // );
     var res = await Get.dialog<bool>(
       DeleteDialog(hw: hw, context: context),
     );

@@ -12,7 +12,7 @@ class PeopleListPage extends StatefulWidget {
   final String type;
   final String? title;
 
-  const PeopleListPage(this.peopleFutureFunc, {this.selectionMode = false, this.type = 'all', this.title, Key? key}) : super(key: key);
+  const PeopleListPage(this.peopleFutureFunc, {this.selectionMode = false, this.type = 'all', this.title, super.key});
   @override
   State<PeopleListPage> createState() => _PeopleListPageState();
 }
@@ -58,7 +58,7 @@ class _PeopleListPageState extends State<PeopleListPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 16),
-                    child: Text(loc.personType, style: TextStyle(color: Theme.of(context).hintColor)),
+                    child: Text(loc.personType, style: TextStyle(color: Get.theme.hintColor)),
                   ),
                   DropdownButton<String>(
                     value: _typeValue,

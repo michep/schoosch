@@ -4,6 +4,7 @@ import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
+import 'package:schoosch/model/marktype_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/model/venue_model.dart';
@@ -19,6 +20,7 @@ class InstitutionModel {
   bool _semesterPeriodsLoaded = false;
   late final StudyPeriodModel? _yearPeriod;
   final List<StudyPeriodModel> _semesterPeriods = [];
+  final List<MarkType> _markTypes = [];
 
   final Map<String, Uint8List> _files = {};
 
@@ -29,8 +31,16 @@ class InstitutionModel {
 
   static InstitutionModel get currentInstitution => Get.find<ProxyStore>().currentInstitution!;
 
+  Future<void> prefetchMarkTypes() async {
+    _markTypes.addAll(await Get.find<ProxyStore>().getAllMarktypes());
+  }
+
   Future<List<VenueModel>> get venues async {
     return Get.find<ProxyStore>().getAllVenues();
+  }
+
+  Future<List<MarkType>> get marktypes async {
+    return Get.find<ProxyStore>().getAllMarktypes();
   }
 
   Future<List<StudyPeriodModel>> get studyperiods async {
@@ -97,6 +107,15 @@ class InstitutionModel {
       _files.addAll({filename: data});
     }
     return _files[filename]!;
+  }
+
+  List<MarkType> get marktypesSync => _markTypes;
+
+  MarkType getMarkTypeFromId(String id) {
+    return _markTypes.firstWhere(
+      (element) => element.id == id,
+      orElse: () => MarkType.empty(),
+    );
   }
 
   // Future<void> createChatRoom(PersonModel other) async {

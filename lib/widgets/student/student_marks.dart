@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/widgets/marktype_chip.dart';
 
 class StudentMarks extends StatefulWidget {
   final LessonModel _lesson;
   final DateTime _date;
   final StudentModel _student;
-  const StudentMarks(this._lesson, this._date, this._student, {Key? key}) : super(key: key);
+  const StudentMarks(this._lesson, this._date, this._student, {super.key});
 
   @override
   State<StudentMarks> createState() => _StudentMarksState();
@@ -60,10 +61,22 @@ class _StudentMarksState extends State<StudentMarks> {
                             style: const TextStyle(fontSize: 20),
                           ),
                         ),
-                        title: Text(e.comment),
-                        subtitle: FutureBuilder<PersonModel>(
-                          future: e.teacher,
-                          builder: ((context, snapshot) => snapshot.hasData ? Text(snapshot.data!.fullName) : const Text('')),
+                        title: Text(
+                          e.comment != '' ? e.comment : 'Комментария нет.',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                        subtitle: Row(
+                          children: [
+                            MarkTypeChip(marktype: e.type),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            FutureBuilder<PersonModel>(
+                              future: e.teacher,
+                              builder: ((context, snapshot) => snapshot.hasData ? Text(snapshot.data!.fullName) : const Text('')),
+                            ),
+                          ],
                         ),
                       ),
                     )
@@ -76,12 +89,18 @@ class _StudentMarksState extends State<StudentMarks> {
 
   Color getBorderColor(String firstMark) {
     switch (firstMark) {
-      case '5': return Colors.green;
-      case '4': return Colors.lime;
-      case '3': return Colors.yellow;
-      case '2': return Colors.red;
-      case '1': return Colors.red;
-      default: return Colors.red;
+      case '5':
+        return Colors.green;
+      case '4':
+        return Colors.lime;
+      case '3':
+        return Colors.yellow;
+      case '2':
+        return Colors.red;
+      case '1':
+        return Colors.red;
+      default:
+        return Colors.red;
     }
   }
 }

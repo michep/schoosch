@@ -44,7 +44,7 @@
 //                       Get.to(const ScanPage());
 //                     },
 //                     elevation: 2.0,
-//                     fillColor: Theme.of(context).colorScheme.primary,
+//                     fillColor: Get.theme.colorScheme.primary,
 //                     padding: const EdgeInsets.all(15.0),
 //                     shape: const CircleBorder(),
 //                     child: const Icon(
@@ -75,15 +75,15 @@
 //             },
 //             elevation: Get.find<BlueprintController>().chosenFloor$.value == flors[i] ? 0 : 2.0,
 //             fillColor: Get.find<BlueprintController>().chosenFloor$.value == flors[i]
-//                 ? Theme.of(context).colorScheme.onPrimary
-//                 : Theme.of(context).colorScheme.primary,
+//                 ? Get.theme.colorScheme.onPrimary
+//                 : Get.theme.colorScheme.primary,
 //             padding: const EdgeInsets.only(top: 15, bottom: 25, right: 15, left: 15),
 //             shape: const CircleBorder(),
 //             child: Text(
 //               "${flors[i]}",
 //               style: TextStyle(
 //                   fontSize: 30,
-//                   color: Get.find<BlueprintController>().chosenFloor$.value == flors[i] ? Colors.black : Theme.of(context).colorScheme.onSecondaryContainer),
+//                   color: Get.find<BlueprintController>().chosenFloor$.value == flors[i] ? Colors.black : Get.theme.colorScheme.onSecondaryContainer),
 //             ),
 //           );
 //         }),

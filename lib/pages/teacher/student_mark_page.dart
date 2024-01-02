@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
+import 'package:schoosch/model/marktype_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/mark_field.dart';
+import 'package:schoosch/widgets/mark_type_field.dart';
 // import 'package:schoosch/widgets/mark_type_field.dart';
 import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -18,7 +20,7 @@ class StudentMarkPage extends StatefulWidget {
   final LessonMarkModel mark;
   final bool editMode;
 
-  const StudentMarkPage(this.lesson, this.mark, this.title, {Key? key, this.editMode = false}) : super(key: key);
+  const StudentMarkPage(this.lesson, this.mark, this.title, {super.key, this.editMode = false});
 
   @override
   State<StudentMarkPage> createState() => _StudentMarkPageState();
@@ -68,16 +70,16 @@ class _StudentMarkPageState extends State<StudentMarkPage> {
                   onSaved: setMark,
                   validator: (value) => Utils.validateMark(value, S.of(context).errorMarkError),
                 ),
-                // MarkTypeFormField(
-                //   markType: markType,
-                //   onChanged: (v) {
-                //     if (v is MarkType) {
-                //       setState(() {
-                //         markType = v;
-                //       });
-                //     }
-                //   },
-                // ),
+                MarkTypeFormField(
+                  markType: widget.mark.type,
+                  validator: (value) => Utils.validateMarkType(value, S.of(context).errorUnknownMarkType),
+                  onChanged: (v) {
+                    if (v is MarkType) {
+                      markType = v;
+                    }
+                  },
+                  editMode: widget.editMode,
+                ),
                 TextFormField(
                   decoration: InputDecoration(
                     label: Text(S.of(context).commentTitle),
@@ -140,8 +142,8 @@ class _StudentMarkPageState extends State<StudentMarkPage> {
           'date': widget.mark.date.toIso8601String(),
           'curriculum_id': widget.mark.curriculumId,
           'lesson_order': widget.mark.lessonOrder,
-          // 'type': markType.nameString,
-          'type': 'regular',
+          'type_id': markType.id,
+          // 'type': 'regular',
           'comment': _commentcont.value.text,
           'mark': mark,
         },

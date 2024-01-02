@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/model/institution_model.dart';
 
 Widget drawerHeader(BuildContext context) {
   return DrawerHeader(
-    decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+    decoration: BoxDecoration(color: Get.theme.primaryColor),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
         InstitutionModel.currentInstitution.name,

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/all_marks_table_page.dart';
-import 'package:schoosch/pages/student/student_periods_marks.dart';
+import 'package:schoosch/pages/observer/observer_cur_choice_page.dart';
+import 'package:schoosch/pages/student_marks_table_page.dart';
+import 'package:schoosch/pages/student/student_year_marks_table_page.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
 import 'package:schoosch/pdf/pdf_preview.dart';
 import 'package:schoosch/pdf/pdf_classesweekschedule.dart';
@@ -12,7 +14,7 @@ import 'package:schoosch/pdf/pdf_theme.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
 
 class MDrawer extends StatelessWidget {
-  const MDrawer({Key? key}) : super(key: key);
+  const MDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,17 +57,17 @@ class MDrawer extends StatelessWidget {
         TextButton.icon(
           onPressed: () async {
             var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
-            Get.to(() => StudentsTablePage(student: PersonModel.currentStudent!, periods: periods));
+            Get.to(() => StudentMarksTablePage(student: PersonModel.currentStudent!, periods: periods));
           },
           icon: const Icon(Icons.table_chart_outlined),
-          label: const Text('Все оценки'),
+          label: const Text('Успеваемость'),
         ),
       );
       items.add(
         TextButton.icon(
           onPressed: () async {
             var periods = await InstitutionModel.currentInstitution.currentYearAndSemestersPeriods;
-            Get.to(() => StudentPeriodicMarksScreen(student: PersonModel.currentStudent!, periods: periods));
+            Get.to(() => StudentYearMarksTablePage(student: PersonModel.currentStudent!, periods: periods));
           },
           icon: const Icon(Icons.power_input_rounded),
           label: const Text('Итоговые оценки'),
@@ -76,7 +78,11 @@ class MDrawer extends StatelessWidget {
         TextButton.icon(
           onPressed: () async {
             // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
-            Get.to(() => const CurriculumChoicePage());
+            Get.to(
+              () => TeacherCurriculumChoicePage(
+                teacher: PersonModel.currentTeacher!,
+              ),
+            );
           },
           icon: const Icon(Icons.table_chart_outlined),
           label: const Text('Ваши оценки'),
@@ -86,11 +92,10 @@ class MDrawer extends StatelessWidget {
         TextButton.icon(
           onPressed: () async {
             // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
-            Get.to(
-              () => const CurriculumChoicePage(
-                isYear: true,
-              ),
-            );
+            Get.to(() => TeacherCurriculumChoicePage(
+                  teacher: PersonModel.currentTeacher!,
+                  isYear: true,
+                ));
           },
           icon: const Icon(Icons.power_input_rounded),
           label: const Text('Итоговые оценки'),
@@ -104,7 +109,7 @@ class MDrawer extends StatelessWidget {
             var stud = await PersonModel.currentParent!.currentChild;
             var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
 
-            Get.to(() => StudentsTablePage(student: stud, periods: periods));
+            Get.to(() => StudentMarksTablePage(student: stud, periods: periods));
           },
           icon: const Icon(Icons.table_chart_outlined),
           label: const Text('Успеваемость'),
@@ -114,29 +119,52 @@ class MDrawer extends StatelessWidget {
         TextButton.icon(
           onPressed: () async {
             // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
-            var stud = await PersonModel.currentParent!.currentChild;
-            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+            var student = await PersonModel.currentParent!.currentChild;
+            var periods = await InstitutionModel.currentInstitution.currentYearAndSemestersPeriods;
 
-            Get.to(() => StudentPeriodicMarksScreen(
-                  periods: periods,
-                  student: stud,
+            Get.to(() => StudentYearMarksTablePage(student: student, periods: periods));
+          },
+          icon: const Icon(Icons.power_input_rounded),
+          label: const Text('Итоговые оценки'),
+        ),
+      );
+    } else if (PersonModel.currentUser!.currentType == PersonType.observer) {
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            Get.to(() => ObserverCurriculumChoicePage(
+                  aclass: Get.find<ProxyStore>().currentObserverClass!,
                 ));
           },
           icon: const Icon(Icons.table_chart_outlined),
+          label: const Text('Оценки класса'),
+        ),
+      );
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            Get.to(
+              () => ObserverCurriculumChoicePage(
+                aclass: Get.find<ProxyStore>().currentObserverClass!,
+                isYear: true,
+              ),
+            );
+          },
+          icon: const Icon(Icons.power_input_rounded),
           label: const Text('Итоговые оценки'),
         ),
       );
     }
-    // if(PersonModel.currentUser!.currentType == PersonType.observer) {
+    // if (PersonModel.currentUser!.currentType == PersonType.observer) {
     //   items.add(
-    //   TextButton.icon(
-    //     onPressed: () {
-    //       Get.to(() => TeacherYearMarksTable(currentcur: currentcur, periods: periods));
-    //     },
-    //     icon: const Icon(Icons.power_input_rounded),
-    //     label: const Text('Итоговые оценки'),
-    //   ),
-    // );
+    //     TextButton.icon(
+    //       onPressed: () {
+    //         Get.to(() => TeacherYearMarksTable(currentcur: currentcur, periods: periods));
+    //       },
+    //       icon: const Icon(Icons.power_input_rounded),
+    //       label: const Text('Итоговые оценки'),
+    //     ),
+    //   );
     // }
     // items.add(
     //   TextButton.icon(
@@ -156,28 +184,28 @@ class MDrawer extends StatelessWidget {
     //     label: const Text('о приложении'),
     //   ),
     // );
-    if (PersonModel.currentUser!.types.contains(PersonType.admin)) {
-      items.add(
-        TextButton.icon(
-          onPressed: () async {
-            var classes = await InstitutionModel.currentInstitution.classes;
-            var cw = Get.find<CurrentWeek>().currentWeek;
+    // if (PersonModel.currentUser!.types.contains(PersonType.admin)) {
+    items.add(
+      TextButton.icon(
+        onPressed: () async {
+          var classes = await InstitutionModel.currentInstitution.classes;
+          var cw = Get.find<CurrentWeek>().currentWeek;
 
-            Get.to(
-              () => Preview(
-                format: defaultPdfPageFormat,
-                generate: PDFClassesWeekSchedule(
-                  classes: classes.sublist(4),
-                  week: cw,
-                ).generate,
-              ),
-            );
-          },
-          icon: const Icon(Icons.table_chart_outlined),
-          label: const Text('Печать расписания'),
-        ),
-      );
-    }
+          Get.to(
+            () => PDFPreview(
+              format: landscapePdfPageFormat,
+              generate: PDFClassesWeekSchedule(
+                classes: classes.where((element) => element.grade > 4).toList(),
+                week: cw,
+              ).generate,
+            ),
+          );
+        },
+        icon: const Icon(Icons.table_chart_outlined),
+        label: const Text('Печать расписания'),
+      ),
+    );
+    // }
     return items;
   }
 }

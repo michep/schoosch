@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -15,7 +16,7 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
   final void Function(HomeworkModel, CompletionFlagModel) toggleHomeworkCompletion;
 
   const StudentHomeworkCompetionTile({
-    Key? key,
+    super.key,
     required this.homework,
     required this.student,
     required this.editHomework,
@@ -23,7 +24,7 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
     required this.toggleHomeworkCompletion,
     required this.readOnly,
     this.forceRefresh = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(Object context) {
@@ -68,7 +69,7 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
           subtitle: Text(
             '${Utils.formatDatetime(homework.date)} - ${Utils.formatDatetime(homework.todate!)}',
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+              color: Get.theme.colorScheme.onBackground.withOpacity(0.7),
               fontSize: 13,
             ),
           ),

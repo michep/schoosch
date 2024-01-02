@@ -11,7 +11,7 @@ class StudentsAbsencePage extends StatefulWidget {
   final DateTime _date;
   final bool readOnly;
 
-  const StudentsAbsencePage(this._date, this._lesson, {Key? key, this.readOnly = false}) : super(key: key);
+  const StudentsAbsencePage(this._date, this._lesson, {super.key, this.readOnly = false});
 
   @override
   State<StudentsAbsencePage> createState() => _StudentsAbsencePageState();
@@ -36,20 +36,18 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
               },
               child: snapshot.data!.isEmpty
                   ? ListView(
-                    children: const [
-                      Center(child: Text('На этом уроке нет отсутствующих')),
-                    ],
-                  )
+                      children: const [
+                        Center(child: Text('На этом уроке нет отсутствующих')),
+                      ],
+                    )
                   : ListView(
                       key: const PageStorageKey('absence'),
                       children: [
-                        ...snapshot.data!
-                            .map((absence) => AbsenceListTile(
-                                  absence,
-                                  deleteAbsence,
-                                  widget.readOnly,
-                                ))
-                            .toList()
+                        ...snapshot.data!.map((absence) => AbsenceListTile(
+                              absence,
+                              deleteAbsence,
+                              widget.readOnly,
+                            ))
                       ],
                     ),
             );
@@ -86,15 +84,15 @@ class _StudentsAbsencePageState extends State<StudentsAbsencePage> {
         'date': widget._date.toIso8601String(),
       });
       widget._lesson.createAbsence(abs).then((value) => setState(() {
-        forceRefresh = true;
-      }));
+            forceRefresh = true;
+          }));
     }
   }
 
   Future<void> deleteAbsence(AbsenceModel absence) async {
     absence.delete(widget._lesson).then((value) => setState(() {
-      forceRefresh = true;
-    }));
+          forceRefresh = true;
+        }));
   }
 }
 
@@ -103,7 +101,7 @@ class AbsenceListTile extends StatelessWidget {
   final Future<void> Function(AbsenceModel) deleteAbsenceFunc;
   final bool readOnly;
 
-  const AbsenceListTile(this.absence, this.deleteAbsenceFunc, this.readOnly, {Key? key}) : super(key: key);
+  const AbsenceListTile(this.absence, this.deleteAbsenceFunc, this.readOnly, {super.key});
 
   @override
   Widget build(BuildContext context) {

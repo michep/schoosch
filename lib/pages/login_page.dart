@@ -4,7 +4,7 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();

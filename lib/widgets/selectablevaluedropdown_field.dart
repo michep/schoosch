@@ -28,8 +28,8 @@ class SelectableValueDropdownFormField<T extends Object> extends StatefulWidget 
     required this.callback,
     this.detailsFunc,
     this.validatorFunc,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   SelectableValueDropdownFormFieldState<T> createState() => SelectableValueDropdownFormFieldState<T>();
@@ -133,7 +133,7 @@ class SelectableValueDropdownFormFieldState<T extends Object> extends State<Sele
                       });
                     }
                     return Container(
-                      color: highlight ? Theme.of(context).focusColor : null,
+                      color: highlight ? Get.theme.focusColor : null,
                       padding: const EdgeInsets.all(16.0),
                       child: Text(option.toString()),
                     );

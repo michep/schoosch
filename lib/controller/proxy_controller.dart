@@ -17,6 +17,7 @@ import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/mark_model.dart';
+import 'package:schoosch/model/marktype_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/model/venue_model.dart';
@@ -56,6 +57,7 @@ class ProxyStore extends getx.GetxController {
     //   },
     // ));
     institution = await _geInstitutionIdByUserEmail(userEmail);
+    await institution.prefetchMarkTypes();
     _currentUser = await _getPersonByEmail(userEmail);
   }
 
@@ -618,6 +620,30 @@ class ProxyStore extends getx.GetxController {
     );
   }
 
+  Future<List<MarkType>> getAllMarktypes() async {
+    var res = await dio.getUri<List>(baseUriFunc('/marktype'));
+    var js = res.data!;
+    return js.map((e) => MarkType.fromMap(e['_id'], e)).toList();
+  }
+
+  Future<String> saveMarktype(MarkType mt) async {
+    var data = mt.toMap();
+    data['institution_id'] = institution.id;
+    var res = await dio.putUri<Map<String, dynamic>>(
+      baseUriFunc('/marktype'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: data,
+    );
+    var js = res.data!;
+    return js['id'];
+  }
+
+  Future<void> deleteMarktype(MarkType mt) async {
+    await dio.deleteUri(
+      baseUriFunc('/marktype/${mt.id}'),
+    );
+  }
+
   Future<List<LessonMarkModel>> getAllLessonMarks(LessonModel lesson, DateTime date) async {
     var res = await dio.getUri<List>(
       baseUriFunc('/class/${lesson.aclass.id}/curriculum/${lesson.curriculumId}/mark/${date.toIso8601String()}/${lesson.order}'),
@@ -691,11 +717,10 @@ class ProxyStore extends getx.GetxController {
   Future<List<PeriodMarkModel>> getPeriodsMarksByStudents(
     List<StudentModel> students,
     List<StudyPeriodModel> periods,
-    TeacherModel teacher,
     CurriculumModel cur,
   ) async {
     var res = await dio.postUri<List>(
-      baseUriFunc('/curriculum/${cur.id}/teacher/${teacher.id}/mark/periods'),
+      baseUriFunc('/curriculum/${cur.id}/mark/periods'),
       options: Options(headers: {'Content-Type': 'application/json'}),
       data: {
         'students': students.map((e) => e.id).toList(),

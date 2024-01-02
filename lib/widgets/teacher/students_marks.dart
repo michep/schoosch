@@ -9,13 +9,14 @@ import 'package:schoosch/pages/teacher/student_mark_page.dart';
 import 'package:schoosch/widgets/delete_bottomscheet.dart';
 import 'package:schoosch/widgets/delete_dialog.dart';
 import 'package:schoosch/widgets/fab_menu.dart';
+import 'package:schoosch/widgets/marktype_chip.dart';
 
 class StudentsMarksPage extends StatefulWidget {
   final LessonModel _lesson;
   final DateTime _date;
   final bool readOnly;
 
-  const StudentsMarksPage(this._date, this._lesson, {Key? key, this.readOnly = false}) : super(key: key);
+  const StudentsMarksPage(this._date, this._lesson, {super.key, this.readOnly = false});
 
   @override
   State<StudentsMarksPage> createState() => _StudentsMarksPageState();
@@ -82,8 +83,8 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
                   title: 'Ученику',
                 ),
               ],
-              colorClosed: Theme.of(context).colorScheme.secondary,
-              colorOpen: Theme.of(context).colorScheme.background,
+              colorClosed: Get.theme.colorScheme.secondary,
+              colorOpen: Get.theme.colorScheme.background,
             ),
           ),
         ),
@@ -112,7 +113,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
   }
 
   Future<void> addClassMark() async {
-    var res = await Get.to<bool>(
+    await Get.to<bool>(
       () => ClassMarkPage(
         widget._lesson,
         'Оценки классу',
@@ -125,11 +126,11 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
         ),
       ),
     );
-    if (res is bool) {
-      setState(() {
-        forceRefresh = true;
-      });
-    }
+    // if (res is bool) {
+    setState(() {
+      forceRefresh = true;
+    });
+    // }
   }
 
   void deleteMark(LessonMarkModel mark) async {
@@ -204,7 +205,7 @@ class MarkListTile extends StatefulWidget {
   final List<LessonMarkModel> marks;
   final bool readOnly;
 
-  const MarkListTile(this.studentId, this.lesson, this.date, this.marks, this.deleteFunc, this.editFunc, this.readOnly, {Key? key}) : super(key: key);
+  const MarkListTile(this.studentId, this.lesson, this.date, this.marks, this.deleteFunc, this.editFunc, this.readOnly, {super.key});
 
   @override
   State<MarkListTile> createState() => _MarkListTileState();
@@ -235,7 +236,7 @@ class _MarkListTileState extends State<MarkListTile> {
       title: Text(student!.fullName),
       subtitle: Text(marksString(widget.marks)),
       children: [
-        ...widget.marks.map((e) => MarkTile(e, widget.deleteFunc, widget.editFunc, widget.readOnly, key: ValueKey(e.id))).toList(),
+        ...widget.marks.map((e) => MarkTile(e, widget.deleteFunc, widget.editFunc, widget.readOnly, key: ValueKey(e.id))),
       ],
     );
   }
@@ -255,23 +256,31 @@ class MarkTile extends StatelessWidget {
   final Future<void> Function(LessonMarkModel) editFunc;
   final bool readOnly;
 
-  const MarkTile(this.mark, this.deleteFunc, this.editFunc, this.readOnly, {Key? key}) : super(key: key);
+  const MarkTile(this.mark, this.deleteFunc, this.editFunc, this.readOnly, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        mark.comment,
+        mark.comment != '' ? mark.comment : 'Комментария нет.',
         overflow: TextOverflow.ellipsis,
         maxLines: 1,
       ),
       leading: Text(mark.toString()),
-      subtitle: FutureBuilder<PersonModel>(
-        future: mark.teacher,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return const SizedBox.shrink();
-          return Text(snapshot.data!.fullName);
-        },
+      subtitle: Row(
+        children: [
+          MarkTypeChip(marktype: mark.type),
+          const SizedBox(
+            width: 10,
+          ),
+          FutureBuilder<PersonModel>(
+            future: mark.teacher,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return const SizedBox.shrink();
+              return Text(snapshot.data!.fullName);
+            },
+          ),
+        ],
       ),
       trailing: readOnly
           ? null

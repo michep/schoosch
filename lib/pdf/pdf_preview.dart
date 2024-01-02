@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 
-class Preview extends StatelessWidget {
+class PDFPreview extends StatelessWidget {
   final LayoutCallback generate;
   final PdfPageFormat format;
 
-  const Preview({
+  const PDFPreview({
     required this.generate,
     required this.format,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

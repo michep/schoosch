@@ -8,7 +8,7 @@ import 'package:schoosch/widgets/utils.dart';
 class LessonTimePage extends StatefulWidget {
   final LessontimeModel _lessontime;
 
-  const LessonTimePage(this._lessontime, {Key? key}) : super(key: key);
+  const LessonTimePage(this._lessontime, {super.key});
 
   @override
   State<LessonTimePage> createState() => _LessonTimePageState();

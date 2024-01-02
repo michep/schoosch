@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:schoosch/controller/day_controller.dart';
 
 class DaySelector extends StatelessWidget {
-  DaySelector({Key? key}) : super(key: key);
+  DaySelector({super.key});
 
   final cd = Get.find<CurrentDay>();
 

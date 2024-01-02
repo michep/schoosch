@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
@@ -20,7 +21,15 @@ class TeacherLessonPage extends StatefulWidget {
   final LessontimeModel time;
   final TeacherModel teacher;
 
-  const TeacherLessonPage(this.lesson, this.curriculum, this.venue, this.time, this.date, this.teacher, {Key? key}) : super(key: key);
+  const TeacherLessonPage({
+    required this.lesson,
+    required this.curriculum,
+    required this.venue,
+    required this.time,
+    required this.date,
+    required this.teacher,
+    super.key,
+  });
 
   @override
   State<TeacherLessonPage> createState() => _TeacherLessonPageState();
@@ -119,7 +128,7 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: Theme.of(context).colorScheme.primary,
+        color: Get.theme.colorScheme.primary,
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
         child: GNav(
           onTabChange: (i) => setState(() {
@@ -127,10 +136,10 @@ class _TeacherLessonPageState extends State<TeacherLessonPage> {
           }),
           gap: 8,
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
-          activeColor: Theme.of(context).colorScheme.onBackground,
+          color: Get.theme.colorScheme.onBackground.withOpacity(0.5),
+          activeColor: Get.theme.colorScheme.onBackground,
           tabActiveBorder: Border.all(
-            color: Theme.of(context).colorScheme.onBackground,
+            color: Get.theme.colorScheme.onBackground,
           ),
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           tabs: [

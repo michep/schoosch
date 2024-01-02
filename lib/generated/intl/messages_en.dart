@@ -91,6 +91,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Homework text shold not be empty"),
         "errorMarkError":
             MessageLookupByLibrary.simpleMessage("Mark shoud be defined"),
+        "errorMarkTypeLabelEmpty": MessageLookupByLibrary.simpleMessage(
+            "Mark type Label should not be empty"),
+        "errorMarkTypeWeightEmpty": MessageLookupByLibrary.simpleMessage(
+            "Mark type Weight should not be empty and need to be a number"),
         "errorNameEmpty":
             MessageLookupByLibrary.simpleMessage("Name should be provided"),
         "errorPersonBirthdayEmpty":
@@ -117,6 +121,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Student should be selected"),
         "errorTeacherEmpty":
             MessageLookupByLibrary.simpleMessage("Teacher should be selected"),
+        "errorUnknownMarkType": MessageLookupByLibrary.simpleMessage(
+            "Mark type should be selected"),
         "errorUnknownPersonType":
             MessageLookupByLibrary.simpleMessage("unknown person type"),
         "errorVenueEmpty":
@@ -136,14 +142,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "loginPageTitle":
             MessageLookupByLibrary.simpleMessage("Application Login"),
         "markTitle": MessageLookupByLibrary.simpleMessage("Mark"),
-        "markTypeExam": MessageLookupByLibrary.simpleMessage("Exam"),
-        "markTypeRegular": MessageLookupByLibrary.simpleMessage("Regular"),
-        "markTypeTest": MessageLookupByLibrary.simpleMessage("Test"),
+        "markTypeLabel": MessageLookupByLibrary.simpleMessage("Short Label"),
+        "markTypeList": MessageLookupByLibrary.simpleMessage("Mark types"),
         "markTypeTitle": MessageLookupByLibrary.simpleMessage("Mark type"),
+        "markTypeWeight": MessageLookupByLibrary.simpleMessage("Weight"),
         "modelStatusTitle": MessageLookupByLibrary.simpleMessage("Status"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "newClass": MessageLookupByLibrary.simpleMessage("New Class"),
         "newCurriculum": MessageLookupByLibrary.simpleMessage("New Curriculum"),
+        "newMarkType": MessageLookupByLibrary.simpleMessage("New Mark type"),
         "newPerson": m1,
         "newVenue": MessageLookupByLibrary.simpleMessage("New Vanue"),
         "nextLessonClassHomework":

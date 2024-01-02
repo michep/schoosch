@@ -13,7 +13,7 @@ import 'package:schoosch/widgets/utils.dart';
 
 class CreateReplacement extends StatefulWidget {
   final ClassModel aclass;
-  const CreateReplacement(this.aclass, {Key? key}) : super(key: key);
+  const CreateReplacement(this.aclass, {super.key});
 
   @override
   State<CreateReplacement> createState() => _CreateReplacementState();

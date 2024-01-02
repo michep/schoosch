@@ -12,7 +12,7 @@ class StudentLessonListTile extends StatefulWidget {
   final StudentModel _student;
   final DateTime _date;
 
-  const StudentLessonListTile(this._student, this._lesson, this._date, {Key? key}) : super(key: key);
+  const StudentLessonListTile(this._student, this._lesson, this._date, {super.key});
 
   @override
   State<StudentLessonListTile> createState() => _StudentLessonListTileState();
@@ -86,7 +86,14 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
   }
 
   void _onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim) {
-    Get.to(() => StudentLessonPage(widget._student, les, cur, ven, tim, widget._date));
+    Get.to(() => StudentLessonPage(
+          student: widget._student,
+          lesson: les,
+          curriculum: cur,
+          venue: ven,
+          time: tim,
+          date: widget._date,
+        ));
   }
 
   Color getBorderColor(String firstMark) {

@@ -11,7 +11,7 @@ import 'package:schoosch/widgets/drawer.dart';
 class ObserverPage extends StatefulWidget {
   final ClassModel _class;
 
-  const ObserverPage(this._class, {Key? key}) : super(key: key);
+  const ObserverPage(this._class, {super.key});
 
   @override
   State<ObserverPage> createState() => _ObserverPageState();
@@ -55,7 +55,7 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
         ),
       ),
       bottomNavigationBar: Container(
-        color: Theme.of(context).colorScheme.primary,
+        color: Get.theme.colorScheme.primary,
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
         child: GNav(
           onTabChange: (i) => setState(() {
@@ -63,10 +63,10 @@ class _ObserverPageState extends State<ObserverPage> with SingleTickerProviderSt
           }),
           gap: 8,
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
-          activeColor: Theme.of(context).colorScheme.onBackground,
+          color: Get.theme.colorScheme.onBackground.withOpacity(0.5),
+          activeColor: Get.theme.colorScheme.onBackground,
           tabActiveBorder: Border.all(
-            color: Theme.of(context).colorScheme.onBackground,
+            color: Get.theme.colorScheme.onBackground,
           ),
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           tabs: [
