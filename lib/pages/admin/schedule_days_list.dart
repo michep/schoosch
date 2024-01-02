@@ -10,7 +10,7 @@ import 'package:schoosch/widgets/utils.dart';
 class ScheduleDaysListPage extends StatefulWidget {
   final ClassModel _aclass;
 
-  const ScheduleDaysListPage(this._aclass, {Key? key}) : super(key: key);
+  const ScheduleDaysListPage(this._aclass, {super.key});
 
   @override
   State<ScheduleDaysListPage> createState() => _VenueListPageState();

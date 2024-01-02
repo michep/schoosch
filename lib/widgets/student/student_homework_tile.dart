@@ -12,7 +12,7 @@ class StudentHomeworkTile extends StatefulWidget {
   final bool isClass;
   final StudentModel student;
   final void Function() refresh;
-  const StudentHomeworkTile({Key? key, required this.homework, required this.isClass, required this.student, required this.refresh}) : super(key: key);
+  const StudentHomeworkTile({super.key, required this.homework, required this.isClass, required this.student, required this.refresh});
 
   @override
   State<StudentHomeworkTile> createState() => _StudentHomeworkTileState();

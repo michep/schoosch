@@ -11,7 +11,7 @@ class VenueListPage extends StatefulWidget {
   final InstitutionModel _institution;
   final bool selectionMode;
 
-  const VenueListPage(this._institution, {this.selectionMode = false, Key? key}) : super(key: key);
+  const VenueListPage(this._institution, {this.selectionMode = false, super.key});
 
   @override
   State<VenueListPage> createState() => _VenueListPageState();

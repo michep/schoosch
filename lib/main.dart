@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:schoosch/generated/l10n.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,6 @@ import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/firebase_options.dart';
-import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/theme.dart';
 
 Future<void> main() async {
@@ -20,8 +20,8 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var fauth = FAuth();
   await fauth.init();
-  var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org:8182', path));
-  // var proxy = ProxyStore((path) => Uri.http('localhost:8182', path));
+  var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org:8182', path)); //real
+  // var proxy = ProxyStore((path) => Uri.http('localhost:8182', path)); // local
   var curweek = CurrentWeek(Week.current());
   var prefs = PrefsController();
   await prefs.init();
@@ -37,17 +37,17 @@ Future<void> main() async {
     // await bcont.init();
   }
 
-  runApp(const MyApp());
+  runApp(const SchooschApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class SchooschApp extends StatefulWidget {
+  const SchooschApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<SchooschApp> createState() => _SchooschAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _SchooschAppState extends State<SchooschApp> {
   @override
   void initState() {
     super.initState();
@@ -64,6 +64,7 @@ class _MyAppState extends State<MyApp> {
         S.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
         FirebaseUILocalizations.delegate,
       ],
       locale: const Locale('ru'),

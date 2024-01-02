@@ -27,37 +27,40 @@ class PDFClassesWeekSchedule {
   Future<Uint8List> generate(PdfPageFormat format) async {
     Map<ClassModel, List<ClassScheduleModel>> data = {};
     for (var cls in classes) {
-      var sched = await cls.getClassSchedulesWeek(week);
-      data[cls] = sched;
+      var scheds = await cls.getClassSchedulesWeek(week);
+      data[cls] = scheds;
     }
 
     var doc = pw.Document(
       theme: await getTheme(),
     );
-    for (var day in [0, 1, 2, 3, 4]) {
+
+    var lessonTimes = (await (await data.keys.first.getDayLessontime())!.lessontimes).map((e) => e.toMap()).toList();
+
+    for (var weekday in [0, 1, 2, 3, 4]) {
       doc.addPage(
         pw.MultiPage(
           pageFormat: format,
           header: (context) => pw.Row(
             children: [
-              pw.Padding(padding: const pw.EdgeInsets.fromLTRB(0, 0, 0, 32)),
+              pw.Padding(padding: const pw.EdgeInsets.only(bottom: 32)),
               pw.Text(
-                DateFormat.EEEE().format(week.days[day]).capitalizeFirst!,
+                DateFormat.EEEE('ru').format(week.days[weekday]).capitalizeFirst!,
                 style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
               ),
             ],
           ),
-          footer: (context) => pw.Row(
-            mainAxisAlignment: pw.MainAxisAlignment.end,
-            children: [
-              pw.Text((day + 1).toString()),
-            ],
-          ),
+          // footer: (context) => pw.Row(
+          //   mainAxisAlignment: pw.MainAxisAlignment.end,
+          //   children: [
+          //     pw.Text((day + 1).toString()),
+          //   ],
+          // ),
           build: (context) {
             var oneDayAllClasseseLessons = data.keys.map(
               (aclass) {
-                if (data[aclass]!.length > day) {
-                  var sched = data[aclass]![day];
+                if (data[aclass]!.length > weekday) {
+                  var sched = data[aclass]![weekday];
                   return sched.toMap(recursive: true)['lesson'] as List<Map<String, dynamic>>;
                 } else {
                   return <Map<String, dynamic>>[];
@@ -65,35 +68,42 @@ class PDFClassesWeekSchedule {
               },
             ).toList();
 
-            var maxLessonsInOneDay = oneDayAllClasseseLessons.map<int>((e) => e.map<int>((e) => e['order']).reduce(max)).reduce(max);
-            var maxLessonsInOneDayIdx = oneDayAllClasseseLessons.indexWhere((e) => e.map<int>((e) => e['order']).reduce(max) == maxLessonsInOneDay);
+            var maxLessonsInOneDay = oneDayAllClasseseLessons.map<int>((e) => e.isNotEmpty ? e.map<int>((e) => e['order']).reduce((max)) : 0).reduce(max);
 
             List<pw.TableRow> rows = [];
             rows.add(pw.TableRow(
               children: [
                 _emptyCell(),
                 _emptyCell(),
-                ...data.keys.map((e) => _cell(text: e.name, fontWeight: pw.FontWeight.bold, fontSize: 10)).toList(),
+                ...data.keys.map((e) => _classCell(text: e.name)),
               ],
             ));
 
-            for (var orderidx = 0; orderidx < maxLessonsInOneDay; orderidx++) {
+            for (var lessonOrderIdx = 0; lessonOrderIdx < maxLessonsInOneDay; lessonOrderIdx++) {
               List<pw.Widget> rowcells = [];
-              rowcells.add(_orderWidget((orderidx + 1).toString()));
-              rowcells.add(_timePeriodWidget(oneDayAllClasseseLessons[maxLessonsInOneDayIdx][orderidx]));
-              for (var colidx = 0; colidx < data.keys.length; colidx++) {
-                orderidx < oneDayAllClasseseLessons[colidx].length
-                    ? rowcells.add(_lessonWidget(_getLessonsByOrder(oneDayAllClasseseLessons[colidx], orderidx + 1)))
+              rowcells.add(_orderCell((lessonOrderIdx + 1).toString()));
+              rowcells.add(_timePeriodCell(lessonTimes[lessonOrderIdx]));
+              for (var classIdx = 0; classIdx < data.keys.length; classIdx++) {
+                // orderidx < oneDayAllClasseseLessons[colidx].length
+                oneDayAllClasseseLessons[classIdx].firstWhereOrNull((element) => element['order'] == (lessonOrderIdx + 1)) != null
+                    ? rowcells.add(_lessonCell(_getLessonsByOrder(oneDayAllClasseseLessons[classIdx], lessonOrderIdx + 1)))
                     : rowcells.add(_emptyCell());
               }
               rows.add(pw.TableRow(children: rowcells));
             }
+            Map<int, pw.TableColumnWidth> colW = {};
+            for (var classIdx = 0; classIdx < data.keys.length; classIdx++) {
+              colW[classIdx + 2] = const pw.FlexColumnWidth(1);
+            }
+
             return [
               pw.Table(
                 columnWidths: {
-                  0: const pw.FractionColumnWidth(0.03),
-                  1: const pw.FractionColumnWidth(0.10),
-                },
+                  // 0: const pw.FractionColumnWidth(0.03),
+                  // 1: const pw.FractionColumnWidth(0.10),
+                  0: const pw.FixedColumnWidth(20),
+                  1: const pw.FixedColumnWidth(70),
+                }..addAll(colW),
                 border: pw.TableBorder.all(color: PdfColors.black),
                 children: rows,
               ),
@@ -109,7 +119,7 @@ class PDFClassesWeekSchedule {
     return data.where((element) => element['order'] == order).toList();
   }
 
-  pw.Widget _orderWidget(String order) {
+  pw.Widget _orderCell(String order) {
     return pw.Padding(
       padding: const pw.EdgeInsets.all(2),
       child: pw.Column(
@@ -120,18 +130,19 @@ class PDFClassesWeekSchedule {
     );
   }
 
-  pw.Widget _timePeriodWidget(Map<String, dynamic> data) {
+  pw.Widget _timePeriodCell(Map<String, dynamic> data) {
     return pw.Padding(
       padding: const pw.EdgeInsets.all(2),
       child: pw.Column(
         children: [
-          pw.Text('${data['time']['from']} — ${data['time']['till']}', style: lessonTimeStyle),
+          // pw.Text('${data['time']['from']} — ${data['time']['till']}', style: lessonTimeStyle),
+          pw.Text('${data['from']} — ${data['till']}', style: lessonTimeStyle),
         ],
       ),
     );
   }
 
-  pw.Widget _lessonWidget(List<Map<String, dynamic>> data) {
+  pw.Widget _lessonCell(List<Map<String, dynamic>> data) {
     return pw.Padding(
       padding: const pw.EdgeInsets.all(2),
       child: pw.Column(
@@ -163,14 +174,13 @@ class PDFClassesWeekSchedule {
     );
   }
 
-  pw.Widget _cell({
-    required String text,
-    double? fontSize,
-    pw.FontWeight? fontWeight,
-  }) {
+  pw.Widget _classCell({required String text}) {
     return pw.Padding(
       padding: const pw.EdgeInsets.all(2),
-      child: pw.Text(text, style: pw.TextStyle(fontSize: fontSize, fontWeight: fontWeight)),
+      child: pw.Text(
+        text,
+        style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
+      ),
     );
   }
 

@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
+import 'package:schoosch/pdf/pdf_preview.dart';
+import 'package:schoosch/pdf/pdf_studentperiodmarks.dart';
+import 'package:schoosch/pdf/pdf_theme.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/tablemarkcell.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class StudentsTablePage extends StatefulWidget {
+class StudentMarksTablePage extends StatefulWidget {
   final StudentModel student;
   final List<StudyPeriodModel> periods;
 
-  const StudentsTablePage({
-    Key? key,
+  const StudentMarksTablePage({
+    super.key,
     required this.student,
     required this.periods,
-  }) : super(key: key);
+  });
 
   @override
-  State<StudentsTablePage> createState() => _StudentsTablePageState();
+  State<StudentMarksTablePage> createState() => _StudentMarksTablePageState();
 }
 
-class _StudentsTablePageState extends State<StudentsTablePage> {
+class _StudentMarksTablePageState extends State<StudentMarksTablePage> {
   late StudyPeriodModel? selectedPeriod;
 
   @override
@@ -36,8 +40,24 @@ class _StudentsTablePageState extends State<StudentsTablePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MAppBar(
-        'все оценки',
+      appBar: MAppBar(
+        'Все оценки',
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.to(
+                () => PDFPreview(
+                  format: landscapePdfPageFormat,
+                  generate: PDFStudentPeriodMarks(
+                    period: selectedPeriod!,
+                    student: widget.student,
+                  ).generate,
+                ),
+              );
+            },
+            icon: const Icon(Icons.print_outlined),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,12 +67,10 @@ class _StudentsTablePageState extends State<StudentsTablePage> {
             child: DropdownButton<StudyPeriodModel>(
               value: selectedPeriod,
               items: [
-                ...widget.periods
-                    .map((e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(e.name),
-                        ))
-                    .toList(),
+                ...widget.periods.map((e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e.name),
+                    )),
               ],
               onChanged: (value) => setState(() {
                 selectedPeriod = value;
@@ -128,38 +146,8 @@ class _StudentsTablePageState extends State<StudentsTablePage> {
   List<Widget> _buildMarkCells(List<LessonMarkModel> listmark) {
     return List.generate(
       listmark.length,
-      (index) => Container(
-        alignment: Alignment.center,
-        width: 120.0,
-        height: 60.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: Colors.black54,
-        ),
-        margin: const EdgeInsets.all(4.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(DateFormat.Md().format(listmark[index].date)),
-            Text(listmark[index].toString()),
-          ],
-        ),
-      ),
+      (index) => TableMarkCell(lessonmark: listmark[index]),
     );
-  }
-
-  String getSummaryMark(List<LessonMarkModel> listmark) {
-    int sum = 0;
-
-    for (MarkModel mark in listmark) {
-      // var times = 1;
-      // if (mark.type == MarkType.exam || mark.type == MarkType.test) {
-      //   times = 2;
-      // }
-      // sum += mark.mark * times;
-      sum += mark.mark;
-    }
-    return (sum / listmark.length).toStringAsFixed(1);
   }
 
   List<Widget> _buildSubjectCells(List<CurriculumModel> listcur) {
@@ -231,11 +219,7 @@ class _StudentsTablePageState extends State<StudentsTablePage> {
           children: [
             const Text('средний'),
             Text(
-              data[curs[index]] == null
-                  ? 'нет данных'
-                  : getSummaryMark(
-                      data[curs[index]]!,
-                    ),
+              data[curs[index]] == null ? 'нет данных' : Utils.calculateWeightedAverageMark(data[curs[index]]!).toStringAsFixed(1),
             ),
           ],
         ),

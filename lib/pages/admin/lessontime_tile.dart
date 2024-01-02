@@ -8,7 +8,7 @@ class LessonTimeTile extends StatefulWidget {
   final bool _isLast;
   final void Function() _deleteFunc;
 
-  const LessonTimeTile(this._lessontime, this._isLast, this._deleteFunc, {Key? key}) : super(key: key);
+  const LessonTimeTile(this._lessontime, this._isLast, this._deleteFunc, {super.key});
 
   @override
   State<LessonTimeTile> createState() => _LessonTimeTileState();
@@ -34,7 +34,7 @@ class _LessonTimeTileState extends State<LessonTimeTile> {
           const Icon(Icons.chevron_right),
           widget._isLast
               ? IconButton(onPressed: widget._deleteFunc, icon: const Icon(Icons.delete))
-              : IconButton(onPressed: null, icon: Icon(Icons.delete, color: Theme.of(context).scaffoldBackgroundColor)),
+              : IconButton(onPressed: null, icon: Icon(Icons.delete, color: Get.theme.scaffoldBackgroundColor)),
         ],
       ),
       onTap: () => _onTap(_lessontime),

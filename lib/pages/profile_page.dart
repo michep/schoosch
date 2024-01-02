@@ -12,7 +12,7 @@ import 'package:schoosch/widgets/appbar.dart';
 class ProfilePage extends StatelessWidget {
   final PersonModel _user;
 
-  const ProfilePage(this._user, {Key? key}) : super(key: key);
+  const ProfilePage(this._user, {super.key});
 
   @override
   Widget build(BuildContext context) {

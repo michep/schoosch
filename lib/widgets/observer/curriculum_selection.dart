@@ -4,16 +4,16 @@ import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
-import 'package:schoosch/pages/teacher/teacher_marks_table_page.dart';
+import 'package:schoosch/pages/teacher/class_cur_marks_table_page.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class CurriculumSelection extends StatelessWidget {
   final ClassModel _class;
-  const CurriculumSelection(this._class, {Key? key}) : super(key: key);
+  const CurriculumSelection(this._class, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    bool isYear = false;
+    // bool isYear = false;
     return FutureBuilder<List<CurriculumModel>>(
       future: _class.curriculums(),
       builder: (context, snapshot) {
@@ -31,34 +31,35 @@ class CurriculumSelection extends StatelessWidget {
             // ),
             Expanded(
               child: ListView.builder(
+                itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   var cur = snapshot.data!.elementAt(index);
                   return FutureBuilder<TeacherModel?>(
-                      future: cur.master,
-                      builder: (context, teachersnap) {
-                        if (!teachersnap.hasData) {
-                          return const SizedBox.shrink();
-                        }
-                        var teacher = teachersnap.data!;
-                        return ListTile(
-                          title: Text(cur.name),
-                          subtitle: Text(teacher.abbreviatedName),
-                          onTap: () async {
-                            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
-                            Get.to(
-                              () => TeacherTablePage(
-                                currentcur: cur,
-                                periods: periods,
-                                aclass: _class,
-                                teacher: teacher,
-                                readOnly: true,
-                              ),
-                            );
-                          },
-                        );
-                      });
+                    future: cur.master,
+                    builder: (context, teachersnap) {
+                      if (!teachersnap.hasData) {
+                        return const SizedBox.shrink();
+                      }
+                      var teacher = teachersnap.data!;
+                      return ListTile(
+                        title: Text(cur.name),
+                        subtitle: Text(teacher.abbreviatedName),
+                        onTap: () async {
+                          var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+                          Get.to(
+                            () => ClassCurriculumMarksTablePage(
+                              currentcur: cur,
+                              periods: periods,
+                              aclass: _class,
+                              // teacher: teacher,
+                              readOnly: true,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  );
                 },
-                itemCount: snapshot.data!.length,
               ),
             )
           ],
@@ -82,7 +83,7 @@ class CurriculumSelection extends StatelessWidget {
 //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 //       children: [
 //         ElevatedButton(
-//             style: ElevatedButton.styleFrom(backgroundColor: widget.isYear ? Colors.transparent : Theme.of(context).colorScheme.primary),
+//             style: ElevatedButton.styleFrom(backgroundColor: widget.isYear ? Colors.transparent : Get.theme.colorScheme.primary),
 //             onPressed: () {
 //               setState(() {
 //                 widget.isYear = false;
@@ -90,7 +91,7 @@ class CurriculumSelection extends StatelessWidget {
 //             },
 //             child: Text('Четвертные')),
 //         ElevatedButton(
-//             style: ElevatedButton.styleFrom(backgroundColor: !widget.isYear ? Colors.transparent : Theme.of(context).colorScheme.primary),
+//             style: ElevatedButton.styleFrom(backgroundColor: !widget.isYear ? Colors.transparent : Get.theme.colorScheme.primary),
 //             onPressed: () {
 //               setState(() {
 //                 widget.isYear = true;

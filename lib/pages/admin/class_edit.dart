@@ -18,7 +18,7 @@ class ClassPage extends StatefulWidget {
   final ClassModel _aclass;
   final String _title;
 
-  const ClassPage(this._aclass, this._title, {Key? key}) : super(key: key);
+  const ClassPage(this._aclass, this._title, {super.key});
 
   @override
   State<ClassPage> createState() => _ClassPageState();

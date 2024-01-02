@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/main.dart';
 
 class DisconnectedPage extends StatelessWidget {
-  const DisconnectedPage({Key? key}) : super(key: key);
+  const DisconnectedPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class DisconnectedPage extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               Get.off(
-                () => const MyApp(),
+                () => const SchooschApp(),
               );
             },
             child: const Text('перезагрузить'),

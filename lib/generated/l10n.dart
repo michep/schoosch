@@ -1060,6 +1060,16 @@ class S {
     );
   }
 
+  /// `New Mark type`
+  String get newMarkType {
+    return Intl.message(
+      'New Mark type',
+      name: 'newMarkType',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Mark type`
   String get markTypeTitle {
     return Intl.message(
@@ -1070,31 +1080,61 @@ class S {
     );
   }
 
-  /// `Regular`
-  String get markTypeRegular {
+  /// `Mark types`
+  String get markTypeList {
     return Intl.message(
-      'Regular',
-      name: 'markTypeRegular',
+      'Mark types',
+      name: 'markTypeList',
       desc: '',
       args: [],
     );
   }
 
-  /// `Test`
-  String get markTypeTest {
+  /// `Weight`
+  String get markTypeWeight {
     return Intl.message(
-      'Test',
-      name: 'markTypeTest',
+      'Weight',
+      name: 'markTypeWeight',
       desc: '',
       args: [],
     );
   }
 
-  /// `Exam`
-  String get markTypeExam {
+  /// `Short Label`
+  String get markTypeLabel {
     return Intl.message(
-      'Exam',
-      name: 'markTypeExam',
+      'Short Label',
+      name: 'markTypeLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mark type Weight should not be empty and need to be a number`
+  String get errorMarkTypeWeightEmpty {
+    return Intl.message(
+      'Mark type Weight should not be empty and need to be a number',
+      name: 'errorMarkTypeWeightEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mark type Label should not be empty`
+  String get errorMarkTypeLabelEmpty {
+    return Intl.message(
+      'Mark type Label should not be empty',
+      name: 'errorMarkTypeLabelEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mark type should be selected`
+  String get errorUnknownMarkType {
+    return Intl.message(
+      'Mark type should be selected',
+      name: 'errorUnknownMarkType',
       desc: '',
       args: [],
     );

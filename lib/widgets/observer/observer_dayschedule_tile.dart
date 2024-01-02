@@ -13,7 +13,7 @@ import 'package:schoosch/pages/observer/observer_lesson_page.dart';
 class ObserverDayScheduleTile extends StatefulWidget {
   final ClassScheduleModel _schedule;
   final DateTime _date;
-  const ObserverDayScheduleTile(this._schedule, this._date, {Key? key}) : super(key: key);
+  const ObserverDayScheduleTile(this._schedule, this._date, {super.key});
 
   @override
   State<ObserverDayScheduleTile> createState() => _ObserverDayScheduleTileState();

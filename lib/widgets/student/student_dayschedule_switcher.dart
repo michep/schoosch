@@ -11,7 +11,7 @@ import 'package:schoosch/widgets/utils.dart';
 
 class StudentDayScheduleSwitcher extends StatefulWidget {
   final StudentModel _student;
-  const StudentDayScheduleSwitcher(this._student, {Key? key}) : super(key: key);
+  const StudentDayScheduleSwitcher(this._student, {super.key});
 
   @override
   State<StatefulWidget> createState() => StudentDayScheduleSwitcherState();

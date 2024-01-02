@@ -7,7 +7,7 @@ import 'package:schoosch/widgets/utils.dart';
 class ClassSelection extends StatelessWidget {
   final ObserverModel _observer;
 
-  const ClassSelection(this._observer, {Key? key}) : super(key: key);
+  const ClassSelection(this._observer, {super.key});
 
   @override
   Widget build(BuildContext context) {

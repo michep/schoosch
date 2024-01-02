@@ -1,55 +1,10 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
-import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
+import 'package:schoosch/model/institution_model.dart';
+import 'package:schoosch/model/marktype_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
-
-enum MarkType {
-  regular,
-  test,
-  exam;
-
-  static const _regular = 'regular';
-  static const _test = 'test';
-  static const _exam = 'exam';
-
-  static MarkType _parse(String value) {
-    switch (value) {
-      case _regular:
-        return MarkType.regular;
-      case _test:
-        return MarkType.test;
-      case _exam:
-        return MarkType.exam;
-      default:
-        throw 'unkown type';
-    }
-  }
-
-  String get nameString {
-    switch (this) {
-      case MarkType.regular:
-        return _regular;
-      case MarkType.test:
-        return _test;
-      case MarkType.exam:
-        return _exam;
-    }
-  }
-
-  String localizedName(S S) {
-    switch (this) {
-      case MarkType.regular:
-        return S.markTypeRegular;
-      case MarkType.test:
-        return S.markTypeTest;
-      case MarkType.exam:
-        return S.markTypeExam;
-    }
-  }
-}
 
 class MarkModel {
   String? id;
@@ -68,7 +23,6 @@ class MarkModel {
     curriculumId = map['curriculum_id'] != null ? map['curriculum_id'] as String : throw 'need curriculum_id key in mark $id';
     comment = map['comment'] != null ? map['comment'] as String : '';
     mark = map['mark'] != null ? map['mark'] as int : throw 'need mark key in mark $id';
-
     if (map.containsKey('teacher') && map['teacher'] is Map) {
       _teacher = TeacherModel.fromMap((map['teacher'] as Map<String, dynamic>)['_id'] as String, map['teacher'] as Map<String, dynamic>);
     }
@@ -115,7 +69,7 @@ class LessonMarkModel extends MarkModel {
           'curriculum_id': curriculumId,
           'date': date.toIso8601String(),
           'lesson_order': lessonOrder,
-          'type': 'regular',
+          'type_id': null,
           'comment': '',
           'mark': 0,
         });
@@ -123,7 +77,7 @@ class LessonMarkModel extends MarkModel {
   LessonMarkModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map) {
     date = map['date'] != null ? DateTime.tryParse(map['date'])! : throw 'need date key in mark $id';
     lessonOrder = map['lesson_order'] != null ? map['lesson_order'] as int : throw 'need lesson_order key in mark $id';
-    type = map['type'] != null ? MarkType._parse(map['type'] as String) : throw 'need type key in mark $id';
+    type = map['type_id'] != null ? InstitutionModel.currentInstitution.getMarkTypeFromId(map['type_id']) : MarkType.empty();
 
     if (map.containsKey('curriculum') && map['curriculum'] is Map) {
       _curriculum = CurriculumModel.fromMap((map['curriculum'] as Map<String, dynamic>)['_id'] as String, map['curriculum'] as Map<String, dynamic>);
@@ -137,7 +91,7 @@ class LessonMarkModel extends MarkModel {
       'curriculum_id': curriculumId,
       'date': date.toIso8601String(),
       'lesson_order': lessonOrder,
-      'type': type.nameString,
+      'type_id': type.id,
       'comment': comment,
       'mark': mark,
     };
@@ -152,7 +106,7 @@ class LessonMarkModel extends MarkModel {
   @override
   String toString() {
     String res = mark.toString();
-    if (type == MarkType.exam || type == MarkType.test) {
+    if (type.name == 'контрольная работа' || type.name == 'самостоятельная работа') {
       res = res += '²';
     }
     return res;

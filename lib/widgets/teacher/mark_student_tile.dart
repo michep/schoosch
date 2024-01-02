@@ -22,7 +22,7 @@ class _MarkStudentTileState extends State<MarkStudentTile> {
 
   @override
   Widget build(BuildContext context) {
-    var selStyle = ButtonStyle(backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary));
+    var selStyle = ButtonStyle(backgroundColor: MaterialStateProperty.all(Get.theme.colorScheme.secondary));
     return Card(
       color: Colors.black.withOpacity(0.3),
       child: Padding(
@@ -88,12 +88,7 @@ class _MarkStudentTileState extends State<MarkStudentTile> {
                   child: const Text('5'),
                 ),
                 IconButton(
-                  onPressed: () {
-                    save();
-                    setState(() {
-                      forceRefresh = true;
-                    });
-                  },
+                  onPressed: save,
                   icon: const Icon(Icons.add),
                 ),
               ],
@@ -112,22 +107,37 @@ class _MarkStudentTileState extends State<MarkStudentTile> {
                 }
                 List<LessonMarkModel> marks = snapshot.data!;
                 return SizedBox(
-                  height: 40,
-                  child: GridView.count(
-                    crossAxisCount: 10,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
+                  height: 80,
+                  width: double.infinity,
+                  // child: GridView.count(
+                  //   crossAxisCount: (MediaQuery.of(context).size.width / 100).ceil(),
+                  //   mainAxisSpacing: 10,
+                  //   crossAxisSpacing: 10,
+                  //   childAspectRatio: 1.3,
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
+                    alignment: WrapAlignment.start,
                     children: [
                       ...marks.map(
                         (e) => Container(
                           // padding: const EdgeInsets.all(3),
+                          height: 60,
+                          width: 80,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.black,
                           ),
                           child: Center(
-                            child: Text(
-                              e.mark.toString(),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '${e.mark.toString()};',
+                                ),
+                                const SizedBox(width: 3),
+                                Text(e.type.label),
+                              ],
                             ),
                           ),
                         ),
@@ -156,6 +166,12 @@ class _MarkStudentTileState extends State<MarkStudentTile> {
   }
 
   void save() async {
+    if (value == null) {
+      return Utils.showErrorSnackbar('Выберите пожалуйста оценку');
+    }
+    if (widget.mark.type.id == null) {
+      return Utils.showErrorSnackbar('Выберите пожалуйста тип оценки');
+    }
     if (value != null) {
       var nmark = LessonMarkModel.fromMap(
         widget.mark.id,
@@ -166,14 +182,15 @@ class _MarkStudentTileState extends State<MarkStudentTile> {
           'curriculum_id': widget.mark.curriculumId,
           'lesson_order': widget.mark.lessonOrder,
           // 'type': markType.nameString,
-          'type': 'regular',
+          'type_id': widget.mark.type.id,
           'comment': '',
           'mark': value,
         },
       );
       await nmark.save();
-      // Get.back<bool>(result: true);
-      // setState(() {});
+      setState(() {
+        forceRefresh = true;
+      });
     }
   }
 }

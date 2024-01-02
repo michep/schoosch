@@ -1,25 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
+import 'package:schoosch/pdf/pdf_preview.dart';
+import 'package:schoosch/pdf/pdf_studentyearmarks.dart';
+import 'package:schoosch/pdf/pdf_theme.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class StudentPeriodicMarksScreen extends StatelessWidget {
+class StudentYearMarksTablePage extends StatelessWidget {
   final List<StudyPeriodModel> periods;
   final StudentModel student;
-  const StudentPeriodicMarksScreen({
-    Key? key,
+
+  const StudentYearMarksTablePage({
+    super.key,
     required this.periods,
     required this.student,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    // final StudentModel student = PersonModel.currentStudent!;
     return Scaffold(
-      appBar: const MAppBar('Оценки по периодам'),
+      appBar: MAppBar(
+        'Итоговые оценки',
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.to(
+                () => PDFPreview(
+                  format: landscapePdfPageFormat,
+                  generate: PDFStudentYearMarks(
+                    periods: periods,
+                    student: student,
+                  ).generate,
+                ),
+              );
+            },
+            icon: const Icon(Icons.print_outlined),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: FutureBuilder<List<CurriculumModel>>(
@@ -31,10 +53,8 @@ class StudentPeriodicMarksScreen extends StatelessWidget {
               );
             }
             var curriculums = curssnapshot.data!;
-            return FutureBuilder<Map<CurriculumModel, List<PeriodMarkModel>>>(
-              future: student.getAllPeriodsMarks(
-                curriculums,
-              ),
+            return FutureBuilder<Map<CurriculumModel, List<PeriodMarkModel?>>>(
+              future: student.getAllPeriodsMarks(curriculums, periods),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
@@ -58,19 +78,6 @@ class StudentPeriodicMarksScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(
-                    //     bottom: 8,
-                    //     top: 4,
-                    //   ),
-                    //   child: Row(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: _buildSummaryMarks(
-                    //       data,
-                    //       curriculums,
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 );
               },
@@ -80,36 +87,6 @@ class StudentPeriodicMarksScreen extends StatelessWidget {
       ),
     );
   }
-
-  List<Widget> _buildMarkCells(List<PeriodMarkModel> listmark) {
-    return List.generate(
-      listmark.length,
-      (index) => Container(
-        alignment: Alignment.center,
-        width: 90.0,
-        height: 70.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: Colors.black54,
-        ),
-        margin: const EdgeInsets.all(4.0),
-        child: Center(
-          child: Text(
-            listmark[index].mark.toString(),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // String getSummaryMark(List<LessonMarkModel> listmark) {
-  //   int sum = 0;
-
-  //   for (MarkModel mark in listmark) {
-  //     sum += mark.mark;
-  //   }
-  //   return (sum / listmark.length).toStringAsFixed(1);
-  // }
 
   List<Widget> _buildSubjectCells(List<CurriculumModel> listcur) {
     return [
@@ -143,7 +120,7 @@ class StudentPeriodicMarksScreen extends StatelessWidget {
         );
   }
 
-  List<Widget> _buildRows(Map<CurriculumModel, List<PeriodMarkModel>> data, List<CurriculumModel> listcur) {
+  List<Widget> _buildRows(Map<CurriculumModel, List<PeriodMarkModel?>> data, List<CurriculumModel> listcur) {
     return <Widget>[
           Row(
             children: _buildPeriodCells(),
@@ -164,11 +141,69 @@ class StudentPeriodicMarksScreen extends StatelessWidget {
                   child: const Text('нет оценок.'),
                 )
               : Row(
-                  children: _buildMarkCells(
-                    data[listcur[index]]!,
-                  ),
+                  children: _buildMarkCells(data[listcur[index]]!),
                 ),
         );
+  }
+
+  List<Widget> _buildMarkCells(List<PeriodMarkModel?> listmark) {
+    return List.generate(
+      // listmark.length,
+      // (index) => Container(
+      //   alignment: Alignment.center,
+      //   width: 90.0,
+      //   height: 70.0,
+      //   decoration: BoxDecoration(
+      //     borderRadius: BorderRadius.circular(12),
+      //     color: Colors.black54,
+      //   ),
+      //   margin: const EdgeInsets.all(4.0),
+      //   child: Center(
+      //     child: Text(
+      //       listmark[index].mark.toString(),
+      //     ),
+      //   ),
+      // ),
+      listmark.length,
+      (index) => Container(
+        alignment: Alignment.center,
+        width: 90.0,
+        height: 70.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.black54,
+        ),
+        margin: const EdgeInsets.all(4.0),
+        child: index == listmark.length - 1
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Годовая'),
+                  listmark[index] != null
+                      ? Text(
+                          listmark[index]!.mark.toStringAsFixed(1),
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              )
+            : Center(
+                child: listmark[index] != null
+                    ? Center(
+                        child: Text(
+                          listmark[index]!.mark.toString(),
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      )
+                    : null,
+              ),
+      ),
+    );
   }
 
   List<Widget> _buildPeriodCells() {

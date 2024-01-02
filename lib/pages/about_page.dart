@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AboutPage extends StatefulWidget {
-  const AboutPage({Key? key}) : super(key: key);
+  const AboutPage({super.key});
 
   @override
   AboutPageState createState() => AboutPageState();

@@ -6,6 +6,7 @@ import 'package:schoosch/pages/admin/class_list.dart';
 import 'package:schoosch/pages/admin/curriculum_list.dart';
 import 'package:schoosch/pages/admin/daylessontime_list.dart';
 import 'package:schoosch/pages/admin/institution.dart';
+import 'package:schoosch/pages/admin/marktype_list.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/class_choice_page.dart';
 import 'package:schoosch/pages/admin/studyperiod_list.dart';
@@ -14,7 +15,7 @@ import 'package:schoosch/widgets/drawerheader.dart';
 import 'package:schoosch/pages/about_page.dart';
 
 class AdminDrawer extends StatelessWidget {
-  const AdminDrawer({Key? key}) : super(key: key);
+  const AdminDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +57,10 @@ class AdminDrawer extends StatelessWidget {
             TextButton(
               onPressed: _openSchedulesPage,
               child: Text(loc.dayScheduleList),
+            ),
+            TextButton(
+              onPressed: _openMarktypesPage,
+              child: Text(loc.markTypeList),
             ),
             TextButton(
               onPressed: _openReplacementsPage,
@@ -132,6 +137,11 @@ class AdminDrawer extends StatelessWidget {
   Future<void> _openSchedulesPage() async {
     // Get.back();
     Get.to(() => ClassListPage(InstitutionModel.currentInstitution, listMode: ClassListMode.schedules));
+  }
+
+  Future<void> _openMarktypesPage() async {
+    // Get.back();
+    Get.to(() => MarktypeListPage(InstitutionModel.currentInstitution));
   }
 
   Future<void> _openAboutPage() async {

@@ -3,19 +3,15 @@ import 'package:get/get.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
-import 'package:schoosch/model/person_model.dart';
-// import 'package:schoosch/model/person_model.dart';
-// import 'package:schoosch/model/studyperiod_model.dart';
-import 'package:schoosch/pages/teacher/teacher_marks_table_page.dart';
-import 'package:schoosch/pages/teacher/year_marks_table.dart';
+import 'package:schoosch/pages/teacher/class_cur_marks_table_page.dart';
+import 'package:schoosch/pages/teacher/class_cur_year_marks_table_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class ClassChoicePage extends StatelessWidget {
   final CurriculumModel curriculum;
-  // final List<StudyPeriodModel> periods;
   final bool isYear;
-  const ClassChoicePage({Key? key, required this.curriculum, this.isYear = false}) : super(key: key);
+  const ClassChoicePage({super.key, required this.curriculum, this.isYear = false});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +31,7 @@ class ClassChoicePage extends StatelessWidget {
               return const Text('нет доступных предметов.');
             }
             return ListView.builder(
+              itemCount: snapshot.data!.length,
               itemBuilder: (_, index) {
                 return ListTile(
                   title: Text(snapshot.data![index].name),
@@ -44,15 +41,13 @@ class ClassChoicePage extends StatelessWidget {
                         : await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
                     isYear
                         ? Get.to(
-                            () => TeacherYearMarksTable(
+                            () => ClassCurriculumYearMarksTable(
                               currentcur: curriculum,
                               periods: periods,
                               aclass: snapshot.data![index],
-                              teacher: PersonModel.currentTeacher,
                             ),
                           )
-                        : Get.to(() => TeacherTablePage(
-                              // currentcur: snapshot.data![index],
+                        : Get.to(() => ClassCurriculumMarksTablePage(
                               currentcur: curriculum,
                               periods: periods,
                               aclass: snapshot.data![index],
@@ -60,7 +55,6 @@ class ClassChoicePage extends StatelessWidget {
                   },
                 );
               },
-              itemCount: snapshot.data!.length,
             );
           },
         ),

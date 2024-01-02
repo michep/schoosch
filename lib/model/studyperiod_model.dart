@@ -47,7 +47,7 @@ class StudyPeriodModel {
   late final DateTime from;
   late final DateTime till;
   late final StudyPeriodType type;
-  late final ModelStatus status;
+  late final StatusModel status;
 
   String? get id => _id;
 
@@ -55,7 +55,7 @@ class StudyPeriodModel {
       : this.fromMap(null, {
           'name': '',
           'type': StudyPeriodType.year.nameString,
-          'status': ModelStatus.active.nameInt,
+          'status': StatusModel.active.nameInt,
           'from': DateTime.now().toIso8601String(),
           'till': DateTime.now().toIso8601String(),
         });
@@ -63,7 +63,7 @@ class StudyPeriodModel {
   StudyPeriodModel.fromMap(this._id, Map<String, dynamic> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in period $id';
     map['type'] != null ? type = StudyPeriodType._parse(map['type']) : throw 'need type key in period $id';
-    map['status'] != null ? status = ModelStatus.parse(map['status']) : throw 'need status key in period $id';
+    map['status'] != null ? status = StatusModel.parse(map['status']) : throw 'need status key in period $id';
     from = map['from'] != null
         ? DateTime.tryParse(map['from']) != null
             ? DateTime.tryParse(map['from'])!

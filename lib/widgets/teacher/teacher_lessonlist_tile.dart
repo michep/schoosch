@@ -10,7 +10,7 @@ class TeacherLessonListTile extends StatefulWidget {
   final LessonModel _lesson;
   final DateTime _date;
 
-  const TeacherLessonListTile(this._lesson, this._date, {Key? key}) : super(key: key);
+  const TeacherLessonListTile(this._lesson, this._date, {super.key});
 
   @override
   State<TeacherLessonListTile> createState() => _TeacherLessonListTileState();
@@ -87,6 +87,13 @@ class _TeacherLessonListTileState extends State<TeacherLessonListTile> {
   void _onTap(LessonModel les, CurriculumModel cur, VenueModel ven, LessontimeModel tim) async {
     var master = await cur.master;
     // Get.to(() => TeacherLessonPage(les, cur, ven, tim, widget._date, master!));
-    Get.to(() => TeacherLessonPage(les, cur, ven, tim, widget._date, master!));
+    Get.to(() => TeacherLessonPage(
+          lesson: les,
+          curriculum: cur,
+          venue: ven,
+          time: tim,
+          date: widget._date,
+          teacher: master!,
+        ));
   }
 }

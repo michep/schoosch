@@ -9,7 +9,7 @@ import 'package:schoosch/widgets/utils.dart';
 class ObserverScheduleWidget extends StatefulWidget {
   final ClassModel _class;
   final Week _week;
-  const ObserverScheduleWidget(this._class, this._week, {Key? key}) : super(key: key);
+  const ObserverScheduleWidget(this._class, this._week, {super.key});
 
   @override
   State<ObserverScheduleWidget> createState() => _ObserverScheduleWidgetState();

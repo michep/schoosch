@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
@@ -21,9 +22,15 @@ class ObserverLessonPage extends StatefulWidget {
   final DateTime date;
   final Map<String, List<HomeworkModel>> homeworks;
 
-  const ObserverLessonPage(
-      {Key? key, required this.lesson, required this.homeworks, required this.curriculum, required this.venue, required this.time, required this.date})
-      : super(key: key);
+  const ObserverLessonPage({
+    required this.lesson,
+    required this.homeworks,
+    required this.curriculum,
+    required this.venue,
+    required this.time,
+    required this.date,
+    super.key,
+  });
 
   @override
   State<ObserverLessonPage> createState() => _ObserverLessonPageState();
@@ -124,7 +131,7 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: Theme.of(context).colorScheme.primary,
+        color: Get.theme.colorScheme.primary,
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
         child: GNav(
           onTabChange: (i) => setState(() {
@@ -132,10 +139,10 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
           }),
           gap: 8,
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
-          activeColor: Theme.of(context).colorScheme.onBackground,
+          color: Get.theme.colorScheme.onBackground.withOpacity(0.5),
+          activeColor: Get.theme.colorScheme.onBackground,
           tabActiveBorder: Border.all(
-            color: Theme.of(context).colorScheme.onBackground,
+            color: Get.theme.colorScheme.onBackground,
           ),
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           tabs: [

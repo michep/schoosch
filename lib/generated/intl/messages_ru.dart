@@ -101,6 +101,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "Текст задания не может быть пустым"),
         "errorMarkError":
             MessageLookupByLibrary.simpleMessage("Нужно выбрать оценку"),
+        "errorMarkTypeLabelEmpty": MessageLookupByLibrary.simpleMessage(
+            "Короткое название не может быть пустым"),
+        "errorMarkTypeWeightEmpty": MessageLookupByLibrary.simpleMessage(
+            "Вес не может быть пустым и должен быть числом"),
         "errorNameEmpty": MessageLookupByLibrary.simpleMessage(
             "Название должно быть заполнено"),
         "errorPersonBirthdayEmpty":
@@ -127,6 +131,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Учченик должен быть выбран"),
         "errorTeacherEmpty": MessageLookupByLibrary.simpleMessage(
             "Преподаватель должен быть выбран"),
+        "errorUnknownMarkType":
+            MessageLookupByLibrary.simpleMessage("Нужно выбрать Тип оценки"),
         "errorUnknownPersonType":
             MessageLookupByLibrary.simpleMessage("unknown person type"),
         "errorVenueEmpty":
@@ -147,15 +153,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "loginPageTitle":
             MessageLookupByLibrary.simpleMessage("Вход в приложение"),
         "markTitle": MessageLookupByLibrary.simpleMessage("Оценка"),
-        "markTypeExam": MessageLookupByLibrary.simpleMessage("Экзамен"),
-        "markTypeRegular": MessageLookupByLibrary.simpleMessage("Обычная"),
-        "markTypeTest": MessageLookupByLibrary.simpleMessage("Проверочная"),
+        "markTypeLabel":
+            MessageLookupByLibrary.simpleMessage("Короткое название"),
+        "markTypeList": MessageLookupByLibrary.simpleMessage("Типы оценок"),
         "markTypeTitle": MessageLookupByLibrary.simpleMessage("Тип оценки"),
+        "markTypeWeight": MessageLookupByLibrary.simpleMessage("Вес"),
         "modelStatusTitle": MessageLookupByLibrary.simpleMessage("Статус"),
         "name": MessageLookupByLibrary.simpleMessage("Название"),
         "newClass": MessageLookupByLibrary.simpleMessage("Новый учебный класс"),
         "newCurriculum":
             MessageLookupByLibrary.simpleMessage("Новый учебный предмет"),
+        "newMarkType": MessageLookupByLibrary.simpleMessage("Новый Тип оценки"),
         "newPerson": m1,
         "newVenue": MessageLookupByLibrary.simpleMessage("Новый кабинет"),
         "nextLessonClassHomework": MessageLookupByLibrary.simpleMessage(

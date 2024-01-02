@@ -317,7 +317,7 @@ class LessonModel {
 }
 
 class ReplacementModel extends LessonModel {
-  ReplacementModel.fromMap(ClassModel aclass, ClassScheduleModel schedule, String? id, Map<String, dynamic> map) : super.fromMap(aclass, schedule, id, map) {
+  ReplacementModel.fromMap(super.aclass, ClassScheduleModel super.schedule, super.id, Map<String, dynamic> super.map) : super.fromMap() {
     type = LessonType.replacment;
   }
 }

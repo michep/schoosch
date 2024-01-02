@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/lesson_model.dart';
 import 'package:schoosch/model/mark_model.dart';
+import 'package:schoosch/model/marktype_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/mark_type_field.dart';
 import 'package:schoosch/widgets/teacher/mark_student_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 // import 'package:schoosch/widgets/mark_type_field.dart';
@@ -14,7 +15,7 @@ class ClassMarkPage extends StatefulWidget {
   final LessonModel lesson;
   final DateTime date;
   final LessonMarkModel mark;
-  const ClassMarkPage(this.lesson, this.title, this.date, this.mark, {Key? key}) : super(key: key);
+  const ClassMarkPage(this.lesson, this.title, this.date, this.mark, {super.key});
 
   @override
   State<ClassMarkPage> createState() => _ClassMarkPageState();
@@ -22,26 +23,24 @@ class ClassMarkPage extends StatefulWidget {
 
 class _ClassMarkPageState extends State<ClassMarkPage> {
   final TextEditingController _name = TextEditingController();
+  late MarkType? marktype;
 
   @override
   void initState() {
     //
+    marktype = widget.mark.type;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     var loc = S.of(context);
-    return WillPopScope(
-      onWillPop: () async {
-        Get.back<bool>(result: true);
-        return true;
-      },
-      child: Scaffold(
-        appBar: MAppBar(widget.title),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20.0, right: 10, left: 10),
+    return Scaffold(
+      appBar: MAppBar(widget.title),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20.0, right: 10, left: 10),
+          child: SingleChildScrollView(
             child: Column(
               children: [
                 TextField(
@@ -60,6 +59,19 @@ class _ClassMarkPageState extends State<ClassMarkPage> {
                 const SizedBox(
                   height: 10,
                 ),
+                MarkTypeFormField(
+                  markType: widget.mark.type,
+                  onChanged: (type) {
+                    if (type is MarkType) {
+                      marktype = type;
+                      widget.mark.type = marktype!;
+                    }
+                  },
+                  validator: (value) => Utils.validateMarkType(value, S.of(context).errorUnknownMarkType),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
                 FutureBuilder<List<StudentModel>>(
                   future: _initStudents(),
                   builder: (context, snapshot) {
@@ -72,18 +84,17 @@ class _ClassMarkPageState extends State<ClassMarkPage> {
                       );
                     }
                     List<StudentModel> studs = snapshot.data!.where(_filter).toList();
-                    return Expanded(
-                      child: ListView.builder(
-                        itemCount: studs.length,
-                        itemBuilder: (context, index) {
-                          return MarkStudentTile(
-                            student: studs[index],
-                            lesson: widget.lesson,
-                            date: widget.date,
-                            mark: widget.mark,
-                          );
-                        },
-                      ),
+                    return ListView.builder(
+                      itemCount: studs.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return MarkStudentTile(
+                          student: studs[index],
+                          lesson: widget.lesson,
+                          date: widget.date,
+                          mark: widget.mark,
+                        );
+                      },
                     );
                   },
                 ),

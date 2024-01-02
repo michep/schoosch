@@ -14,7 +14,7 @@ class StudyPeriodPage extends StatefulWidget {
   final StudyPeriodModel _period;
   final String _title;
 
-  const StudyPeriodPage(this._period, this._title, {Key? key}) : super(key: key);
+  const StudyPeriodPage(this._period, this._title, {super.key});
 
   @override
   State<StudyPeriodPage> createState() => _StudyPeriodPageState();
@@ -26,7 +26,7 @@ class _StudyPeriodPageState extends State<StudyPeriodPage> {
   late DateTime? _from;
   late DateTime? _till;
   late StudyPeriodType _periodType;
-  late ModelStatus _status;
+  late StatusModel _status;
 
   @override
   void initState() {
@@ -114,7 +114,7 @@ class _StudyPeriodPageState extends State<StudyPeriodPage> {
                 ModelStatusFormField(
                   status: _status,
                   onChanged: (v) {
-                    if (v is ModelStatus) {
+                    if (v is StatusModel) {
                       setState(() {
                         _status = v;
                       });

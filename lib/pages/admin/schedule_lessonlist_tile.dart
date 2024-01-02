@@ -11,7 +11,7 @@ class ScheduleLessonListTile extends StatefulWidget {
   final Function(LessonModel) _removeLessonFunc;
   final Function(LessonModel) _updateLessonRunc;
 
-  const ScheduleLessonListTile(this._lesson, this._removeLessonFunc, this._updateLessonRunc, {Key? key}) : super(key: key);
+  const ScheduleLessonListTile(this._lesson, this._removeLessonFunc, this._updateLessonRunc, {super.key});
 
   @override
   State<ScheduleLessonListTile> createState() => _ScheduleLessonListTileState();

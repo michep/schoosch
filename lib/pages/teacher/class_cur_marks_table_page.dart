@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
@@ -8,30 +7,32 @@ import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/pages/teacher/period_mark_page.dart';
+import 'package:schoosch/pdf/pdf_classcurriculumperiodmarks.dart';
+import 'package:schoosch/pdf/pdf_preview.dart';
+import 'package:schoosch/pdf/pdf_theme.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/tablemarkcell.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class TeacherTablePage extends StatefulWidget {
+class ClassCurriculumMarksTablePage extends StatefulWidget {
   final CurriculumModel currentcur;
-  final ClassModel? aclass;
-  final TeacherModel? teacher;
+  final ClassModel aclass;
   final List<StudyPeriodModel> periods;
   final bool readOnly;
 
-  const TeacherTablePage({
-    Key? key,
+  const ClassCurriculumMarksTablePage({
+    super.key,
     required this.currentcur,
     required this.periods,
-    this.aclass,
-    this.teacher,
+    required this.aclass,
     this.readOnly = false,
-  }) : super(key: key);
+  });
 
   @override
-  State<TeacherTablePage> createState() => _TeacherTablePageState();
+  State<ClassCurriculumMarksTablePage> createState() => _ClassCurriculumMarksTablePageState();
 }
 
-class _TeacherTablePageState extends State<TeacherTablePage> {
+class _ClassCurriculumMarksTablePageState extends State<ClassCurriculumMarksTablePage> {
   late StudyPeriodModel? selectedPeriod;
 
   @override
@@ -48,6 +49,23 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
     return Scaffold(
       appBar: MAppBar(
         widget.currentcur.aliasOrName,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.to(
+                () => PDFPreview(
+                  format: landscapePdfPageFormat,
+                  generate: PDFClassCurriculumPeriodMarks(
+                    period: selectedPeriod!,
+                    curriculum: widget.currentcur,
+                    aclass: widget.aclass,
+                  ).generate,
+                ),
+              );
+            },
+            icon: const Icon(Icons.print_outlined),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,12 +75,10 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
             child: DropdownButton<StudyPeriodModel>(
               value: selectedPeriod,
               items: [
-                ...widget.periods
-                    .map((e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(e.name),
-                        ))
-                    .toList(),
+                ...widget.periods.map((e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e.name),
+                    )),
               ],
               onChanged: (value) => setState(() {
                 selectedPeriod = value;
@@ -73,7 +89,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: FutureBuilder<List<StudentModel>>(
-                future: widget.aclass != null ? widget.currentcur.classStudents(widget.aclass!) : widget.currentcur.students(),
+                future: widget.currentcur.classStudents(widget.aclass),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Center(
@@ -84,10 +100,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
                   return FutureBuilder<List>(
                     future: Future.wait(
                       [
-                        widget.currentcur.getLessonMarksByStudents(
-                          students,
-                          selectedPeriod!,
-                        ),
+                        widget.currentcur.getLessonMarksByStudents(students, selectedPeriod!),
                         widget.currentcur.getPeriodMarksByStudents(students, selectedPeriod!),
                       ],
                     ),
@@ -152,34 +165,8 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
     listmark.sort((a, b) => b.date.compareTo(a.date));
     return List.generate(
       listmark.length,
-      (index) => Container(
-        alignment: Alignment.center,
-        width: 120.0,
-        height: 60.0,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.black54),
-        margin: const EdgeInsets.all(4.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(DateFormat.Md().format(listmark[index].date)),
-            Text(listmark[index].mark.toString()),
-          ],
-        ),
-      ),
+      (index) => TableMarkCell(lessonmark: listmark[index]),
     );
-  }
-
-  String getSummaryMark(List<LessonMarkModel> listmark) {
-    int sum = 0;
-    for (MarkModel mark in listmark) {
-      // var times = 1;
-      // if (mark.type == MarkType.exam || mark.type == MarkType.test) {
-      //   times = 2;
-      // }
-      // sum += mark.mark * times;
-      sum += mark.mark;
-    }
-    return (sum / listmark.length).toStringAsFixed(1);
   }
 
   List<Widget> _buildStudentCells(List<StudentModel> liststud) {
@@ -224,14 +211,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
           children: [
             const Text('средний'),
             Text(
-              // getSummaryMark(
-              //   data.values.toList()[index],
-              // ),
-              data[liststud[index]] == null
-                  ? 'нет данных'
-                  : getSummaryMark(
-                      data[liststud[index]]!,
-                    ),
+              data[liststud[index]] == null ? 'нет данных' : Utils.calculateWeightedAverageMark(data[liststud[index]]!).toStringAsFixed(1),
             ),
           ],
         ),
@@ -253,7 +233,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
                   color: Colors.grey,
                 )
               : null,
-          color: widget.readOnly || hasMark ? Colors.black54 : Theme.of(context).colorScheme.secondary,
+          color: widget.readOnly || hasMark ? Colors.black54 : Get.theme.colorScheme.secondary,
         ),
         margin: const EdgeInsets.all(4.0),
         child: GestureDetector(
@@ -284,7 +264,7 @@ class _TeacherTablePageState extends State<TeacherTablePage> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Text(data[liststud[index]]!.mark.toStringAsFixed(1)),
-                        if (widget.readOnly)
+                        if (!widget.readOnly)
                           const Icon(
                             Icons.edit,
                             size: 16,

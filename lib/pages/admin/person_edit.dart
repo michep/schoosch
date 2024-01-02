@@ -17,7 +17,7 @@ class PersonPage extends StatefulWidget {
   final PersonModel _person;
   final String _title;
 
-  const PersonPage(this._person, this._title, {Key? key}) : super(key: key);
+  const PersonPage(this._person, this._title, {super.key});
 
   @override
   State<PersonPage> createState() => _PersonPageState();
@@ -138,10 +138,10 @@ class _PersonPageState extends State<PersonPage> {
                         padding: const EdgeInsets.only(bottom: 18),
                         child: ListTile(
                           onTap: null,
-                          iconColor: Theme.of(context).disabledColor,
+                          iconColor: Get.theme.disabledColor,
                           title: Text(
                             loc.personRelatedStudents,
-                            style: TextStyle(color: Theme.of(context).disabledColor),
+                            style: TextStyle(color: Get.theme.disabledColor),
                           ),
                         ),
                       ),
@@ -161,10 +161,10 @@ class _PersonPageState extends State<PersonPage> {
                         padding: const EdgeInsets.only(bottom: 18),
                         child: ListTile(
                           onTap: null,
-                          iconColor: Theme.of(context).disabledColor,
+                          iconColor: Get.theme.disabledColor,
                           title: Text(
                             loc.personRelatedStudents,
-                            style: TextStyle(color: Theme.of(context).disabledColor),
+                            style: TextStyle(color: Get.theme.disabledColor),
                           ),
                         ),
                       ),
@@ -347,7 +347,7 @@ class _PersonPageState extends State<PersonPage> {
       map['middlename'] = _middlename.text == '' ? null : _middlename.text;
       map['lastname'] = _lastname.text;
       map['email'] = _email.text;
-      map['birthday'] = _birthday != null ? _birthday! : null;
+      map['birthday'] = _birthday;
 
       var nperson = PersonModel.fromMap(person.id, map);
       await nperson.save();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:schoosch/model/mark_model.dart';
+import 'package:schoosch/model/marktype_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
@@ -14,6 +15,10 @@ class Utils {
 
   static String? validateTextNotEmpty(String? value, String error) {
     return (value == null || value.isEmpty) ? error : null;
+  }
+
+  static String? validateNumNotEmpty(String? value, String error) {
+    return (value == null || value.isEmpty || !value.isNum) ? error : null;
   }
 
   static String? validateTextAndvAlueNotEmpty<T>(String? textValue, T? value, String error) {
@@ -39,11 +44,16 @@ class Utils {
     return (mark == null || mark < 1 || mark > 5) ? error : null;
   }
 
+  static String? validateMarkType(MarkType? type, String error) {
+    return (type == null || type.id == null) ? error : null;
+  }
+
   static Future<void> showErrorSnackbar(String text) async {
     Get.snackbar(
       'Ошибка',
       text,
       snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Get.theme.scaffoldBackgroundColor,
       colorText: Colors.red,
       animationDuration: const Duration(milliseconds: 500),
     );
@@ -124,5 +134,17 @@ class Utils {
         ),
       );
     }
+  }
+
+  static double calculateWeightedAverageMark(List<LessonMarkModel> listmarks) {
+    double sum = 0;
+    double kolvo = 0;
+    for (LessonMarkModel mark in listmarks) {
+      double times = mark.type.weight;
+      sum += mark.mark * times;
+      kolvo += times;
+      // sum += mark.mark;
+    }
+    return (sum / kolvo);
   }
 }

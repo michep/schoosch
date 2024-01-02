@@ -17,7 +17,7 @@ class StudentLessonTile extends StatelessWidget {
   final LessontimeModel? tim;
   final String? mar;
   const StudentLessonTile({
-    Key? key,
+    super.key,
     required this.lesson,
     required this.student,
     required this.date,
@@ -25,7 +25,7 @@ class StudentLessonTile extends StatelessWidget {
     this.ven,
     this.tim,
     this.mar,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class StudentLessonTile extends StatelessWidget {
                         style: TextStyle(
                             // fontWeight: FontWeight.bold,
                             fontSize: 14,
-                            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7)),
+                            color: Get.theme.colorScheme.onBackground.withOpacity(0.7)),
                       ),
                     const SizedBox(
                       height: 2,
@@ -107,9 +107,9 @@ class StudentLessonTile extends StatelessWidget {
                                   style: TextStyle(
                                     overflow: TextOverflow.ellipsis,
                                     fontSize: 14,
-                                    color: Theme.of(context).colorScheme.onBackground.withOpacity(
-                                          0.7,
-                                        ),
+                                    color: Get.theme.colorScheme.onBackground.withOpacity(
+                                      0.7,
+                                    ),
                                   ),
                                 )
                               : const SizedBox.shrink();
@@ -141,17 +141,30 @@ class StudentLessonTile extends StatelessWidget {
   }
 
   void _onTap() {
-    Get.to(() => StudentLessonPage(student, lesson, cur!, ven!, tim!, date));
+    Get.to(() => StudentLessonPage(
+          student: student,
+          lesson: lesson,
+          curriculum: cur!,
+          venue: ven!,
+          time: tim!,
+          date: date,
+        ));
   }
 
   Color getBorderColor(String firstMark) {
     switch (firstMark) {
-      case '5': return Colors.green;
-      case '4': return Colors.lime;
-      case '3': return Colors.yellow;
-      case '2': return Colors.red;
-      case '1': return Colors.red;
-      default: return Colors.red;
+      case '5':
+        return Colors.green;
+      case '4':
+        return Colors.lime;
+      case '3':
+        return Colors.yellow;
+      case '2':
+        return Colors.red;
+      case '1':
+        return Colors.red;
+      default:
+        return Colors.red;
     }
   }
 }
