@@ -96,6 +96,7 @@ class PDFClassCurriculumPeriodMarks {
       rows.add(pw.TableRow(children: cells));
     } else {
       for (int i = 0; i < maxlen; i++) {
+        cells = [];
         for (StudentModel s in studlist) {
           if (data[s] != null) {
             LessonMarkModel? mark = i >= data[s]!.length ? null : data[s]![i];

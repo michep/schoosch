@@ -93,6 +93,7 @@ class PDFStudentPeriodMarks {
       }
     } else {
       for (int i = 0; i < maxlen; i++) {
+        cells = [];
         for (CurriculumModel s in curlist) {
           if (data[s] != null) {
             LessonMarkModel? mark = i >= data[s]!.length ? null : data[s]![i];
