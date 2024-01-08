@@ -106,7 +106,7 @@ class PDFClassCurriculumPeriodMarks {
               ),
             );
           } else {
-            cells.add(PdfWidgets.nameCell(text: 'нет оценок.'));
+            cells.add(PdfWidgets.nameCell(text: ''));
           }
         }
         rows.add(
