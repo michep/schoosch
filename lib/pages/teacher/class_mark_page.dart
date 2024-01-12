@@ -84,17 +84,17 @@ class _ClassMarkPageState extends State<ClassMarkPage> {
                       );
                     }
                     List<StudentModel> studs = snapshot.data!.where(_filter).toList();
-                    return ListView.builder(
-                      itemCount: studs.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return MarkStudentTile(
-                          student: studs[index],
-                          lesson: widget.lesson,
-                          date: widget.date,
-                          mark: widget.mark,
-                        );
-                      },
+                    return Column(
+                      children: [
+                        ...studs.map(
+                          (stud) => MarkStudentTile(
+                            student: stud,
+                            lesson: widget.lesson,
+                            date: widget.date,
+                            mark: widget.mark,
+                          ),
+                        )
+                      ],
                     );
                   },
                 ),
