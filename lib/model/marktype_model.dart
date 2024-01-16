@@ -14,7 +14,7 @@ class MarkType {
     map['status'] != null ? status = StatusModel.parse(map['status']) : throw 'need status key in marktype $id';
     name = map['name'] != null ? map['name'] as String : (throw 'required name in marktype $_id');
     label = map['label'] != null ? map['label'] as String : (throw 'required label in marktype $_id');
-    weight = map['weight'] != null ? map['weight'] as double : (throw 'required weight amount in marktype $_id');
+    weight = map['weight'] != null ? (map['weight'] as num).toDouble() : (throw 'required weight amount in marktype $_id');
     // institutionId = map['institution_id'] != null ? map['institution_id'] as String : (throw 'required status in marktype $_id');
   }
 
