@@ -224,16 +224,6 @@ class StudentModel extends PersonModel {
     return res;
   }
 
-  Future<Map<CurriculumModel, PeriodMarkModel>> getPeriodMarksByCurriculums(List<CurriculumModel> curriculums, StudyPeriodModel period) async {
-    Map<CurriculumModel, PeriodMarkModel> res = {};
-    var marks = await Get.find<ProxyStore>().getStudentPeriodMarksByCurriculums(this, curriculums, period);
-    var splitted = Utils.splitPeriodMarksByCurriculum(marks);
-    for (var curid in splitted.keys) {
-      res[await splitted[curid]!.curriculum] = splitted[curid]!;
-    }
-    return res;
-  }
-
   Future<Map<CurriculumModel, List<PeriodMarkModel?>>> getAllPeriodsMarks(
     List<CurriculumModel> curriculums,
     List<StudyPeriodModel> periods,
