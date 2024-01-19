@@ -81,7 +81,7 @@ class PdfWidgets {
 
   static pw.Widget absenceMarkCell({
     required List<AbsenceModel>? absence,
-    required DateTime date,
+    required DateTime? date,
     double? fontSize,
     pw.FontWeight? fontWeight,
   }) {
@@ -91,7 +91,7 @@ class PdfWidgets {
         if (absence.last != a) {
           lessonsNums += '${a.lessonOrder}; ';
         } else {
-          lessonsNums += '{a.lessonOrder}';
+          lessonsNums += '${a.lessonOrder}';
         }
       }
     }
@@ -99,7 +99,7 @@ class PdfWidgets {
       padding: const pw.EdgeInsets.all(2),
       child: pw.SizedBox(
         width: 10,
-        child: absence != null
+        child: absence != null && date != null
             ? pw.Column(
                 children: [
                   pw.Text(
