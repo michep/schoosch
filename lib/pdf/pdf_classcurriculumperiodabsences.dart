@@ -103,8 +103,9 @@ class PDFClassCurriculumPeriodAbsences {
         cells = [];
         for (StudentModel s in studlist) {
           if (data[s] != null) {
-            DateTime dateKey = data[s]!.keys.toList()[i];
-            List<AbsenceModel>? abs = i >= data[s]!.length ? null : data[s]![dateKey];
+            var keyslist = data[s]!.keys.toList();
+            DateTime? dateKey = i >= keyslist.length ? null : keyslist[i];
+            List<AbsenceModel>? abs = i >= data[s]!.length || dateKey == null ? null : data[s]![dateKey];
             cells.add(
               PdfWidgets.absenceMarkCell(
                 absence: abs,
