@@ -20,8 +20,8 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   var fauth = FAuth();
   await fauth.init();
-  var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org:8182', path)); //real
-  // var proxy = ProxyStore((path) => Uri.http('localhost:8182', path)); // local
+  // var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org:8182', path)); //real
+  var proxy = ProxyStore((path) => Uri.http('localhost:8182', path)); // local
   var curweek = CurrentWeek(Week.current());
   var prefs = PrefsController();
   await prefs.init();

@@ -7,6 +7,7 @@ import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/pages/teacher/period_mark_page.dart';
+import 'package:schoosch/pdf/pdf_classcurriculumperiodabsences.dart';
 import 'package:schoosch/pdf/pdf_classcurriculumperiodmarks.dart';
 import 'package:schoosch/pdf/pdf_preview.dart';
 import 'package:schoosch/pdf/pdf_theme.dart';
@@ -64,6 +65,21 @@ class _ClassCurriculumMarksTablePageState extends State<ClassCurriculumMarksTabl
               );
             },
             icon: const Icon(Icons.print_outlined),
+          ),
+          IconButton(
+            onPressed: () {
+              Get.to(
+                () => PDFPreview(
+                  format: landscapePdfPageFormat,
+                  generate: PDFClassCurriculumPeriodAbsences(
+                    aclass: widget.aclass,
+                    curriculum: widget.currentcur,
+                    period: selectedPeriod!,
+                  ).generate,
+                ),
+              );
+            },
+            icon: const Icon(Icons.switch_account_outlined),
           ),
         ],
       ),
