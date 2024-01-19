@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 
 class PdfWidgets {
@@ -71,6 +72,56 @@ class PdfWidgets {
                       pw.Text('(x${mark.type.weight.toStringAsFixed(1)})'),
                     ],
                   ),
+                ],
+              )
+            : pw.Text(''),
+      ),
+    );
+  }
+
+  static pw.Widget absenceMarkCell({
+    required List<AbsenceModel>? absence,
+    required DateTime date,
+    double? fontSize,
+    pw.FontWeight? fontWeight,
+  }) {
+    String lessonsNums = '';
+    if (absence != null) {
+      for (AbsenceModel a in absence) {
+        if (absence.last != a) {
+          lessonsNums += '${a.lessonOrder}; ';
+        } else {
+          lessonsNums += '{a.lessonOrder}';
+        }
+      }
+    }
+    return pw.Padding(
+      padding: const pw.EdgeInsets.all(2),
+      child: pw.SizedBox(
+        width: 10,
+        child: absence != null
+            ? pw.Column(
+                children: [
+                  pw.Text(
+                    DateFormat.Md().format(date),
+                    style: pw.TextStyle(fontSize: fontSize, fontWeight: fontWeight),
+                  ),
+                  // pw.Row(
+                  //   mainAxisAlignment: pw.MainAxisAlignment.center,
+                  //   mainAxisSize: pw.MainAxisSize.min,
+                  //   children: [
+                  //     pw.Text(
+                  //       'Урок ${absence.lessonOrder}',
+                  //       style: pw.TextStyle(
+                  //         fontWeight: pw.FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //     // pw.SizedBox(width: 4),
+                  //     // pw.Text('(x${mark.type.weight.toStringAsFixed(1)})'),
+                  //   ],
+                  // ),
+                  pw.Text('Уроки:'),
+                  pw.Text(lessonsNums),
                 ],
               )
             : pw.Text(''),

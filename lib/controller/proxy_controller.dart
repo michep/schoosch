@@ -589,6 +589,16 @@ class ProxyStore extends getx.GetxController {
     return js.map((data) => AbsenceModel.fromMap(data['_id'], data)).toList();
   }
 
+  Future<List<AbsenceModel>> getAllPeriodtAbsences(StudyPeriodModel period, List<StudentModel> studs) async {
+    var res = await dio.postUri<List>(
+      baseUriFunc('/absence/${period.from}/${period.till}'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: studs.map((e) => e.id).toList()
+    );
+    var js = res.data!;
+    return js.map((data) => AbsenceModel.fromMap(data['_id'], data)).toList();
+  }
+
   Future<List<AbsenceModel>> getAbsencesByStudentIds(List<StudentModel> students, StudyPeriodModel period) async {
     var res = await dio.postUri<List>(
       baseUriFunc('/absence/${period.from.toIso8601String()}/${period.till.toIso8601String()}'),

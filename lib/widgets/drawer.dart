@@ -101,6 +101,20 @@ class MDrawer extends StatelessWidget {
           label: const Text('Итоговые оценки'),
         ),
       );
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
+            Get.to(
+              () => TeacherCurriculumChoicePage(
+                teacher: PersonModel.currentTeacher!,
+              ),
+            );
+          },
+          icon: const Icon(Icons.person_off),
+          label: const Text('Пропуски учеников'),
+        ),
+      );
     } else if (PersonModel.currentUser!.currentType == PersonType.parent) {
       items.add(
         TextButton.icon(
