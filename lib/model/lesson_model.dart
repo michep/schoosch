@@ -118,6 +118,15 @@ class LessonModel {
       _homeworksNextLesson.addAll(_splitHomeworksByStudent(hw));
       _homeworksNextLessonLoaded = true;
     }
+
+    if (map.containsKey('absence') && map['absence'] is List) {
+      var abs = (map['absence'] as List).map<AbsenceModel>((e) {
+        var data = e as Map<String, dynamic>;
+        return AbsenceModel.fromMap(data['_id'], data);
+      }).toList();
+      _absence.addAll(abs);
+      _absenceLoaded = true;
+    }
   }
 
   void setReplacedType() {
