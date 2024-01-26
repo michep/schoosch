@@ -66,21 +66,6 @@ class _ClassCurriculumMarksTablePageState extends State<ClassCurriculumMarksTabl
             },
             icon: const Icon(Icons.print_outlined),
           ),
-          IconButton(
-            onPressed: () {
-              Get.to(
-                () => PDFPreview(
-                  format: landscapePdfPageFormat,
-                  generate: PDFClassCurriculumPeriodAbsences(
-                    aclass: widget.aclass,
-                    curriculum: widget.currentcur,
-                    period: selectedPeriod!,
-                  ).generate,
-                ),
-              );
-            },
-            icon: const Icon(Icons.switch_account_outlined),
-          ),
         ],
       ),
       body: Column(

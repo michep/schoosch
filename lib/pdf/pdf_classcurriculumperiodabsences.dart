@@ -4,7 +4,6 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/class_model.dart';
-import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/pdf/pdf_theme.dart';
@@ -13,16 +12,16 @@ import 'package:schoosch/pdf/pdf_widgets.dart';
 class PDFClassCurriculumPeriodAbsences {
   final StudyPeriodModel period;
   final ClassModel aclass;
-  final CurriculumModel curriculum;
+  final StudentModel? singleStudent;
 
   PDFClassCurriculumPeriodAbsences({
     required this.period,
-    required this.curriculum,
     required this.aclass,
+    this.singleStudent,
   });
 
   Future<Uint8List> generate(PdfPageFormat format) async {
-    var students = await curriculum.classStudents(aclass);
+    var students = singleStudent != null ? [singleStudent!] : await aclass.students();
     // var marks = await curriculum.getLessonMarksByStudents(students, period);
     var absencesList = await period.getAllPeriodAbsences(students);
     // var periodMarks = await curriculum.getPeriodMarksByStudents(students, period);
