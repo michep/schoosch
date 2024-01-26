@@ -8,6 +8,7 @@ import 'package:schoosch/pages/observer/observer_cur_choice_page.dart';
 import 'package:schoosch/pages/student_marks_table_page.dart';
 import 'package:schoosch/pages/student/student_year_marks_table_page.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
+import 'package:schoosch/pdf/pdf_classcurriculumperiodabsences.dart';
 import 'package:schoosch/pdf/pdf_preview.dart';
 import 'package:schoosch/pdf/pdf_classesweekschedule.dart';
 import 'package:schoosch/pdf/pdf_theme.dart';
@@ -142,6 +143,26 @@ class MDrawer extends StatelessWidget {
           label: const Text('Итоговые оценки'),
         ),
       );
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            var period = await InstitutionModel.currentInstitution.currentYearPeriod;
+            var student = await PersonModel.currentParent!.currentChild;
+            Get.to(
+              () => PDFPreview(
+                format: landscapePdfPageFormat,
+                generate: PDFClassCurriculumPeriodAbsences(
+                  aclass: Get.find<ProxyStore>().currentObserverClass!,
+                  period: period!,
+                  singleStudent: student,
+                ).generate,
+              ),
+            );
+          },
+          icon: const Icon(Icons.person_off_rounded),
+          label: const Text('Пропуски учеников'),
+        ),
+      );
     } else if (PersonModel.currentUser!.currentType == PersonType.observer) {
       items.add(
         TextButton.icon(
@@ -166,6 +187,24 @@ class MDrawer extends StatelessWidget {
           },
           icon: const Icon(Icons.power_input_rounded),
           label: const Text('Итоговые оценки'),
+        ),
+      );
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            var period = await InstitutionModel.currentInstitution.currentYearPeriod;
+            Get.to(
+              () => PDFPreview(
+                format: landscapePdfPageFormat,
+                generate: PDFClassCurriculumPeriodAbsences(
+                  aclass: Get.find<ProxyStore>().currentObserverClass!,
+                  period: period!,
+                ).generate,
+              ),
+            );
+          },
+          icon: const Icon(Icons.person_off_rounded),
+          label: const Text('Пропуски учеников'),
         ),
       );
     }
