@@ -4,6 +4,7 @@ import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/pages/absence_period_choice_page.dart';
 import 'package:schoosch/pages/observer/observer_cur_choice_page.dart';
 import 'package:schoosch/pages/student_marks_table_page.dart';
 import 'package:schoosch/pages/student/student_year_marks_table_page.dart';
@@ -101,6 +102,20 @@ class MDrawer extends StatelessWidget {
           label: const Text('Итоговые оценки'),
         ),
       );
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
+            Get.to(
+              () => TeacherCurriculumChoicePage(
+                teacher: PersonModel.currentTeacher!,
+              ),
+            );
+          },
+          icon: const Icon(Icons.person_off),
+          label: const Text('Пропуски учеников'),
+        ),
+      );
     } else if (PersonModel.currentUser!.currentType == PersonType.parent) {
       items.add(
         TextButton.icon(
@@ -128,6 +143,23 @@ class MDrawer extends StatelessWidget {
           label: const Text('Итоговые оценки'),
         ),
       );
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+            var student = await PersonModel.currentParent!.currentChild;
+            Get.to(
+              () => AbsencePeriodChoicePage(
+                aclass: Get.find<ProxyStore>().currentObserverClass!,
+                periods: periods,
+                singleStudent: student,
+              ),
+            );
+          },
+          icon: const Icon(Icons.person_off_rounded),
+          label: const Text('Пропуски учеников'),
+        ),
+      );
     } else if (PersonModel.currentUser!.currentType == PersonType.observer) {
       items.add(
         TextButton.icon(
@@ -152,6 +184,21 @@ class MDrawer extends StatelessWidget {
           },
           icon: const Icon(Icons.power_input_rounded),
           label: const Text('Итоговые оценки'),
+        ),
+      );
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+            Get.to(
+              () => AbsencePeriodChoicePage(
+                aclass: Get.find<ProxyStore>().currentObserverClass!,
+                periods: periods,
+              ),
+            );
+          },
+          icon: const Icon(Icons.person_off_rounded),
+          label: const Text('Пропуски учеников'),
         ),
       );
     }

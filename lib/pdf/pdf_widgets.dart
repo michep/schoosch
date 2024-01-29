@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 
 class PdfWidgets {
@@ -71,6 +72,41 @@ class PdfWidgets {
                       pw.Text('(x${mark.type.weight.toStringAsFixed(1)})'),
                     ],
                   ),
+                ],
+              )
+            : pw.Text(''),
+      ),
+    );
+  }
+
+  static pw.Widget absenceMarkCell({
+    required List<AbsenceModel>? absence,
+    required DateTime? date,
+    double? fontSize,
+    pw.FontWeight? fontWeight,
+  }) {
+    String lessonsNums = '';
+    List<int> nums = [];
+    if (absence != null) {
+      for (AbsenceModel a in absence) {
+        nums.add(a.lessonOrder);
+      }
+    }
+    nums.sort();
+    lessonsNums = nums.toString().replaceAll('[', '').replaceAll(']', '');
+    return pw.Padding(
+      padding: const pw.EdgeInsets.all(2),
+      child: pw.SizedBox(
+        width: 10,
+        child: absence != null && date != null
+            ? pw.Column(
+                children: [
+                  pw.Text(
+                    DateFormat.Md().format(date),
+                    style: pw.TextStyle(fontSize: fontSize, fontWeight: fontWeight),
+                  ),
+                  pw.Text('Уроки:'),
+                  pw.Text(lessonsNums),
                 ],
               )
             : pw.Text(''),
