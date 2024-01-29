@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
+import 'package:schoosch/model/absence_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -95,5 +97,9 @@ class StudyPeriodModel {
     var id = await Get.find<ProxyStore>().saveStudyPeriod(this);
     _id ??= id;
     return this;
+  }
+
+  Future<List<AbsenceModel>> getAllPeriodAbsences(List<StudentModel> studs) async {
+    return await Get.find<ProxyStore>().getAllPeriodtAbsences(this, studs);
   }
 }

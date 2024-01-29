@@ -225,14 +225,6 @@ class ProxyStore extends getx.GetxController {
     return PersonModel.fromMap(js['_id'], js);
   }
 
-  //TODO: this one below
-  // Future<void> changePersonView(PersonModel person) async {
-  //   var res = await dio.patchUri(
-  //     baseUriFunc('/person/${person.id}/pageview'),
-  //     options: Options(headers: {'Content-Type': 'application/json'}),
-  //   );
-  // }
-
   Future<List<PersonModel>> getPeopleByIds(List<String> ids) async {
     var res = await dio.postUri<List>(
       baseUriFunc('/person'),
@@ -586,19 +578,35 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<AbsenceModel>> getAllAbsences(LessonModel lesson, DateTime date) async {
-    //TODO: total redesign
-
     var res = await dio.getUri<List>(baseUriFunc('/class/${lesson.aclass.id}/absence/${date.toIso8601String()}/${lesson.order}'));
     var js = res.data!;
     return js.map((data) => AbsenceModel.fromMap(data['_id'], data)).toList();
   }
 
   Future<List<AbsenceModel>> getStudentAbsence(LessonModel lesson, String studentId, DateTime date) async {
-    //TODO: total redesign
-
     var res = await dio.getUri<List>(baseUriFunc('/class/${lesson.aclass.id}/student/$studentId/absence/${date.toIso8601String()}/${lesson.order}'));
     var js = res.data!;
     return js.map((data) => AbsenceModel.fromMap(data['_id'], data)).toList();
+  }
+
+  Future<List<AbsenceModel>> getAllPeriodtAbsences(StudyPeriodModel period, List<StudentModel> studs) async {
+    var res = await dio.postUri<List>(
+      baseUriFunc('/absence/${period.from}/${period.till}'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: studs.map((e) => e.id).toList()
+    );
+    var js = res.data!;
+    return js.map((data) => AbsenceModel.fromMap(data['_id'], data)).toList();
+  }
+
+  Future<List<AbsenceModel>> getAbsencesByStudentIds(List<StudentModel> students, StudyPeriodModel period) async {
+    var res = await dio.postUri<List>(
+      baseUriFunc('/absence/${period.from.toIso8601String()}/${period.till.toIso8601String()}'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: students.map((e) => e.id).toList(),
+    );
+    var js = res.data!;
+    return js.map((e) => AbsenceModel.fromMap(e['_id'], e)).toList();
   }
 
   Future<void> createAbsence(LessonModel lesson, AbsenceModel absence) async {
@@ -690,15 +698,15 @@ class ProxyStore extends getx.GetxController {
     return js.map((e) => PeriodMarkModel.fromMap(e['_id'], e)).toList();
   }
 
-  Future<List<PeriodMarkModel>> getStudentPeriodMarksByCurriculums(StudentModel student, List<CurriculumModel> curriculums, StudyPeriodModel period) async {
-    var res = await dio.postUri<List>(
-      baseUriFunc('/student/${student.id}/curriculums/mark/period/${period.id}'),
-      options: Options(headers: {'Content-Type': 'application/json'}),
-      data: curriculums.map((e) => e.id).toList(),
-    );
-    var js = res.data!;
-    return js.map((e) => PeriodMarkModel.fromMap(e['_id'], e)).toList();
-  }
+  // Future<List<PeriodMarkModel>> getStudentPeriodMarksByCurriculums(StudentModel student, List<CurriculumModel> curriculums, StudyPeriodModel period) async {
+  //   var res = await dio.postUri<List>(
+  //     baseUriFunc('/student/${student.id}/curriculums/mark/period/${period.id}'),
+  //     options: Options(headers: {'Content-Type': 'application/json'}),
+  //     data: curriculums.map((e) => e.id).toList(),
+  //   );
+  //   var js = res.data!;
+  //   return js.map((e) => PeriodMarkModel.fromMap(e['_id'], e)).toList();
+  // }
 
   Future<List<PeriodMarkModel>> getStudentAllPerioddMarks(StudentModel student, List<CurriculumModel> curriculums) async {
     var periods = await currentInstitution!.currentYearAndSemestersPeriods;
