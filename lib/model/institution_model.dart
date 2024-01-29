@@ -54,7 +54,7 @@ class InstitutionModel {
     }
     return _yearPeriod;
   }
-
+  
   // Future<StudyPeriodModel?> get currentSemesterPeriod async {
   //   return Get.find<ProxyStore>().getSemesterPeriodForDate(DateTime.now());
   // }

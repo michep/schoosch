@@ -4,11 +4,11 @@ import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/pages/absence_period_choice_page.dart';
 import 'package:schoosch/pages/observer/observer_cur_choice_page.dart';
 import 'package:schoosch/pages/student_marks_table_page.dart';
 import 'package:schoosch/pages/student/student_year_marks_table_page.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
-import 'package:schoosch/pdf/pdf_classcurriculumperiodabsences.dart';
 import 'package:schoosch/pdf/pdf_preview.dart';
 import 'package:schoosch/pdf/pdf_classesweekschedule.dart';
 import 'package:schoosch/pdf/pdf_theme.dart';
@@ -146,16 +146,13 @@ class MDrawer extends StatelessWidget {
       items.add(
         TextButton.icon(
           onPressed: () async {
-            var period = await InstitutionModel.currentInstitution.currentYearPeriod;
+            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
             var student = await PersonModel.currentParent!.currentChild;
             Get.to(
-              () => PDFPreview(
-                format: landscapePdfPageFormat,
-                generate: PDFClassCurriculumPeriodAbsences(
-                  aclass: Get.find<ProxyStore>().currentObserverClass!,
-                  period: period!,
-                  singleStudent: student,
-                ).generate,
+              () => AbsencePeriodChoicePage(
+                aclass: Get.find<ProxyStore>().currentObserverClass!,
+                periods: periods,
+                singleStudent: student,
               ),
             );
           },
@@ -192,14 +189,11 @@ class MDrawer extends StatelessWidget {
       items.add(
         TextButton.icon(
           onPressed: () async {
-            var period = await InstitutionModel.currentInstitution.currentYearPeriod;
+            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
             Get.to(
-              () => PDFPreview(
-                format: landscapePdfPageFormat,
-                generate: PDFClassCurriculumPeriodAbsences(
-                  aclass: Get.find<ProxyStore>().currentObserverClass!,
-                  period: period!,
-                ).generate,
+              () => AbsencePeriodChoicePage(
+                aclass: Get.find<ProxyStore>().currentObserverClass!,
+                periods: periods,
               ),
             );
           },
