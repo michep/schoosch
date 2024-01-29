@@ -86,15 +86,14 @@ class PdfWidgets {
     pw.FontWeight? fontWeight,
   }) {
     String lessonsNums = '';
+    List<int> nums = [];
     if (absence != null) {
       for (AbsenceModel a in absence) {
-        if (absence.last != a) {
-          lessonsNums += '${a.lessonOrder}; ';
-        } else {
-          lessonsNums += '${a.lessonOrder}';
-        }
+        nums.add(a.lessonOrder);
       }
     }
+    nums.sort();
+    lessonsNums = nums.toString().replaceAll('[', '').replaceAll(']', '');
     return pw.Padding(
       padding: const pw.EdgeInsets.all(2),
       child: pw.SizedBox(
@@ -106,20 +105,6 @@ class PdfWidgets {
                     DateFormat.Md().format(date),
                     style: pw.TextStyle(fontSize: fontSize, fontWeight: fontWeight),
                   ),
-                  // pw.Row(
-                  //   mainAxisAlignment: pw.MainAxisAlignment.center,
-                  //   mainAxisSize: pw.MainAxisSize.min,
-                  //   children: [
-                  //     pw.Text(
-                  //       'Урок ${absence.lessonOrder}',
-                  //       style: pw.TextStyle(
-                  //         fontWeight: pw.FontWeight.bold,
-                  //       ),
-                  //     ),
-                  //     // pw.SizedBox(width: 4),
-                  //     // pw.Text('(x${mark.type.weight.toStringAsFixed(1)})'),
-                  //   ],
-                  // ),
                   pw.Text('Уроки:'),
                   pw.Text(lessonsNums),
                 ],
