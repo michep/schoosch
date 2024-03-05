@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/mark_model.dart';
@@ -74,7 +75,7 @@ class PdfWidgets {
                   ),
                 ],
               )
-            : pw.Text(''),
+            : pw.Text('.', style: const pw.TextStyle(color: PdfColors.white)),
       ),
     );
   }
@@ -109,7 +110,7 @@ class PdfWidgets {
                   pw.Text(lessonsNums),
                 ],
               )
-            : pw.Text(''),
+            : pw.Text('.', style: const pw.TextStyle(color: PdfColors.white)),
       ),
     );
   }
@@ -123,13 +124,15 @@ class PdfWidgets {
       padding: const pw.EdgeInsets.all(2),
       child: pw.SizedBox(
         width: 10,
-        child: pw.Text(
-          mark != null ? mark.mark.toString() : '',
-          style: pw.TextStyle(
-            fontSize: fontSize,
-            fontWeight: fontWeight,
-          ),
-        ),
+        child: mark != null
+            ? pw.Text(
+                mark.mark.toString(),
+                style: pw.TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: fontWeight,
+                ),
+              )
+            : pw.Text('.', style: const pw.TextStyle(color: PdfColors.white)),
       ),
     );
   }
@@ -157,5 +160,9 @@ class PdfWidgets {
         ),
       ),
     );
+  }
+
+  static pw.Widget emptyCell() {
+    return pw.Text('.', style: const pw.TextStyle(color: PdfColors.white));
   }
 }

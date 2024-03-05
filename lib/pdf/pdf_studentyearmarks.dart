@@ -32,7 +32,7 @@ class PDFStudentYearMarks {
           rows.add(
             pw.TableRow(
               children: [
-                PdfWidgets.nameCell(text: ''),
+                PdfWidgets.emptyCell(),
                 ...periods.map(
                   (e) => PdfWidgets.nameCell(text: e.name),
                 ),
@@ -51,6 +51,7 @@ class PDFStudentYearMarks {
                           fontWeight: pw.FontWeight.bold,
                           fontSize: 10,
                         )),
+                  if (periodMarks[cur] == null) ...periods.map((e) => PdfWidgets.emptyCell()),
                 ],
               ),
             );
@@ -59,6 +60,7 @@ class PDFStudentYearMarks {
           return [
             pw.Table(
               border: pw.TableBorder.all(color: PdfColors.black),
+              tableWidth: pw.TableWidth.min,
               children: rows,
             ),
           ];
@@ -76,8 +78,4 @@ class PDFStudentYearMarks {
       subtitle: 'годовые',
     );
   }
-
-  // pw.Widget _emptyCell() {
-  //   return pw.Text('.', style: const pw.TextStyle(color: PdfColors.white));
-  // }
 }
