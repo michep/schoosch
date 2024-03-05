@@ -5,7 +5,8 @@ import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/absence_period_choice_page.dart';
-import 'package:schoosch/pages/observer/observer_cur_choice_page.dart';
+import 'package:schoosch/pages/observer/observer_curriculum_choice_page.dart';
+import 'package:schoosch/pages/observer/observer_student_choice_page.dart';
 import 'package:schoosch/pages/student_marks_table_page.dart';
 import 'package:schoosch/pages/student/student_year_marks_table_page.dart';
 import 'package:schoosch/pages/teacher/teacher_cur_choice_page.dart';
@@ -157,7 +158,7 @@ class MDrawer extends StatelessWidget {
             );
           },
           icon: const Icon(Icons.person_off_rounded),
-          label: const Text('Пропуски учеников'),
+          label: const Text('Пропуски'),
         ),
       );
     } else if (PersonModel.currentUser!.currentType == PersonType.observer) {
@@ -169,7 +170,7 @@ class MDrawer extends StatelessWidget {
                 ));
           },
           icon: const Icon(Icons.table_chart_outlined),
-          label: const Text('Оценки класса'),
+          label: const Text('Оценки учеников класса'),
         ),
       );
       items.add(
@@ -183,7 +184,7 @@ class MDrawer extends StatelessWidget {
             );
           },
           icon: const Icon(Icons.power_input_rounded),
-          label: const Text('Итоговые оценки'),
+          label: const Text('Итоговые оценки учеников'),
         ),
       );
       items.add(
@@ -199,6 +200,36 @@ class MDrawer extends StatelessWidget {
           },
           icon: const Icon(Icons.person_off_rounded),
           label: const Text('Пропуски учеников'),
+        ),
+      );
+      items.add(const Divider());
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+            var students = await Get.find<ProxyStore>().currentObserverClass!.students();
+            Get.to(() => ObserverStudentChoicePage(
+                  periods: periods,
+                  students: students,
+                ));
+          },
+          icon: const Icon(Icons.table_chart_outlined),
+          label: const Text('Оценки ученика'),
+        ),
+      );
+      items.add(
+        TextButton.icon(
+          onPressed: () async {
+            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+            var students = await Get.find<ProxyStore>().currentObserverClass!.students();
+            Get.to(() => ObserverStudentChoicePage(
+                  periods: periods,
+                  students: students,
+                  selectPeriods: false,
+                ));
+          },
+          icon: const Icon(Icons.table_chart_outlined),
+          label: const Text('Итоговые оценки ученика'),
         ),
       );
     }
@@ -232,6 +263,7 @@ class MDrawer extends StatelessWidget {
     //   ),
     // );
     // if (PersonModel.currentUser!.types.contains(PersonType.admin)) {
+    items.add(const Divider());
     items.add(
       TextButton.icon(
         onPressed: () async {
