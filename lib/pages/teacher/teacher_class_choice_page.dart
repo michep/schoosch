@@ -6,17 +6,17 @@ import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/pages/teacher/class_cur_marks_table_page.dart';
 import 'package:schoosch/pages/teacher/class_cur_year_marks_table_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/drawer.dart';
 import 'package:schoosch/widgets/utils.dart';
 
-class ClassChoicePage extends StatelessWidget {
+class TeacherClassChoicePage extends StatelessWidget {
   final CurriculumModel curriculum;
-  final bool isYear;
-  final bool isAbsences;
-  const ClassChoicePage({
+  final ReportType reportType;
+
+  const TeacherClassChoicePage({
     super.key,
     required this.curriculum,
-    this.isYear = false,
-    this.isAbsences = false,
+    required this.reportType,
   });
 
   @override
@@ -42,22 +42,24 @@ class ClassChoicePage extends StatelessWidget {
                 return ListTile(
                   title: Text(snapshot.data![index].name),
                   onTap: () async {
-                    var periods = isYear
-                        ? await InstitutionModel.currentInstitution.currentYearAndSemestersPeriods
-                        : await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
-                    isYear
-                        ? Get.to(
-                            () => ClassCurriculumYearMarksTable(
-                              currentcur: curriculum,
-                              periods: periods,
-                              aclass: snapshot.data![index],
-                            ),
-                          )
-                        : Get.to(() => ClassCurriculumMarksTablePage(
+                    switch (reportType) {
+                      case ReportType.teacherPeriodMarks:
+                        var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+                        Get.to(() => ClassCurriculumMarksTablePage(
                               currentcur: curriculum,
                               periods: periods,
                               aclass: snapshot.data![index],
                             ));
+                        break;
+                      case ReportType.teacherYearMarks:
+                        var periods = await InstitutionModel.currentInstitution.currentYearAndSemestersPeriods;
+                        Get.to(() => ClassCurriculumYearMarksTable(
+                              currentcur: curriculum,
+                              periods: periods,
+                              aclass: snapshot.data![index],
+                            ));
+                        break;
+                    }
                   },
                 );
               },

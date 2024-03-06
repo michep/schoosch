@@ -53,7 +53,6 @@ class PDFClassCurriculumYearMarks {
                     ...periodMarks[student]!.map((e) => PdfWidgets.periodMarkCell(
                           mark: e,
                           fontWeight: pw.FontWeight.bold,
-                          fontSize: 10,
                         )),
                 ],
               ),
