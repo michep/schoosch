@@ -4,15 +4,16 @@ import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/teacher/teacher_class_choice_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/drawer.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class TeacherCurriculumChoicePage extends StatelessWidget {
-  final bool isYear;
   final TeacherModel teacher;
+  final ReportType reportType;
 
   const TeacherCurriculumChoicePage({
     required this.teacher,
-    this.isYear = false,
+    required this.reportType,
     super.key,
   });
 
@@ -39,16 +40,10 @@ class TeacherCurriculumChoicePage extends StatelessWidget {
                 return ListTile(
                   title: Text(snapshot.data![index].aliasOrName),
                   onTap: () async {
-                    // var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
-                    // Get.to(() => TeacherTablePage(
-                    //       currentcur: snapshot.data![index],
-                    //       periods: periods,
-                    //     ));
-
                     Get.to(
-                      () => ClassChoicePage(
+                      () => TeacherClassChoicePage(
                         curriculum: snapshot.data![index],
-                        isYear: isYear,
+                        reportType: reportType,
                       ),
                     );
                   },

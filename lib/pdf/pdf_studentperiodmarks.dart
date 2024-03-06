@@ -27,54 +27,64 @@ class PDFStudentPeriodMarks {
       theme: await getTheme(),
     );
 
-    const columnsPerSplit = 8;
+    const columnsPerSplit = 15;
 
     var splits = allcurriculums.length / columnsPerSplit;
 
+    List<pw.Widget> tables = [];
+
     for (var split = 0; split < splits; split++) {
       var curriculums = allcurriculums.sublist(split * columnsPerSplit, min(split * columnsPerSplit + columnsPerSplit, allcurriculums.length));
-      doc.addPage(
-        pw.MultiPage(
-          pageFormat: format,
-          header: (context) => _header(),
-          build: (context) {
-            List<pw.TableRow> rows = [];
+      List<pw.TableRow> rows = [];
+      Map<int, pw.TableColumnWidth> colW = {for (var v in Iterable.generate(15)) v: const pw.FixedColumnWidth(50)};
 
-            rows.add(
-              pw.TableRow(
-                children: [
-                  ...curriculums.map(
-                    (e) => PdfWidgets.nameCell(text: e.aliasOrName),
-                  ),
-                ],
+      rows.add(
+        pw.TableRow(
+          children: [
+            ...curriculums.map(
+              (e) => PdfWidgets.nameCell(text: e.aliasOrName, angle: pi / 2, softWrap: false),
+            ),
+          ],
+        ),
+      );
+
+      buildMarksByRows(curriculumsMarks, curriculums, rows);
+
+      rows.add(
+        pw.TableRow(
+          children: [
+            ...curriculums.map(
+              (e) => PdfWidgets.summaryMarkCell(
+                value: curriculumsMarks[e] != null ? Utils.calculateWeightedAverageMark(curriculumsMarks[e]!).toStringAsFixed(1) : 'нет',
               ),
-            );
+            ),
+          ],
+        ),
+      );
 
-            buildMarksByRows(curriculumsMarks, curriculums, rows);
-
-            rows.add(
-              pw.TableRow(
-                children: [
-                  ...curriculums.map(
-                    (e) => PdfWidgets.summaryMarkCell(
-                      value: curriculumsMarks[e] != null ? Utils.calculateWeightedAverageMark(curriculumsMarks[e]!).toStringAsFixed(1) : 'нет данных',
-                    ),
-                  ),
-                ],
-              ),
-            );
-
-            return [
-              pw.Table(
-                border: pw.TableBorder.all(color: PdfColors.black),
-                tableWidth: pw.TableWidth.min,
-                children: rows,
-              ),
-            ];
-          },
+      tables.add(
+        pw.Padding(
+          padding: const pw.EdgeInsets.only(bottom: 50),
+          child: pw.Table(
+            border: pw.TableBorder.all(color: PdfColors.black),
+            tableWidth: pw.TableWidth.min,
+            columnWidths: colW,
+            defaultVerticalAlignment: pw.TableCellVerticalAlignment.full,
+            children: rows,
+          ),
         ),
       );
     }
+
+    doc.addPage(
+      pw.MultiPage(
+        pageFormat: format,
+        header: (context) => _header(),
+        build: (context) {
+          return tables;
+        },
+      ),
+    );
 
     return doc.save();
   }
@@ -93,34 +103,34 @@ class PDFStudentPeriodMarks {
       if (data[i] != null) maxlen = max(maxlen, data[i]!.length);
     }
     List<pw.Widget> cells = [];
-    if (maxlen == 0) {
-      for (CurriculumModel _ in curlist) {
-        cells.add(PdfWidgets.nameCell(text: 'нет оценок.'));
-        rows.add(pw.TableRow(children: cells));
-      }
-    } else {
-      for (int i = 0; i < maxlen; i++) {
-        cells = [];
-        for (CurriculumModel s in curlist) {
-          if (data[s] != null) {
-            LessonMarkModel? mark = i >= data[s]!.length ? null : data[s]![i];
-            cells.add(
-              PdfWidgets.lessonMarkCell(
-                mark: mark,
-              ),
-            );
-          } else if (i == 0) {
-            cells.add(PdfWidgets.nameCell(text: 'нет оценок.'));
-          } else {
-            cells.add(PdfWidgets.emptyCell());
-          }
+    // if (maxlen == 0) {
+    //   for (CurriculumModel _ in curlist) {
+    //     cells.add(PdfWidgets.nameCell(text: 'нет оценок.'));
+    //     rows.add(pw.TableRow(children: cells));
+    //   }
+    // } else {
+    for (int i = 0; i < maxlen; i++) {
+      cells = [];
+      for (CurriculumModel s in curlist) {
+        if (data[s] != null) {
+          LessonMarkModel? mark = i >= data[s]!.length ? null : data[s]![i];
+          cells.add(
+            PdfWidgets.lessonMarkCell(
+              mark: mark,
+            ),
+          );
+          // } else if (i == 0) {
+          //   cells.add(PdfWidgets.nameCell(text: 'нет оценок.'));
+        } else {
+          cells.add(PdfWidgets.emptyCell());
         }
-        rows.add(
-          pw.TableRow(
-            children: cells,
-          ),
-        );
       }
+      rows.add(
+        pw.TableRow(
+          children: cells,
+        ),
+      );
     }
+    // }
   }
 }

@@ -15,6 +15,11 @@ import 'package:schoosch/pdf/pdf_classesweekschedule.dart';
 import 'package:schoosch/pdf/pdf_theme.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
 
+enum ReportType {
+  teacherPeriodMarks,
+  teacherYearMarks,
+}
+
 class MDrawer extends StatelessWidget {
   const MDrawer({super.key});
 
@@ -83,6 +88,7 @@ class MDrawer extends StatelessWidget {
             Get.to(
               () => TeacherCurriculumChoicePage(
                 teacher: PersonModel.currentTeacher!,
+                reportType: ReportType.teacherPeriodMarks,
               ),
             );
           },
@@ -96,25 +102,11 @@ class MDrawer extends StatelessWidget {
             // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
             Get.to(() => TeacherCurriculumChoicePage(
                   teacher: PersonModel.currentTeacher!,
-                  isYear: true,
+                  reportType: ReportType.teacherYearMarks,
                 ));
           },
           icon: const Icon(Icons.power_input_rounded),
-          label: const Text('Итоговые оценки'),
-        ),
-      );
-      items.add(
-        TextButton.icon(
-          onPressed: () async {
-            // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
-            Get.to(
-              () => TeacherCurriculumChoicePage(
-                teacher: PersonModel.currentTeacher!,
-              ),
-            );
-          },
-          icon: const Icon(Icons.person_off),
-          label: const Text('Пропуски учеников'),
+          label: const Text('Ваши итоговые оценки'),
         ),
       );
     } else if (PersonModel.currentUser!.currentType == PersonType.parent) {
@@ -134,7 +126,6 @@ class MDrawer extends StatelessWidget {
       items.add(
         TextButton.icon(
           onPressed: () async {
-            // ClassModel? clas = await PersonModel.currentStudent!.studentClass;
             var student = await PersonModel.currentParent!.currentChild;
             var periods = await InstitutionModel.currentInstitution.currentYearAndSemestersPeriods;
 
@@ -149,9 +140,10 @@ class MDrawer extends StatelessWidget {
           onPressed: () async {
             var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
             var student = await PersonModel.currentParent!.currentChild;
+            var aclass = await (await PersonModel.currentParent!.currentChild).studentClass;
             Get.to(
               () => AbsencePeriodChoicePage(
-                aclass: Get.find<ProxyStore>().currentObserverClass!,
+                aclass: aclass,
                 periods: periods,
                 singleStudent: student,
               ),

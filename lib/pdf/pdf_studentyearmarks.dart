@@ -49,7 +49,6 @@ class PDFStudentYearMarks {
                     ...periodMarks[cur]!.map((e) => PdfWidgets.periodMarkCell(
                           mark: e,
                           fontWeight: pw.FontWeight.bold,
-                          fontSize: 10,
                         )),
                   if (periodMarks[cur] == null) ...periods.map((e) => PdfWidgets.emptyCell()),
                 ],
