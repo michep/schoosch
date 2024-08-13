@@ -74,7 +74,7 @@ class PDFStudentYearMarks {
     return PdfWidgets.header(
       subject: student.fullName,
       title: 'оценки по всем предметам',
-      subtitle: 'годовые',
+      subtitle: 'годовые (${periods.first.from.year} - ${periods.last.till.year})',
     );
   }
 }
