@@ -212,7 +212,7 @@ class MDrawer extends StatelessWidget {
       items.add(
         TextButton.icon(
           onPressed: () async {
-            var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
+            var periods = await InstitutionModel.currentInstitution.currentYearAndSemestersPeriods;
             var students = await Get.find<ProxyStore>().currentObserverClass!.students();
             Get.to(() => ObserverStudentChoicePage(
                   periods: periods,
