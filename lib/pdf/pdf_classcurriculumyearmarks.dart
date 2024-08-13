@@ -76,7 +76,7 @@ class PDFClassCurriculumYearMarks {
     return PdfWidgets.header(
       subject: aclass.name,
       title: curriculum.name,
-      subtitle: 'годовые',
+      subtitle: 'годовые (${periods.first.from.year} - ${periods.last.till.year})',
     );
   }
 }
