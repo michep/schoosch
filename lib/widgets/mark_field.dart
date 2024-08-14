@@ -28,7 +28,7 @@ class _MarkFormFieldState extends State<MarkFormField> {
       onSaved: widget.onSaved,
       validator: validate,
       builder: ((state) {
-        var selStyle = ButtonStyle(backgroundColor: MaterialStateProperty.all(Get.theme.colorScheme.secondary));
+        var selStyle = ButtonStyle(backgroundColor: WidgetStateProperty.all(Get.theme.colorScheme.secondary));
         return InputDecorator(
           decoration: InputDecoration(
             label: Text(S.of(context).markTitle),
