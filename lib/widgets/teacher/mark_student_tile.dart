@@ -22,7 +22,7 @@ class _MarkStudentTileState extends State<MarkStudentTile> {
 
   @override
   Widget build(BuildContext context) {
-    var selStyle = ButtonStyle(backgroundColor: MaterialStateProperty.all(Get.theme.colorScheme.secondary));
+    var selStyle = ButtonStyle(backgroundColor: WidgetStateProperty.all(Get.theme.colorScheme.secondary));
     return Card(
       color: Colors.black.withOpacity(0.3),
       child: Padding(
