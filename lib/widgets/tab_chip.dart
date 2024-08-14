@@ -14,7 +14,7 @@ class TabChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.transparent,
         border: Border.all(
-          color: current == pos ? Get.theme.colorScheme.onBackground : Colors.transparent,
+          color: current == pos ? Get.theme.colorScheme.onSurface : Colors.transparent,
           width: 1.3,
         ),
         borderRadius: BorderRadius.circular(20),

@@ -79,7 +79,7 @@ class StudentLessonTile extends StatelessWidget {
                         style: TextStyle(
                             // fontWeight: FontWeight.bold,
                             fontSize: 14,
-                            color: Get.theme.colorScheme.onBackground.withOpacity(0.7)),
+                            color: Get.theme.colorScheme.onSurface.withOpacity(0.7)),
                       ),
                     const SizedBox(
                       height: 2,
@@ -107,7 +107,7 @@ class StudentLessonTile extends StatelessWidget {
                                   style: TextStyle(
                                     overflow: TextOverflow.ellipsis,
                                     fontSize: 14,
-                                    color: Get.theme.colorScheme.onBackground.withOpacity(
+                                    color: Get.theme.colorScheme.onSurface.withOpacity(
                                       0.7,
                                     ),
                                   ),

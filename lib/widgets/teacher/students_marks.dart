@@ -84,7 +84,7 @@ class _StudentsMarksPageState extends State<StudentsMarksPage> {
                 ),
               ],
               colorClosed: Get.theme.colorScheme.secondary,
-              colorOpen: Get.theme.colorScheme.background,
+              colorOpen: Get.theme.colorScheme.surface,
             ),
           ),
         ),

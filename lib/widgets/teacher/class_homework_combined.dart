@@ -129,7 +129,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                 ),
               ],
               colorClosed: Get.theme.colorScheme.secondary,
-              colorOpen: Get.theme.colorScheme.background,
+              colorOpen: Get.theme.colorScheme.surface,
             ),
           ),
         ),
