@@ -50,7 +50,7 @@ class ClassHomeworkTile extends StatelessWidget {
           subtitle: Text(
             '${Utils.formatDatetime(homework.date)} - ${Utils.formatDatetime(homework.todate!)}',
             style: TextStyle(
-              color: Get.theme.colorScheme.onBackground.withOpacity(0.7),
+              color: Get.theme.colorScheme.onSurface.withOpacity(0.7),
               fontSize: 13,
             ),
           ),
