@@ -128,10 +128,10 @@ class StudentYearMarksTablePage extends StatelessWidget {
         ] +
         List.generate(
           listcur.length,
-          (index) => data[listcur[index]] == null
+          (index) => data[listcur[index]] == null || data[listcur[index]]!.every((e) => e == null)
               ? Container(
                   alignment: Alignment.center,
-                  width: 120.0,
+                  width: 90.0,
                   height: 70.0,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
@@ -179,7 +179,7 @@ class StudentYearMarksTablePage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Годовая'),
+                  if(listmark[index] != null) const Text('Годовая'),
                   listmark[index] != null
                       ? Text(
                           listmark[index]!.mark.toStringAsFixed(1),
