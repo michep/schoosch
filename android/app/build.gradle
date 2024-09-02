@@ -40,7 +40,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 // apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
