@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
+import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/pages/admin/studyperiod_edit.dart';
 import 'package:schoosch/widgets/appbar.dart';
@@ -18,7 +19,7 @@ class StudyPeriodListPage extends StatefulWidget {
 }
 
 class _StudyPeriodListPageState extends State<StudyPeriodListPage> {
-  final TextEditingController _name = TextEditingController();
+  int? _status;
   final ScrollController _scrollCtl = ScrollController();
 
   @override
@@ -37,18 +38,32 @@ class _StudyPeriodListPageState extends State<StudyPeriodListPage> {
                 title: _inSearch ? Text(loc.search, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.search),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextField(
-                    onChanged: (_) => setState(() {}),
-                    controller: _name,
-                    decoration: InputDecoration(
-                      label: Text(loc.name),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () => setState(() {
-                          _name.value = TextEditingValue.empty;
-                        }),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16),
+                        child: DropdownButton(
+                          value: _status,
+                          items: const [
+                            DropdownMenuItem(
+                              value: 1,
+                              child: Text('Активно'),
+                            ),
+                            DropdownMenuItem(
+                              value: 0,
+                              child: Text('Выключено'),
+                            ),
+                            DropdownMenuItem(
+                              value: null,
+                              child: Text('Все'),
+                            ),
+                          ],
+                          onChanged: (value) => setState(() {
+                            _status = value;
+                          }),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
@@ -83,11 +98,11 @@ class _StudyPeriodListPageState extends State<StudyPeriodListPage> {
   }
 
   bool _filter(StudyPeriodModel period) {
-    return period.name.toUpperCase().contains(_name.text.toUpperCase());
+    return _status == null ? true : period.status == StatusModel.parse(_status!);
   }
 
   bool get _inSearch {
-    return _name.text.isNotEmpty;
+    return _status != null;
   }
 
   Future _onTap(StudyPeriodModel period) async {
