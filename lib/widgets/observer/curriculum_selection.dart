@@ -4,6 +4,7 @@ import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/pages/teacher/class_cur_marks_table_page.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -49,7 +50,7 @@ class CurriculumSelection extends StatelessWidget {
                           Get.to(
                             () => ClassCurriculumMarksTablePage(
                               currentcur: cur,
-                              periods: periods,
+                              periods: periods.where((e) => e.status == StatusModel.active).toList(),
                               aclass: _class,
                               // teacher: teacher,
                               readOnly: true,
