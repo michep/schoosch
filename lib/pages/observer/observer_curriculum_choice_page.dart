@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
+import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/pages/teacher/class_cur_marks_table_page.dart';
 import 'package:schoosch/pages/teacher/class_cur_year_marks_table_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
@@ -48,13 +49,13 @@ class ObserverCurriculumChoicePage extends StatelessWidget {
                         ? Get.to(
                             () => ClassCurriculumYearMarksTable(
                               currentcur: snapshot.data![index],
-                              periods: periods,
+                              periods: periods.where((e) => e.status == StatusModel.active).toList(),
                               aclass: aclass,
                             ),
                           )
                         : Get.to(() => ClassCurriculumMarksTablePage(
                               currentcur: snapshot.data![index],
-                              periods: periods,
+                              periods: periods.where((e) => e.status == StatusModel.active).toList(),
                               aclass: aclass,
                             ));
                   },

@@ -4,6 +4,7 @@ import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/pages/absence_period_choice_page.dart';
 import 'package:schoosch/pages/observer/observer_curriculum_choice_page.dart';
 import 'package:schoosch/pages/observer/observer_student_choice_page.dart';
@@ -64,7 +65,10 @@ class MDrawer extends StatelessWidget {
         TextButton.icon(
           onPressed: () async {
             var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
-            Get.to(() => StudentMarksTablePage(student: PersonModel.currentStudent!, periods: periods));
+            Get.to(() => StudentMarksTablePage(
+                  student: PersonModel.currentStudent!,
+                  periods: periods.where((e) => e.status == StatusModel.active).toList(),
+                ));
           },
           icon: const Icon(Icons.table_chart_outlined),
           label: const Text('Успеваемость'),
@@ -74,7 +78,10 @@ class MDrawer extends StatelessWidget {
         TextButton.icon(
           onPressed: () async {
             var periods = await InstitutionModel.currentInstitution.currentYearAndSemestersPeriods;
-            Get.to(() => StudentYearMarksTablePage(student: PersonModel.currentStudent!, periods: periods));
+            Get.to(() => StudentYearMarksTablePage(
+                  student: PersonModel.currentStudent!,
+                  periods: periods.where((e) => e.status == StatusModel.active).toList(),
+                ));
           },
           icon: const Icon(Icons.power_input_rounded),
           label: const Text('Итоговые оценки'),
@@ -117,7 +124,10 @@ class MDrawer extends StatelessWidget {
             var stud = await PersonModel.currentParent!.currentChild;
             var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
 
-            Get.to(() => StudentMarksTablePage(student: stud, periods: periods));
+            Get.to(() => StudentMarksTablePage(
+                  student: stud,
+                  periods: periods.where((e) => e.status == StatusModel.active).toList(),
+                ));
           },
           icon: const Icon(Icons.table_chart_outlined),
           label: const Text('Успеваемость'),
@@ -129,7 +139,10 @@ class MDrawer extends StatelessWidget {
             var student = await PersonModel.currentParent!.currentChild;
             var periods = await InstitutionModel.currentInstitution.currentYearAndSemestersPeriods;
 
-            Get.to(() => StudentYearMarksTablePage(student: student, periods: periods));
+            Get.to(() => StudentYearMarksTablePage(
+                  student: student,
+                  periods: periods.where((e) => e.status == StatusModel.active).toList(),
+                ));
           },
           icon: const Icon(Icons.power_input_rounded),
           label: const Text('Итоговые оценки'),
@@ -144,7 +157,7 @@ class MDrawer extends StatelessWidget {
             Get.to(
               () => AbsencePeriodChoicePage(
                 aclass: aclass,
-                periods: periods,
+                periods: periods.where((e) => e.status == StatusModel.active).toList(),
                 singleStudent: student,
               ),
             );
@@ -186,7 +199,7 @@ class MDrawer extends StatelessWidget {
             Get.to(
               () => AbsencePeriodChoicePage(
                 aclass: Get.find<ProxyStore>().currentObserverClass!,
-                periods: periods,
+                periods: periods.where((e) => e.status == StatusModel.active).toList(),
               ),
             );
           },
@@ -201,7 +214,7 @@ class MDrawer extends StatelessWidget {
             var periods = await InstitutionModel.currentInstitution.currentYearSemesterPeriods;
             var students = await Get.find<ProxyStore>().currentObserverClass!.students();
             Get.to(() => ObserverStudentChoicePage(
-                  periods: periods,
+                  periods: periods.where((e) => e.status == StatusModel.active).toList(),
                   students: students,
                 ));
           },
@@ -215,7 +228,7 @@ class MDrawer extends StatelessWidget {
             var periods = await InstitutionModel.currentInstitution.currentYearAndSemestersPeriods;
             var students = await Get.find<ProxyStore>().currentObserverClass!.students();
             Get.to(() => ObserverStudentChoicePage(
-                  periods: periods,
+                  periods: periods.where((e) => e.status == StatusModel.active).toList(),
                   students: students,
                   selectPeriods: false,
                 ));
