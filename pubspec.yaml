@@ -20,7 +20,7 @@ dependencies:
   flutter_rating_bar: ^4.0.0
   drag_and_drop_lists: ^0.4.1
   chips_choice: ^3.0.1
-  dropdown_search: ^5.0.1
+  dropdown_search: ^6.0.0
   flutter_native_splash: ^2.0.1+1
   # directed_graph: ^0.4.0
   flex_color_scheme: ^7.1.2

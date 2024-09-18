@@ -4,9 +4,11 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/modelstatus_field.dart';
 import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/selectablevaluelist_field.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -28,11 +30,13 @@ class _CurriculumPageState extends State<CurriculumPage> {
   final _formKey = GlobalKey<FormState>();
   final List<StudentModel> _students = [];
   TeacherModel? _master;
+  late StatusModel _status;
 
   @override
   void initState() {
     _name.value = TextEditingValue(text: widget._curriculum.name);
     _alias.value = TextEditingValue(text: widget._curriculum.alias ?? '');
+    _status = widget._curriculum.status;
     super.initState();
   }
 
@@ -95,6 +99,16 @@ class _CurriculumPageState extends State<CurriculumPage> {
                   addElementFunc: _addStudent,
                   setElementFunc: _setStudent,
                   removeElementFunc: _removeStudent,
+                ),
+                ModelStatusFormField(
+                  status: _status,
+                  onChanged: (v) {
+                    if (v is StatusModel) {
+                      setState(() {
+                        _status = v;
+                      });
+                    }
+                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -201,6 +215,7 @@ class _CurriculumPageState extends State<CurriculumPage> {
       Map<String, dynamic> map = {};
       map['name'] = _name.text;
       map['alias'] = _alias.text.isNotEmpty ? _alias.text : null;
+      map['status'] = _status.nameInt;
       map['master_id'] = _master!.id!;
       map['student_ids'] = _students.map((e) => e.id!).toList();
 
