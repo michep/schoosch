@@ -4,6 +4,7 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/lesson_model.dart';
+import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/model/venue_model.dart';
 import 'package:schoosch/pages/admin/curriculum_edit.dart';
 import 'package:schoosch/pages/admin/curriculum_list.dart';
@@ -61,6 +62,7 @@ class _LessonPageState extends State<LessonPage> {
                   listFunc: () => CurriculumListPage(
                     InstitutionModel.currentInstitution,
                     selectionMode: true,
+                    status: 1,
                   ),
                   detailsFunc: () => CurriculumPage(curriculum!, curriculum!.name),
                   validatorFunc: (value) => Utils.validateTextNotEmpty(value, loc.errorCurriculumEmpty),
@@ -101,8 +103,8 @@ class _LessonPageState extends State<LessonPage> {
     });
   }
 
-  Future<List<CurriculumModel>> _initCurriculumOptions() {
-    return InstitutionModel.currentInstitution.curriculums();
+  Future<List<CurriculumModel>> _initCurriculumOptions() async {
+    return (await InstitutionModel.currentInstitution.curriculums()).where((curriculum) => curriculum.status == StatusModel.active).toList();
   }
 
   bool _setCurriculum(CurriculumModel? value) {

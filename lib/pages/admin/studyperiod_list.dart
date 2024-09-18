@@ -6,21 +6,29 @@ import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/pages/admin/studyperiod_edit.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/status_filter.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class StudyPeriodListPage extends StatefulWidget {
   final InstitutionModel _institution;
   final bool selectionMode;
+  final int? status;
 
-  const StudyPeriodListPage(this._institution, {this.selectionMode = false, super.key});
+  const StudyPeriodListPage(this._institution, {this.selectionMode = false, super.key, this.status});
 
   @override
   State<StudyPeriodListPage> createState() => _StudyPeriodListPageState();
 }
 
 class _StudyPeriodListPageState extends State<StudyPeriodListPage> {
-  int? _status;
   final ScrollController _scrollCtl = ScrollController();
+  int? _status;
+
+  @override
+  void initState() {
+    super.initState();
+    _status = widget.status;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,32 +46,10 @@ class _StudyPeriodListPageState extends State<StudyPeriodListPage> {
                 title: _inSearch ? Text(loc.search, style: const TextStyle(fontStyle: FontStyle.italic)) : Text(loc.search),
                 expandedCrossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16),
-                        child: DropdownButton(
-                          value: _status,
-                          items: const [
-                            DropdownMenuItem(
-                              value: 1,
-                              child: Text('Активно'),
-                            ),
-                            DropdownMenuItem(
-                              value: 0,
-                              child: Text('Выключено'),
-                            ),
-                            DropdownMenuItem(
-                              value: null,
-                              child: Text('Все'),
-                            ),
-                          ],
-                          onChanged: (value) => setState(() {
-                            _status = value;
-                          }),
-                        ),
-                      ),
-                    ],
+                  StatusFilter(
+                    onChange: (value) => setState(() {
+                      _status = value;
+                    }),
                   ),
                 ],
               ),

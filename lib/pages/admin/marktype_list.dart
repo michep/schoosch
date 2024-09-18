@@ -3,15 +3,18 @@ import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/marktype_model.dart';
+import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/pages/admin/marktype_edit.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/status_filter.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class MarktypeListPage extends StatefulWidget {
   final InstitutionModel _institution;
   final bool selectionMode;
+  final int? status;
 
-  const MarktypeListPage(this._institution, {this.selectionMode = false, super.key});
+  const MarktypeListPage(this._institution, {this.selectionMode = false, super.key, this.status});
 
   @override
   State<MarktypeListPage> createState() => _MarktypeListPageState();
@@ -20,6 +23,13 @@ class MarktypeListPage extends StatefulWidget {
 class _MarktypeListPageState extends State<MarktypeListPage> {
   final TextEditingController _name = TextEditingController();
   final ScrollController _scrollCtl = ScrollController();
+  int? _status;
+
+  @override
+  void initState() {
+    super.initState();
+    _status = widget.status;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +59,11 @@ class _MarktypeListPageState extends State<MarktypeListPage> {
                         }),
                       ),
                     ),
+                  ),
+                  StatusFilter(
+                    onChange: (value) => setState(() {
+                      _status = value;
+                    }),
                   ),
                 ],
               ),
@@ -82,7 +97,7 @@ class _MarktypeListPageState extends State<MarktypeListPage> {
   }
 
   bool _filter(MarkType type) {
-    return type.name.toUpperCase().contains(_name.text.toUpperCase());
+    return type.name.toUpperCase().contains(_name.text.toUpperCase()) && _status == null ? true : type.status == StatusModel.parse(_status!);
   }
 
   bool get _inSearch {

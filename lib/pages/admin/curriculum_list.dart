@@ -4,15 +4,18 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/pages/admin/curriculum_edit.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/status_filter.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class CurriculumListPage extends StatefulWidget {
   final InstitutionModel _institution;
   final bool selectionMode;
+  final int? status;
 
-  const CurriculumListPage(this._institution, {this.selectionMode = false, super.key});
+  const CurriculumListPage(this._institution, {this.selectionMode = false, super.key, this.status});
 
   @override
   State<CurriculumListPage> createState() => _CurriculumListPageState();
@@ -20,6 +23,13 @@ class CurriculumListPage extends StatefulWidget {
 
 class _CurriculumListPageState extends State<CurriculumListPage> {
   final TextEditingController _name = TextEditingController();
+  int? _status;
+
+  @override
+  void initState() {
+    super.initState();
+    _status = widget.status;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +59,11 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
                         }),
                       ),
                     ),
+                  ),
+                  StatusFilter(
+                    onChange: (value) => setState(() {
+                      _status = value;
+                    }),
                   ),
                 ],
               ),
@@ -87,8 +102,9 @@ class _CurriculumListPageState extends State<CurriculumListPage> {
   }
 
   bool _filter(CurriculumModel curriculum) {
-    return (curriculum.name.toUpperCase().contains(_name.text.toUpperCase())) ||
-        (curriculum.alias != null && curriculum.alias!.toUpperCase().contains(_name.text.toUpperCase()));
+    return ((curriculum.name.toUpperCase().contains(_name.text.toUpperCase())) ||
+            (curriculum.alias != null && curriculum.alias!.toUpperCase().contains(_name.text.toUpperCase()))) &&
+        (_status == null ? true : curriculum.status == StatusModel.parse(_status!));
   }
 
   bool get _inSearch {

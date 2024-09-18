@@ -3,6 +3,7 @@ import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -11,6 +12,8 @@ class CurriculumModel {
   late final String name;
   late final String? alias;
   late final String _masterId;
+  late final StatusModel status;
+
   final List<String> _studentIds = [];
   final List<StudentModel> _specificStudents = [];
   final List<StudentModel> _students = [];
@@ -38,6 +41,7 @@ class CurriculumModel {
   CurriculumModel.fromMap(this._id, Map<String, dynamic> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in curriculum $id';
     alias = map['alias'] != null ? map['alias'] as String : null;
+    status = map['status'] != null ? StatusModel.parse(map['status']) : StatusModel.active;
     _masterId = map['master_id'] != null ? map['master_id'] as String : throw 'need master_id key in curriculum $id';
     map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
 
@@ -144,6 +148,7 @@ class CurriculumModel {
     if (withId) res['_id'] = id;
     res['name'] = name;
     res['alias'] = alias;
+    res['status'] = status.nameInt;
     res['master_id'] = _masterId;
     res['student_ids'] = _studentIds;
     if (recursive && _master != null) {
