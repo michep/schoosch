@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/curriculum_model.dart';
+import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
@@ -81,7 +82,7 @@ class _StudentMarksTablePageState extends State<StudentMarksTablePage> {
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: FutureBuilder<List<CurriculumModel>>(
-                future: widget.student.curriculums(),
+                future: InstitutionModel.currentInstitution.currentYearPeriod.then((period) => widget.student.curriculums(period!)),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Center(

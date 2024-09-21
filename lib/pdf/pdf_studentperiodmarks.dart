@@ -20,7 +20,7 @@ class PDFStudentPeriodMarks {
   });
 
   Future<Uint8List> generate(PdfPageFormat format) async {
-    var allcurriculums = await student.curriculums();
+    var allcurriculums = await student.curriculums(period);
     var curriculumsMarks = await student.getLessonMarksByCurriculums(allcurriculums, period);
 
     var doc = pw.Document(

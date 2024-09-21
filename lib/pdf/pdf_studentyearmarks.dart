@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/pdf/pdf_theme.dart';
@@ -16,7 +17,10 @@ class PDFStudentYearMarks {
   });
 
   Future<Uint8List> generate(PdfPageFormat format) async {
-    var curriculums = await student.curriculums();
+    List<CurriculumModel> curriculums = [];
+    for (var period in periods) {
+      curriculums.addAll(await student.curriculums(period));
+    }
     var periodMarks = await student.getAllPeriodsMarks(curriculums, periods);
 
     var doc = pw.Document(

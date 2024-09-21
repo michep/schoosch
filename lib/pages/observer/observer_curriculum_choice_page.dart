@@ -28,7 +28,7 @@ class ObserverCurriculumChoicePage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: FutureBuilder<List<CurriculumModel>>(
-          future: aclass.curriculums(),
+          future: InstitutionModel.currentInstitution.currentYearPeriod.then((period) => aclass.curriculums(period!)),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Utils.progressIndicator();

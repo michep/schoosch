@@ -186,8 +186,7 @@ class PersonModel {
 class StudentModel extends PersonModel {
   ClassModel? _studentClass;
   ParentModel? parent;
-  final List<CurriculumModel> _curriculums = [];
-  bool _curriculumsLoaded = false;
+  final Map<String, List<CurriculumModel>> _curriculums = {};
 
   StudentModel.empty()
       : super.fromMap(null, <String, dynamic>{
@@ -205,13 +204,11 @@ class StudentModel extends PersonModel {
     return _studentClass!;
   }
 
-  Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
-    if (!_curriculumsLoaded || forceRefresh) {
-      _curriculums.clear();
-      _curriculums.addAll(await Get.find<ProxyStore>().getStudentCurriculums(this));
-      _curriculumsLoaded = true;
+  Future<List<CurriculumModel>> curriculums(StudyPeriodModel period, {bool forceRefresh = false}) async {
+    if (forceRefresh || !_curriculums.containsKey(period.id!)) {
+      _curriculums[period.id!] = await Get.find<ProxyStore>().getStudentCurriculums(this, period);
     }
-    return _curriculums;
+    return _curriculums[period.id!]!;
   }
 
   Future<Map<CurriculumModel, List<LessonMarkModel>>> getLessonMarksByCurriculums(List<CurriculumModel> curriculums, StudyPeriodModel period) async {

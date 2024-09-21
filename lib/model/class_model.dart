@@ -6,6 +6,7 @@ import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
+import 'package:schoosch/model/studyperiod_model.dart';
 
 class ClassModel {
   String? _id;
@@ -22,8 +23,7 @@ class ClassModel {
   final Map<Week, List<ClassScheduleModel>> _weekClassSchedules = {};
   final Map<Week, List<StudentScheduleModel>> _weekStudentSchedules = {};
   final Map<int, List<StudentScheduleModel>> _daySchedules = {};
-  final List<CurriculumModel> _curriculums = [];
-  bool _curriculumsLoaded = false;
+  final Map<String, List<CurriculumModel>> _curriculums = {};
 
   String? get id => _id;
 
@@ -142,27 +142,11 @@ class ClassModel {
   //   return await Get.find<MStore>().getFreeLessonsOnDay(this, date);
   // }
 
-  // Future<Set<CurriculumModel>> getUniqueCurriculums({bool forceRefresh = false}) async {
-  //   if(allCurriculums.isEmpty || forceRefresh) {
-  //     var weekschedules = await getSchedulesWeek(Week.current());
-  //     for(var sched in weekschedules) {
-  //       var les = await sched.allLessons();
-  //       for(var l in les) {
-  //         var cur = await l.curriculum;
-  //         allCurriculums.add(cur!);
-  //       }
-  //     }
-  //   }
-  //   return allCurriculums;
-  // }
-
-  Future<List<CurriculumModel>> curriculums({bool forceRefresh = false}) async {
-    if (!_curriculumsLoaded || forceRefresh) {
-      _curriculums.clear();
-      _curriculums.addAll(await Get.find<ProxyStore>().getClassCurriculums(this));
-      _curriculumsLoaded = true;
+  Future<List<CurriculumModel>> curriculums(StudyPeriodModel period, {bool forceRefresh = false}) async {
+    if (forceRefresh || !_curriculums.containsKey(period.id!)) {
+      _curriculums[period.id!] = await Get.find<ProxyStore>().getClassCurriculums(this, period);
     }
-    return _curriculums;
+    return _curriculums[period.id!]!;
   }
 
   Map<String, dynamic> toMap({bool withId = false}) {

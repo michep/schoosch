@@ -590,11 +590,8 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<AbsenceModel>> getAllPeriodtAbsences(StudyPeriodModel period, List<StudentModel> studs) async {
-    var res = await dio.postUri<List>(
-      baseUriFunc('/absence/${period.from}/${period.till}'),
-      options: Options(headers: {'Content-Type': 'application/json'}),
-      data: studs.map((e) => e.id).toList()
-    );
+    var res = await dio.postUri<List>(baseUriFunc('/absence/${period.from}/${period.till}'),
+        options: Options(headers: {'Content-Type': 'application/json'}), data: studs.map((e) => e.id).toList());
     var js = res.data!;
     return js.map((data) => AbsenceModel.fromMap(data['_id'], data)).toList();
   }
@@ -839,13 +836,27 @@ class ProxyStore extends getx.GetxController {
     return res.data!.map((e) => StudentModel.fromMap(e['_id'], e)).toList();
   }
 
-  Future<List<CurriculumModel>> getClassCurriculums(ClassModel aclass) async {
-    var res = await dio.getUri<List>(baseUriFunc('/class/${aclass.id}/curriculum'));
+  Future<List<CurriculumModel>> getClassCurriculums(ClassModel aclass, StudyPeriodModel period) async {
+    var res = await dio.postUri<List>(
+      baseUriFunc('/class/${aclass.id}/curriculum/dates'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {
+        'from': period.from.toIso8601String(),
+        "till": period.till.toIso8601String(),
+      },
+    );
     return res.data!.map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
   }
 
-  Future<List<CurriculumModel>> getStudentCurriculums(StudentModel student) async {
-    var res = await dio.getUri<List>(baseUriFunc('/person/${student.id}/student/curriculum'));
+  Future<List<CurriculumModel>> getStudentCurriculums(StudentModel student, StudyPeriodModel period) async {
+    var res = await dio.postUri<List>(
+      baseUriFunc('/person/${student.id}/student/curriculum/dates'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {
+        'from': period.from.toIso8601String(),
+        "till": period.till.toIso8601String(),
+      },
+    );
     return res.data!.map((e) => CurriculumModel.fromMap(e['_id'], e)).toList();
   }
 
