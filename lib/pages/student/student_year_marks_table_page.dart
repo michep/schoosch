@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/model/curriculum_model.dart';
+import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/mark_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
@@ -45,7 +46,7 @@ class StudentYearMarksTablePage extends StatelessWidget {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: FutureBuilder<List<CurriculumModel>>(
-          future: student.curriculums(),
+          future: InstitutionModel.currentInstitution.currentYearPeriod.then((period) => student.curriculums(period!)),
           builder: (context, curssnapshot) {
             if (!curssnapshot.hasData) {
               return Center(
@@ -179,7 +180,7 @@ class StudentYearMarksTablePage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if(listmark[index] != null) const Text('Годовая'),
+                  if (listmark[index] != null) const Text('Годовая'),
                   listmark[index] != null
                       ? Text(
                           listmark[index]!.mark.toStringAsFixed(1),

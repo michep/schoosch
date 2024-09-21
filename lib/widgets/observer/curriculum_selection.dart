@@ -16,7 +16,7 @@ class CurriculumSelection extends StatelessWidget {
   Widget build(BuildContext context) {
     // bool isYear = false;
     return FutureBuilder<List<CurriculumModel>>(
-      future: _class.curriculums(),
+      future: InstitutionModel.currentInstitution.currentYearPeriod.then((period) => _class.curriculums(period!)),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Utils.progressIndicator();
