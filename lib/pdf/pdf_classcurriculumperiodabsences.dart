@@ -21,7 +21,10 @@ class PDFClassCurriculumPeriodAbsences {
   });
 
   Future<Uint8List> generate(PdfPageFormat format) async {
-    var students = singleStudent != null ? [singleStudent!] : await aclass.students();
+    var students = singleStudent != null
+        ? [singleStudent!]
+        : (await aclass.students()
+          ..sort((a, b) => a.fullName.compareTo(b.fullName)));
     // var marks = await curriculum.getLessonMarksByStudents(students, period);
     var absencesList = await period.getAllPeriodAbsences(students);
     // var periodMarks = await curriculum.getPeriodMarksByStudents(students, period);
@@ -30,16 +33,16 @@ class PDFClassCurriculumPeriodAbsences {
     for (StudentModel sm in students) {
       List<AbsenceModel> studabsences = absencesList.where((element) => element.personId == sm.id).toList();
       List<DateTime> dates = [];
-      for(AbsenceModel am in studabsences) {
-        if(!dates.contains(am.date)) {
+      for (AbsenceModel am in studabsences) {
+        if (!dates.contains(am.date)) {
           dates.add(am.date);
         }
       }
       Map<DateTime, List<AbsenceModel>> absencesbydate = {};
-      for(DateTime d in dates) {
+      for (DateTime d in dates) {
         absencesbydate[d] = studabsences.where((element) => element.date == d).toList();
       }
-      absences[sm] = absencesbydate; 
+      absences[sm] = absencesbydate;
     }
 
     var doc = pw.Document(
