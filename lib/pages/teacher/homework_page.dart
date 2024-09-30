@@ -145,6 +145,7 @@ class _HomeworkPageState extends State<HomeworkPage> {
 
   Future<List<PersonModel>> _initStudentOptions() async {
     var ppl = await widget.lesson.aclass.students();
+    ppl.sort((a, b) => a.fullName.compareTo(b.fullName));
     return ppl;
   }
 

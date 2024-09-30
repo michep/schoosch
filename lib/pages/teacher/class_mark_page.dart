@@ -111,6 +111,8 @@ class _ClassMarkPageState extends State<ClassMarkPage> {
   }
 
   Future<List<StudentModel>> _initStudents() async {
-    return widget.lesson.aclass.students();
+    var ppl = await widget.lesson.aclass.students();
+    ppl.sort((a, b) => a.fullName.compareTo(b.fullName));
+    return ppl;
   }
 }
