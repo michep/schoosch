@@ -75,6 +75,13 @@ class _PersonPageState extends State<PersonPage> {
                   child: Column(
                     children: [
                       TextFormField(
+                        controller: _lastname,
+                        decoration: InputDecoration(
+                          label: Text(loc.personLastName),
+                        ),
+                        validator: (value) => Utils.validateTextNotEmpty(value, loc.errorPersonLastNameEmpty),
+                      ),
+                      TextFormField(
                         controller: _firstname,
                         decoration: InputDecoration(
                           label: Text(loc.personFirstName),
@@ -86,13 +93,6 @@ class _PersonPageState extends State<PersonPage> {
                         decoration: InputDecoration(
                           label: Text(loc.personMiddleName),
                         ),
-                      ),
-                      TextFormField(
-                        controller: _lastname,
-                        decoration: InputDecoration(
-                          label: Text(loc.personLastName),
-                        ),
-                        validator: (value) => Utils.validateTextNotEmpty(value, loc.errorPersonLastNameEmpty),
                       ),
                       TextFormField(
                         controller: _email,

@@ -7,6 +7,7 @@ import 'package:schoosch/model/lessontime_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/dayschedule_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
+import 'package:schoosch/model/status_enum.dart';
 
 class ClassModel {
   String? _id;
@@ -14,6 +15,8 @@ class ClassModel {
   late final int grade;
   late final String _masterId;
   late final String _dayLessontimeId;
+  late final StatusModel status;
+
   final List<String> _studentIds = [];
   final List<StudentModel> _students = [];
   bool _studentsLoaded = false;
@@ -39,6 +42,7 @@ class ClassModel {
   ClassModel.fromMap(this._id, Map<String, dynamic> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in class $_id';
     grade = map['grade'] != null ? map['grade'] as int : throw 'need grade key in class $_id';
+    status = map['status'] != null ? StatusModel.parse(map['status']) : StatusModel.active;
     _dayLessontimeId = map['lessontime_id'] != null ? map['lessontime_id'] as String : throw 'need lessontime_id key in class $_id';
     _masterId = map['master_id'] != null ? map['master_id'] as String : throw 'need master_id key in class $_id';
     map['student_ids'] != null ? _studentIds.addAll((map['student_ids'] as List<dynamic>).map((e) => e as String)) : null;
@@ -154,6 +158,7 @@ class ClassModel {
     if (withId) res['_id'] = id;
     res['name'] = name;
     res['grade'] = grade;
+    res['status'] = status.nameInt;
     res['master_id'] = _masterId;
     res['student_ids'] = _studentIds;
     res['lessontime_id'] = _dayLessontimeId;

@@ -3,9 +3,11 @@ import 'package:get/get.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/institution_model.dart';
+import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/pages/admin/class_edit.dart';
 import 'package:schoosch/pages/admin/schedule_days_list.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/status_filter.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 enum ClassListMode { classes, schedules }
@@ -13,9 +15,16 @@ enum ClassListMode { classes, schedules }
 class ClassListPage extends StatefulWidget {
   final InstitutionModel _institution;
   final bool selectionMode;
+  final int? status;
   final ClassListMode listMode;
 
-  const ClassListPage(this._institution, {this.selectionMode = false, this.listMode = ClassListMode.classes, super.key});
+  const ClassListPage(
+    this._institution, {
+    this.selectionMode = false,
+    this.listMode = ClassListMode.classes,
+    this.status,
+    super.key,
+  });
 
   @override
   State<ClassListPage> createState() => _ClassListPageState();
@@ -23,6 +32,13 @@ class ClassListPage extends StatefulWidget {
 
 class _ClassListPageState extends State<ClassListPage> {
   final TextEditingController _name = TextEditingController();
+  int? _status;
+
+  @override
+  void initState() {
+    super.initState();
+    _status = widget.status;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +68,11 @@ class _ClassListPageState extends State<ClassListPage> {
                         }),
                       ),
                     ),
+                  ),
+                  StatusFilter(
+                    onChange: (value) => setState(() {
+                      _status = value;
+                    }),
                   ),
                 ],
               ),
@@ -85,7 +106,7 @@ class _ClassListPageState extends State<ClassListPage> {
   }
 
   bool _filter(ClassModel aclass) {
-    return aclass.name.toUpperCase().contains(_name.text.toUpperCase());
+    return aclass.name.toUpperCase().contains(_name.text.toUpperCase()) && (_status == null ? true : aclass.status == StatusModel.parse(_status!));
   }
 
   bool get _inSearch {

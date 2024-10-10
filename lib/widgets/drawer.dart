@@ -279,7 +279,7 @@ class MDrawer extends StatelessWidget {
             () => PDFPreview(
               format: landscapePdfPageFormat,
               generate: PDFClassesWeekSchedule(
-                classes: classes.where((element) => element.grade > 4).toList(),
+                classes: classes.where((element) => element.grade > 4 && element.status == StatusModel.active).toList(),
                 week: cw,
               ).generate,
             ),
