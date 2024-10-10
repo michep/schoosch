@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/institution_model.dart';
+import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/pages/teacher/class_cur_marks_table_page.dart';
 import 'package:schoosch/pages/teacher/class_cur_year_marks_table_page.dart';
@@ -40,7 +41,17 @@ class ObserverCurriculumChoicePage extends StatelessWidget {
               itemCount: snapshot.data!.length,
               itemBuilder: (_, index) {
                 return ListTile(
-                  title: Text(snapshot.data![index].aliasOrName),
+                  title: FutureBuilder<TeacherModel?>(
+                      future: snapshot.data![index].master,
+                      builder: (context, snapshot2) {
+                        return Row(
+                          children: [
+                            Text(snapshot.data![index].aliasOrName),
+                            SizedBox(width: 8),
+                            Text("(${snapshot2.data?.fullName ?? ''}", style: TextStyle(color: Colors.white54)),
+                          ],
+                        );
+                      }),
                   onTap: () async {
                     var periods = isYear
                         ? await InstitutionModel.currentInstitution.currentYearAndSemestersPeriods
