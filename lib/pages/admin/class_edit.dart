@@ -6,10 +6,12 @@ import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/model/status_enum.dart';
 import 'package:schoosch/pages/admin/daylessontime_list.dart';
 import 'package:schoosch/pages/admin/people_list.dart';
 import 'package:schoosch/pages/admin/person_edit.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/modelstatus_field.dart';
 import 'package:schoosch/widgets/selectablevaluedropdown_field.dart';
 import 'package:schoosch/widgets/selectablevaluelist_field.dart';
 import 'package:schoosch/widgets/utils.dart';
@@ -28,6 +30,7 @@ class _ClassPageState extends State<ClassPage> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _grade = TextEditingController();
   final TextEditingController _mastercont = TextEditingController();
+  late StatusModel _status;
   final _formKey = GlobalKey<FormState>();
   final List<StudentModel> _students = [];
   TeacherModel? _master;
@@ -37,6 +40,7 @@ class _ClassPageState extends State<ClassPage> {
   void initState() {
     _name.value = TextEditingValue(text: widget._aclass.name);
     _grade.value = TextEditingValue(text: widget._aclass.grade != 0 ? widget._aclass.grade.toString() : '');
+    _status = widget._aclass.status;
     super.initState();
   }
 
@@ -119,6 +123,16 @@ class _ClassPageState extends State<ClassPage> {
                   addElementFunc: _addChild,
                   setElementFunc: _setChild,
                   removeElementFunc: _removeChild,
+                ),
+                ModelStatusFormField(
+                  status: _status,
+                  onChanged: (v) {
+                    if (v is StatusModel) {
+                      setState(() {
+                        _status = v;
+                      });
+                    }
+                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
@@ -250,6 +264,7 @@ class _ClassPageState extends State<ClassPage> {
       Map<String, dynamic> map = {};
       map['name'] = _name.text;
       map['grade'] = int.parse(_grade.text);
+      map['status'] = _status.nameInt;
       map['master_id'] = _master!.id!;
       map['lessontime_id'] = _dayLessontime!.id!;
       map['student_ids'] = _students.map((e) => e.id!).toList();

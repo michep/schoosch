@@ -15,7 +15,12 @@ class CurriculumListPage extends StatefulWidget {
   final bool selectionMode;
   final int? status;
 
-  const CurriculumListPage(this._institution, {this.selectionMode = false, super.key, this.status});
+  const CurriculumListPage(
+    this._institution, {
+    this.selectionMode = false,
+    this.status,
+    super.key,
+  });
 
   @override
   State<CurriculumListPage> createState() => _CurriculumListPageState();

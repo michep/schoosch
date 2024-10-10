@@ -14,7 +14,12 @@ class StudyPeriodListPage extends StatefulWidget {
   final bool selectionMode;
   final int? status;
 
-  const StudyPeriodListPage(this._institution, {this.selectionMode = false, super.key, this.status});
+  const StudyPeriodListPage(
+    this._institution, {
+    this.selectionMode = false,
+    this.status,
+    super.key,
+  });
 
   @override
   State<StudyPeriodListPage> createState() => _StudyPeriodListPageState();
