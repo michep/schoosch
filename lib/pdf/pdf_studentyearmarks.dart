@@ -17,11 +17,11 @@ class PDFStudentYearMarks {
   });
 
   Future<Uint8List> generate(PdfPageFormat format) async {
-    List<CurriculumModel> curriculums = [];
+    Set<CurriculumModel> curriculums = {};
     for (var period in periods) {
       curriculums.addAll(await student.curriculums(period));
     }
-    var periodMarks = await student.getAllPeriodsMarks(curriculums, periods);
+    var periodMarks = await student.getAllPeriodsMarks(curriculums.toList(), periods);
 
     var doc = pw.Document(
       theme: await getTheme(),
