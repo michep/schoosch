@@ -31,6 +31,7 @@ class StudentYearMarksTablePage extends StatelessWidget {
             onPressed: () {
               Get.to(
                 () => PDFPreview(
+                  title: 'Итоговые оценки',
                   format: landscapePdfPageFormat,
                   generate: PDFStudentYearMarks(
                     periods: periods,

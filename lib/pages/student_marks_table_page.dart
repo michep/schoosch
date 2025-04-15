@@ -48,6 +48,7 @@ class _StudentMarksTablePageState extends State<StudentMarksTablePage> {
             onPressed: () {
               Get.to(
                 () => PDFPreview(
+                  title: 'Все оценки',
                   format: landscapePdfPageFormat,
                   generate: PDFStudentPeriodMarks(
                     period: selectedPeriod!,
