@@ -18,8 +18,10 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(_current != null,
-        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    assert(
+      _current != null,
+      'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.',
+    );
     return _current!;
   }
 
@@ -41,8 +43,10 @@ class S {
 
   static S of(BuildContext context) {
     final instance = S.maybeOf(context);
-    assert(instance != null,
-        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
+    assert(
+      instance != null,
+      'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?',
+    );
     return instance!;
   }
 
@@ -62,12 +66,7 @@ class S {
 
   /// `Schoosch`
   String get appBarTitle {
-    return Intl.message(
-      'Schoosch',
-      name: 'appBarTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Schoosch', name: 'appBarTitle', desc: '', args: []);
   }
 
   /// `Save changes`
@@ -82,22 +81,12 @@ class S {
 
   /// `Search`
   String get search {
-    return Intl.message(
-      'Search',
-      name: 'search',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Search', name: 'search', desc: '', args: []);
   }
 
   /// `Name`
   String get name {
-    return Intl.message(
-      'Name',
-      name: 'name',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Name', name: 'name', desc: '', args: []);
   }
 
   /// `Edit Institution`
@@ -122,32 +111,17 @@ class S {
 
   /// `Name`
   String get className {
-    return Intl.message(
-      'Name',
-      name: 'className',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Name', name: 'className', desc: '', args: []);
   }
 
   /// `Grade`
   String get classGrade {
-    return Intl.message(
-      'Grade',
-      name: 'classGrade',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Grade', name: 'classGrade', desc: '', args: []);
   }
 
   /// `Teacher`
   String get classMaster {
-    return Intl.message(
-      'Teacher',
-      name: 'classMaster',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Teacher', name: 'classMaster', desc: '', args: []);
   }
 
   /// `Lessons Times`
@@ -162,32 +136,17 @@ class S {
 
   /// `Students`
   String get classStudents {
-    return Intl.message(
-      'Students',
-      name: 'classStudents',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Students', name: 'classStudents', desc: '', args: []);
   }
 
   /// `Classes`
   String get classList {
-    return Intl.message(
-      'Classes',
-      name: 'classList',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Classes', name: 'classList', desc: '', args: []);
   }
 
   /// `New Class`
   String get newClass {
-    return Intl.message(
-      'New Class',
-      name: 'newClass',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('New Class', name: 'newClass', desc: '', args: []);
   }
 
   /// `Lessons Times`
@@ -292,52 +251,27 @@ class S {
 
   /// `Venue`
   String get venueName {
-    return Intl.message(
-      'Venue',
-      name: 'venueName',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Venue', name: 'venueName', desc: '', args: []);
   }
 
   /// `Venues`
   String get venueList {
-    return Intl.message(
-      'Venues',
-      name: 'venueList',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Venues', name: 'venueList', desc: '', args: []);
   }
 
   /// `New Vanue`
   String get newVenue {
-    return Intl.message(
-      'New Vanue',
-      name: 'newVenue',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('New Vanue', name: 'newVenue', desc: '', args: []);
   }
 
   /// `Lesson`
   String get lessonName {
-    return Intl.message(
-      'Lesson',
-      name: 'lessonName',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Lesson', name: 'lessonName', desc: '', args: []);
   }
 
   /// `Name`
   String get personName {
-    return Intl.message(
-      'Name',
-      name: 'personName',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Name', name: 'personName', desc: '', args: []);
   }
 
   /// `First Name`
@@ -372,42 +306,22 @@ class S {
 
   /// `Email`
   String get personEmail {
-    return Intl.message(
-      'Email',
-      name: 'personEmail',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Email', name: 'personEmail', desc: '', args: []);
   }
 
   /// `Birthday`
   String get personBirthday {
-    return Intl.message(
-      'Birthday',
-      name: 'personBirthday',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Birthday', name: 'personBirthday', desc: '', args: []);
   }
 
   /// `Type`
   String get personType {
-    return Intl.message(
-      'Type',
-      name: 'personType',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Type', name: 'personType', desc: '', args: []);
   }
 
   /// `All`
   String get personTypeAll {
-    return Intl.message(
-      'All',
-      name: 'personTypeAll',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('All', name: 'personTypeAll', desc: '', args: []);
   }
 
   /// `Student`
@@ -432,12 +346,7 @@ class S {
 
   /// `Parent`
   String get personTypeParent {
-    return Intl.message(
-      'Parent',
-      name: 'personTypeParent',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Parent', name: 'personTypeParent', desc: '', args: []);
   }
 
   /// `Observer`
@@ -452,12 +361,7 @@ class S {
 
   /// `Admin`
   String get personTypeAdmin {
-    return Intl.message(
-      'Admin',
-      name: 'personTypeAdmin',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Admin', name: 'personTypeAdmin', desc: '', args: []);
   }
 
   /// `Related Students`
@@ -492,12 +396,7 @@ class S {
 
   /// `New {type}`
   String newPerson(Object type) {
-    return Intl.message(
-      'New $type',
-      name: 'newPerson',
-      desc: '',
-      args: [type],
-    );
+    return Intl.message('New $type', name: 'newPerson', desc: '', args: [type]);
   }
 
   /// `Schedule start date`
@@ -542,12 +441,7 @@ class S {
 
   /// `Lesson`
   String get lesson {
-    return Intl.message(
-      'Lesson',
-      name: 'lesson',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Lesson', name: 'lesson', desc: '', args: []);
   }
 
   /// `Curriculum should be selected`
@@ -772,82 +666,42 @@ class S {
 
   /// `From time`
   String get fromTimeTitle {
-    return Intl.message(
-      'From time',
-      name: 'fromTimeTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('From time', name: 'fromTimeTitle', desc: '', args: []);
   }
 
   /// `Till time`
   String get tillTimeTitle {
-    return Intl.message(
-      'Till time',
-      name: 'tillTimeTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Till time', name: 'tillTimeTitle', desc: '', args: []);
   }
 
   /// `From`
   String get fromTitle {
-    return Intl.message(
-      'From',
-      name: 'fromTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('From', name: 'fromTitle', desc: '', args: []);
   }
 
   /// `Till`
   String get tillTitle {
-    return Intl.message(
-      'Till',
-      name: 'tillTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Till', name: 'tillTitle', desc: '', args: []);
   }
 
   /// `Mark`
   String get markTitle {
-    return Intl.message(
-      'Mark',
-      name: 'markTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mark', name: 'markTitle', desc: '', args: []);
   }
 
   /// `Student`
   String get studentTitle {
-    return Intl.message(
-      'Student',
-      name: 'studentTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Student', name: 'studentTitle', desc: '', args: []);
   }
 
   /// `Comment`
   String get commentTitle {
-    return Intl.message(
-      'Comment',
-      name: 'commentTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Comment', name: 'commentTitle', desc: '', args: []);
   }
 
   /// `Set Mark`
   String get setMarkTitle {
-    return Intl.message(
-      'Set Mark',
-      name: 'setMarkTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Set Mark', name: 'setMarkTitle', desc: '', args: []);
   }
 
   /// `Update Mark`
@@ -932,12 +786,7 @@ class S {
 
   /// `Homework`
   String get homeworkTitle {
-    return Intl.message(
-      'Homework',
-      name: 'homeworkTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Homework', name: 'homeworkTitle', desc: '', args: []);
   }
 
   /// `Homework Text`
@@ -1052,12 +901,7 @@ class S {
 
   /// `Lesson`
   String get lessonTitle {
-    return Intl.message(
-      'Lesson',
-      name: 'lessonTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Lesson', name: 'lessonTitle', desc: '', args: []);
   }
 
   /// `New Mark type`
@@ -1072,32 +916,17 @@ class S {
 
   /// `Mark type`
   String get markTypeTitle {
-    return Intl.message(
-      'Mark type',
-      name: 'markTypeTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mark type', name: 'markTypeTitle', desc: '', args: []);
   }
 
   /// `Mark types`
   String get markTypeList {
-    return Intl.message(
-      'Mark types',
-      name: 'markTypeList',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mark types', name: 'markTypeList', desc: '', args: []);
   }
 
   /// `Weight`
   String get markTypeWeight {
-    return Intl.message(
-      'Weight',
-      name: 'markTypeWeight',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Weight', name: 'markTypeWeight', desc: '', args: []);
   }
 
   /// `Short Label`
@@ -1142,62 +971,32 @@ class S {
 
   /// `Administrator`
   String get roleAdmin {
-    return Intl.message(
-      'Administrator',
-      name: 'roleAdmin',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Administrator', name: 'roleAdmin', desc: '', args: []);
   }
 
   /// `Teacher`
   String get roleTeacher {
-    return Intl.message(
-      'Teacher',
-      name: 'roleTeacher',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Teacher', name: 'roleTeacher', desc: '', args: []);
   }
 
   /// `Parnet`
   String get roleParent {
-    return Intl.message(
-      'Parnet',
-      name: 'roleParent',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Parnet', name: 'roleParent', desc: '', args: []);
   }
 
   /// `Student`
   String get roleStudent {
-    return Intl.message(
-      'Student',
-      name: 'roleStudent',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Student', name: 'roleStudent', desc: '', args: []);
   }
 
   /// `Observer`
   String get roleObserver {
-    return Intl.message(
-      'Observer',
-      name: 'roleObserver',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Observer', name: 'roleObserver', desc: '', args: []);
   }
 
   /// `TBD till`
   String get todateTitle {
-    return Intl.message(
-      'TBD till',
-      name: 'todateTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('TBD till', name: 'todateTitle', desc: '', args: []);
   }
 
   /// `Homework for today`
@@ -1312,12 +1111,7 @@ class S {
 
   /// `study year`
   String get periodYear {
-    return Intl.message(
-      'study year',
-      name: 'periodYear',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('study year', name: 'periodYear', desc: '', args: []);
   }
 
   /// `study semester`
@@ -1332,32 +1126,17 @@ class S {
 
   /// `Inactive`
   String get statusInactive {
-    return Intl.message(
-      'Inactive',
-      name: 'statusInactive',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Inactive', name: 'statusInactive', desc: '', args: []);
   }
 
   /// `Active`
   String get statusActive {
-    return Intl.message(
-      'Active',
-      name: 'statusActive',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Active', name: 'statusActive', desc: '', args: []);
   }
 
   /// `Status`
   String get modelStatusTitle {
-    return Intl.message(
-      'Status',
-      name: 'modelStatusTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Status', name: 'modelStatusTitle', desc: '', args: []);
   }
 
   /// `Study Period Type`
