@@ -77,10 +77,9 @@ class StudentLessonTile extends StatelessWidget {
                       Text(
                         '${tim!.formatPeriod()}, ${ven!.name}',
                         style: TextStyle(
-                          // fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: Get.theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                        ),
+                            // fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Get.theme.colorScheme.onSurface.withAlpha(180)),
                       ),
                     const SizedBox(
                       height: 2,
@@ -108,8 +107,8 @@ class StudentLessonTile extends StatelessWidget {
                                   style: TextStyle(
                                     overflow: TextOverflow.ellipsis,
                                     fontSize: 14,
-                                    color: Get.theme.colorScheme.onSurface.withValues(
-                                      alpha: 0.7,
+                                    color: Get.theme.colorScheme.onSurface.withAlpha(
+                                      180,
                                     ),
                                   ),
                                 )

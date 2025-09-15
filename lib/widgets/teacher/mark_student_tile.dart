@@ -24,7 +24,7 @@ class _MarkStudentTileState extends State<MarkStudentTile> {
   Widget build(BuildContext context) {
     var selStyle = ButtonStyle(backgroundColor: WidgetStateProperty.all(Get.theme.colorScheme.secondary));
     return Card(
-      color: Colors.black.withValues(alpha: 0.3),
+      color: Colors.black.withAlpha(80),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
