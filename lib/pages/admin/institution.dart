@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/institution_model.dart';
 import 'package:schoosch/widgets/appbar.dart';
+import 'package:schoosch/widgets/attachments.dart';
 
 class InstitutionPage extends StatelessWidget {
   final InstitutionModel institution;
@@ -10,6 +11,7 @@ class InstitutionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var loc = S.of(context);
     return Scaffold(
       appBar: MAppBar(
         S.of(context).appBarTitle,
@@ -21,6 +23,17 @@ class InstitutionPage extends StatelessWidget {
           children: [
             Text(institution.name),
             Text(institution.address),
+            Attachments(
+              attachments: [institution.logo],
+              limit: 3,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: ElevatedButton(
+                child: Text(loc.saveChanges),
+                onPressed: () => print('save'), //TODO:
+              ),
+            ),
           ],
         ),
       ),
