@@ -1,1 +1,60 @@
-{"functions":{"ignore":["node_modules",".git","firebase-debug.log","firebase-debug.*.log"]},"firestore":{"rules":"firestore.rules","indexes":"firestore.indexes.json"},"hosting":[{"target":"default","public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"]},{"target":"pasternak","public":"build/web","ignore":["firebase.json","**/.*","**/node_modules/**"]}],"flutter":{"platforms":{"android":{"default":{"projectId":"schoosch-8e6d4","appId":"1:245847143504:android:817797bb6a19243a918d55","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"schoosch-8e6d4","configurations":{"android":"1:245847143504:android:817797bb6a19243a918d55","ios":"1:245847143504:ios:2d446011452f6ef3918d55","web":"1:245847143504:web:3122ebcf999f9078918d55"}}}}}}
+{
+    "functions": {
+        "ignore": [
+            "node_modules",
+            ".git",
+            "firebase-debug.log",
+            "firebase-debug.*.log"
+        ]
+    },
+    "firestore": {
+        "rules": "firestore.rules",
+        "indexes": "firestore.indexes.json"
+    },
+    "hosting": [
+        {
+            "target": "default",
+            "public": "build/web",
+            "ignore": [
+                "firebase.json",
+                "**/.*",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "target": "pasternak",
+            "public": "build/web",
+            "ignore": [
+                "firebase.json",
+                "**/.*",
+                "**/node_modules/**"
+            ]
+        }
+    ],
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "schoosch-8e6d4",
+                    "appId": "1:245847143504:android:817797bb6a19243a918d55",
+                    "fileOutput": "android/app/google-services.json"
+                },
+                "pasternak": {
+                    "projectId": "schoosch-pasternak",
+                    "appId": "1:245847143504:android:817797bb6a19243a918d55",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "schoosch-8e6d4",
+                    "configurations": {
+                        "android": "1:245847143504:android:817797bb6a19243a918d55",
+                        "ios": "1:245847143504:ios:2d446011452f6ef3918d55",
+                        "web": "1:245847143504:web:3122ebcf999f9078918d55"
+                    }
+                }
+            }
+        }
+    }
+}
