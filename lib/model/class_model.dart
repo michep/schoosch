@@ -133,7 +133,7 @@ class ClassModel {
     return Get.find<ProxyStore>().getClassTeachers(this);
   }
 
-  Future<List<StudentModel>> students({forceRefresh = false}) async {
+  Future<List<StudentModel>> students({bool forceRefresh = false}) async {
     if (!_studentsLoaded || forceRefresh) {
       _students.clear();
       _students.addAll((await Get.find<ProxyStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));

@@ -316,7 +316,7 @@ class ParentModel extends PersonModel {
         : throw 'need student_ids key in people for parent $id';
   }
 
-  Future<List<StudentModel>> children({forceRefresh = false}) async {
+  Future<List<StudentModel>> children({bool forceRefresh = false}) async {
     if (!_studentsLoaded || forceRefresh) {
       _students.clear();
       for (var id in studentIds) {
@@ -365,7 +365,7 @@ class ObserverModel extends PersonModel {
         : throw 'need class_ids key in people for observer $id';
   }
 
-  Future<List<ClassModel>> classes({forceRefresh = false}) async {
+  Future<List<ClassModel>> classes({bool forceRefresh = false}) async {
     if (!_classesLoaded || forceRefresh) {
       _classes.clear();
       _classes.addAll(await Get.find<ProxyStore>().getClassesByIds(classIds));

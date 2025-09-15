@@ -75,7 +75,7 @@ class _TeacherLessonListTileState extends State<TeacherLessonListTile> {
               style: const TextStyle(overflow: TextOverflow.ellipsis),
             ),
             tileColor: widget._lesson.type == LessonType.replacment
-                ? Colors.grey.withOpacity(0.1)
+                ? Colors.grey.withAlpha(26)
                 : widget._lesson.type == LessonType.replaced
                     ? Colors.black54
                     : null,

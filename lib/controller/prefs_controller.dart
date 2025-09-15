@@ -22,7 +22,7 @@ class PrefsController extends GetxController {
     return prefs.containsKey(viewKey) ? prefs.getBool(viewKey) : false;
   }
 
-  Future<void> changeViewType(v) async {
+  Future<void> changeViewType(bool v) async {
     isDayView.value = v;
     await setView(v);
   }

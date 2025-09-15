@@ -44,7 +44,7 @@ class _StudentLessonListTileState extends State<StudentLessonListTile> {
           return ListTile(
             leading: Text(widget._lesson.order.toString()),
             title: Text(widget._lesson.type == LessonType.empty ? 'Окно' : cur!.aliasOrName),
-            tileColor: widget._lesson.type == LessonType.replacment ? Colors.grey.withOpacity(0.1) : null,
+            tileColor: widget._lesson.type == LessonType.replacment ? Colors.grey.withAlpha(26) : null,
             trailing: widget._lesson.type == LessonType.empty
                 ? null
                 // : mar != ""

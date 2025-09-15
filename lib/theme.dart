@@ -15,7 +15,6 @@ var darkTheme = FlexThemeData.dark(
     visualDensity: FlexColorScheme.comfortablePlatformDensity,
     fontFamily: 'Lato',
     subThemesData: const FlexSubThemesData(
-      useTextTheme: true,
       fabUseShape: true,
       interactionEffects: true,
       bottomNavigationBarElevation: 0,
