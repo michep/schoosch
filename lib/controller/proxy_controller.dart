@@ -7,6 +7,7 @@ import 'package:isoweek/isoweek.dart';
 import 'package:schoosch/controller/auth_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/absence_model.dart';
+import 'package:schoosch/model/attachments_model.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
@@ -21,6 +22,7 @@ import 'package:schoosch/model/marktype_model.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/model/studyperiod_model.dart';
 import 'package:schoosch/model/venue_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProxyStore extends getx.GetxController {
   late InstitutionModel institution;
@@ -39,13 +41,15 @@ class ProxyStore extends getx.GetxController {
         return client;
       };
     }
-    dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
-        var currentToken = getx.Get.find<FAuth>().token;
-        options.headers.addAll({'Authorization': 'Bearer $currentToken'});
-        return handler.next(options);
-      },
-    ));
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          var currentToken = getx.Get.find<FAuth>().token;
+          options.headers.addAll({'Authorization': 'Bearer $currentToken'});
+          return handler.next(options);
+        },
+      ),
+    );
     // dio.interceptors.add(InterceptorsWrapper(
     //   onError: (e, handler) {
     //     getx.Get.showSnackbar(getx.GetSnackBar(
@@ -590,8 +594,11 @@ class ProxyStore extends getx.GetxController {
   }
 
   Future<List<AbsenceModel>> getAllPeriodtAbsences(StudyPeriodModel period, List<StudentModel> studs) async {
-    var res = await dio.postUri<List>(baseUriFunc('/absence/${period.from}/${period.till}'),
-        options: Options(headers: {'Content-Type': 'application/json'}), data: studs.map((e) => e.id).toList());
+    var res = await dio.postUri<List>(
+      baseUriFunc('/absence/${period.from}/${period.till}'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: studs.map((e) => e.id).toList(),
+    );
     var js = res.data!;
     return js.map((data) => AbsenceModel.fromMap(data['_id'], data)).toList();
   }
@@ -870,9 +877,29 @@ class ProxyStore extends getx.GetxController {
     return DateTime.parse(res.data!['nextdate']);
   }
 
-  Future<Uint8List> getFile(String filename) async {
-    var res = await dio.getUri<Uint8List>(baseUriFunc('/files/$filename'), options: Options(responseType: ResponseType.bytes));
+  Future<Uint8List> getFileData(AttachmentModel attachment) async {
+    var res = await dio.getUri<Uint8List>(baseUriFunc('/files/${attachment.id}'), options: Options(responseType: ResponseType.bytes));
     return res.data!;
+  }
+
+  Future<AttachmentModel> saveFile(String filename, Uint8List bytes) async {
+    FormData form = FormData.fromMap({
+      'file': MultipartFile.fromBytes(
+        bytes,
+        filename: filename,
+      ),
+    });
+    var res = await dio.putUri<Map<String, dynamic>>(baseUriFunc('/files'), data: form);
+    var att = AttachmentModel.fromMap(res.data!['_id'], res.data!);
+    return att;
+  }
+
+  Future<void> deleteFile(AttachmentModel attachment) async {
+    await dio.deleteUri(baseUriFunc('/files/${attachment.id}'));
+  }
+
+  Future<void> downloadFile(AttachmentModel attachment) async {
+    await launchUrl(baseUriFunc('/files/download/${attachment.id}'));
   }
 
   Future<void> logEvent(Map<String, dynamic> data) async {

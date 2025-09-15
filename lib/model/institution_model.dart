@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
+import 'package:schoosch/model/attachments_model.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/curriculum_model.dart';
 import 'package:schoosch/model/daylessontime_model.dart';
@@ -13,6 +14,7 @@ class InstitutionModel {
   final String id;
   late final String name;
   late final String address;
+  late final AttachmentModel? logo;
   final Map<String, String> attributes = {};
   final List<CurriculumModel> _curriculums = [];
   bool _curriculumsLoaded = false;
@@ -27,6 +29,12 @@ class InstitutionModel {
   InstitutionModel.fromMap(this.id, Map<String, dynamic> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in institution $id';
     address = map['address'] != null ? map['address'] as String : '';
+
+    if (map.containsKey('logo') && map['logo'] is Map) {
+      logo = AttachmentModel.fromMap(map['logo']['_id'], map['logo']);
+    } else {
+      logo = null;
+    }
   }
 
   static InstitutionModel get currentInstitution => Get.find<ProxyStore>().currentInstitution!;
@@ -54,7 +62,7 @@ class InstitutionModel {
     }
     return _yearPeriod;
   }
-  
+
   // Future<StudyPeriodModel?> get currentSemesterPeriod async {
   //   return Get.find<ProxyStore>().getSemesterPeriodForDate(DateTime.now());
   // }
@@ -101,12 +109,15 @@ class InstitutionModel {
     return Get.find<ProxyStore>().getAllDayLessontime();
   }
 
-  Future<Uint8List> getFile(String filename) async {
-    if (!_files.keys.contains(filename)) {
-      var data = await Get.find<ProxyStore>().getFile(filename);
-      _files.addAll({filename: data});
+  Future<Uint8List?> getFile(AttachmentModel? attachment) async {
+    if (attachment == null) {
+      return null;
     }
-    return _files[filename]!;
+    if (!_files.keys.contains(id)) {
+      var data = await Get.find<ProxyStore>().getFileData(attachment);
+      _files.addAll({id: data});
+    }
+    return _files[id]!;
   }
 
   List<MarkType> get marktypesSync => _markTypes;
