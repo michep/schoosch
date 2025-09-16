@@ -31,13 +31,13 @@ class ClassModel {
   String? get id => _id;
 
   ClassModel.empty()
-      : this.fromMap(null, <String, dynamic>{
-          'name': '',
-          'grade': 0,
-          'master_id': '',
-          'lessontime_id': '',
-          'student_ids': <String>[],
-        });
+    : this.fromMap(null, <String, dynamic>{
+        'name': '',
+        'grade': 0,
+        'master_id': '',
+        'lessontime_id': '',
+        'student_ids': <String>[],
+      });
 
   ClassModel.fromMap(this._id, Map<String, dynamic> map) {
     name = map['name'] != null ? map['name'] as String : throw 'need name key in class $_id';
@@ -133,7 +133,7 @@ class ClassModel {
     return Get.find<ProxyStore>().getClassTeachers(this);
   }
 
-  Future<List<StudentModel>> students({forceRefresh = false}) async {
+  Future<List<StudentModel>> students({bool forceRefresh = false}) async {
     if (!_studentsLoaded || forceRefresh) {
       _students.clear();
       _students.addAll((await Get.find<ProxyStore>().getPeopleByIds(_studentIds)).map((e) => e.asStudent!));

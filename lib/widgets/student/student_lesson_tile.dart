@@ -77,9 +77,10 @@ class StudentLessonTile extends StatelessWidget {
                       Text(
                         '${tim!.formatPeriod()}, ${ven!.name}',
                         style: TextStyle(
-                            // fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: Get.theme.colorScheme.onSurface.withOpacity(0.7)),
+                          // fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color: Get.theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                        ),
                       ),
                     const SizedBox(
                       height: 2,
@@ -107,8 +108,8 @@ class StudentLessonTile extends StatelessWidget {
                                   style: TextStyle(
                                     overflow: TextOverflow.ellipsis,
                                     fontSize: 14,
-                                    color: Get.theme.colorScheme.onSurface.withOpacity(
-                                      0.7,
+                                    color: Get.theme.colorScheme.onSurface.withValues(
+                                      alpha: 0.7,
                                     ),
                                   ),
                                 )
@@ -141,14 +142,16 @@ class StudentLessonTile extends StatelessWidget {
   }
 
   void _onTap() {
-    Get.to(() => StudentLessonPage(
-          student: student,
-          lesson: lesson,
-          curriculum: cur!,
-          venue: ven!,
-          time: tim!,
-          date: date,
-        ));
+    Get.to(
+      () => StudentLessonPage(
+        student: student,
+        lesson: lesson,
+        curriculum: cur!,
+        venue: ven!,
+        time: tim!,
+        date: date,
+      ),
+    );
   }
 
   Color getBorderColor(String firstMark) {

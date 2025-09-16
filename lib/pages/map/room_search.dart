@@ -49,7 +49,7 @@
 //           decoration: BoxDecoration(
 //             borderRadius: BorderRadius.circular(12),
 //             border: Border.all(color: Colors.black, width: 1.3),
-//             color: Colors.black.withOpacity(0.7),
+//             color: Colors.black.withValues(alpha: 0.7),
 //           ),
 //           child: Row(
 //             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -95,7 +95,7 @@
 //                     title: Container(
 //                       height: 50,
 //                       decoration: BoxDecoration(
-//                         color: Colors.blue.withOpacity(0.8),
+//                         color: Colors.blue.withValues(alpha: 0.8),
 //                         borderRadius: const BorderRadius.only(
 //                           topLeft: Radius.circular(12),
 //                           topRight: Radius.circular(12),
@@ -167,7 +167,7 @@
 //                           title: Container(
 //                             height: 50,
 //                             decoration: BoxDecoration(
-//                               color: Colors.blue.withOpacity(0.8),
+//                               color: Colors.blue.withValues(alpha: 0.8),
 //                               borderRadius: const BorderRadius.only(
 //                                 topLeft: Radius.circular(12),
 //                                 topRight: Radius.circular(12),
@@ -230,7 +230,7 @@
 //                     title: Container(
 //                       height: 50,
 //                       decoration: BoxDecoration(
-//                         color: Colors.blue.withOpacity(0.8),
+//                         color: Colors.blue.withValues(alpha: 0.8),
 //                         borderRadius: const BorderRadius.only(
 //                           topLeft: Radius.circular(12),
 //                           topRight: Radius.circular(12),
