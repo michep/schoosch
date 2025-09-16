@@ -59,7 +59,8 @@ class ProfilePage extends StatelessWidget {
                       )
                     : const SizedBox.shrink(),
               );
-            })
+            },
+          )
         : const SizedBox.shrink();
   }
 
@@ -79,19 +80,22 @@ class ProfilePage extends StatelessWidget {
     Get.bottomSheet(
       Card(
         child: FutureBuilder<List<StudentModel>>(
-            future: user.children(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return const SizedBox.shrink();
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ...snapshot.data!.map((e) => ElevatedButton(
-                        onPressed: () => _changeChild(user, e),
-                        child: Text(e.fullName),
-                      )),
-                ],
-              );
-            }),
+          future: user.children(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return const SizedBox.shrink();
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ...snapshot.data!.map(
+                  (e) => ElevatedButton(
+                    onPressed: () => _changeChild(user, e),
+                    child: Text(e.fullName),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -143,10 +147,12 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ...user.types.map((e) => ElevatedButton(
-                  onPressed: () => _changeType(user, e),
-                  child: Text(e.localizedName(S.of(context))),
-                )),
+            ...user.types.map(
+              (e) => ElevatedButton(
+                onPressed: () => _changeType(user, e),
+                child: Text(e.localizedName(S.of(context))),
+              ),
+            ),
           ],
         ),
       ),

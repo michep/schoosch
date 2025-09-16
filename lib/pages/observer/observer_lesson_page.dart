@@ -139,7 +139,7 @@ class _ObserverLessonPageState extends State<ObserverLessonPage> {
           }),
           gap: 8,
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          color: Get.theme.colorScheme.onSurface.withOpacity(0.5),
+          color: Get.theme.colorScheme.onSurface.withValues(alpha: 0.5),
           activeColor: Get.theme.colorScheme.onSurface,
           tabActiveBorder: Border.all(
             color: Get.theme.colorScheme.onSurface,

@@ -50,7 +50,7 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
                   state,
                   widget.markType,
                   deprecated: true,
-                )
+                ),
             ],
           ),
         );
@@ -67,14 +67,14 @@ class _MarkTypeFormFieldState extends State<MarkTypeFormField> {
   }
 
   Widget chip(FormFieldState<MarkType> state, MarkType mt, {bool deprecated = false}) => ChoiceChip(
-        label: Text(mt.name),
-        selected: mt == state.value,
-        selectedColor: !deprecated ? Get.theme.colorScheme.secondary : Get.theme.colorScheme.secondary.withOpacity(0.5),
-        backgroundColor: !deprecated ? Get.theme.colorScheme.primary : Get.theme.colorScheme.primary.withOpacity(0.5),
-        onSelected: (bool selected) {
-          widget.onChanged(mt);
-          state.didChange(mt);
-          state.save();
-        },
-      );
+    label: Text(mt.name),
+    selected: mt == state.value,
+    selectedColor: !deprecated ? Get.theme.colorScheme.secondary : Get.theme.colorScheme.secondary.withValues(alpha: 0.5),
+    backgroundColor: !deprecated ? Get.theme.colorScheme.primary : Get.theme.colorScheme.primary.withValues(alpha: 0.5),
+    onSelected: (bool selected) {
+      widget.onChanged(mt);
+      state.didChange(mt);
+      state.save();
+    },
+  );
 }
