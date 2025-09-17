@@ -84,6 +84,7 @@ class _ClassHomeworksCombinedPageState extends State<ClassHomeworksCombinedPage>
                             );
                           },
                         ),
+                        const SizedBox(height: 20,),
                         const Text(
                           'ДЗ личные',
                           style: TextStyle(

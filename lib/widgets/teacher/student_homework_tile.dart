@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -28,23 +29,30 @@ class StudentHomeworkTile extends StatelessWidget {
       future: homeworks[0].student,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done || !snapshot.hasData) return const SizedBox.shrink();
-        return ExpansionTile(
-          key: PageStorageKey(snapshot.data!.id),
-          controlAffinity: ListTileControlAffinity.leading,
-          title: Text(snapshot.data!.fullName),
-          children: [
-            ...homeworks
-                .map((hw) => StudentHomeworkCompetionTile(
-                      homework: hw,
-                      student: snapshot.data!,
-                      editHomework: editHomework,
-                      delete: delete,
-                      toggleHomeworkCompletion: toggleHomeworkCompletion,
-                      readOnly: readOnly,
-                      forceRefresh: forceRefresh,
-                    ))
-                ,
-          ],
+        return Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child:  ExpansionTile(
+              key: PageStorageKey(snapshot.data!.id),
+              controlAffinity: ListTileControlAffinity.leading,
+              title: Text(snapshot.data!.fullName),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(12),
+                side: BorderSide(color: Get.theme.primaryColor)
+              ),
+              children: [
+                ...homeworks.map(
+                  (hw) => StudentHomeworkCompetionTile(
+                    homework: hw,
+                    student: snapshot.data!,
+                    editHomework: editHomework,
+                    delete: delete,
+                    toggleHomeworkCompletion: toggleHomeworkCompletion,
+                    readOnly: readOnly,
+                    forceRefresh: forceRefresh,
+                  ),
+                ),
+              ],
+            ),
         );
       },
     );
