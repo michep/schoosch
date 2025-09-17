@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/model/attachments_model.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
 import 'package:schoosch/model/person_model.dart';
+import 'package:schoosch/widgets/attachments.dart';
 import 'package:schoosch/widgets/utils.dart';
 
 class StudentHomeworkCompetionTile extends StatelessWidget {
@@ -30,6 +32,7 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
   Widget build(Object context) {
     Widget icon;
     Widget complTime;
+    List<AttachmentModel> attachments = [];
 
     return FutureBuilder<CompletionFlagModel?>(
       future: homework.getStudentCompletion(student, forceRefresh: forceRefresh),
@@ -53,42 +56,130 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
             default:
               icon = const SizedBox.shrink();
           }
-          complTime = Text(Utils.formatDatetime(completion.completedTime!, format: 'dd MMM'));
+          complTime = Text(
+            Utils.formatDatetime(completion.completedTime!, format: 'dd MMM'),
+            style: TextStyle(fontSize: 12, color: Colors.white70),
+          );
+          attachments = completion.getAttachments();
         } else {
           icon = const SizedBox.shrink();
           complTime = const SizedBox.shrink();
         }
-        return ListTile(
-          leading: complTime,
-          title: Linkify(
-            text: homework.text,
-            onOpen: (link) => Utils.openLink(link.url),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 10,
+        // return ListTile(
+        //   leading: complTime,
+        //   title: Linkify(
+        //     text: homework.text,
+        //     onOpen: (link) => Utils.openLink(link.url),
+        //     overflow: TextOverflow.ellipsis,
+        //     maxLines: 10,
+        //   ),
+        //   subtitle: Text(
+        //     '${Utils.formatDatetime(homework.date)} - ${Utils.formatDatetime(homework.todate!)}',
+        //     style: TextStyle(
+        //       color: Get.theme.colorScheme.onSurface.withOpacity(0.7),
+        //       fontSize: 13,
+        //     ),
+        //   ),
+        //   trailing: Row(
+        //     mainAxisSize: MainAxisSize.min,
+        //     children: [
+        //       icon,
+        //       if (!readOnly)
+        //         IconButton(
+        //           icon: const Icon(Icons.edit),
+        //           onPressed: () => editHomework(homework, true),
+        //         ),
+        //       if (!readOnly)
+        //         IconButton(
+        //           onPressed: () => delete(homework),
+        //           icon: const Icon(
+        //             Icons.delete,
+        //           ),
+        //         ),
+        //     ],
+        //   ),
+        // );
+
+        return Padding(
+          padding: const EdgeInsets.only(
+            bottom: 8.0,
+            left: 8,
+            right: 8,
           ),
-          subtitle: Text(
-            '${Utils.formatDatetime(homework.date)} - ${Utils.formatDatetime(homework.todate!)}',
-            style: TextStyle(
-              color: Get.theme.colorScheme.onSurface.withValues(alpha: 0.7),
-              fontSize: 13,
-            ),
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              icon,
-              if (!readOnly)
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () => editHomework(homework, true),
-                ),
-              if (!readOnly)
-                IconButton(
-                  onPressed: () => delete(homework),
-                  icon: const Icon(
-                    Icons.delete,
+              Row(
+                children: [
+                  complTime,
+                  const SizedBox(
+                    width: 10,
                   ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Linkify(
+                          text: homework.text,
+                          onOpen: (link) => Utils.openLink(link.url),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 10,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          '${Utils.formatDatetime(homework.date)} - ${Utils.formatDatetime(homework.todate!)}',
+                          style: TextStyle(
+                            color: Get.theme.colorScheme.onSurface.withOpacity(0.7),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 100,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        icon,
+                        if (!readOnly)
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () => editHomework(homework, true),
+                          ),
+                        if (!readOnly)
+                          IconButton(
+                            onPressed: () => delete(homework),
+                            icon: const Icon(
+                              Icons.delete,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              if (attachments.isNotEmpty)
+                const SizedBox(
+                  height: 8,
                 ),
+              if (attachments.isNotEmpty) Text('Файлы с решением:'),
+              if (attachments.isNotEmpty)
+                const SizedBox(
+                  height: 4,
+                ),
+              ...attachments.map((e) {
+                return Attachment(
+                  attachment: e,
+                  readOnly: true,
+                  isExpanded: true,
+                  onDelete: (a) {},
+                );
+              }),
             ],
           ),
         );

@@ -12,7 +12,6 @@ import 'package:schoosch/pages/admin/class_choice_page.dart';
 import 'package:schoosch/pages/admin/studyperiod_list.dart';
 import 'package:schoosch/pages/admin/venue_list.dart';
 import 'package:schoosch/widgets/drawerheader.dart';
-import 'package:schoosch/pages/about_page.dart';
 
 class AdminDrawer extends StatelessWidget {
   const AdminDrawer({super.key});
@@ -74,10 +73,12 @@ class AdminDrawer extends StatelessWidget {
               onPressed: _openFreeLessonsPage,
               child: Text(loc.freeLessonsTitle),
             ),
-            TextButton(
-              onPressed: _openAboutPage,
-              child: Text(loc.aboutTitle),
-            ),
+
+            //TODO:
+            // TextButton(
+            //   onPressed: _openAboutPage,
+            //   child: Text(loc.aboutTitle),
+            // ),
           ],
         ),
       ],
@@ -144,8 +145,8 @@ class AdminDrawer extends StatelessWidget {
     Get.to(() => MarktypeListPage(InstitutionModel.currentInstitution));
   }
 
-  Future<void> _openAboutPage() async {
-    // Get.back();
-    Get.to(() => const AboutPage());
-  }
+  // Future<void> _openAboutPage() async {
+  //   // Get.back();
+  //   Get.to(() => const AboutPage());
+  // }
 }
