@@ -451,7 +451,7 @@ class ProxyStore extends getx.GetxController {
     );
   }
 
-  Future<void> createCompletion(HomeworkModel homework, StudentModel student) async {
+  Future<void> createCompletion(HomeworkModel homework, StudentModel student, List<AttachmentModel> attachments) async {
     var data = {
       '_id': null,
       'completedby_id': student.id,
@@ -461,6 +461,7 @@ class ProxyStore extends getx.GetxController {
       'status': 1,
       'homework_id': homework.id,
       'institution_id': institution.id,
+      'attachments': attachments.map((a) => a.toMap(withId: true)).toList(),
     };
     var res = await dio.putUri<Map<String, dynamic>>(
       baseUriFunc('/completion'),
@@ -882,11 +883,11 @@ class ProxyStore extends getx.GetxController {
     return res.data!;
   }
 
-  Future<AttachmentModel> saveFile(String filename, Uint8List bytes) async {
+  Future<AttachmentModel> saveFile(AttachmentModel attachment) async {
     FormData form = FormData.fromMap({
       'file': MultipartFile.fromBytes(
-        bytes,
-        filename: filename,
+        attachment.filebytes!,
+        filename: attachment.filename,
       ),
     });
     var res = await dio.putUri<Map<String, dynamic>>(baseUriFunc('/files'), data: form);
