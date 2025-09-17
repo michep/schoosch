@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:schoosch/controller/proxy_controller.dart';
 
 import 'package:schoosch/model/attachments_model.dart';
 
@@ -11,12 +10,14 @@ class Attachments extends StatefulWidget {
   final List<AttachmentModel?> attachments;
   final int? limit;
   final bool readOnly;
+  final bool localOnly;
 
   const Attachments({
     super.key,
     required this.attachments,
     this.limit,
     this.readOnly = false,
+    this.localOnly = false,
   });
 
   @override
@@ -30,16 +31,21 @@ class _AttachmentsState extends State<Attachments> {
     return Row(
       spacing: 8,
       children: [
-        ...widget.attachments.take(limit).map((element) => Attachment(
-              attachment: element,
-              readOnly: widget.readOnly,
-              onDelete: deleteAttachment,
-            )),
+        ...widget.attachments
+            .take(limit)
+            .map(
+              (element) => Attachment(
+                attachment: element,
+                readOnly: widget.readOnly,
+                localOnly: widget.localOnly,
+                onDelete: deleteAttachment,
+              ),
+            ),
         if (!widget.readOnly && widget.attachments.length < limit)
           IconButton(
             icon: Icon(Icons.add),
             onPressed: addAttachment,
-          )
+          ),
       ],
     );
   }
@@ -50,16 +56,28 @@ class _AttachmentsState extends State<Attachments> {
     if (result != null) {
       Uint8List? fileBytes = result.files.first.bytes;
       String fileName = result.files.first.name;
-      var res = await Get.find<ProxyStore>().saveFile(fileName, fileBytes!);
-      widget.attachments.add(res);
-      setState(() {});
+      var res = AttachmentModel.fromMap(
+        (widget.attachments.length + 1).toString(),
+        {
+          'filename': fileName,
+          'filebytes': fileBytes,
+        },
+      );
+      if (!(widget.localOnly)) {
+        // res = await Get.find<ProxyStore>().saveFile(fileName, fileBytes!);
+        res.save();
+      }
+      setState(() {
+        widget.attachments.add(res);
+      });
     }
   }
 
   void deleteAttachment(AttachmentModel attachment) async {
-    await attachment.delete();
-    widget.attachments.remove(attachment);
-    setState(() {});
+    // await attachment.delete();
+    setState(() {
+      widget.attachments.remove(attachment);
+    });
   }
 }
 
@@ -67,12 +85,16 @@ class Attachment extends StatelessWidget {
   final AttachmentModel? attachment;
   final void Function(AttachmentModel)? onDelete;
   final bool readOnly;
+  final bool localOnly;
+  final bool isExpanded;
 
   const Attachment({
     super.key,
     required this.attachment,
     required this.onDelete,
     this.readOnly = false,
+    this.localOnly = false,
+    this.isExpanded = false,
   });
 
   @override
@@ -81,20 +103,36 @@ class Attachment extends StatelessWidget {
       return SizedBox(width: 0);
     } else {
       return Container(
-        color: Get.theme.primaryColor,
         padding: EdgeInsets.all(8),
+        constraints: BoxConstraints(
+          maxWidth: isExpanded ? 600 : 200,
+          minWidth: 50
+        ),
+        decoration: BoxDecoration(
+          color: Get.theme.primaryColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
         child: Row(
           children: [
-            Text(attachment!.filename),
+            Expanded(
+              child: Text(
+                attachment!.filename,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(),
+              ),
+            ),
             if (!readOnly)
               IconButton(
                 onPressed: delete,
                 icon: Icon(Icons.delete_outline),
               ),
-            IconButton(
-              onPressed: download,
-              icon: Icon(Icons.download),
-            ),
+            if (!localOnly)
+              IconButton(
+                onPressed: () {
+                  attachment!.download();
+                },
+                icon: Icon(Icons.download),
+              ),
           ],
         ),
       );
@@ -103,9 +141,5 @@ class Attachment extends StatelessWidget {
 
   void delete() async {
     if (onDelete != null) onDelete!(attachment!);
-  }
-
-  void download() async {
-    await Get.find<ProxyStore>().downloadFile(attachment!);
   }
 }

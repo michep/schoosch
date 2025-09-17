@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
+import 'package:schoosch/model/attachments_model.dart';
 import 'package:schoosch/model/person_model.dart';
 
 class CompletionFlagModel {
@@ -10,6 +11,7 @@ class CompletionFlagModel {
   DateTime? completedTime;
   DateTime? confirmedTime;
   CompletionStatus? status;
+  List<AttachmentModel> _attachments = [];
   late PersonModel? _completer;
   bool _completerLoaded = false;
   late PersonModel? _confirmer;
@@ -39,6 +41,14 @@ class CompletionFlagModel {
     if (map.containsKey('confirmedby') && map['confirmedby'] is Map) {
       _confirmer = PersonModel.fromMap((map['confirmedby'] as Map<String, dynamic>)['_id'] as String, map['confirmedby'] as Map<String, dynamic>);
       _confirmerLoaded = true;
+    }
+
+    if (map.containsKey('attachments') && map['attachments'] is List) {
+      var s = (map['attachments'] as List).map<AttachmentModel>((e) {
+        var data = e as Map<String, dynamic>;
+        return AttachmentModel.fromMap(data['_id'], data);
+      }).toList();
+      _attachments.addAll(s);
     }
   }
 
@@ -71,7 +81,17 @@ class CompletionFlagModel {
     return _confirmer?.asTeacher;
   }
 
+  List<AttachmentModel> getAttachments() {
+    return _attachments;
+  }
+
   Future<void> delete() async {
+    await Future.forEach(
+      _attachments,
+      (e) async {
+        await e.delete();
+      },
+    );
     return await Get.find<ProxyStore>().deleteCompletion(this);
   }
 

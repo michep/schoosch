@@ -78,7 +78,7 @@ class SelectableValueDropdownFormFieldState<T extends Object> extends State<Sele
       focusNode: focusNode,
       onFieldSubmitted: (value) => onFieldSubmitted(),
       decoration: InputDecoration(
-        label: Text(widget.title),
+        hint: Text(widget.title),
         suffixIcon: Padding(
           padding: const EdgeInsets.only(right: 8.0),
           child: _data == null

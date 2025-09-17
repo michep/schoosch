@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
+import 'package:schoosch/model/attachments_model.dart';
 import 'package:schoosch/model/class_model.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/person_model.dart';
@@ -14,6 +15,8 @@ class HomeworkModel {
   late String curriculumId;
   late String teacherId;
   final List<CompletionFlagModel> _completions = [];
+  final List<AttachmentModel> _attachments = [];
+  // final List<>
   bool _completionsLoaded = false;
 
   StudentModel? _student;
@@ -48,6 +51,14 @@ class HomeworkModel {
       }).toList();
       _completions.addAll(s);
       _completionsLoaded = true;
+    }
+
+    if (map.containsKey('attachments') && map['attachments'] is List) {
+      var s = (map['attachments'] as List).map<AttachmentModel>((e) {
+        var data = e as Map<String, dynamic>;
+        return AttachmentModel.fromMap(data['_id'], data);
+      }).toList();
+      _attachments.addAll(s);
     }
   }
 
@@ -84,8 +95,22 @@ class HomeworkModel {
     return _completions;
   }
 
-  Future<void> createCompletion(StudentModel student) async {
-    return await Get.find<ProxyStore>().createCompletion(this, student);
+  Future<void> createCompletion(StudentModel student, List<AttachmentModel> attachments) async {
+    List<AttachmentModel> addedAttachments = [];
+
+    await Future.forEach(
+      attachments,
+      (a) async {
+        var added = await a.save();
+        addedAttachments.add(added);
+      },
+    );
+
+    return await Get.find<ProxyStore>().createCompletion(this, student, addedAttachments);
+  }
+
+  List<AttachmentModel> getAttachments() {
+    return _attachments;
   }
 
   Map<String, dynamic> toMap() {
@@ -98,6 +123,11 @@ class HomeworkModel {
       'student_id': studentId,
       'teacher_id': teacherId,
       'curriculum_id': curriculumId,
+      'attachments': _attachments
+          .map(
+            (a) => a.toMap(withId: true),
+          )
+          .toList(),
     };
   }
 
