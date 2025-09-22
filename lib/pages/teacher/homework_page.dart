@@ -81,7 +81,13 @@ class _HomeworkPageState extends State<HomeworkPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: ListView(
                   children: [
-                    Text(widget.homework.date.toString()),
+                    Text(
+                      Utils.formatDatetime(
+                        widget.homework.date,
+                        format: 'dd MMMM yyyy',
+                      ),
+                    ),
+
                     FutureBuilder<CurriculumModel?>(
                       future: widget.lesson.curriculum,
                       builder: ((context, snapshot) {
@@ -162,12 +168,9 @@ class _HomeworkPageState extends State<HomeworkPage> {
                               child: Text('Дополнительные файлы:'),
                             ),
                           ),
-                          SizedBox(
-                            height: 80,
-                            child: Attachments(
-                              attachments: attachments,
-                              localOnly: true,
-                            ),
+                          Attachments(
+                            attachments: attachments,
+                            localOnly: true,
                           ),
                         ],
                       ),

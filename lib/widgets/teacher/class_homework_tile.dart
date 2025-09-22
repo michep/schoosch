@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:get/get.dart';
+import 'package:schoosch/model/attachments_model.dart';
 import 'package:schoosch/model/completion_flag_model.dart';
 import 'package:schoosch/model/homework_model.dart';
+import 'package:schoosch/widgets/attachments.dart';
 import 'package:schoosch/widgets/teacher/class_homework_completion_tile.dart';
 import 'package:schoosch/widgets/utils.dart';
 
@@ -26,6 +28,7 @@ class ClassHomeworkTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<AttachmentModel> homeworkAttachments = homework.getAttachments();
     return FutureBuilder<List<CompletionFlagModel>>(
       future: homework.getAllCompletions(forceRefresh: forceRefresh),
       builder: (context, snapshot) {
@@ -35,13 +38,14 @@ class ClassHomeworkTile extends StatelessWidget {
           iconColor: Get.theme.listTileTheme.iconColor,
           textColor: Get.theme.listTileTheme.textColor,
           controlAffinity: ListTileControlAffinity.leading,
+          expandedCrossAxisAlignment: CrossAxisAlignment.start,
+
           // leading: Text(
           //   Utils.formatDatetime(
           //     homework.date,
           //     format: 'dd MMM',
           //   ),
           // ),
-          
           title: Linkify(
             text: homework.text,
             onOpen: (link) => Utils.openLink(link.url),
@@ -73,6 +77,20 @@ class ClassHomeworkTile extends StatelessWidget {
                   ],
                 ),
           children: [
+            if (homeworkAttachments.isNotEmpty) Text('Прикрепленные файлы:'),
+            if (homeworkAttachments.isNotEmpty)
+              const SizedBox(
+                height: 4,
+              ),
+            Attachments(
+              attachments: homeworkAttachments,
+              readOnly: true,
+            ),
+            if (homeworkAttachments.isNotEmpty)
+              const SizedBox(
+                height: 8,
+              ),
+            if (homeworkAttachments.isNotEmpty) const SizedBox(width: double.infinity,),
             ...snapshot.data!.map(
               (compl) => ClassHomeworkCompetionTile(
                 homework: homework,

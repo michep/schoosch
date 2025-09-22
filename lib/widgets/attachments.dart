@@ -32,6 +32,7 @@ class _AttachmentsState extends State<Attachments> {
       spacing: 8,
       runSpacing: 8,
       direction: Axis.horizontal,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         ...widget.attachments
             .take(limit)

@@ -25,7 +25,6 @@ class ClassHomeworkCompetionTile extends StatelessWidget {
     Widget complTime;
 
     List<AttachmentModel> attachments = completion.getAttachments();
-    List<AttachmentModel> homeworkAttachments = homework.getAttachments();
 
     switch (completion.status) {
       case CompletionStatus.completed:
@@ -87,28 +86,6 @@ class ClassHomeworkCompetionTile extends StatelessWidget {
                   icon,
                 ],
               ),
-
-              if (homeworkAttachments.isNotEmpty)
-                const SizedBox(
-                  height: 8,
-                ),
-              if (homeworkAttachments.isNotEmpty) Text('Прикрепленные файлы:'),
-              if (homeworkAttachments.isNotEmpty)
-                const SizedBox(
-                  height: 4,
-                ),
-              Attachments(
-                attachments: homeworkAttachments,
-                readOnly: true,
-              ),
-
-              if (attachments.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 4,
-                  ),
-                  child: const Divider(),
-                ),
 
               if (attachments.isNotEmpty)
                 const SizedBox(
