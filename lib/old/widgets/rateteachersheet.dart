@@ -1,0 +1,76 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:schoosch/old/controller/proxy_controller.dart';
+import 'package:schoosch/old/model/person_model.dart';
+import 'package:get/get.dart';
+
+class RateSheet extends StatefulWidget {
+  final TeacherModel _teacher;
+
+  const RateSheet(this._teacher, {super.key});
+
+  @override
+  RateSheetState createState() => RateSheetState();
+}
+
+class RateSheetState extends State<RateSheet> {
+  int _rating = 0;
+  bool _showComment = false;
+  final TextEditingController _comment = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: [
+          RatingBar.builder(
+            itemBuilder: (context, _) => const Icon(
+              Icons.star,
+              color: Colors.amber,
+            ),
+            onRatingUpdate: (rating) {
+              _rating = rating.round();
+              setState(() {
+                if (rating < 3) {
+                  _showComment = true;
+                } else {
+                  _showComment = false;
+                }
+              });
+            },
+            minRating: 1,
+            updateOnDrag: true,
+            glow: false,
+            itemSize: MediaQuery.of(context).size.width * 0.14,
+            itemPadding: const EdgeInsets.symmetric(horizontal: 5),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 30),
+            child: _showComment == true
+                ? TextField(
+                    controller: _comment,
+                    decoration: const InputDecoration(labelText: 'объясните свой выбор:'),
+                  )
+                : const SizedBox.shrink(),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          ElevatedButton(onPressed: (_rating > 2) || (_rating < 2 && _comment.text != '') ? _rate : null, child: const Text('оценить')),
+        ],
+      ),
+    );
+  }
+
+  void _rate() async {
+    var has = await Get.find<ProxyStore>().hasRatingInMonth(widget._teacher);
+    if (has) return;
+    widget._teacher.createRating(PersonModel.currentUser!, _rating, _comment.text);
+    _rating = 0;
+    _comment.clear();
+    Get.back();
+  }
+}

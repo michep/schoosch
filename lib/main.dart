@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
-import 'package:schoosch/controller/day_controller.dart';
-import 'package:schoosch/controller/prefs_controller.dart';
-import 'package:schoosch/controller/proxy_controller.dart';
-import 'package:schoosch/controller/week_controller.dart';
-import 'package:schoosch/pages/login_page_new.dart';
+import 'package:schoosch/old/controller/day_controller.dart';
+import 'package:schoosch/old/controller/prefs_controller.dart';
+import 'package:schoosch/old/controller/proxy_controller.dart';
+import 'package:schoosch/old/controller/week_controller.dart';
+import 'package:schoosch/old/pages/login_page_new.dart';
 import 'package:schoosch/theme.dart';
 
 Future<void> main() async {
@@ -49,7 +49,7 @@ class _SchooschAppState extends State<SchooschApp> {
       ],
       locale: const Locale('ru'),
       scrollBehavior: AppScrollBehavior(),
-      onGenerateTitle: (context) => S.of(context).appTiile,
+      onGenerateTitle: (context) => S.of(context).,
       debugShowCheckedModeBanner: false,
       theme: darkTheme,
       home: const LoginPageNew(),
