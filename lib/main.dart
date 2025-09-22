@@ -1,5 +1,7 @@
 import 'dart:async';
-import 'package:schoosch/generated/l10n.dart';
+import 'package:schoosch/core/providers/base_dio_functions.dart';
+import 'package:schoosch/features/lesson/presentation/view/lesson_page.dart';
+import 'package:schoosch/old/generated/l10n.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -7,21 +9,31 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:isoweek/isoweek.dart';
-import 'package:schoosch/controller/day_controller.dart';
-import 'package:schoosch/controller/auth_controller.dart';
-import 'package:schoosch/controller/prefs_controller.dart';
-import 'package:schoosch/controller/proxy_controller.dart';
-import 'package:schoosch/controller/week_controller.dart';
-import 'package:schoosch/firebase_options.dart';
+import 'package:schoosch/old/controller/day_controller.dart';
+import 'package:schoosch/old/controller/auth_controller.dart';
+import 'package:schoosch/old/controller/prefs_controller.dart';
+import 'package:schoosch/old/controller/proxy_controller.dart';
+import 'package:schoosch/old/controller/week_controller.dart';
+import 'package:schoosch/core/firebase/firebase_options.dart';
 import 'package:schoosch/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  BaseDioFunctions(isLocal: true);
+
   var fauth = FAuth();
   await fauth.init();
+
+  // var store = DataStore((path) => Uri.https('www.chepaykin.org', '/schoosch/api$path')); // NEW REAL
+
+  // var store = ProxyStore((path) => Uri.http('localhost:8182', '/schoosch/api$path')); // NEW LOCAL
+
   var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org', '/schoosch/api$path')); //real
+
   // var proxy = ProxyStore((path) => Uri.http('localhost:8182', '/schoosch/api$path')); // local
+
   var curweek = CurrentWeek(Week.current());
   var prefs = PrefsController();
   await prefs.init();
@@ -72,6 +84,14 @@ class _SchooschAppState extends State<SchooschApp> {
       onGenerateTitle: (context) => S.of(context).appTiile,
       debugShowCheckedModeBanner: false,
       theme: darkTheme,
+      getPages: [
+        //TODO: define all the pages here
+        //TODO: migrate all Get.to() to Get.toNamed()
+        GetPage(
+          name: LessonScreenProvider.routeName,
+          page: () => LessonScreen(),
+        ),
+      ],
       home: const SizedBox.shrink(),
     );
   }
@@ -80,7 +100,7 @@ class _SchooschAppState extends State<SchooschApp> {
 class AppScrollBehavior extends MaterialScrollBehavior {
   @override
   Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-      };
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+  };
 }

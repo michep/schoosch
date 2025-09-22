@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:isoweek/isoweek.dart';
+import 'package:schoosch/old/controller/day_controller.dart';
+
+class CurrentWeek extends GetxController {
+  late final Rx<Week> _currentWeek = Rx(Week.current());
+  late final PageController _pageController;
+  int? prevIdx;
+
+  Week get currentWeek => _currentWeek.value;
+
+  PageController get pageController => _pageController;
+
+  CurrentWeek(Week week) {
+    _currentWeek.value = week;
+    _pageController = PageController(initialPage: currentWeek.year * 100 + currentWeek.weekNumber);
+  }
+
+  void setIdx(int idx) {
+    var idxYear = idx ~/ 100;
+    var idxWeek = idx % 100;
+
+    if (idxWeek == 0) {
+      _currentWeek.value = Week(year: idxYear - 1, weekNumber: 52);
+      if (_pageController.hasClients) _pageController.jumpToPage((idxYear - 1) * 100 + 52);
+      idx = currentWeek.year * 100 + currentWeek.weekNumber;
+      return;
+    } else if (idxWeek == 53) {
+      _currentWeek.value = Week(year: idxYear + 1, weekNumber: 1);
+      if (_pageController.hasClients) _pageController.jumpToPage((idxYear + 1) * 100 + 1);
+      idx = currentWeek.year * 100 + currentWeek.weekNumber;
+      return;
+    }
+    _currentWeek.value = Week(year: idx ~/ 100, weekNumber: idx % 100);
+    if (_pageController.hasClients) {
+      _pageController.animateToPage(
+        currentWeek.year * 100 + currentWeek.weekNumber,
+        duration: const Duration(milliseconds: 1000),
+        curve: Curves.easeOutExpo,
+      );
+    }
+    prevIdx = idx;
+  }
+
+  void next() {
+    _currentWeek.value = _currentWeek.value.next;
+    Get.find<CurrentDay>().setDate(_currentWeek.value.days.first, isFromWeek: true);
+    if (_pageController.hasClients) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 1000),
+        curve: Curves.easeOutExpo,
+      );
+    }
+  }
+
+  void previous({bool isFromDay = false}) {
+    _currentWeek.value = _currentWeek.value.previous;
+    Get.find<CurrentDay>().setDate(isFromDay ? _currentWeek.value.days.last : _currentWeek.value.days.first, isFromWeek: true);
+    if (_pageController.hasClients) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 1000),
+        curve: Curves.easeOutExpo,
+      );
+    }
+  }
+
+  Future<void> changeToCurrentWeek() async {
+    var week = Week.current();
+    var nIdx = week.year * 100 + week.weekNumber;
+    var cIdx = currentWeek.year * 100 + currentWeek.weekNumber;
+    int direction = 0;
+    if (nIdx > cIdx) direction = -1;
+    if (nIdx < cIdx) direction = 1;
+    if (direction == 0) return Future.value();
+    _pageController.jumpToPage(nIdx + direction);
+    _currentWeek.value = week;
+    return _pageController.animateToPage(nIdx, duration: const Duration(milliseconds: 1000), curve: Curves.easeOutExpo);
+  }
+}
