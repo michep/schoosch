@@ -217,14 +217,10 @@ class _StudentHomeworkTileState extends State<StudentHomeworkTile> {
                 const SizedBox(
                   height: 4,
                 ),
-              ...attachments.map((e) {
-                return Attachment(
-                  attachment: e,
-                  readOnly: true,
-                  isExpanded: true,
-                  onDelete: (a) {},
-                );
-              }),
+              Attachments(
+                attachments: attachments,
+                readOnly: true,
+              ),
             ],
           ),
         ),

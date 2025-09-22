@@ -41,6 +41,7 @@ class ClassHomeworkTile extends StatelessWidget {
           //     format: 'dd MMM',
           //   ),
           // ),
+          
           title: Linkify(
             text: homework.text,
             onOpen: (link) => Utils.openLink(link.url),

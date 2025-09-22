@@ -25,6 +25,7 @@ class ClassHomeworkCompetionTile extends StatelessWidget {
     Widget complTime;
 
     List<AttachmentModel> attachments = completion.getAttachments();
+    List<AttachmentModel> homeworkAttachments = homework.getAttachments();
 
     switch (completion.status) {
       case CompletionStatus.completed:
@@ -42,7 +43,10 @@ class ClassHomeworkCompetionTile extends StatelessWidget {
       default:
         icon = const SizedBox.shrink();
     }
-    complTime = Text(Utils.formatDatetime(completion.completedTime!, format: 'dd MMM'), style: TextStyle(fontSize: 12, color: Colors.white70),);
+    complTime = Text(
+      Utils.formatDatetime(completion.completedTime!, format: 'dd MMM'),
+      style: TextStyle(fontSize: 12, color: Colors.white70),
+    );
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: DecoratedBox(
@@ -68,7 +72,12 @@ class ClassHomeworkCompetionTile extends StatelessWidget {
                       future: completion.student,
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) return const SizedBox.shrink();
-                        return Text(snapshot.data!.fullName, style: TextStyle(fontSize: 16,),);
+                        return Text(
+                          snapshot.data!.fullName,
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -78,7 +87,29 @@ class ClassHomeworkCompetionTile extends StatelessWidget {
                   icon,
                 ],
               ),
-              
+
+              if (homeworkAttachments.isNotEmpty)
+                const SizedBox(
+                  height: 8,
+                ),
+              if (homeworkAttachments.isNotEmpty) Text('Прикрепленные файлы:'),
+              if (homeworkAttachments.isNotEmpty)
+                const SizedBox(
+                  height: 4,
+                ),
+              Attachments(
+                attachments: homeworkAttachments,
+                readOnly: true,
+              ),
+
+              if (attachments.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 4,
+                  ),
+                  child: const Divider(),
+                ),
+
               if (attachments.isNotEmpty)
                 const SizedBox(
                   height: 8,
@@ -88,14 +119,10 @@ class ClassHomeworkCompetionTile extends StatelessWidget {
                 const SizedBox(
                   height: 4,
                 ),
-              ...attachments.map((e) {
-                return Attachment(
-                  attachment: e,
-                  readOnly: true,
-                  isExpanded: true,
-                  onDelete: (a) {},
-                );
-              }),
+               Attachments(
+                attachments: attachments,
+                readOnly: true,
+              ),
             ],
           ),
         ),

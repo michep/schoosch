@@ -28,8 +28,10 @@ class _AttachmentsState extends State<Attachments> {
   @override
   Widget build(BuildContext context) {
     var limit = widget.limit ?? 100;
-    return Row(
+    return Wrap(
       spacing: 8,
+      runSpacing: 8,
+      direction: Axis.horizontal,
       children: [
         ...widget.attachments
             .take(limit)
@@ -104,36 +106,38 @@ class Attachment extends StatelessWidget {
     } else {
       return Container(
         padding: EdgeInsets.all(8),
-        constraints: BoxConstraints(
-          maxWidth: isExpanded ? 600 : 200,
-          minWidth: 50
-        ),
         decoration: BoxDecoration(
           color: Get.theme.primaryColor,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                attachment!.filename,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: isExpanded ? 600 : 200,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  attachment!.filename,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(),
+                ),
               ),
-            ),
-            if (!readOnly)
-              IconButton(
-                onPressed: delete,
-                icon: Icon(Icons.delete_outline),
-              ),
-            if (!localOnly)
-              IconButton(
-                onPressed: () {
-                  attachment!.download();
-                },
-                icon: Icon(Icons.download),
-              ),
-          ],
+              if (!readOnly)
+                IconButton(
+                  onPressed: delete,
+                  icon: Icon(Icons.delete_outline),
+                ),
+              if (!localOnly)
+                IconButton(
+                  onPressed: () {
+                    attachment!.download();
+                  },
+                  icon: Icon(Icons.download),
+                ),
+            ],
+          ),
         ),
       );
     }

@@ -33,6 +33,7 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
     Widget icon;
     Widget complTime;
     List<AttachmentModel> attachments = [];
+    List<AttachmentModel> homeworkAttachments = homework.getAttachments();
 
     return FutureBuilder<CompletionFlagModel?>(
       future: homework.getStudentCompletion(student, forceRefresh: forceRefresh),
@@ -65,6 +66,7 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
           icon = const SizedBox.shrink();
           complTime = const SizedBox.shrink();
         }
+
         // return ListTile(
         //   leading: complTime,
         //   title: Linkify(
@@ -163,23 +165,41 @@ class StudentHomeworkCompetionTile extends StatelessWidget {
                 ],
               ),
 
-              if (attachments.isNotEmpty)
+              if (homeworkAttachments.isNotEmpty)
                 const SizedBox(
                   height: 8,
+                ),
+              if (homeworkAttachments.isNotEmpty) Text('Прикрепленные файлы:'),
+              if (homeworkAttachments.isNotEmpty)
+                const SizedBox(
+                  height: 4,
+                ),
+              Attachments(
+                attachments: homeworkAttachments,
+                readOnly: true,
+              ),
+
+              if (attachments.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 4,
+                  ),
+                  child: const Divider(),
+                ),
+
+              if (attachments.isNotEmpty)
+                const SizedBox(
+                  height: 4,
                 ),
               if (attachments.isNotEmpty) Text('Файлы с решением:'),
               if (attachments.isNotEmpty)
                 const SizedBox(
                   height: 4,
                 ),
-              ...attachments.map((e) {
-                return Attachment(
-                  attachment: e,
-                  readOnly: true,
-                  isExpanded: true,
-                  onDelete: (a) {},
-                );
-              }),
+              Attachments(
+                attachments: attachments,
+                readOnly: true,
+              ),
             ],
           ),
         );
