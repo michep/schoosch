@@ -17,4 +17,6 @@ class LessonPageController extends GetxController {
   final VenueModel venue;
   final LessontimeModel time;
   final TeacherModel teacher;
+
+  
 }
