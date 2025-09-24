@@ -1,5 +1,3 @@
-
-
 import 'package:schoosch/features/mark/domain/models/mark_model.dart';
 import 'package:schoosch/features/mark/domain/models/marktype_model.dart';
 
