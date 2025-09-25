@@ -12,7 +12,7 @@ import 'package:schoosch/controller/auth_controller.dart';
 import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
-import 'package:schoosch/firebase_options.dart';
+import 'package:schoosch/core/firebase/firebase_options.dart';
 import 'package:schoosch/theme.dart';
 
 Future<void> main() async {

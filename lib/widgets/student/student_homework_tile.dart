@@ -46,6 +46,7 @@ class _StudentHomeworkTileState extends State<StudentHomeworkTile> {
   Future<void> onTap(CompletionFlagModel? c, HomeworkModel hw) {
     bool hasCompletion = c != null;
     List<AttachmentModel> attachments = [];
+    List<AttachmentModel> completionAttachments = c?.getAttachments() ?? [];
     return Get.bottomSheet(
       // Card(
       //   child: Padding(
@@ -99,9 +100,21 @@ class _StudentHomeworkTileState extends State<StudentHomeworkTile> {
                   localOnly: true,
                 ),
               ),
+
+            if(hasCompletion && completionAttachments.isNotEmpty) Text("Файлы, прикрепленные к ответу ранее:"),
+            if (hasCompletion && completionAttachments.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Attachments(
+                  attachments: completionAttachments,
+                  readOnly: true,
+                ),
+              ),
+            
             const SizedBox(
               height: 20,
             ),
+            
             Align(
               alignment: AlignmentGeometry.bottomCenter,
               child: ElevatedButton.icon(
