@@ -6,17 +6,17 @@ enum LessonPageType {
   observer,
 }
 
-class LessonPageController extends GetxController {
-  LessonPageController(
+// class LessonPageController extends GetxController {
+//   LessonPageController(
     
-  );
+//   );
 
-  final DateTime date;
-  final LessonModel lesson;
-  final CurriculumModel curriculum;
-  final VenueModel venue;
-  final LessontimeModel time;
-  final TeacherModel teacher;
+//   final DateTime date;
+//   final LessonModel lesson;
+//   final CurriculumModel curriculum;
+//   final VenueModel venue;
+//   final LessontimeModel time;
+//   final TeacherModel teacher;
 
   
-}
+// }

@@ -13,11 +13,11 @@ import 'package:schoosch/old/widgets/teacher/students_absences.dart';
 import 'package:schoosch/old/widgets/teacher/students_marks.dart';
 import 'package:schoosch/old/widgets/utils.dart';
 
-class LessonScreenProvider {
-  static String routeName = '/lesson_page';
+class HomeScheduleScreenProvider {
+  static String routeName = '/home_schedule';
 }
 
-class LessonScreen extends StatefulWidget {
+class HomeScheduleScreen extends StatefulWidget {
   final DateTime date;
   final LessonModel lesson;
   final CurriculumModel curriculum;
@@ -25,7 +25,7 @@ class LessonScreen extends StatefulWidget {
   final LessontimeModel time;
   final TeacherModel teacher;
 
-  const LessonScreen({
+  const HomeScheduleScreen({
     required this.lesson,
     required this.curriculum,
     required this.venue,
@@ -36,10 +36,10 @@ class LessonScreen extends StatefulWidget {
   });
 
   @override
-  State<LessonScreen> createState() => _TeacherLessonPageState();
+  State<HomeScheduleScreen> createState() => _HomeScheduleScreenState();
 }
 
-class _TeacherLessonPageState extends State<LessonScreen> {
+class _HomeScheduleScreenState extends State<HomeScheduleScreen> {
   int current = 0;
   late final List<Widget> pages;
   final bucket = PageStorageBucket();

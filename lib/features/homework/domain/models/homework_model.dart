@@ -67,26 +67,22 @@ class HomeworkModel {
     return _aclass!;
   }
 
-  Future<CompletionFlagModel?> getStudentCompletion(StudentModel student, {bool forceRefresh = false}) async {
-    if (!_completionsLoaded || forceRefresh) {
-      await getAllCompletions(forceRefresh: forceRefresh);
-    }
-    var compl = _completions.where((c) => c.completedById == student.id).toList();
-    return compl.isEmpty ? null : compl.first;
-  }
+  // Future<CompletionFlagModel?> getStudentCompletion(StudentModel student, {bool forceRefresh = false}) async {
+  //   if (!_completionsLoaded || forceRefresh) {
+  //     await getAllCompletions(forceRefresh: forceRefresh);
+  //   }
+  //   var compl = _completions.where((c) => c.completedById == student.id).toList();
+  //   return compl.isEmpty ? null : compl.first;
+  // }
 
-  Future<List<CompletionFlagModel>> getAllCompletions({bool forceRefresh = false}) async {
-    if (!_completionsLoaded || forceRefresh) {
-      _completions.clear();
-      _completions.addAll(await Get.find<ProxyStore>().getAllHomeworkCompletions(this));
-      _completionsLoaded = true;
-    }
-    return _completions;
-  }
-
-  Future<void> createCompletion(StudentModel student) async {
-    return await Get.find<ProxyStore>().createCompletion(this, student);
-  }
+  // Future<List<CompletionFlagModel>> getAllCompletions({bool forceRefresh = false}) async {
+  //   if (!_completionsLoaded || forceRefresh) {
+  //     _completions.clear();
+  //     _completions.addAll(await Get.find<ProxyStore>().getAllHomeworkCompletions(this));
+  //     _completionsLoaded = true;
+  //   }
+  //   return _completions;
+  // }
 
   Map<String, dynamic> toMap() {
     return {

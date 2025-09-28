@@ -44,22 +44,21 @@ final class LessonRemoteDataSource {
     return DateTime.parse(js['nextdate']);
   }
 
-  Future<List<ReplacementModel>> getReplacementsOnDate(String classId, String scheduleId, DateTime date) async {
+  Future<List<ReplacementLessonModel>> getReplacementsOnDate(String classId, String scheduleId, DateTime date) async {
     var js = await BaseDioFunctions.getList(
       path: '/class/$classId/replace/${date.toIso8601String()}',
     );
-    return js.map((data) => ReplacementModel.fromMap(classId, scheduleId, data['_id'], data)).toList();
+    return js.map((data) => ReplacementLessonModel.fromMap(classId, scheduleId, data['_id'], data)).toList();
   }
 
-  Future<List<ReplacementModel>> getAllReplacementsOnDate(String scheduleId, DateTime date) async {
-    List<ReplacementModel> repl = [];
+  Future<List<ReplacementLessonModel>> getAllReplacementsOnDate(String scheduleId, DateTime date) async {
+    List<ReplacementLessonModel> repl = [];
     var js = await BaseDioFunctions.getList(
       path: '/replace/${date.toIso8601String()}',
     );
 
     for (var i in js) {
-      var aclass = await getClass(i['class_id']);
-      repl.add(ReplacementModel.fromMap(aclass, schedule, i['_id'], i));
+      repl.add(ReplacementLessonModel.fromMap(i['class_id'], scheduleId, i['_id'], i));
     }
     
     return repl;

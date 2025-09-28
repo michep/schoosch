@@ -3,7 +3,6 @@ import 'package:schoosch/features/mark/domain/models/mark_model.dart';
 import 'package:schoosch/features/mark/domain/models/marktype_model.dart';
 import 'package:schoosch/old/model/curriculum_model.dart';
 import 'package:schoosch/old/model/institution_model.dart';
-import 'package:schoosch/old/model/lesson_model.dart';
 import 'package:schoosch/old/model/person_model.dart';
 import 'package:schoosch/old/model/studyperiod_model.dart';
 
@@ -15,22 +14,25 @@ final class MarkRemoteDataSource {
   }
 
   Future<List<LessonMarkModel>> getAllLessonMarks(
-    LessonModel lesson,
+    String classId,
+    String curriculumId,
+    int lessonOrder,
     DateTime date,
   ) async {
     var js = await BaseDioFunctions.getList(
-      path: '/class/${lesson.aclass.id}/curriculum/${lesson.curriculumId}/mark/${date.toIso8601String()}/${lesson.order}',
+      path: '/class/$classId/curriculum/$curriculumId/mark/${date.toIso8601String()}/$lessonOrder',
     );
     return js.map((e) => LessonMarkModel.fromMap(e['_id'], e)).toList();
   }
 
   Future<List<LessonMarkModel>> getStudentLessonMarks(
-    LessonModel lesson,
-    StudentModel student,
+    String curriculumId,
+    int lessonOrder,
+    String studentId,
     DateTime date,
   ) async {
     var js = await BaseDioFunctions.getList(
-      path: '/curriculum/${lesson.curriculumId}/student/${student.id}/mark/${date.toIso8601String()}/${lesson.order}',
+      path: '/curriculum/$curriculumId/student/$studentId/mark/${date.toIso8601String()}/$lessonOrder',
     );
     return js.map((e) => LessonMarkModel.fromMap(e['_id'], e)).toList();
   }
@@ -70,16 +72,6 @@ final class MarkRemoteDataSource {
     );
     return js.map((e) => PeriodMarkModel.fromMap(e['_id'], e)).toList();
   }
-
-  // Future<List<PeriodMarkModel>> getStudentPeriodMarksByCurriculums(StudentModel student, List<CurriculumModel> curriculums, StudyPeriodModel period) async {
-  //   var res = await dio.postUri<List>(
-  //     baseUriFunc('/student/${student.id}/curriculums/mark/period/${period.id}'),
-  //     options: Options(headers: {'Content-Type': 'application/json'}),
-  //     data: curriculums.map((e) => e.id).toList(),
-  //   );
-  //   var js = res.data!;
-  //   return js.map((e) => PeriodMarkModel.fromMap(e['_id'], e)).toList();
-  // }
 
   Future<List<PeriodMarkModel>> getStudentAllPerioddMarks(
     StudentModel student,
@@ -127,12 +119,6 @@ final class MarkRemoteDataSource {
   ) async {
     var data = mark.toMap(withId: true);
     data['institution_id'] = _currentInstitution!.id;
-    // var res = await dio.putUri<Map<String, dynamic>>(
-    //   baseUriFunc('/mark'),
-    //   options: Options(headers: {'Content-Type': 'application/json'}),
-    //   data: data,
-    // );
-    // var js = res.data!;
     var js = await BaseDioFunctions.putMapData(
       path: '/mark',
       data: data,
@@ -141,14 +127,10 @@ final class MarkRemoteDataSource {
   }
 
   Future<void> deleteMark(
-    MarkModel mark,
+    String markId,
   ) async {
-    // await dio.deleteUri(
-    //   baseUriFunc('/mark/${mark.id}'),
-    // );
-
     await BaseDioFunctions.delete(
-      path: '/mark/${mark.id}',
+      path: '/mark/$markId',
     );
   }
 
@@ -164,9 +146,9 @@ final class MarkRemoteDataSource {
     return js['id'];
   }
 
-  Future<void> deleteMarkType(MarkType mt) async {
+  Future<void> deleteMarkType(String mtId) async {
     await BaseDioFunctions.delete(
-      path: '/marktype/${mt.id}',
+      path: '/marktype/$mtId',
     );
   }
 }

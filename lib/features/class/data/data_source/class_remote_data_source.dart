@@ -1,7 +1,6 @@
 import 'package:schoosch/core/providers/base_dio_functions.dart';
 import 'package:schoosch/old/model/class_model.dart';
 import 'package:schoosch/old/model/institution_model.dart';
-import 'package:schoosch/old/model/person_model.dart';
 
 final class ClassRemoteDataSource {
   InstitutionModel? _currentInstitution;
@@ -20,8 +19,8 @@ final class ClassRemoteDataSource {
     return js['id'];
   }
 
-  Future<void> deleteClass(ClassModel aclass) async {
-    await BaseDioFunctions.delete(path: '/class/${aclass.id}');
+  Future<void> deleteClass(String classId) async {
+    await BaseDioFunctions.delete(path: '/class/$classId');
   }
 
   Future<List<ClassModel>> getAllClasses() async {
@@ -46,9 +45,9 @@ final class ClassRemoteDataSource {
     return js.map((data) => ClassModel.fromMap(data['_id'], data)).toList();
   }
 
-  Future<ClassModel?> getClassByStudent(PersonModel student) async {
+  Future<ClassModel?> getClassByStudent(String studentId) async {
     var js = await BaseDioFunctions.getMapData(
-      path: '/class/student/${student.id}',
+      path: '/class/student/$studentId',
     );
     return ClassModel.fromMap(js['_id'], js);
   }
