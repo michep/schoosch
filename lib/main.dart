@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:schoosch/core/providers/base_dio_functions.dart';
-import 'package:schoosch/features/lesson/presentation/view/lesson_page.dart';
+import 'package:schoosch/features/home_schedule/presentation/view/home_schedule_screen.dart';
+import 'package:schoosch/features/homework/presentation/view/homework_screen.dart';
+import 'package:schoosch/features/lesson/presentation/view/lesson_screen.dart';
 import 'package:schoosch/old/generated/l10n.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/gestures.dart';
@@ -88,8 +90,16 @@ class _SchooschAppState extends State<SchooschApp> {
         //TODO: define all the pages here
         //TODO: migrate all Get.to() to Get.toNamed()
         GetPage(
+          name: HomeScheduleScreenProvider.routeName,
+          page: () => HomeScheduleScreen(),
+        ),
+        GetPage(
           name: LessonScreenProvider.routeName,
           page: () => LessonScreen(),
+        ),
+        GetPage(
+          name: HomeworkScreenProvider.routeName,
+          page: () => HomeworkScreen(),
         ),
       ],
       home: const SizedBox.shrink(),

@@ -1,0 +1,15 @@
+import 'package:schoosch/core/use_case/base_use_case.dart';
+import 'package:schoosch/features/homework/domain/repository/homework_repository.dart';
+
+final class DeleteHomeworkUseCase extends BaseUseCase<void, String> {
+  DeleteHomeworkUseCase({
+    required HomeworkRepository homeworkRepository,
+  }) : _homeworkRepository = homeworkRepository;
+
+  final HomeworkRepository _homeworkRepository;
+
+  @override
+  Future<void> invoke(params) async {
+    return await _homeworkRepository.deleteHomework(params);
+  }
+}

@@ -18,7 +18,7 @@ final class GetScheduleLessonsUseCase extends BaseUseCase<List<LessonModel>, Get
     );
 
     List<LessonModel> result = [];
-    List<ReplacementModel> reps = [];
+    List<ReplacementLessonModel> reps = [];
     if (params.date != null) {
       reps.addAll(
         (await _lessonRepository.getReplacementsOnDate(
@@ -48,7 +48,7 @@ final class GetScheduleLessonsUseCase extends BaseUseCase<List<LessonModel>, Get
       });
 
       for (var i in empt) {
-        var nl = EmptyLesson.fromMap(
+        var nl = EmptyLessonModel.fromMap(
           params.classId,
           params.scheduleId,
           null,

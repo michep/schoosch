@@ -16,13 +16,13 @@ abstract class LessonRepository {
     DateTime date,
   );
 
-  Future<List<ReplacementModel>> getReplacementsOnDate(
+  Future<List<ReplacementLessonModel>> getReplacementsOnDate(
     String classId,
     String scheduleId,
     DateTime date,
   );
 
-  Future<List<ReplacementModel>> getAllReplacements(
+  Future<List<ReplacementLessonModel>> getAllReplacements(
     String scheduleId,
     DateTime date,
   );

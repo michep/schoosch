@@ -1,5 +1,5 @@
-final class GetHomeworkOnDateParams {
-  GetHomeworkOnDateParams({
+final class GetHomeworkParams {
+  GetHomeworkParams({
     required this.classId,
     required this.curriculumId,
     required this.date,

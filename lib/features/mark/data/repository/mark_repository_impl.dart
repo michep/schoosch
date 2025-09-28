@@ -1,3 +1,4 @@
+import 'package:schoosch/core/utils/utils.dart';
 import 'package:schoosch/features/mark/data/data_source/mark_remote_data_source.dart';
 import 'package:schoosch/features/mark/domain/models/mark_model.dart';
 import 'package:schoosch/features/mark/domain/models/marktype_model.dart';
@@ -11,8 +12,8 @@ final class MarkRepositoryImpl implements MarkRepository {
   final MarkRemoteDataSource _markRemoteDataSource;
 
   @override
-  Future<void> deleteMark(MarkModel mark) async {
-    await _markRemoteDataSource.deleteMark(mark);
+  Future<void> deleteMark(String markId) async {
+    await _markRemoteDataSource.deleteMark(markId);
   }
 
   @override
@@ -26,12 +27,36 @@ final class MarkRepositoryImpl implements MarkRepository {
   }
 
   @override
-  Future<void> deleteMarkType(MarkType mark) async {
-    await _markRemoteDataSource.deleteMarkType(mark);
+  Future<void> deleteMarkType(String markId) async {
+    await _markRemoteDataSource.deleteMarkType(markId);
   }
 
   @override
   Future<String> saveMarkType(MarkType markType) async {
     return await _markRemoteDataSource.saveMarkType(markType);
+  }
+
+  @override
+  Future<List<LessonMarkModel>> getLessonMarksForStudent(
+    String studentId,
+    String curriculumId,
+    int lessonOrder,
+    DateTime date,
+  ) async {
+    return await _markRemoteDataSource.getStudentLessonMarks(curriculumId, lessonOrder, studentId, date);
+  }
+
+  @override
+  Future<Map<String, List<LessonMarkModel>>> getAllLessonMarks(
+    String classId,
+    String curriculumId,
+    int lessonOrder,
+    DateTime date,
+  ) async {
+    final allLessonMarks = await _markRemoteDataSource.getAllLessonMarks(classId, curriculumId, lessonOrder, date);
+
+    final splittedMarks = Utils.splitLessonMarksByStudent(allLessonMarks);
+
+    return splittedMarks;
   }
 }

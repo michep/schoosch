@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:schoosch/old/model/homework_model.dart';
 import 'package:schoosch/old/model/mark_model.dart';
 import 'package:schoosch/old/model/marktype_model.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -120,6 +121,17 @@ class Utils {
     for (var m in marks) {
       if (res[m.curriculumId] == null) res[m.curriculumId] = [];
       res[m.curriculumId]!.add(m);
+    }
+    return res;
+  }
+
+  static Map<String, List<HomeworkModel>> splitHomeworksByStudent(List<HomeworkModel> homework) {
+    Map<String, List<HomeworkModel>> res = {};
+    String key;
+    for (var hw in homework) {
+      hw.studentId == null ? key = 'class' : key = hw.studentId!;
+      if (!res.keys.contains(key)) res[key] = [];
+      res[key]!.add(hw);
     }
     return res;
   }

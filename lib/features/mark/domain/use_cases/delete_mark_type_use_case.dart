@@ -1,8 +1,7 @@
 import 'package:schoosch/core/use_case/base_use_case.dart';
 import 'package:schoosch/features/mark/domain/repository/mark_repository.dart';
-import 'package:schoosch/features/mark/domain/models/marktype_model.dart';
 
-final class DeleteMarkTypeUseCase extends BaseUseCase<void, MarkType> {
+final class DeleteMarkTypeUseCase extends BaseUseCase<void, String?> {
   DeleteMarkTypeUseCase({
     required MarkRepository markRepository,
   }) : _markRepository = markRepository;
@@ -11,7 +10,7 @@ final class DeleteMarkTypeUseCase extends BaseUseCase<void, MarkType> {
 
   @override
   Future<void> invoke(params) async {
-    if (params.id != null) {
+    if (params != null) {
       await _markRepository.deleteMarkType(params);
     }
   }

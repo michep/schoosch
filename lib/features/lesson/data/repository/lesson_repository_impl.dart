@@ -44,7 +44,7 @@ final class LessonRepositoryImpl implements LessonRepository {
   }
 
   @override
-  Future<List<ReplacementModel>> getReplacementsOnDate(
+  Future<List<ReplacementLessonModel>> getReplacementsOnDate(
     String classId,
     String scheduleId,
     DateTime date,
@@ -57,7 +57,7 @@ final class LessonRepositoryImpl implements LessonRepository {
   }
 
   @override
-  Future<List<ReplacementModel>> getAllReplacements(
+  Future<List<ReplacementLessonModel>> getAllReplacements(
     String scheduleId,
     DateTime date,
   ) async {
