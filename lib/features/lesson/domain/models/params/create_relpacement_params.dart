@@ -1,5 +1,5 @@
-final class GetNextLessonDateParams {
-  GetNextLessonDateParams({
+final class CreateReplacementParams {
+  CreateReplacementParams({
     required this.classId,
     required this.curriculumId,
     required this.teacherId,

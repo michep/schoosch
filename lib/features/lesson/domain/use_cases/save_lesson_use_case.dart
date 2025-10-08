@@ -1,15 +1,16 @@
 import 'package:schoosch/core/use_case/base_use_case.dart';
+import 'package:schoosch/features/lesson/domain/models/lesson_model.dart';
 import 'package:schoosch/features/lesson/domain/repository/lesson_repository.dart';
 
-final class DeleteLessonUseCase extends BaseUseCase<void, String> {
-  DeleteLessonUseCase({
+final class SaveLessonUseCase extends BaseUseCase<String, LessonModel> {
+  SaveLessonUseCase({
     required LessonRepository lessonRepository,
   }) : _lessonRepository = lessonRepository;
 
   final LessonRepository _lessonRepository;
 
   @override
-  Future<void> invoke(params) async {
-    _lessonRepository.deleteLesson(params);
+  Future<String> invoke(params) async {
+    return await _lessonRepository.saveLesson(params);
   }
 }

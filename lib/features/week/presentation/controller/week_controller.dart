@@ -10,6 +10,8 @@ class WeekController extends GetxController {
 
   Week get currentWeek => _currentWeek.value;
 
+  Rx<Week> get weekStream => _currentWeek;
+
   PageController get pageController => _pageController;
 
   WeekController({required Week week}) {

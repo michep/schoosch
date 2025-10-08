@@ -1,8 +1,10 @@
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:schoosch/features/homework/domain/models/homework_model.dart';
-import 'package:schoosch/features/lesson/domain/models/lesson_model.dart';
+import 'package:schoosch/features/homework/presentation/controller/homework_screen_controller.dart';
+import 'package:schoosch/features/homework/presentation/homework_page.dart';
 import 'package:schoosch/old/generated/l10n.dart';
 import 'package:schoosch/old/model/person_model.dart';
 import 'package:schoosch/old/widgets/appbar.dart';
@@ -15,17 +17,19 @@ class HomeworkScreenProvider {
 
 class HomeworkScreen extends StatefulWidget {
   const HomeworkScreen({
-    required this.homework,
-    required this.isPersonal,
-    required this.lesson,
-    required this.date,
+    // required this.homework,
+    // required this.isPersonal,
+    // required this.lesson,
+    // required this.date,
+    required this.screenController,
     super.key,
   });
 
-  final HomeworkModel? homework;
-  final LessonModel lesson;
-  final DateTime date;
-  final bool isPersonal;
+  // final HomeworkModel? homework;
+  // final LessonModel lesson;
+  // final DateTime date;
+  // final bool isPersonal;
+  final HomeworkScreenController screenController;
 
   @override
   State<HomeworkScreen> createState() => _HomeworkScreenState();
@@ -41,8 +45,12 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
   final TextEditingController _todatecont = TextEditingController();
   final ScrollController _scrollcon = ScrollController();
 
+  late final S loc;
+
   @override
   void initState() {
+    loc = S.of(context);
+
     _student = widget.student;
     _commentcont.value = TextEditingValue(text: widget.homework.text);
     if (_student != null) _studentcont.value = TextEditingValue(text: _student!.fullName);
@@ -66,77 +74,84 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var loc = S.of(context);
-    return Scaffold(
-      appBar: MAppBar(S.of(context).homeworkTitle),
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: ListView(
-              children: [
-                Text(widget.homework.date.toString()),
-                FutureBuilder<CurriculumModel?>(
-                  future: widget.lesson.curriculum,
-                  builder: ((context, snapshot) {
-                    if (!snapshot.hasData) return const SizedBox.shrink();
-                    return Text(snapshot.data!.aliasOrName);
-                  }),
-                ),
-                if (widget.isPersonal)
-                  SelectableValueDropdownFormField<PersonModel>(
-                    key: _studentFieldKey,
-                    title: loc.studentTitle,
-                    initFutureFunc: _initStudent,
-                    initOptionsFutureFunc: _initStudentOptions,
-                    titleFunc: (value) => value?.fullName ?? '',
-                    listFunc: () => PeopleListPage(widget.lesson.aclass.students, selectionMode: true, type: 'student', title: loc.classStudentsTitle),
-                    detailsFunc: () => PersonPage(_student!, _student!.fullName),
-                    validatorFunc: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorStudentEmpty),
-                    callback: (value) => _setStudent(value),
+    return Obx(() {
+      switch (widget.screenController.currentState()) {
+        case InitializingHomeworkScreenState():
+          int a = 0;
+        case ErrorHomeworkScreenState():
+      }
+
+      return Scaffold(
+        appBar: MAppBar(S.of(context).homeworkTitle),
+        body: SafeArea(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: ListView(
+                children: [
+                  Text(widget.homework.date.toString()),
+                  FutureBuilder<CurriculumModel?>(
+                    future: widget.lesson.curriculum,
+                    builder: ((context, snapshot) {
+                      if (!snapshot.hasData) return const SizedBox.shrink();
+                      return Text(snapshot.data!.aliasOrName);
+                    }),
                   ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    label: Text(S.of(context).homeworkTextTitle),
+                  if (widget.isPersonal)
+                    SelectableValueDropdownFormField<PersonModel>(
+                      key: _studentFieldKey,
+                      title: loc.studentTitle,
+                      initFutureFunc: _initStudent,
+                      initOptionsFutureFunc: _initStudentOptions,
+                      titleFunc: (value) => value?.fullName ?? '',
+                      listFunc: () => PeopleListPage(widget.lesson.aclass.students, selectionMode: true, type: 'student', title: loc.classStudentsTitle),
+                      detailsFunc: () => PersonPage(_student!, _student!.fullName),
+                      validatorFunc: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorStudentEmpty),
+                      callback: (value) => _setStudent(value),
+                    ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      label: Text(S.of(context).homeworkTextTitle),
+                    ),
+                    controller: _commentcont,
+                    maxLines: 3,
+                    scrollController: _scrollcon,
+                    validator: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty),
                   ),
-                  controller: _commentcont,
-                  maxLines: 3,
-                  scrollController: _scrollcon,
-                  validator: (value) => Utils.validateTextNotEmpty(value, S.of(context).errorHomeworkTextEmpty),
-                ),
-                DateTimeField(
-                  controller: _todatecont,
-                  initialValue: _todate,
-                  format: DateFormat('dd MMM yyyy'),
-                  onChanged: (DateTime? date) => _todate = date,
-                  decoration: InputDecoration(
-                    label: Text(loc.todateTitle),
+                  DateTimeField(
+                    controller: _todatecont,
+                    initialValue: _todate,
+                    format: DateFormat('dd MMM yyyy'),
+                    onChanged: (DateTime? date) => _todate = date,
+                    decoration: InputDecoration(
+                      label: Text(loc.todateTitle),
+                    ),
+                    onShowPicker: (context, currentValue) async {
+                      var date = await showDatePicker(
+                        context: context,
+                        firstDate: DateTime(1900),
+                        initialDate: currentValue ?? DateTime.now(),
+                        lastDate: DateTime(2100),
+                      );
+                      return date;
+                    },
+                    validator: (value) => Utils.validateDateTimeNotEmpty(value, loc.errorScheduleFromDateEmpty),
                   ),
-                  onShowPicker: (context, currentValue) async {
-                    var date = await showDatePicker(
-                      context: context,
-                      firstDate: DateTime(1900),
-                      initialDate: currentValue ?? DateTime.now(),
-                      lastDate: DateTime(2100),
-                    );
-                    return date;
-                  },
-                  validator: (value) => Utils.validateDateTimeNotEmpty(value, loc.errorScheduleFromDateEmpty),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: ElevatedButton(
-                    onPressed: save,
-                    child: Text(loc.saveChanges),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: ElevatedButton(
+                      onPressed: save,
+                      child: Text(loc.saveChanges),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Future<PersonModel?> _initStudent() async {
@@ -172,10 +187,10 @@ class _HomeworkScreenState extends State<HomeworkScreen> {
           'date': widget.date.toIso8601String(),
           'todate': _todate?.toIso8601String(),
           'text': _commentcont.value.text,
-          'class_id': widget.homework.classId,
+          'class_id': widget.homework?.classId,
           'student_id': _student?.id,
-          'teacher_id': widget.homework.teacherId,
-          'curriculum_id': widget.homework.curriculumId,
+          'teacher_id': widget.homework?.teacherId,
+          'curriculum_id': widget.homework?.curriculumId,
         },
       );
       await nhw.save();
