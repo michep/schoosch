@@ -23,6 +23,11 @@ final class LessonRemoteDataSource {
     return js['id'];
   }
 
+  Future<LessonModel> getLessonById(String lessonId) async {
+    var js = await BaseDioFunctions.get(path: '/lesson/$lessonId');
+    return LessonModel.fromMap('', '', js['_id'], js);
+  }
+
   Future<void> deleteLesson(String lessonId) async {
     await BaseDioFunctions.delete(
       path: '/lesson/$lessonId',

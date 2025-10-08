@@ -145,13 +145,13 @@ class LessonModel {
     return _venue;
   }
 
-  Future<LessontimeModel?> get lessontime async {
-    if (!_lessontimeLoaded) {
-      _lessontime = await aclass.getLessontime(order);
-      _lessontimeLoaded = true;
-    }
-    return _lessontime;
-  }
+  // Future<LessontimeModel?> get lessontime async {
+  //   if (!_lessontimeLoaded) {
+  //     _lessontime = await aclass.getLessontime(order);
+  //     _lessontimeLoaded = true;
+  //   }
+  //   return _lessontime;
+  // }
 
   Map<String, List<HomeworkModel>> _splitHomeworksByStudent(List<HomeworkModel> homework) {
     Map<String, List<HomeworkModel>> res = {};

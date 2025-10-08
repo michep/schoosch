@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:schoosch/features/home_schedule/presentation/controller/home_schedule_screen_controller.dart';
 import 'package:schoosch/old/generated/l10n.dart';
-import 'package:schoosch/old/model/curriculum_model.dart';
-import 'package:schoosch/old/model/lesson_model.dart';
-import 'package:schoosch/old/model/lessontime_model.dart';
 import 'package:schoosch/old/model/person_model.dart';
-import 'package:schoosch/old/model/venue_model.dart';
 import 'package:schoosch/old/widgets/appbar.dart';
 import 'package:schoosch/old/widgets/teacher/class_homework_combined.dart';
 import 'package:schoosch/old/widgets/teacher/students_absences.dart';
@@ -18,20 +15,10 @@ class HomeScheduleScreenProvider {
 }
 
 class HomeScheduleScreen extends StatefulWidget {
-  final DateTime date;
-  final LessonModel lesson;
-  final CurriculumModel curriculum;
-  final VenueModel venue;
-  final LessontimeModel time;
-  final TeacherModel teacher;
+  final HomeScheduleScreenController screenController;
 
   const HomeScheduleScreen({
-    required this.lesson,
-    required this.curriculum,
-    required this.venue,
-    required this.time,
-    required this.date,
-    required this.teacher,
+    required this.screenController,
     super.key,
   });
 

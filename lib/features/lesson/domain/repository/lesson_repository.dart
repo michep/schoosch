@@ -3,6 +3,8 @@ import 'package:schoosch/features/lesson/domain/models/lesson_model.dart';
 abstract class LessonRepository {
   Future<String> saveLesson(LessonModel lesson);
 
+  Future<LessonModel> getLessonById(String lessonId);
+
   Future<void> deleteLesson(String lessonId);
 
   Future<List<LessonModel>> getScheduleLessons(

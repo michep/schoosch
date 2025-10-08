@@ -15,6 +15,11 @@ final class LessonRepositoryImpl implements LessonRepository {
   }
 
   @override
+  Future<LessonModel> getLessonById(String lessonId) async {
+    return await _lessonRemoteDataSource.getLessonById(lessonId);
+  }
+
+  @override
   Future<void> deleteLesson(String lessonId) async {
     await _lessonRemoteDataSource.deleteLesson(lessonId);
   }
