@@ -49,7 +49,7 @@
 //               constrained: false,
 //               boundaryMargin: const EdgeInsets.only(left: 800, right: 800, top: 800, bottom: 800),
 //               child: Container(
-//                 // color: Colors.amber.withOpacity(0.1),
+//                 // color: Colors.amber.withValues(alpha: 0.1),
 //                 alignment: Alignment.center,
 //                 child: GestureDetector(
 //                   onTapDown: hitTest,
@@ -83,7 +83,7 @@
 //                       margin: const EdgeInsets.all(10),
 //                       padding: const EdgeInsets.all(6),
 //                       decoration: BoxDecoration(
-//                           borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.black, width: 1.3), color: Colors.blue.withOpacity(0.7)),
+//                           borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.black, width: 1.3), color: Colors.blue.withValues(alpha: 0.7)),
 //                       child: Container(),
 //                     ),
 //                   );

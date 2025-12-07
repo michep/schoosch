@@ -1,10 +1,7 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:get/get.dart' as getx;
 import 'package:isoweek/isoweek.dart';
-import 'package:schoosch/controller/auth_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/attachments_model.dart';
@@ -30,22 +27,16 @@ class ProxyStore extends getx.GetxController {
   ClassModel? currentObserverClass;
   final Dio dio = Dio();
   Uri Function(String) baseUriFunc;
+  String? _token;
 
   ProxyStore(this.baseUriFunc);
 
   Future<void> init(String userEmail) async {
-    if (dio.httpClientAdapter is IOHttpClientAdapter) {
-      (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
-        HttpClient client = HttpClient();
-        client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-        return client;
-      };
-    }
+    // dio.interceptors.clear() //TODO: ???
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          var currentToken = getx.Get.find<FAuth>().token;
-          options.headers.addAll({'Authorization': 'Bearer $currentToken'});
+          options.headers.addAll({'Authorization': 'Bearer $_token'});
           return handler.next(options);
         },
       ),
@@ -65,15 +56,12 @@ class ProxyStore extends getx.GetxController {
     _currentUser = await _getPersonByEmail(userEmail);
   }
 
-  void fixdate(Response response, ResponseInterceptorHandler handler) {
-    handler.next(response);
-  }
-
   Future<void> reset() async {
     return init(_currentUser!.email);
   }
 
   void resetCurrentUser() {
+    _token = null;
     _currentUser = null;
   }
 
@@ -910,5 +898,22 @@ class ProxyStore extends getx.GetxController {
       options: Options(headers: {'Content-Type': 'application/json'}),
       data: data,
     );
+  }
+
+  Future<void> loginWithUsernamePassword(String username, String password) async {
+    var res = await dio.postUri<Map<String, dynamic>>(
+      baseUriFunc('/auth/login'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {
+        'username': username,
+        'password': password,
+      },
+    );
+    _token = res.data!['token'];
+    await init(username);
+  }
+
+  Future<void> logout() async {
+    resetCurrentUser();
   }
 }

@@ -55,7 +55,7 @@
 //               child: Container(
 //                 padding: const EdgeInsets.all(10),
 //                 decoration: BoxDecoration(
-//                   color: Colors.white24.withOpacity(0.8),
+//                   color: Colors.white24.withValues(alpha: 0.8),
 //                   borderRadius: BorderRadius.circular(10),
 //                 ),
 //                 child: Text(
@@ -78,7 +78,7 @@
 //           borderRadius: 10,
 //           borderWidth: 10,
 //           borderLength: 20,
-//           borderColor: Colors.blue.withOpacity(0.8),
+//           borderColor: Colors.blue.withValues(alpha: 0.8),
 //         ),
 //       );
 
