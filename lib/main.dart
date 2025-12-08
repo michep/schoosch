@@ -16,6 +16,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // var proxy = ProxyStore((path) => Uri.https('www.chepaykin.org', '/schoosch/api$path')); //real
   var proxy = ProxyStore((path) => Uri.http('localhost:8182', '/schoosch/api$path')); // local
+  // var proxy = ProxyStore((path) => Uri.http('10.0.2.2:8182', '/schoosch/api$path')); // local emulator
   var curweek = CurrentWeek(Week.current());
   var prefs = PrefsController();
   await prefs.init();
