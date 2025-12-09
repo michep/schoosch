@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import 'package:isoweek/isoweek.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/attachments_model.dart';
@@ -28,6 +29,7 @@ class ProxyStore extends getx.GetxController {
   final Dio dio = Dio();
   Uri Function(String) baseUriFunc;
   String? _token;
+  String? _refreshToken;
 
   ProxyStore(this.baseUriFunc);
 
@@ -35,22 +37,20 @@ class ProxyStore extends getx.GetxController {
     // dio.interceptors.clear() //TODO: ???
     dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
+        onRequest: (options, handler) async {
+          if (options.uri == baseUriFunc('/auth/refresh')) return handler.next(options);
+          if (_token != null && _refreshToken != null && JwtDecoder.getRemainingTime(_token!).inMinutes < 3) {
+            var res = await dio.getUri<Map<String, dynamic>>(
+              baseUriFunc('/auth/refresh'),
+              options: Options(headers: {'Authorization': 'Bearer $_refreshToken'}),
+            );
+            _token = res.data!['token'];
+          }
           options.headers.addAll({'Authorization': 'Bearer $_token'});
           return handler.next(options);
         },
       ),
     );
-    // dio.interceptors.add(InterceptorsWrapper(
-    //   onError: (e, handler) {
-    //     getx.Get.showSnackbar(getx.GetSnackBar(
-    //       title: 'Error',
-    //       message: e.message,
-    //       duration: const Duration(seconds: 10),
-    //     ));
-    //     return handler.next(e);
-    //   },
-    // ));
     institution = await _geInstitutionIdByUserEmail(userEmail);
     await institution.prefetchMarkTypes();
     _currentUser = await _getPersonByEmail(userEmail);
@@ -910,10 +910,12 @@ class ProxyStore extends getx.GetxController {
       },
     );
     _token = res.data!['token'];
+    _refreshToken = res.data!['refresh'];
     await init(username);
   }
 
   Future<void> logout() async {
+    await dio.getUri(baseUriFunc('/auth/logout'));
     resetCurrentUser();
   }
 }
