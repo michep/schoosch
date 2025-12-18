@@ -5,20 +5,22 @@ import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
 import 'package:schoosch/pages/home_page.dart';
-import 'package:schoosch/pages/set_password_page.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
-class LoginPageNew extends StatefulWidget {
-  const LoginPageNew({super.key});
+class SetPasswordPage extends StatefulWidget {
+  const SetPasswordPage({super.key});
 
   @override
-  State<LoginPageNew> createState() => _LoginPageState();
+  State<SetPasswordPage> createState() => _SetPasswordPageState();
 }
 
-class _LoginPageState extends State<LoginPageNew> {
-  String? username;
-  String? password;
-  bool _obscurePassword = true;
+class _SetPasswordPageState extends State<SetPasswordPage> {
+  String? passwordFirst;
+  String? passwordSecond;
+  bool _obscurePasswordSecond = true;
+
+  int maxRetryTimes = 3;
+  int currentRetryTimes = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -36,34 +38,39 @@ class _LoginPageState extends State<LoginPageNew> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Text('Для регистрации в приложении, для аккаунта требуется установить пароль.\nПридумайте пароль от 6 символов.'),
+
+                  const SizedBox(height: 32),
+
                   TextField(
+                    obscureText: true,
                     decoration: InputDecoration(
-                      labelText: 'e-mail',
+                      labelText: 'пароль',
                       prefixIcon: Icon(Icons.mail),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                     ),
-                    onChanged: (value) => username = value,
+                    onChanged: (value) => passwordFirst = value,
                   ),
                   const SizedBox(height: 16),
 
                   TextField(
-                    obscureText: _obscurePassword, 
+                    obscureText: _obscurePasswordSecond, 
                     decoration: InputDecoration(
-                      labelText: 'пароль',
+                      labelText: 'повторите пароль',
                       prefixIcon: const Icon(Icons.lock),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                          _obscurePasswordSecond ? Icons.visibility_off : Icons.visibility,
                         ),
                         onPressed: () {
                           setState(() {
-                            _obscurePassword = !_obscurePassword;
+                            _obscurePasswordSecond = !_obscurePasswordSecond;
                           });
                         },
                       ),
                     ),
-                    onChanged: (value) => password = value,
+                    onChanged: (value) => passwordSecond = value,
                   ),
                   const SizedBox(height: 32),
 
@@ -79,7 +86,7 @@ class _LoginPageState extends State<LoginPageNew> {
                         ),
                         onPressed: () => _save(),
                         child: const Text(
-                          'войти',
+                          'подтвердить',
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -95,17 +102,29 @@ class _LoginPageState extends State<LoginPageNew> {
   }
 
   Future<void> _save() async {
-    if (username == null || password == null || username!.isEmpty || password!.isEmpty) {
-      Get.snackbar("Error", "Пожалуйста, введите e-mail и пароль.", 
+    if (passwordFirst == null || passwordSecond == null || passwordFirst!.isEmpty || passwordSecond!.isEmpty) {
+      Get.snackbar("Не заполнено", "Пожалуйста, заполните поля для установки пароля.", 
+        snackPosition: SnackPosition.BOTTOM);
+      return;
+    }
+
+    if(passwordFirst != passwordSecond) {
+      Get.snackbar("Пароль не совпадает", "Проверка показала, что веденные пароли не совпадают друг с другом.", 
+        snackPosition: SnackPosition.BOTTOM);
+      return;
+    }
+
+    if(passwordFirst!.length < 6) {
+      Get.snackbar("Пароль слишком короткий", "Придумайте пароль длиной не менее 6 символов.", 
         snackPosition: SnackPosition.BOTTOM);
       return;
     }
 
     try {
       var proxy = Get.find<ProxyStore>();
-      await proxy.loginWithUsernamePassword(username!, password!);
-      if (proxy.currentUser!.shouldSetPassword) {
-        Get.to(() => const SetPasswordPage());
+      await proxy.setNewPasswordForUser(passwordFirst!);
+      if (proxy.currentUser == null) {
+        proxy.logout();
         return;
       }
       if (proxy.currentUser!.currentType == PersonType.admin) {
@@ -114,11 +133,18 @@ class _LoginPageState extends State<LoginPageNew> {
         Get.offAll(() => const HomePage());
       }
     } catch (e) {
-        print(e); //TODO: auth error!!!
-        Get.snackbar("Login Failed", e.toString(), 
+      print(e); //TODO: auth error!!!
+      if(currentRetryTimes < maxRetryTimes) {
+        Get.snackbar("Возникла ошибка при смене пароля", e.toString(), 
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.redAccent,
           colorText: Colors.white);
+      } else {
+        print('Maximum set password attempts exceeded.');
+        var proxy = Get.find<ProxyStore>();
+        await proxy.logout();
+      }
+      currentRetryTimes++;
     }
   }
 }

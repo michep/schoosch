@@ -85,6 +85,7 @@ class PersonModel {
   late List<PersonType> types = [];
   late final DateTime? birthday;
   late final bool viewByDays;
+  late final bool shouldSetPassword;
   late PersonType _currentType;
   ParentModel? _asParent;
   StudentModel? _asStudent;
@@ -101,6 +102,7 @@ class PersonModel {
     birthday = map['birthday'] != null ? DateTime.tryParse(map['birthday']) : null;
     email = map['email'] != null ? map['email'] as String : throw 'need email key in people $id';
     viewByDays = map['viewbydays'] != null ? map['viewbydays'] as bool : false;
+    shouldSetPassword = map['shouldsetpassword'] != null ? map['shouldsetpassword'] as bool : false;
     map['type'] != null ? types.addAll((map['type'] as List).map((e) => PersonType._parse(e))) : throw 'need type key in people $id';
     if (recursive) {
       if (types.contains(PersonType.admin)) {
@@ -167,6 +169,7 @@ class PersonModel {
     res['birthday'] = birthday?.toIso8601String();
     res['email'] = email;
     res['type'] = types.toStringList();
+    res['shouldsetpassword'] = shouldSetPassword;
     if (asObserver != null) res.addAll(asObserver!.toMap());
     if (asParent != null) res.addAll(asParent!.toMap());
     return res;

@@ -914,6 +914,20 @@ class ProxyStore extends getx.GetxController {
     await init(username);
   }
 
+  Future<void> setNewPasswordForUser(String newPassword) async {
+    var data = currentUser!.toMap(withId: true);
+    data['shouldsetpassword'] = false;
+    data['password'] = newPassword;
+    var res = await dio.putUri<Map<String, dynamic>>(
+      baseUriFunc('/person'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: data,
+    );
+    var js = res.data!;
+    _currentUser = await _getPersonByEmail(js['email']);
+    return js['id'];
+  }
+
   Future<void> logout() async {
     await dio.getUri(baseUriFunc('/auth/logout'));
     resetCurrentUser();

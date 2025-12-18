@@ -29,6 +29,7 @@ class _PersonPageState extends State<PersonPage> {
   final TextEditingController _firstname = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _shouldSetPassword = false;
   DateTime? _birthday;
   bool _isStudent = false;
   bool _isTeacher = false;
@@ -45,6 +46,7 @@ class _PersonPageState extends State<PersonPage> {
     _firstname.value = TextEditingValue(text: widget._person.firstname);
     _email.value = TextEditingValue(text: widget._person.email);
     _birthday = widget._person.birthday;
+    _shouldSetPassword = widget._person.shouldSetPassword;
     if (widget._person.types.contains(PersonType.student)) _isStudent = true;
     if (widget._person.types.contains(PersonType.teacher)) _isTeacher = true;
     if (widget._person.types.contains(PersonType.parent)) _isParent = true;
@@ -118,6 +120,23 @@ class _PersonPageState extends State<PersonPage> {
                           );
                           return date;
                         },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('Принудительная установка пароля'),
+                          const SizedBox(width: 16,),
+                          Checkbox(
+                            value: _shouldSetPassword, 
+                            onChanged: (v) {
+                              if(v != null) {
+                                setState(() {
+                                  _shouldSetPassword = v;
+                                });
+                              }
+                            }
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -348,6 +367,7 @@ class _PersonPageState extends State<PersonPage> {
       map['lastname'] = _lastname.text;
       map['email'] = _email.text;
       map['birthday'] = _birthday;
+      map['shouldsetpassword'] = _shouldSetPassword;
 
       var nperson = PersonModel.fromMap(person.id, map);
       await nperson.save();
