@@ -36,9 +36,10 @@ class _LoginPageState extends State<LoginPageNew> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  //TODO: использовать форму
                   TextField(
                     decoration: InputDecoration(
-                      labelText: 'e-mail',
+                      labelText: 'Электронная почта',
                       prefixIcon: Icon(Icons.mail),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                     ),
@@ -47,9 +48,9 @@ class _LoginPageState extends State<LoginPageNew> {
                   const SizedBox(height: 16),
 
                   TextField(
-                    obscureText: _obscurePassword, 
+                    obscureText: _obscurePassword,
                     decoration: InputDecoration(
-                      labelText: 'пароль',
+                      labelText: 'Пароль',
                       prefixIcon: const Icon(Icons.lock),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       suffixIcon: IconButton(
@@ -79,7 +80,7 @@ class _LoginPageState extends State<LoginPageNew> {
                         ),
                         onPressed: () => _save(),
                         child: const Text(
-                          'войти',
+                          'Войти',
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -95,9 +96,9 @@ class _LoginPageState extends State<LoginPageNew> {
   }
 
   Future<void> _save() async {
+    //TODO: использовать валидацию формы и подписи ошибок к полям, а не снэкбаром
     if (username == null || password == null || username!.isEmpty || password!.isEmpty) {
-      Get.snackbar("Error", "Пожалуйста, введите e-mail и пароль.", 
-        snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar("Error", "Пожалуйста, введите e-mail и пароль.", snackPosition: SnackPosition.BOTTOM);
       return;
     }
 
@@ -114,11 +115,13 @@ class _LoginPageState extends State<LoginPageNew> {
         Get.offAll(() => const HomePage());
       }
     } catch (e) {
-        print(e); //TODO: auth error!!!
-        Get.snackbar("Login Failed", e.toString(), 
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white);
+      Get.snackbar(
+        'Неправильная Электронная почта или неверный Пароль',
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
     }
   }
 }

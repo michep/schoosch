@@ -38,14 +38,15 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('Для регистрации в приложении, для аккаунта требуется установить пароль.\nПридумайте пароль от 6 символов.'),
+                  //TODO: использовать форму
+                  Text('Требуется сменить пароль.\nПридумайте пароль от 6 символов.'),
 
                   const SizedBox(height: 32),
 
                   TextField(
                     obscureText: true,
                     decoration: InputDecoration(
-                      labelText: 'пароль',
+                      labelText: 'Новый пароль',
                       prefixIcon: Icon(Icons.mail),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                     ),
@@ -54,9 +55,9 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
                   const SizedBox(height: 16),
 
                   TextField(
-                    obscureText: _obscurePasswordSecond, 
+                    obscureText: _obscurePasswordSecond,
                     decoration: InputDecoration(
-                      labelText: 'повторите пароль',
+                      labelText: 'Повторите новый пароль',
                       prefixIcon: const Icon(Icons.lock),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       suffixIcon: IconButton(
@@ -86,10 +87,10 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
                         ),
                         onPressed: () => _save(),
                         child: const Text(
-                          'подтвердить',
+                          'Подтвердить',
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                      ),
+                      ), //TODO: тут еще должна быть кнопка Отмены, которая делает logout
                     ),
                   ),
                 ],
@@ -102,49 +103,41 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
   }
 
   Future<void> _save() async {
+    //TODO: использовать валидацию формы и подписи ошибок к полям, а не снэкбарами
     if (passwordFirst == null || passwordSecond == null || passwordFirst!.isEmpty || passwordSecond!.isEmpty) {
-      Get.snackbar("Не заполнено", "Пожалуйста, заполните поля для установки пароля.", 
-        snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar("Не заполнено", "Пожалуйста, заполните поля для установки пароля.", snackPosition: SnackPosition.BOTTOM);
       return;
     }
 
-    if(passwordFirst != passwordSecond) {
-      Get.snackbar("Пароль не совпадает", "Проверка показала, что веденные пароли не совпадают друг с другом.", 
-        snackPosition: SnackPosition.BOTTOM);
+    if (passwordFirst != passwordSecond) {
+      Get.snackbar("Пароль не совпадает", "Проверка показала, что веденные пароли не совпадают друг с другом.", snackPosition: SnackPosition.BOTTOM);
       return;
     }
 
-    if(passwordFirst!.length < 6) {
-      Get.snackbar("Пароль слишком короткий", "Придумайте пароль длиной не менее 6 символов.", 
-        snackPosition: SnackPosition.BOTTOM);
+    if (passwordFirst!.length < 6) {
+      Get.snackbar("Пароль слишком короткий", "Придумайте пароль длиной не менее 6 символов.", snackPosition: SnackPosition.BOTTOM);
       return;
     }
 
     try {
       var proxy = Get.find<ProxyStore>();
-      await proxy.setNewPasswordForUser(passwordFirst!);
-      if (proxy.currentUser == null) {
-        proxy.logout();
-        return;
-      }
+      proxy.currentUser!.shouldSetPassword = false;
+      proxy.currentUser!.password = passwordFirst;
+      proxy.currentUser!.save();
+      proxy.currentUser!.password = null;
       if (proxy.currentUser!.currentType == PersonType.admin) {
         Get.offAll(() => const AdminPage());
       } else {
         Get.offAll(() => const HomePage());
       }
     } catch (e) {
-      print(e); //TODO: auth error!!!
-      if(currentRetryTimes < maxRetryTimes) {
-        Get.snackbar("Возникла ошибка при смене пароля", e.toString(), 
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white);
-      } else {
-        print('Maximum set password attempts exceeded.');
-        var proxy = Get.find<ProxyStore>();
-        await proxy.logout();
-      }
-      currentRetryTimes++;
+      Get.snackbar(
+        "Возникла ошибка при смене пароля",
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
     }
   }
 }

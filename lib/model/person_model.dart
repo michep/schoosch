@@ -85,7 +85,8 @@ class PersonModel {
   late List<PersonType> types = [];
   late final DateTime? birthday;
   late final bool viewByDays;
-  late final bool shouldSetPassword;
+  late bool shouldSetPassword;
+  String? password;
   late PersonType _currentType;
   ParentModel? _asParent;
   StudentModel? _asStudent;
@@ -170,6 +171,9 @@ class PersonModel {
     res['email'] = email;
     res['type'] = types.toStringList();
     res['shouldsetpassword'] = shouldSetPassword;
+    if (password != null) {
+      res['password'] = password;
+    }
     if (asObserver != null) res.addAll(asObserver!.toMap());
     if (asParent != null) res.addAll(asParent!.toMap());
     return res;
