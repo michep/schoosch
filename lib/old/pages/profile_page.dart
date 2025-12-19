@@ -77,6 +77,18 @@ class ProfilePage extends StatelessWidget {
         : const SizedBox.shrink();
   }
 
+  Widget _changeObserverClassdW(BuildContext context, PersonModel user) {
+    return (user.currentType == PersonType.observer)
+        ? ListTile(
+            title: Text(Get.find<ProxyStore>().currentObserverClass!.name),
+            trailing: ElevatedButton(
+              onPressed: () => Get.offAll(() => const HomePage()),
+              child: const Text('cменить класс'),
+            ),
+          )
+        : const SizedBox.shrink();
+  }
+
   void _changeChildBottomsheet(ParentModel user) {
     Get.bottomSheet(
       Card(
