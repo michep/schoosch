@@ -45,6 +45,7 @@ class ProxyStore extends getx.GetxController {
               options: Options(headers: {'Authorization': 'Bearer $_refreshToken'}),
             );
             _token = res.data!['token'];
+            _refreshToken = res.data!['refresh'];
           }
           options.headers.addAll({'Authorization': 'Bearer $_token'});
           return handler.next(options);
