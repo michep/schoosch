@@ -57,6 +57,8 @@ class _LoginPageState extends State<LoginPageNew> {
                         }
                         return null;
                       },
+                      autofocus: true,
+                      textInputAction: TextInputAction.next,
                     ),
                     const SizedBox(height: 16),
 
@@ -88,6 +90,7 @@ class _LoginPageState extends State<LoginPageNew> {
                         }
                         return null;
                       },
+                      onFieldSubmitted: (value) => _save(),
                     ),
                     const SizedBox(height: 32),
 

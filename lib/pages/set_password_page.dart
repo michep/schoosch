@@ -18,6 +18,7 @@ class SetPasswordPage extends StatefulWidget {
 class _SetPasswordPageState extends State<SetPasswordPage> {
   String? passwordFirst;
   String? passwordSecond;
+  bool _obscurePasswordFirst = true;
   bool _obscurePasswordSecond = true;
 
   int maxRetryTimes = 3;
@@ -45,15 +46,22 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text('Требуется сменить пароль.\nПридумайте пароль от 6 символов.'),
-                
                     const SizedBox(height: 32),
-                
                     TextFormField(
-                      obscureText: true,
+                      obscureText: _obscurePasswordFirst,
                       decoration: InputDecoration(
                         labelText: 'Новый пароль',
-                        prefixIcon: Icon(Icons.mail),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePasswordFirst ? Icons.visibility_off : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePasswordFirst = !_obscurePasswordFirst;
+                            });
+                          },
+                        ),
                       ),
                       onChanged: (value) => passwordFirst = value,
                       validator: (value) {
@@ -65,14 +73,14 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
                           return null;
                         }
                       },
+                      autofocus: true,
+                      textInputAction: TextInputAction.next,
                     ),
                     const SizedBox(height: 16),
-                
                     TextFormField(
                       obscureText: _obscurePasswordSecond,
                       decoration: InputDecoration(
                         labelText: 'Повторите пароль',
-                        prefixIcon: const Icon(Icons.lock),
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -92,9 +100,9 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
                         }
                         return null;
                       },
+                      onFieldSubmitted: (value) => _save(),
                     ),
                     const SizedBox(height: 32),
-                
                     Center(
                       child: SizedBox(
                         width: double.infinity,

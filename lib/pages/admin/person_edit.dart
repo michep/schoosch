@@ -125,16 +125,21 @@ class _PersonPageState extends State<PersonPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Принудительная установка пароля', style: TextStyle(fontSize: 16,),),
+                          Text(
+                            'Принудительная установка пароля',
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
                           Checkbox(
-                            value: _shouldSetPassword, 
+                            value: _shouldSetPassword,
                             onChanged: (v) {
-                              if(v != null) {
+                              if (v != null) {
                                 setState(() {
                                   _shouldSetPassword = v;
                                 });
                               }
-                            }
+                            },
                           ),
                         ],
                       ),
