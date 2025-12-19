@@ -20,10 +20,11 @@ Future<void> main() async {
   var curweek = CurrentWeek(Week.current());
   var prefs = PrefsController();
   await prefs.init();
+  
+  Get.put<PrefsController>(prefs);
   Get.put<ProxyStore>(proxy);
   Get.put<CurrentWeek>(curweek);
   Get.put<CurrentDay>(CurrentDay(DateTime.now()));
-  Get.put<PrefsController>(prefs);
 
   runApp(const SchooschApp());
 }

@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
 import 'package:isoweek/isoweek.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/attachments_model.dart';
@@ -39,6 +40,7 @@ class ProxyStore extends getx.GetxController {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           if (options.uri == baseUriFunc('/auth/refresh')) return handler.next(options);
+          final String? prefsRefreshToken = getx.Get.find<PrefsController>().getRefreshToken();
           if (_token != null && _refreshToken != null && JwtDecoder.getRemainingTime(_token!).inMinutes < 3) {
             var res = await dio.getUri<Map<String, dynamic>>(
               baseUriFunc('/auth/refresh'),
@@ -60,9 +62,10 @@ class ProxyStore extends getx.GetxController {
     return init(_currentUser!.email);
   }
 
-  void resetCurrentUser() {
+  Future<void> resetCurrentUser() async {
     _token = null;
     _currentUser = null;
+    await getx.Get.find<PrefsController>().clearRefreshToken();
   }
 
   PersonModel? get currentUser => _currentUser;
@@ -911,11 +914,12 @@ class ProxyStore extends getx.GetxController {
     );
     _token = res.data!['token'];
     _refreshToken = res.data!['refresh'];
+    await getx.Get.find<PrefsController>().setRefreshToken(_refreshToken!);
     await init(username);
   }
 
   Future<void> logout() async {
     await dio.getUri(baseUriFunc('/auth/logout'));
-    resetCurrentUser();
+    await resetCurrentUser();
   }
 }
