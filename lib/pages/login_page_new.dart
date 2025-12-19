@@ -20,6 +20,8 @@ class _LoginPageState extends State<LoginPageNew> {
   String? password;
   bool _obscurePassword = true;
 
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,61 +34,85 @@ class _LoginPageState extends State<LoginPageNew> {
             padding: const EdgeInsets.all(24.0),
             child: Container(
               constraints: const BoxConstraints(maxWidth: 400),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  //TODO: использовать форму
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Электронная почта',
-                      prefixIcon: Icon(Icons.mail),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                    onChanged: (value) => username = value,
-                  ),
-                  const SizedBox(height: 16),
-
-                  TextField(
-                    obscureText: _obscurePassword,
-                    decoration: InputDecoration(
-                      labelText: 'Пароль',
-                      prefixIcon: const Icon(Icons.lock),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Электронная почта',
+                        prefixIcon: Icon(Icons.mail),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       ),
+                      onChanged: (value) {
+                        formKey.currentState!.setState(() {
+                          username = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Введите электронную почту';
+                        }
+                        return null;
+                      },
                     ),
-                    onChanged: (value) => password = value,
-                  ),
-                  const SizedBox(height: 32),
+                    const SizedBox(height: 16),
 
-                  Center(
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                    TextFormField(
+                      obscureText: _obscurePassword,
+                      decoration: InputDecoration(
+                        labelText: 'Пароль',
+                        prefixIcon: const Icon(Icons.lock),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                      ),
+                      onChanged: (value) {
+                        formKey.currentState!.setState(() {
+                          password = value;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Введите пароль';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 32),
+
+                    Center(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            backgroundColor: Get.theme.primaryColor,
+                            foregroundColor: Get.theme.colorScheme.onPrimary,
+                          ),
+                          onPressed: () => _save(),
+                          child: const Text(
+                            'Войти',
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        onPressed: () => _save(),
-                        child: const Text(
-                          'Войти',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -96,32 +122,27 @@ class _LoginPageState extends State<LoginPageNew> {
   }
 
   Future<void> _save() async {
-    //TODO: использовать валидацию формы и подписи ошибок к полям, а не снэкбаром
-    if (username == null || password == null || username!.isEmpty || password!.isEmpty) {
-      Get.snackbar("Error", "Пожалуйста, введите e-mail и пароль.", snackPosition: SnackPosition.BOTTOM);
-      return;
-    }
-
-    try {
-      var proxy = Get.find<ProxyStore>();
-      await proxy.loginWithUsernamePassword(username!, password!);
-      if (proxy.currentUser!.shouldSetPassword) {
-        Get.to(() => const SetPasswordPage());
-        return;
+    if (formKey.currentState != null && formKey.currentState!.validate()) {
+      try {
+        var proxy = Get.find<ProxyStore>();
+        await proxy.loginWithUsernamePassword(username!, password!);
+        if (proxy.currentUser!.shouldSetPassword) {
+          Get.to(() => const SetPasswordPage());
+          return;
+        }
+        if (proxy.currentUser!.currentType == PersonType.admin) {
+          Get.offAll(() => const AdminPage());
+        } else {
+          Get.offAll(() => const HomePage());
+        }
+      } catch (e) {
+        Get.snackbar(
+          'Не удалось войти',
+          'Неправильная электронная почта или пароль.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.black,
+        );
       }
-      if (proxy.currentUser!.currentType == PersonType.admin) {
-        Get.offAll(() => const AdminPage());
-      } else {
-        Get.offAll(() => const HomePage());
-      }
-    } catch (e) {
-      Get.snackbar(
-        'Неправильная Электронная почта или неверный Пароль',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
     }
   }
 }

@@ -121,11 +121,11 @@ class _PersonPageState extends State<PersonPage> {
                           return date;
                         },
                       ),
+                      const SizedBox(height: 8),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Принудительная установка пароля'),
-                          const SizedBox(width: 16,),
+                          Text('Принудительная установка пароля', style: TextStyle(fontSize: 16,),),
                           Checkbox(
                             value: _shouldSetPassword, 
                             onChanged: (v) {

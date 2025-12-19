@@ -4,12 +4,13 @@ import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/profile_page.dart';
 
 class MAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const MAppBar(this._title, {this.showProfile = false, this.showSendNotif = false, super.key, this.actions});
+  const MAppBar(this._title, {this.showProfile = false, this.showSendNotif = false, super.key, this.actions, this.showBackButton = true,});
 
   final String _title;
   final bool showProfile;
   final bool showSendNotif;
   final List<Widget>? actions;
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +18,7 @@ class MAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(_title),
       backgroundColor: Get.theme.primaryColor,
       foregroundColor: Colors.white,
+      automaticallyImplyLeading: showBackButton,
       actions: [
         if (showProfile)
           const IconButton(
