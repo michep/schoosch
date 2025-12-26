@@ -26,9 +26,7 @@ Future<void> main() async {
   Get.put<CurrentWeek>(curweek);
   Get.put<CurrentDay>(CurrentDay(DateTime.now()));
 
-  runApp(
-    const SchooschApp(),
-  );
+  runApp(const SchooschApp());
 }
 
 class SchooschApp extends StatefulWidget {
@@ -39,16 +37,6 @@ class SchooschApp extends StatefulWidget {
 }
 
 class _SchooschAppState extends State<SchooschApp> {
-  final navigation = Navigation();
-  @override
-  void initState() async {
-    super.initState();
-    await navigation.init();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Get.find<FAuth>().startListen();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -61,7 +49,7 @@ class _SchooschAppState extends State<SchooschApp> {
       ],
       locale: const Locale('ru'),
       scrollBehavior: AppScrollBehavior(),
-      onGenerateTitle: (context) => S.of(context).,
+      onGenerateTitle: (context) => S.of(context).appTitle,
       debugShowCheckedModeBanner: false,
       theme: darkTheme,
       home: const LoginPageNew(),

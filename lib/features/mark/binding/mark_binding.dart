@@ -8,7 +8,7 @@ import 'package:schoosch/features/mark/domain/use_cases/save_lesson_mark_use_cas
 import 'package:schoosch/features/mark/domain/use_cases/save_mark_type_use_case.dart';
 import 'package:schoosch/features/mark/domain/use_cases/save_period_mark_use_case.dart';
 
-class MarkBindings implements Bindings {
+class MarkBinding implements Bindings {
   @override
   void dependencies() {
     MarkRemoteDataSource markRemoteDataSource = MarkRemoteDataSource();

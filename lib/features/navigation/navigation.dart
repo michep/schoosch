@@ -16,7 +16,6 @@ class Navigation {
 
   List<GetPage> pages() => [
     homeSchedulePage.toGetPage(
-      pageName: HomeScheduleScreenProvider.routeName,
     ),
     homeworkPage.toGetPage(
       pageName: HomeworkScreenProvider.routeName,

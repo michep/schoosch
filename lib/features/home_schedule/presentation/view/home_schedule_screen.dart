@@ -15,10 +15,10 @@ class HomeScheduleScreenProvider {
 }
 
 class HomeScheduleScreen extends StatefulWidget {
-  final HomeScheduleScreenController screenController;
+  // final HomeScheduleScreenController screenController;
 
   const HomeScheduleScreen({
-    required this.screenController,
+    // required this.screenController,
     super.key,
   });
 
