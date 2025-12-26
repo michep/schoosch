@@ -1,15 +1,16 @@
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:encrypt_shared_preferences/provider.dart';
 
 class PrefsController extends GetxController {
   late Rx<bool> isDayView;
   static const String viewKey = 'view';
   static const String refreshTokenKey = 'refresh_token';
 
-  late final SharedPreferences prefs;
+  late final EncryptedSharedPreferences prefs;
 
   Future<void> init() async {
-    prefs = await SharedPreferences.getInstance();
+    await EncryptedSharedPreferences.initialize('schooschschoosch');
+    prefs = EncryptedSharedPreferences.getInstance();
     isDayView = getView()!.obs;
   }
 
@@ -24,11 +25,11 @@ class PrefsController extends GetxController {
   }
 
   bool? getView() {
-    return prefs.containsKey(viewKey) ? prefs.getBool(viewKey) : false;
+    return prefs.getKeys().contains(viewKey) ? prefs.getBool(viewKey) : false;
   }
 
   String? getRefreshToken() {
-    if(prefs.containsKey(refreshTokenKey)) {
+    if (prefs.getKeys().contains(refreshTokenKey)) {
       return prefs.getString(refreshTokenKey);
     } else {
       return null;
@@ -40,7 +41,7 @@ class PrefsController extends GetxController {
     await setView(v);
   }
 
-   Future<void> clearRefreshToken() {
+  Future<void> clearRefreshToken() {
     return prefs.remove(refreshTokenKey);
   }
 }

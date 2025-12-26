@@ -41,7 +41,7 @@ class _LoaderPageState extends State<LoaderPage> {
         Get.offAll(() => const HomePage());
       }
     } else {
-       Get.offAll(() => const LoginPageNew());
+      Get.offAll(() => const LoginPageNew());
     }
   }
 }

@@ -28,12 +28,12 @@ dependencies:
   google_nav_bar: ^5.0.6
   dio: ^5.2.1+1
   datetime_picker_formfield_new: ^2.0.0
-  shared_preferences: ^2.0.15
   cupertino_icons: ^1.0.8
   pdf: ^3.8.4
   printing: ^5.9.3
   file_picker: ^10.3.3
   jwt_decoder: ^2.0.1
+  encrypt_shared_preferences: ^0.9.10
 
 dev_dependencies:
   flutter_test:

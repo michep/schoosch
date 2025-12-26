@@ -40,7 +40,6 @@ class ProxyStore extends getx.GetxController {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           if (options.uri == baseUriFunc('/auth/refresh')) return handler.next(options);
-          // final String? prefsRefreshToken = getx.Get.find<PrefsController>().getRefreshToken();
           if (_token != null && _refreshToken != null && JwtDecoder.getRemainingTime(_token!).inMinutes < 3) {
             var res = await dio.getUri<Map<String, dynamic>>(
               baseUriFunc('/auth/refresh'),
@@ -54,19 +53,6 @@ class ProxyStore extends getx.GetxController {
         },
       ),
     );
-    institution = await _geInstitutionIdByUserEmail(userEmail);
-    await institution.prefetchMarkTypes();
-    _currentUser = await _getPersonByEmail(userEmail);
-  }
-
-  Future<void> initWithNoRefresh(String userEmail) async {
-    InterceptorsWrapper(
-        onRequest: (options, handler) async {
-          if (options.uri == baseUriFunc('/auth/refresh')) return handler.next(options);
-          options.headers.addAll({'Authorization': 'Bearer $_token'});
-          return handler.next(options);
-        },
-      );
     institution = await _geInstitutionIdByUserEmail(userEmail);
     await institution.prefetchMarkTypes();
     _currentUser = await _getPersonByEmail(userEmail);
@@ -936,30 +922,26 @@ class ProxyStore extends getx.GetxController {
     final prefs = getx.Get.find<PrefsController>();
     final String? prefsRefreshToken = prefs.getRefreshToken();
 
-    print(prefsRefreshToken);
-
     if (prefsRefreshToken == null || prefsRefreshToken.isEmpty) {
       return false;
     }
 
-    if (JwtDecoder.getRemainingTime(prefsRefreshToken).inSeconds > 0) {
+    if (JwtDecoder.getRemainingTime(prefsRefreshToken).inMinutes > 3) {
       var res = await dio.getUri<Map<String, dynamic>>(
         baseUriFunc('/auth/refresh'),
         options: Options(headers: {'Authorization': 'Bearer $prefsRefreshToken'}),
       );
       _token = res.data!['token'];
       _refreshToken = res.data!['refresh'];
-      // String? email = JwtDecoder.decode(_refreshToken!)['sub']['email'];
       var decodedToken = JwtDecoder.decode(_refreshToken!);
-      print(decodedToken);
-      String? email = decodedToken['sub']['email'];
+      String? email = decodedToken['sub'];
 
-      if(email == null) {
+      if (email == null) {
         return false;
       }
 
       await prefs.setRefreshToken(_refreshToken!);
-      await initWithNoRefresh(email);
+      await init(email);
       return true;
     } else {
       await prefs.clearRefreshToken();
