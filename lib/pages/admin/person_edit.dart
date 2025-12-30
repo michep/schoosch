@@ -28,8 +28,10 @@ class _PersonPageState extends State<PersonPage> {
   final TextEditingController _middlename = TextEditingController();
   final TextEditingController _firstname = TextEditingController();
   final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _shouldSetPassword = false;
+  bool _obscurePasswordField = true;
   DateTime? _birthday;
   bool _isStudent = false;
   bool _isTeacher = false;
@@ -45,6 +47,7 @@ class _PersonPageState extends State<PersonPage> {
     _middlename.value = TextEditingValue(text: widget._person.middlename == null ? '' : widget._person.middlename!);
     _firstname.value = TextEditingValue(text: widget._person.firstname);
     _email.value = TextEditingValue(text: widget._person.email);
+    _password.value = TextEditingValue(text: '');
     _birthday = widget._person.birthday;
     _shouldSetPassword = widget._person.shouldSetPassword;
     if (widget._person.types.contains(PersonType.student)) _isStudent = true;
@@ -121,7 +124,7 @@ class _PersonPageState extends State<PersonPage> {
                           return date;
                         },
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -142,6 +145,24 @@ class _PersonPageState extends State<PersonPage> {
                             },
                           ),
                         ],
+                      ),
+                      TextFormField(
+                        controller: _password,
+                        obscureText: _obscurePasswordField,
+                        decoration: InputDecoration(
+                          labelText: 'Временный пароль',
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePasswordField ? Icons.visibility_off : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePasswordField = !_obscurePasswordField;
+                              });
+                            },
+                          ),
+                        ),
+                        validator: (value) => Utils.validatePassword(value),
                       ),
                     ],
                   ),
@@ -375,7 +396,11 @@ class _PersonPageState extends State<PersonPage> {
       map['shouldsetpassword'] = _shouldSetPassword;
 
       var nperson = PersonModel.fromMap(person.id, map);
+      if (_password.text != '') {
+        nperson.password = _password.text;
+      }
       await nperson.save();
+      nperson.password = null;
       Get.back<PersonModel>(result: nperson);
     }
   }
