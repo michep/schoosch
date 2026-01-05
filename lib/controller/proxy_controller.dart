@@ -34,8 +34,7 @@ class ProxyStore extends getx.GetxController {
 
   ProxyStore(this.baseUriFunc);
 
-  Future<void> init(String userEmail) async {
-    // dio.interceptors.clear() //TODO: ???
+  void setInterceptor() {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -53,6 +52,9 @@ class ProxyStore extends getx.GetxController {
         },
       ),
     );
+  }
+
+  Future<void> init(String userEmail) async {
     institution = await _geInstitutionIdByUserEmail(userEmail);
     await institution.prefetchMarkTypes();
     _currentUser = await _getPersonByEmail(userEmail);

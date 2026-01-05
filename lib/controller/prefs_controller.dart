@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:encrypt_shared_preferences/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefsController extends GetxController {
   late Rx<bool> isDayView;
@@ -11,6 +12,14 @@ class PrefsController extends GetxController {
   Future<void> init() async {
     await EncryptedSharedPreferences.initialize('schooschschoosch');
     prefs = EncryptedSharedPreferences.getInstance();
+    try {
+      prefs.getKeys();
+    } on ArgumentError {
+      var sp = await SharedPreferences.getInstance();
+      var viewVal = sp.getKeys().contains(viewKey) ? sp.getBool(viewKey) : false;
+      sp.clear();
+      prefs.setBool(viewKey, viewVal);
+    }
     isDayView = getView()!.obs;
   }
 
