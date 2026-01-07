@@ -85,6 +85,8 @@ class PersonModel {
   late List<PersonType> types = [];
   late final DateTime? birthday;
   late final bool viewByDays;
+  late bool shouldSetPassword;
+  String? password;
   late PersonType _currentType;
   ParentModel? _asParent;
   StudentModel? _asStudent;
@@ -101,6 +103,7 @@ class PersonModel {
     birthday = map['birthday'] != null ? DateTime.tryParse(map['birthday']) : null;
     email = map['email'] != null ? map['email'] as String : throw 'need email key in people $id';
     viewByDays = map['viewbydays'] != null ? map['viewbydays'] as bool : false;
+    shouldSetPassword = map['shouldsetpassword'] != null ? map['shouldsetpassword'] as bool : false;
     map['type'] != null ? types.addAll((map['type'] as List).map((e) => PersonType._parse(e))) : throw 'need type key in people $id';
     if (recursive) {
       if (types.contains(PersonType.admin)) {
@@ -167,6 +170,10 @@ class PersonModel {
     res['birthday'] = birthday?.toIso8601String();
     res['email'] = email;
     res['type'] = types.toStringList();
+    res['shouldsetpassword'] = shouldSetPassword;
+    if (password != null) {
+      res['password'] = password;
+    }
     if (asObserver != null) res.addAll(asObserver!.toMap());
     if (asParent != null) res.addAll(asParent!.toMap());
     return res;
@@ -189,13 +196,13 @@ class StudentModel extends PersonModel {
   final Map<String, List<CurriculumModel>> _curriculums = {};
 
   StudentModel.empty()
-      : super.fromMap(null, <String, dynamic>{
-          'firstname': '',
-          'middlename': '',
-          'lastname': '',
-          'email': '',
-          'type': <String>[PersonType.student._nameString],
-        });
+    : super.fromMap(null, <String, dynamic>{
+        'firstname': '',
+        'middlename': '',
+        'lastname': '',
+        'email': '',
+        'type': <String>[PersonType.student._nameString],
+      });
 
   StudentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
@@ -258,13 +265,13 @@ class TeacherModel extends PersonModel {
   bool _curriculumsLoaded = false;
 
   TeacherModel.empty()
-      : super.fromMap(null, <String, dynamic>{
-          'firstname': '',
-          'middlename': '',
-          'lastname': '',
-          'email': '',
-          'type': <String>[PersonType.teacher._nameString],
-        });
+    : super.fromMap(null, <String, dynamic>{
+        'firstname': '',
+        'middlename': '',
+        'lastname': '',
+        'email': '',
+        'type': <String>[PersonType.teacher._nameString],
+      });
 
   TeacherModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false);
 
@@ -301,14 +308,14 @@ class ParentModel extends PersonModel {
   StudentModel? _selectedChild;
 
   ParentModel.empty()
-      : super.fromMap(null, <String, dynamic>{
-          'firstname': '',
-          'middlename': '',
-          'lastname': '',
-          'email': '',
-          'type': <String>[PersonType.parent._nameString],
-          'student_ids': <String>[],
-        });
+    : super.fromMap(null, <String, dynamic>{
+        'firstname': '',
+        'middlename': '',
+        'lastname': '',
+        'email': '',
+        'type': <String>[PersonType.parent._nameString],
+        'student_ids': <String>[],
+      });
 
   ParentModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
     map['student_ids'] != null
@@ -316,7 +323,7 @@ class ParentModel extends PersonModel {
         : throw 'need student_ids key in people for parent $id';
   }
 
-  Future<List<StudentModel>> children({forceRefresh = false}) async {
+  Future<List<StudentModel>> children({bool forceRefresh = false}) async {
     if (!_studentsLoaded || forceRefresh) {
       _students.clear();
       for (var id in studentIds) {
@@ -351,13 +358,13 @@ class ObserverModel extends PersonModel {
   bool _classesLoaded = false;
 
   ObserverModel.empty()
-      : super.fromMap(null, <String, dynamic>{
-          'firstname': '',
-          'middlename': '',
-          'lastname': '',
-          'email': '',
-          'type': <String>[PersonType.observer._nameString],
-        });
+    : super.fromMap(null, <String, dynamic>{
+        'firstname': '',
+        'middlename': '',
+        'lastname': '',
+        'email': '',
+        'type': <String>[PersonType.observer._nameString],
+      });
 
   ObserverModel.fromMap(String? id, Map<String, dynamic> map) : super.fromMap(id, map, false) {
     map['class_ids'] != null
@@ -365,7 +372,7 @@ class ObserverModel extends PersonModel {
         : throw 'need class_ids key in people for observer $id';
   }
 
-  Future<List<ClassModel>> classes({forceRefresh = false}) async {
+  Future<List<ClassModel>> classes({bool forceRefresh = false}) async {
     if (!_classesLoaded || forceRefresh) {
       _classes.clear();
       _classes.addAll(await Get.find<ProxyStore>().getClassesByIds(classIds));

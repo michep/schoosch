@@ -29,6 +29,12 @@ class Utils {
     return (value == null) ? error : null;
   }
 
+  static String? validatePassword(String? password) {
+    if(password == null || password.isEmpty) return null;
+    if(password.length > 1 && password.length < 6) return 'Пароль должен быть не менее 6 символов';
+    return null;
+  }
+
   static String? validaTimeNotEmptyeAndValid(String? value, String error) {
     if (value == null) return error;
     var a = value.split(':');

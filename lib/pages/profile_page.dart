@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:schoosch/controller/auth_controller.dart';
 import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/controller/proxy_controller.dart';
 import 'package:schoosch/generated/l10n.dart';
 import 'package:schoosch/model/person_model.dart';
 import 'package:schoosch/pages/admin/admin_page.dart';
 import 'package:schoosch/pages/home_page.dart';
+import 'package:schoosch/pages/login_page_new.dart';
 import 'package:schoosch/widgets/appbar.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -59,7 +59,8 @@ class ProfilePage extends StatelessWidget {
                       )
                     : const SizedBox.shrink(),
               );
-            })
+            },
+          )
         : const SizedBox.shrink();
   }
 
@@ -79,19 +80,22 @@ class ProfilePage extends StatelessWidget {
     Get.bottomSheet(
       Card(
         child: FutureBuilder<List<StudentModel>>(
-            future: user.children(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return const SizedBox.shrink();
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ...snapshot.data!.map((e) => ElevatedButton(
-                        onPressed: () => _changeChild(user, e),
-                        child: Text(e.fullName),
-                      )),
-                ],
-              );
-            }),
+          future: user.children(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return const SizedBox.shrink();
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ...snapshot.data!.map(
+                  (e) => ElevatedButton(
+                    onPressed: () => _changeChild(user, e),
+                    child: Text(e.fullName),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -105,7 +109,8 @@ class ProfilePage extends StatelessWidget {
   }
 
   void _logout() async {
-    await Get.find<FAuth>().logout();
+    await Get.find<ProxyStore>().logout();
+    Get.offAll(() => const LoginPageNew());
   }
 
   Widget _changeTypeW(BuildContext context, PersonModel user) {
@@ -143,10 +148,12 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ...user.types.map((e) => ElevatedButton(
-                  onPressed: () => _changeType(user, e),
-                  child: Text(e.localizedName(S.of(context))),
-                )),
+            ...user.types.map(
+              (e) => ElevatedButton(
+                onPressed: () => _changeType(user, e),
+                child: Text(e.localizedName(S.of(context))),
+              ),
+            ),
           ],
         ),
       ),

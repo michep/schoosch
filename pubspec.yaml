@@ -22,23 +22,19 @@ dependencies:
   chips_choice: ^3.0.1
   dropdown_search: ^6.0.0
   flutter_native_splash: ^2.0.1+1
-  # directed_graph: ^0.4.0
   flex_color_scheme: ^8.0.0
   flutter_linkify: ^6.0.0
   url_launcher: ^6.1.5
   google_nav_bar: ^5.0.6
   dio: ^5.2.1+1
   datetime_picker_formfield_new: ^2.0.0
-  shared_preferences: ^2.0.15
   cupertino_icons: ^1.0.8
   pdf: ^3.8.4
   printing: ^5.9.3
-  firebase_ui_auth: ^3.0.0
-  firebase_ui_localizations: ^2.0.0
-  firebase_core: ^4.1.0
-  firebase_storage: ^13.0.1
-  firebase_auth: ^6.0.2
   file_picker: ^10.3.3
+  jwt_decoder: ^2.0.1
+  encrypt_shared_preferences: ^0.9.10
+  shared_preferences: ^2.5.4
 
 dev_dependencies:
   flutter_test:

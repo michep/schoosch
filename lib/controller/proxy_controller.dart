@@ -1,10 +1,9 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:get/get.dart' as getx;
 import 'package:isoweek/isoweek.dart';
-import 'package:schoosch/controller/auth_controller.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:schoosch/controller/prefs_controller.dart';
 import 'package:schoosch/controller/week_controller.dart';
 import 'package:schoosch/model/absence_model.dart';
 import 'package:schoosch/model/attachments_model.dart';
@@ -30,51 +29,45 @@ class ProxyStore extends getx.GetxController {
   ClassModel? currentObserverClass;
   final Dio dio = Dio();
   Uri Function(String) baseUriFunc;
+  String? _token;
+  String? _refreshToken;
 
   ProxyStore(this.baseUriFunc);
 
-  Future<void> init(String userEmail) async {
-    if (dio.httpClientAdapter is IOHttpClientAdapter) {
-      (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
-        HttpClient client = HttpClient();
-        client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-        return client;
-      };
-    }
+  void setInterceptor() {
     dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
-          var currentToken = getx.Get.find<FAuth>().token;
-          options.headers.addAll({'Authorization': 'Bearer $currentToken'});
+        onRequest: (options, handler) async {
+          if (options.uri == baseUriFunc('/auth/refresh')) return handler.next(options);
+          if (_token != null && _refreshToken != null && JwtDecoder.getRemainingTime(_token!).inMinutes < 3) {
+            var res = await dio.getUri<Map<String, dynamic>>(
+              baseUriFunc('/auth/refresh'),
+              options: Options(headers: {'Authorization': 'Bearer $_refreshToken'}),
+            );
+            _token = res.data!['token'];
+            _refreshToken = res.data!['refresh'];
+          }
+          options.headers.addAll({'Authorization': 'Bearer $_token'});
           return handler.next(options);
         },
       ),
     );
-    // dio.interceptors.add(InterceptorsWrapper(
-    //   onError: (e, handler) {
-    //     getx.Get.showSnackbar(getx.GetSnackBar(
-    //       title: 'Error',
-    //       message: e.message,
-    //       duration: const Duration(seconds: 10),
-    //     ));
-    //     return handler.next(e);
-    //   },
-    // ));
+  }
+
+  Future<void> init(String userEmail) async {
     institution = await _geInstitutionIdByUserEmail(userEmail);
     await institution.prefetchMarkTypes();
     _currentUser = await _getPersonByEmail(userEmail);
-  }
-
-  void fixdate(Response response, ResponseInterceptorHandler handler) {
-    handler.next(response);
   }
 
   Future<void> reset() async {
     return init(_currentUser!.email);
   }
 
-  void resetCurrentUser() {
+  Future<void> resetCurrentUser() async {
+    _token = null;
     _currentUser = null;
+    await getx.Get.find<PrefsController>().clearRefreshToken();
   }
 
   PersonModel? get currentUser => _currentUser;
@@ -910,5 +903,56 @@ class ProxyStore extends getx.GetxController {
       options: Options(headers: {'Content-Type': 'application/json'}),
       data: data,
     );
+  }
+
+  Future<void> loginWithUsernamePassword(String username, String password) async {
+    var res = await dio.postUri<Map<String, dynamic>>(
+      baseUriFunc('/auth/login'),
+      options: Options(headers: {'Content-Type': 'application/json'}),
+      data: {
+        'username': username,
+        'password': password,
+      },
+    );
+    _token = res.data!['token'];
+    _refreshToken = res.data!['refresh'];
+    await getx.Get.find<PrefsController>().setRefreshToken(_refreshToken!);
+    await init(username);
+  }
+
+  Future<bool> loginWithToken() async {
+    final prefs = getx.Get.find<PrefsController>();
+    final String? prefsRefreshToken = prefs.getRefreshToken();
+
+    if (prefsRefreshToken == null || prefsRefreshToken.isEmpty) {
+      return false;
+    }
+
+    if (JwtDecoder.getRemainingTime(prefsRefreshToken).inMinutes > 3) {
+      var res = await dio.getUri<Map<String, dynamic>>(
+        baseUriFunc('/auth/refresh'),
+        options: Options(headers: {'Authorization': 'Bearer $prefsRefreshToken'}),
+      );
+      _token = res.data!['token'];
+      _refreshToken = res.data!['refresh'];
+      var decodedToken = JwtDecoder.decode(_refreshToken!);
+      String? email = decodedToken['sub'];
+
+      if (email == null) {
+        return false;
+      }
+
+      await prefs.setRefreshToken(_refreshToken!);
+      await init(email);
+      return true;
+    } else {
+      await prefs.clearRefreshToken();
+      return false;
+    }
+  }
+
+  Future<void> logout() async {
+    await dio.getUri(baseUriFunc('/auth/logout'));
+    await resetCurrentUser();
   }
 }
