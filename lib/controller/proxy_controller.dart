@@ -918,6 +918,10 @@ class ProxyStore extends getx.GetxController {
     _refreshToken = res.data!['refresh'];
     await getx.Get.find<PrefsController>().setRefreshToken(_refreshToken!);
     await init(username);
+    logEvent({
+      'event': 'LOGIN',
+      'useremail': username,
+    });
   }
 
   Future<bool> loginWithToken() async {
@@ -936,14 +940,18 @@ class ProxyStore extends getx.GetxController {
       _token = res.data!['token'];
       _refreshToken = res.data!['refresh'];
       var decodedToken = JwtDecoder.decode(_refreshToken!);
-      String? email = decodedToken['sub'];
+      String? username = decodedToken['sub'];
 
-      if (email == null) {
+      if (username == null) {
         return false;
       }
 
       await prefs.setRefreshToken(_refreshToken!);
-      await init(email);
+      await init(username);
+      logEvent({
+        'event': 'LOGIN',
+        'useremail': username,
+      });
       return true;
     } else {
       await prefs.clearRefreshToken();
