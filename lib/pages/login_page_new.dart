@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPageNew> {
     if (formKey.currentState != null && formKey.currentState!.validate()) {
       try {
         var proxy = Get.find<ProxyStore>();
-        await proxy.loginWithUsernamePassword(username!.trim(), password!.trim());
+        await proxy.loginWithUsernamePassword(username!.trim().toLowerCase(), password!.trim());
         if (proxy.currentUser!.shouldSetPassword) {
           Get.to(() => const SetPasswordPage());
           return;
